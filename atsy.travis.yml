@@ -1,0 +1,13 @@
+language: java
+
+before_script:
+  - mysql -e 'create database atsy;'
+script: mvn clean verify -Pintegration
+
+branches:
+  only:
+  - master
+
+notifications:
+  email:
+  - epam-debrecen-rft-2015@googlegroups.com
