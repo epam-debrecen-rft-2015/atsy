@@ -1,23 +1,30 @@
 package com.epam.rft.atsy.cucumber.login;
 
+import com.epam.rft.atsy.cucumber.util.DriverProvider;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.By;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by Ikantik.
  */
+@Component
 public class LoginStepDefs {
-    WebDriver driver = new HtmlUnitDriver();
+
+    private DriverProvider driverProvider;
+
+    public LoginStepDefs(DriverProvider driverProvider) {
+        this.driverProvider = driverProvider;
+    }
 
     @When("^I'm opening (.*)")
     public void openingThePage(String url) {
-        driver.get(url);
+        driverProvider.getDriver().get(url);
     }
 
     @Then("^I'm happy")
     public void i_am_happy() {
-        driver.close();
+        driverProvider.getDriver().findElement(By.tagName("body"));
     }
 }

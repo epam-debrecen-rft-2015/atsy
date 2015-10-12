@@ -12,6 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skipITs>true</skipITs>
+        <selenium.driver>firefox</selenium.driver>
     </properties>
 
     <modules>
@@ -24,6 +25,12 @@
             <id>integration</id>
             <properties>
                 <skipITs>false</skipITs>
+            </properties>
+        </profile>
+        <profile>
+            <id>travis</id>
+            <properties>
+                <selenium.driver>htmlunit</selenium.driver>
             </properties>
         </profile>
     </profiles>
@@ -47,6 +54,9 @@
                     <includes>
                         <include>**/*IT.java</include>
                     </includes>
+                    <systemProperties>
+                        <webdriver>${selenium.driver}</webdriver>
+                    </systemProperties>
                 </configuration>
                 <executions>
                     <execution>
