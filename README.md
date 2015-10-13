@@ -1,4 +1,4 @@
-# Atsy
+# Atsy [![Build Status](https://travis-ci.org/epam-debrecen-rft-2015/atsy.svg?branch=master)](https://travis-ci.org/epam-debrecen-rft-2015/atsy)
 Applicant Tracking System
 
 Building the project:
