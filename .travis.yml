@@ -2,7 +2,7 @@ language: java
 
 before_script:
   - mysql -e 'create database atsy;'
-script: mvn clean verify -Pintegration
+script: mvn clean verify -Pintegration,travis
 
 branches:
   only:
