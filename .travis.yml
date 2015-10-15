@@ -1,8 +1,12 @@
 language: java
 
+addons:
+  firefox: "39.0"
+
 before_script:
   - mysql -e 'create database atsy;'
-script: mvn clean verify -Pintegration,travis
+
+script: mvn clean verify -Pintegration
 
 branches:
   only:
