@@ -1,10 +1,5 @@
 package com.epam.rft.atsy.persistence.configuration;
 
-import java.util.Properties;
-
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-
 import org.flywaydb.core.Flyway;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +12,10 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+import java.util.Properties;
 
 /**
  * Created by Ikantik.
@@ -37,14 +36,14 @@ public class PersistenceConfiguration {
 
     @Bean
     @DependsOn("flyway")
-    public EntityManagerFactory entityManagerFactory() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(dataSource());
+        em.setDataSource(dataSource);
         em.setPackagesToScan(new String[]{"com.epam.rft.atsy.persistence"});
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
         em.setJpaProperties(additionalProperties());
-        return em.getNativeEntityManagerFactory();
+        return em;
     }
 
     @Bean
@@ -56,8 +55,8 @@ public class PersistenceConfiguration {
     }
 
     @Bean
-    public PlatformTransactionManager txManager() {
-        return new JpaTransactionManager(entityManagerFactory());
+    public PlatformTransactionManager txManager(EntityManagerFactory entityManagerFactory) {
+        return new JpaTransactionManager(entityManagerFactory);
     }
 
     @Bean
