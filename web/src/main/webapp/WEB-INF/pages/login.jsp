@@ -9,22 +9,26 @@
     <div class="container">
         <div class="jumbotron">
             <div class="row">
-                <div class="col-md-6" id="trick">
+                <div class="col-md-6 col-sd-10">
                     <img src="logo.png" class="img-rounded">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 col-sd-10 jobb_oszlop">
                     <form role="form">
                         <div class="alert alert-danger" role="alert">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                            A megadott adatok nem megfelelőek!
+                            <spring:message code="login.error"/>
                         </div>
                         <div class="form-group has-error">
-                            <input type="text" class="form-control" id="username" placeholder="Felhasználónév">
+                            <spring:message code="uname.field" var="i18nUname"/>
+                            <input type="text" class="form-control" id="username" placeholder="${i18nUname}">
                         </div>
                         <div class="form-group has-error">
-                            <input type="password" class="form-control" id="password" placeholder="Jelszó">
+                            <spring:message code="passwd.field" var="i18nPasswd"/>
+                            <input type="password" class="form-control" id="password" placeholder="${i18nPasswd}">
                         </div>
-                        <button type="submit" class="btn btn-success">Belépés</button>
+                        <button type="submit" class="btn btn-success">
+                            <spring:message code="login.button"/>
+                        </button>
                     </form>
                 </div>
             </div>
