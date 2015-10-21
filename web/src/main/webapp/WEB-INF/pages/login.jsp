@@ -12,7 +12,7 @@
                 <div class="col-md-6 col-sd-10">
                     <img src="logo.png" class="img-rounded">
                 </div>
-                <div class="col-md-6 col-sd-10 jobb_oszlop">
+                <div class="col-md-6 col-sd-10 right_column">
                     <form role="form">
                         <div class="alert alert-danger" role="alert">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
