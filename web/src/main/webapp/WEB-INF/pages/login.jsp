@@ -10,7 +10,7 @@
         <div class="jumbotron">
             <div class="row">
                 <div class="col-md-6 col-sd-10">
-                    <img src="logo.png" class="img-rounded">
+                    <img src="resources/img/epam-logo-login.png" class="img-rounded">
                 </div>
                 <div class="col-md-6 col-sd-10 right_column">
                     <form role="form">
