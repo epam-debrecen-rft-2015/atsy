@@ -21,7 +21,7 @@ public class UserEntity implements java.io.Serializable {
         this.userName = userName;
         this.userPassword = userPassword;
     }
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "userId", table = "Users")
     public long getUserId() {
         return userId;
