@@ -1,11 +1,37 @@
-.jumbotron{
-    position: absolute;
-    top: 50%;
-    left:50%;
-    transform: translate(-50%,-50%);
+
+
+@media all and (max-width: 767px) {
+    .jumbotron{
+        width:100%;
+        margin:10px;
+        padding:20px;
+    }
+
+    .left_oolumn{
+        text-align:center;
+    }
+
+    .right_column{
+        padding-top:20px;
+    }
 }
 
-.right_column{
-    border-left: 1px solid #bdbdbd;
-}
+@media all and (min-width: 768px) {
+    .jumbotron{
+        margin-top:200px;
+        margin-left:auto;
+        margin-right:auto;
+        width:600px;
+        padding-left:20px !important;
+        padding-right:20px !important;
+    }
 
+    .left_oolumn{
+        text-align:center;
+    }
+
+    .right_column{
+        border-left:1px solid #bdbdbd;
+    }
+
+}

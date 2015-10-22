@@ -9,10 +9,10 @@
     <div class="container">
         <div class="jumbotron">
             <div class="row">
-                <div class="col-md-6 col-sd-10">
+                <div class="col-lg-6 col-md-6 col-sm-6 left_oolumn">
                     <img src="resources/img/epam-logo-login.png" class="img-rounded">
                 </div>
-                <div class="col-md-6 col-sd-10 right_column">
+                <div class="col-lg-6 col-md-6 col-sm-6 right_column">
                     <form role="form">
                         <div class="alert alert-danger" role="alert">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
