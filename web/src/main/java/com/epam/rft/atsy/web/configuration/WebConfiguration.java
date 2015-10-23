@@ -25,7 +25,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @Configuration
 @EnableWebMvc
 @ComponentScan("com.epam.rft.atsy.web")
-@Import({PersistenceConfiguration.class, ServiceConfiguration.class})
+@Import({ServiceConfiguration.class})
 public class WebConfiguration extends WebMvcConfigurerAdapter {
 
     @Bean
