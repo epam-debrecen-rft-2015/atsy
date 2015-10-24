@@ -13,18 +13,19 @@
                     <img src="resources/img/epam-logo-login.png" class="img-rounded">
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 right_column">
-                    <form role="form">
-                        <div class="alert alert-danger" role="alert">
+                    <form role="form" method="POST" id="login-form">
+                        <!--<div class="alert alert-danger" role="alert">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                             <spring:message code="login.error"/>
                         </div>
-                        <div class="form-group has-error">
+                        -->
+                        <div class="form-group">
                             <spring:message code="uname.field" var="i18nUname"/>
-                            <input type="text" class="form-control" id="username" placeholder="${i18nUname}">
+                            <input type="text" class="form-control" name="username" id="username" placeholder="${i18nUname}">
                         </div>
-                        <div class="form-group has-error">
+                        <div class="form-group">
                             <spring:message code="passwd.field" var="i18nPasswd"/>
-                            <input type="password" class="form-control" id="password" placeholder="${i18nPasswd}">
+                            <input type="password" class="form-control" name="password" id="password" placeholder="${i18nPasswd}">
                         </div>
                         <button type="submit" class="btn btn-success">
                             <spring:message code="login.button"/>
