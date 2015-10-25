@@ -8,10 +8,12 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 
 /**
  * Created by mates on 10/22/2015.
  */
+@Transactional(Transactional.TxType.REQUIRED)
 @Repository
 public class UserDAOImpl extends GenericDAOImpl<UserEntity, Long> implements UserDAO{
     private static final String UNAME="userName";
