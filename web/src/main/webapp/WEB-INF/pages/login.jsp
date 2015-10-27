@@ -30,7 +30,7 @@
                             <spring:message code="passwd.field" var="i18nPasswd"/>
                             <input type="password" class="form-control" name="password" id="password" placeholder="${i18nPasswd}">
                         </div>
-                        <button type="submit" class="btn btn-success">
+                        <button type="submit" class="btn btn-success" id="loginButton">
                             <spring:message code="login.button"/>
                         </button>
                     </form>
