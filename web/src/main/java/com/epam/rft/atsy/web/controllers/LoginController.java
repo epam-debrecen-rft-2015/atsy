@@ -3,9 +3,7 @@ package com.epam.rft.atsy.web.controllers;
 import com.epam.rft.atsy.service.UserService;
 import com.epam.rft.atsy.service.domain.UserDTO;
 import com.epam.rft.atsy.service.exception.UserNotFoundException;
-import com.epam.rft.atsy.service.impl.UserServiceImpl;
 import com.epam.rft.atsy.web.encryption.EncryptionUtil;
-import com.sun.deploy.net.HttpRequest;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -13,16 +11,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
 
 import javax.annotation.Resource;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Locale;
 
 /**
