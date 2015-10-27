@@ -1,15 +1,9 @@
 package com.epam.rft.atsy.web.controllers;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
-
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import com.epam.rft.atsy.service.UserService;
+import com.epam.rft.atsy.service.domain.UserDTO;
+import com.epam.rft.atsy.service.exception.UserNotFoundException;
+import com.epam.rft.atsy.web.encryption.EncryptionUtil;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -20,10 +14,16 @@ import org.springframework.web.servlet.ModelAndView;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.epam.rft.atsy.service.UserService;
-import com.epam.rft.atsy.service.domain.UserDTO;
-import com.epam.rft.atsy.service.exception.UserNotFoundException;
-import com.epam.rft.atsy.web.encryption.EncryptionUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Locale;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalToIgnoringCase;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 
 
 /**
@@ -34,11 +34,11 @@ public class LoginControllerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginControllerTest.class);
     private static final Locale LOCALE = Locale.UK;
-    @InjectMocks  //Amit tesztelsz
-        LoginController loginController;
+    @InjectMocks
+    LoginController loginController;
 
-    @Mock //annak a példány változói, amik @Resource-el vannak annotálva
-        UserService userService;
+    @Mock
+    UserService userService;
 
     @Mock
     EncryptionUtil encryptionUtil;
@@ -49,8 +49,8 @@ public class LoginControllerTest {
     @Mock
     UserDTO userDTO;
 
-    @Mock // paraméterek amiket átadsz
-        BindingResult bindingResult;
+    @Mock
+    BindingResult bindingResult;
 
     @Mock
     HttpSession session;
@@ -64,19 +64,24 @@ public class LoginControllerTest {
     @Test
     public void handleLoginTest() throws UserNotFoundException {
 
-        //given - Mit kell tegyen a mock
-        given(userDTO.getName()).willReturn("test");
         given(userDTO.getName()).willReturn("test");
         given(userDTO.getPassword()).willReturn("pass1");
         given(userService.login(userDTO)).willReturn(userDTO);
         given(bindingResult.hasErrors()).willReturn(false);
         given(request.getSession()).willReturn(session);
         doNothing().when(session).setAttribute("user", userDTO);
-        //when  - Amikor meghívod
+        //when
         ModelAndView model = loginController.handleLogin(userDTO, LOCALE, bindingResult, request);
 
-        //then  - Amikor ellenőrzöd
+        //then
         assertThat(model.getViewName(), containsString("redirect:"));
+    }
+
+    @Test
+    public void loadPageTest(){
+        ModelAndView model = loginController.pageLoad();
+
+        assertThat(model.getViewName(), is(equalToIgnoringCase("login")));
     }
 
 }
