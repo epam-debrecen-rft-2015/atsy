@@ -1,7 +1,9 @@
 package com.epam.rft.atsy.web.controllers;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 
 import java.util.Locale;
 
@@ -15,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -37,7 +38,7 @@ public class LoginControllerTest {
         LoginController loginController;
 
     @Mock //annak a példány változói, amik @Resource-el vannak annotálva
-    UserService userService;
+        UserService userService;
 
     @Mock
     EncryptionUtil encryptionUtil;
@@ -49,7 +50,7 @@ public class LoginControllerTest {
     UserDTO userDTO;
 
     @Mock // paraméterek amiket átadsz
-    BindingResult bindingResult;
+        BindingResult bindingResult;
 
     @Mock
     HttpSession session;
@@ -64,21 +65,18 @@ public class LoginControllerTest {
     public void handleLoginTest() throws UserNotFoundException {
 
         //given - Mit kell tegyen a mock
-        ModelAndView myModel = new ModelAndView();
-        myModel.setViewName("redirect:http://www.google.com");
-
-        when(userDTO.getName()).thenReturn("test");
-        when(userDTO.getPassword()).thenReturn("pass1");
-        when(userService.login(userDTO)).thenReturn(userDTO);
-        when(bindingResult.hasErrors()).thenReturn(false);
-        when(request.getSession()).thenReturn(session);
+        given(userDTO.getName()).willReturn("test");
+        given(userDTO.getName()).willReturn("test");
+        given(userDTO.getPassword()).willReturn("pass1");
+        given(userService.login(userDTO)).willReturn(userDTO);
+        given(bindingResult.hasErrors()).willReturn(false);
+        given(request.getSession()).willReturn(session);
         doNothing().when(session).setAttribute("user", userDTO);
         //when  - Amikor meghívod
         ModelAndView model = loginController.handleLogin(userDTO, LOCALE, bindingResult, request);
 
         //then  - Amikor ellenőrzöd
-        Assert.assertEquals(model.getViewName(), myModel.getViewName());
-
+        assertThat(model.getViewName(), containsString("redirect:"));
     }
 
 }
