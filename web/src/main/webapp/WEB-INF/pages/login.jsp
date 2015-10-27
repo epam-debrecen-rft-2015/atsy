@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
 <%@page contentType="text/html;charset=UTF-8"%>
 
@@ -14,14 +15,15 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 right_column">
                     <form role="form" method="POST" id="login-form">
-                        <!--<div class="alert alert-danger" role="alert">
-                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                            <spring:message code="login.error"/>
+                      <c:if test="${not empty loginErrorKey}">
+                        <div class="alert alert-danger" role="alert">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
+                            <spring:message code="${loginErrorKey}"/>
                         </div>
-                        -->
+                      </c:if>
                         <div class="form-group">
                             <spring:message code="uname.field" var="i18nUname"/>
-                            <input type="text" class="form-control" name="username" id="username" placeholder="${i18nUname}">
+                            <input type="text" class="form-control" name="name" id="name" placeholder="${i18nUname}">
                         </div>
                         <div class="form-group">
                             <spring:message code="passwd.field" var="i18nPasswd"/>

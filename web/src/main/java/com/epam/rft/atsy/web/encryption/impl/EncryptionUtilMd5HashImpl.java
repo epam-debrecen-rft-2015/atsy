@@ -1,16 +1,19 @@
 package com.epam.rft.atsy.web.encryption.impl;
 
-import com.epam.rft.atsy.web.encryption.EncryptionUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import com.epam.rft.atsy.web.encryption.EncryptionUtil;
+
 /**
  * Created by tothd on 2015. 10. 26..
  */
+@Component
 public class EncryptionUtilMd5HashImpl implements EncryptionUtil{
 
     private final static String SALT ="DGE$5SGr@3VsHYUMas2323E4d57vfBfFSTRU@!DSH(*%FDSdfg13sgfsg";
