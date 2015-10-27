@@ -6,11 +6,12 @@
 <%@page contentType="text/html;charset=UTF-8"%>
 
 <atsy:page>
+
 <jsp:body>
     <div class="container">
         <div class="jumbotron">
             <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-6 left_oolumn">
+                <div class="col-lg-6 col-md-6 col-sm-6 left_column">
                     <img src="resources/img/epam-logo-login.png" class="img-rounded">
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 right_column">
@@ -21,11 +22,11 @@
                             <spring:message code="${loginErrorKey}"/>
                         </div>
                       </c:if>
-                        <div class="form-group">
+                        <div class="form-group <c:if test="${not empty loginErrorKey}">has-error </c:if>">
                             <spring:message code="uname.field" var="i18nUname"/>
                             <input type="text" class="form-control" name="name" id="name" placeholder="${i18nUname}">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group <c:if test="${not empty loginErrorKey}">has-error </c:if>">
                             <spring:message code="passwd.field" var="i18nPasswd"/>
                             <input type="password" class="form-control" name="password" id="password" placeholder="${i18nPasswd}">
                         </div>
