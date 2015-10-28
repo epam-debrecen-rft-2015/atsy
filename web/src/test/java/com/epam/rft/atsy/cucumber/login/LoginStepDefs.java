@@ -58,11 +58,13 @@ public class LoginStepDefs {
 
     @Given("the username field is not filled in")
     public void usernameFieldNotFilled() {
-        driverProvider.getDriver().findElement(By.id("name")).getText().isEmpty();
+        driverProvider.getDriver().findElement(By.id("name")).sendKeys("");
     }
 
     @Given("the password field is not filled in")
     public void passwordFieldNotFilled() {
-        driverProvider.getDriver().findElement(By.id("name")).getText().isEmpty();
+        driverProvider.getDriver().findElement(By.id("name")).sendKeys("");
     }
+
+
 }

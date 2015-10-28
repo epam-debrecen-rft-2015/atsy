@@ -22,12 +22,14 @@
                             <spring:message code="${loginErrorKey}"/>
                         </div>
                       </c:if>
-                        <div class="form-group <c:if test="${not empty loginErrorKey}">has-error </c:if>">
+                        <div class="form-group <c:if test="${not empty loginErrorKey}">has-error </c:if>" id="userDiv">
                             <spring:message code="uname.field" var="i18nUname"/>
+                            <span id="missingUsername"><spring:message code="login.frontend.missingUsername"/></span>
                             <input type="text" class="form-control" name="name" id="name" placeholder="${i18nUname}">
                         </div>
-                        <div class="form-group <c:if test="${not empty loginErrorKey}">has-error </c:if>">
+                        <div class="form-group <c:if test="${not empty loginErrorKey}">has-error </c:if>" id="passwordDiv">
                             <spring:message code="passwd.field" var="i18nPasswd"/>
+                            <span id="missingPassword"><spring:message code="login.frontend.missingPassword"/></span>
                             <input type="password" class="form-control" name="password" id="password" placeholder="${i18nPasswd}">
                         </div>
                         <button type="submit" class="btn btn-success" id="loginButton">

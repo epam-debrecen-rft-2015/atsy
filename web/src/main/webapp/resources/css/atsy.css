@@ -17,6 +17,7 @@
 }
 
 @media all and (min-width: 768px) {
+
     .jumbotron{
         margin-top:200px;
         margin-left:auto;
@@ -33,5 +34,14 @@
     .right_column{
         border-left:1px solid #bdbdbd;
     }
+}
 
+#missingUsername{
+    color:red;
+    display: none;
+}
+
+#missingPassword{
+    color:red;
+    display: none;
 }
