@@ -49,9 +49,19 @@ public class LoginStepDefs {
         //assertThat();
     }
 
-    @Then("(.*) message appears")
+    @Then("$(.*) message appears^")
     public void messageAppearance(String message) {
         WebElement messageElement = driverProvider.getDriver().findElement(By.id("globalMessage"));
+        assertThat(messageElement.isDisplayed(), is(true));
+        assertThat(messageElement.getText(), is(message));
+    }
+
+    @Then("^(.*) message appears above the (.*) field$")
+    public void fieldMessageAppearance(String message, String fieldName) {
+        WebElement messageElement = driverProvider.getDriver()
+                .findElement(By.id(fieldName))
+                .findElement(By.xpath("..")) //parent
+                .findElement(By.tagName("span"));
         assertThat(messageElement.isDisplayed(), is(true));
         assertThat(messageElement.getText(), is(message));
     }
