@@ -11,10 +11,6 @@ before_script:
 
 script: mvn clean verify -Pintegration
 
-branches:
-  only:
-  - master
-
 notifications:
   email:
   - epam-debrecen-rft-2015@googlegroups.com
