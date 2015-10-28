@@ -17,7 +17,7 @@
                 <div class="col-lg-6 col-md-6 col-sm-6 right_column">
                     <form role="form" method="POST" id="login-form">
                       <c:if test="${not empty loginErrorKey}">
-                        <div class="alert alert-danger" role="alert">
+                        <div id="globalMessage" class="alert alert-danger" role="alert">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
                             <spring:message code="${loginErrorKey}"/>
                         </div>
