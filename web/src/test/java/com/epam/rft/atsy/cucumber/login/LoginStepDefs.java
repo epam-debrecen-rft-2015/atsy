@@ -55,4 +55,14 @@ public class LoginStepDefs {
         assertThat(messageElement.isDisplayed(), is(true));
         assertThat(messageElement.getText(), is(message));
     }
+
+    @Given("the username field is not filled in")
+    public void usernameFieldNotFilled() {
+        driverProvider.getDriver().findElement(By.id("name")).getText().isEmpty();
+    }
+
+    @Given("the password field is not filled in")
+    public void passwordFieldNotFilled() {
+        driverProvider.getDriver().findElement(By.id("name")).getText().isEmpty();
+    }
 }
