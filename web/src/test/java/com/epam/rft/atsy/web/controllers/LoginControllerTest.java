@@ -2,6 +2,7 @@ package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.UserService;
 import com.epam.rft.atsy.service.domain.UserDTO;
+import com.epam.rft.atsy.service.exception.BackendException;
 import com.epam.rft.atsy.service.exception.UserNotFoundException;
 import com.epam.rft.atsy.web.encryption.EncryptionUtil;
 import org.mockito.InjectMocks;
@@ -19,9 +20,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Locale;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalToIgnoringCase;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 
@@ -60,6 +59,12 @@ public class LoginControllerTest {
         MockitoAnnotations.initMocks(this);
     }
 
+    @Test
+    public void loadPageTest(){
+        ModelAndView model = loginController.pageLoad();
+
+        assertThat(model.getViewName(), is(equalToIgnoringCase("login")));
+    }
 
     @Test
     public void handleLoginTest() throws UserNotFoundException {
@@ -78,10 +83,66 @@ public class LoginControllerTest {
     }
 
     @Test
-    public void loadPageTest(){
-        ModelAndView model = loginController.pageLoad();
+    public void handleLoginTestWithBackendException() throws UserNotFoundException {
 
-        assertThat(model.getViewName(), is(equalToIgnoringCase("login")));
+        given(userDTO.getName()).willReturn("test");
+        given(userDTO.getPassword()).willReturn("pass1");
+        given(userService.login(userDTO)).willThrow(BackendException.class);
+        given(bindingResult.hasErrors()).willReturn(false);
+        given(request.getSession()).willReturn(session);
+        doNothing().when(session).setAttribute("user", userDTO);
+        //when
+        ModelAndView model = loginController.handleLogin(userDTO, LOCALE, bindingResult, request);
+
+        //then
+        assertThat(model.getViewName(),is(equalToIgnoringCase("login")));
     }
 
+    @Test
+    public void handleLoginTestWithUserNotFoundException() throws UserNotFoundException {
+
+        given(userDTO.getName()).willReturn("test");
+        given(userDTO.getPassword()).willReturn("pass1");
+        given(userService.login(userDTO)).willThrow(UserNotFoundException.class);
+        given(bindingResult.hasErrors()).willReturn(false);
+        given(request.getSession()).willReturn(session);
+        doNothing().when(session).setAttribute("user", userDTO);
+        //when
+        ModelAndView model = loginController.handleLogin(userDTO, LOCALE, bindingResult, request);
+
+        //then
+        assertThat(model.getViewName(),is(equalToIgnoringCase("login")));
+    }
+
+    @Test
+    public void handleLoginTestWithEmptyName() throws UserNotFoundException {
+
+        given(userDTO.getName()).willReturn("");
+        given(userDTO.getPassword()).willReturn("pass1");
+        given(userService.login(userDTO)).willReturn(userDTO);
+        given(bindingResult.hasErrors()).willReturn(true);
+        given(request.getSession()).willReturn(session);
+        doNothing().when(session).setAttribute("user", userDTO);
+        //when
+        ModelAndView model = loginController.handleLogin(userDTO, LOCALE, bindingResult, request);
+
+        //then
+        assertThat(model.getViewName(),is(equalToIgnoringCase("login")));
+    }
+
+    @Test
+    public void handleLoginTestWithEmptyPassword() throws UserNotFoundException {
+
+        given(userDTO.getName()).willReturn("test");
+        given(userDTO.getPassword()).willReturn("");
+        given(userService.login(userDTO)).willReturn(userDTO);
+        given(bindingResult.hasErrors()).willReturn(true);
+        given(request.getSession()).willReturn(session);
+        doNothing().when(session).setAttribute("user", userDTO);
+        //when
+        ModelAndView model = loginController.handleLogin(userDTO, LOCALE, bindingResult, request);
+
+        //then
+        assertThat(model.getViewName(),is(equalToIgnoringCase("login")));
+    }
 }

@@ -12,8 +12,12 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
@@ -51,7 +55,7 @@ public class UserServiceImplTest {
 
 
     @Test
-    public void loginTest(){
+    public void loginTest() throws UserNotFoundException {
 
 
         given(userEntity.getUserName()).willReturn("test");
@@ -65,7 +69,6 @@ public class UserServiceImplTest {
 
 
 
-        try {
 
             //when
             UserDTO resultUserDTO = userService.login(userDTO);
@@ -74,15 +77,12 @@ public class UserServiceImplTest {
             assertThat(resultUserDTO.getName(), is(equalToIgnoringCase("test")));
             assertThat(resultUserDTO.getPassword(), is(equalToIgnoringCase("pass1")));
 
-        } catch (UserNotFoundException e) {
-            LOGGER.error("User not found",e);
-        }
 
     }
 
     @Test(expectedExceptions = BackendException.class)
-    public void loginWithBackendException()  {
-        
+    public void loginWithBackendException() throws UserNotFoundException {
+
         given(userEntity.getUserName()).willReturn("test");
         given(userEntity.getUserPassword()).willReturn("pass1");
         given(userDTO.getName()).willReturn("test");
@@ -92,13 +92,52 @@ public class UserServiceImplTest {
 
         given(userDAO.login("test", "pass1")).willReturn(userEntity);
 
-        try {
-            UserDTO resultUserDTO = userService.login(null);
-        } catch (UserNotFoundException e) {
-            LOGGER.info("BackendException tested");
-        }
+        UserDTO resultUserDTO = userService.login(null);
 
     }
 
+    @Test(expectedExceptions = UserNotFoundException.class)
+    public void loginWithNoResultException() throws UserNotFoundException {
 
+        given(userEntity.getUserName()).willReturn("test");
+        given(userEntity.getUserPassword()).willReturn("pass1");
+        given(userDTO.getName()).willReturn("test");
+        given(userDTO.getPassword()).willReturn("pass1");
+
+        given(userDAO.login("test","pass1")).willThrow(NoResultException.class);
+
+        given(modelMapper.map(userEntity, UserDTO.class)).willReturn(userDTO);
+
+        UserDTO resultUserDTO=userService.login(userDTO);
+    }
+
+    @Test(expectedExceptions = UserNotFoundException.class)
+    public void loginWithNoUniqueResultException() throws UserNotFoundException {
+
+        given(userEntity.getUserName()).willReturn("test");
+        given(userEntity.getUserPassword()).willReturn("pass1");
+        given(userDTO.getName()).willReturn("test");
+        given(userDTO.getPassword()).willReturn("pass1");
+
+        given(userDAO.login("test","pass1")).willThrow(NonUniqueResultException.class);
+
+        given(modelMapper.map(userEntity, UserDTO.class)).willReturn(userDTO);
+
+        UserDTO resultUserDTO=userService.login(userDTO);
+    }
+
+    @Test(expectedExceptions = UserNotFoundException.class)
+    public void loginWithEmptyResultDataAccessException() throws UserNotFoundException {
+
+        given(userEntity.getUserName()).willReturn("test");
+        given(userEntity.getUserPassword()).willReturn("pass1");
+        given(userDTO.getName()).willReturn("test");
+        given(userDTO.getPassword()).willReturn("pass1");
+
+        given(userDAO.login("test","pass1")).willThrow(EmptyResultDataAccessException.class);
+
+        given(modelMapper.map(userEntity, UserDTO.class)).willReturn(userDTO);
+
+        UserDTO resultUserDTO=userService.login(userDTO);
+    }
 }
