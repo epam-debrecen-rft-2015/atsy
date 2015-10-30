@@ -12,6 +12,12 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <skipITs>true</skipITs>
+    <jacoco.classRatio>0.80</jacoco.classRatio>
+    <jacoco.instructionRatio>0.80</jacoco.instructionRatio>
+    <jacoco.methodRatio>0.80</jacoco.methodRatio>
+    <jacoco.branchRatio>0.80</jacoco.branchRatio>
+    <jacoco.complexityRatio>0.80</jacoco.complexityRatio>
+    <jacoco.lineRatio>0.80</jacoco.lineRatio>
   </properties>
 
   <modules>
@@ -114,6 +120,89 @@
             <version>5.1.30</version>
           </dependency>
         </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.7.1.201405082137</version>
+        <configuration>
+          <includes>
+            <include>**/atsy/**</include>
+          </includes>
+          <excludes>
+            <exclude>**/*Configuration.*</exclude>
+            <exclude>**/*Test.*</exclude>
+            <exclude>**/*Entity.*</exclude>
+            <exclude>**/*DTO.*</exclude>
+            <exclude>**/*GenericDAOImpl.*</exclude>
+            <exclude>**/*WebAppInitializer.*</exclude>
+            <exclude>jsp/**/*.class</exclude>
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <id>jacoco-initialize</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <configuration>
+            </configuration>
+          </execution>
+          <execution>
+            <id>check</id>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <phase>post-integration-test</phase>
+            <configuration>
+              <rules>
+                <rule>
+                  <element>BUNDLE</element>
+                  <limits>
+                    <limit>
+                      <counter>COMPLEXITY</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>${jacoco.complexityRatio}</minimum>
+                    </limit>
+                    <limit>
+                      <counter>CLASS</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>${jacoco.classRatio}</minimum>
+                    </limit>
+                    <limit>
+                      <counter>METHOD</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>${jacoco.methodRatio}</minimum>
+                    </limit>
+                    <limit>
+                      <counter>BRANCH</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>${jacoco.branchRatio}</minimum>
+                    </limit>
+                    <limit>
+                      <counter>LINE</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>${jacoco.lineRatio}</minimum>
+                    </limit>
+                    <limit>
+                      <counter>INSTRUCTION</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>${jacoco.instructionRatio}</minimum>
+                    </limit>
+                  </limits>
+                </rule>
+              </rules>
+            </configuration>
+          </execution>
+          <execution>
+            <id>jacoco-site</id>
+            <phase>package</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
