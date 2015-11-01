@@ -1,11 +1,10 @@
 package com.epam.rft.atsy.web.controllers;
 
-import java.util.Locale;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
+import com.epam.rft.atsy.service.UserService;
+import com.epam.rft.atsy.service.domain.UserDTO;
+import com.epam.rft.atsy.service.exception.BackendException;
+import com.epam.rft.atsy.service.exception.UserNotFoundException;
+import com.epam.rft.atsy.web.encryption.EncryptionUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,11 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.epam.rft.atsy.service.UserService;
-import com.epam.rft.atsy.service.domain.UserDTO;
-import com.epam.rft.atsy.service.exception.BackendException;
-import com.epam.rft.atsy.service.exception.UserNotFoundException;
-import com.epam.rft.atsy.web.encryption.EncryptionUtil;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.Locale;
 
 /**
  * Created by Ikantik.
@@ -35,8 +33,9 @@ public class LoginController {
 
 
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView pageLoad() {
+    public ModelAndView pageLoad(HttpServletRequest request) {
         ModelAndView model = new ModelAndView(VIEW_NAME);
+        request.getSession().invalidate();
         return model;
     }
 

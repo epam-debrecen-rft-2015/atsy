@@ -61,7 +61,8 @@ public class LoginControllerTest {
 
     @Test
     public void loadPageTest(){
-        ModelAndView model = loginController.pageLoad();
+        given(request.getSession()).willReturn(session);
+        ModelAndView model = loginController.pageLoad(request);
 
         assertThat(model.getViewName(), is(equalToIgnoringCase("login")));
     }

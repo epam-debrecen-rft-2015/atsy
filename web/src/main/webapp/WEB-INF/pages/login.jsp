@@ -8,7 +8,7 @@
 <atsy:page>
 
 <jsp:body>
-    <div class="container">
+    <div id="login" class="container">
         <div class="jumbotron">
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-6 left_column">
