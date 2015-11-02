@@ -17,7 +17,7 @@ public class PositionEntity implements java.io.Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "positionId")
-    private long positionId;
+    private Long positionId;
     @Column(name = "name", nullable = false, length = 255, unique = true)
     private String name;
 
@@ -38,11 +38,11 @@ public class PositionEntity implements java.io.Serializable {
         this.name = name;
     }
 
-    public long getPositionId() {
+    public Long getPositionId() {
         return positionId;
     }
 
-    public void setPositionId(long positionId) {
+    public void setPositionId(Long positionId) {
         this.positionId = positionId;
     }
 

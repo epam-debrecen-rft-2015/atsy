@@ -9,5 +9,7 @@ import java.util.Collection;
  */
 public interface PositionService {
 
-    public Collection<PositionDTO> getAllPositions();
+    Collection<PositionDTO> getAllPositions();
+
+    void saveOrUpdate(PositionDTO position);
 }

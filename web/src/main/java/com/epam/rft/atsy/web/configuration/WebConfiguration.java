@@ -19,6 +19,8 @@ import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import java.util.Locale;
+
 /**
  * Created by Ikantik.
  */
@@ -56,7 +58,9 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
 
     @Bean
     public LocaleResolver localeResolver() {
-        return new CookieLocaleResolver();
+        CookieLocaleResolver resolver = new CookieLocaleResolver();
+        resolver.setDefaultLocale(Locale.forLanguageTag("HU"));
+        return resolver;
     }
 
     @Override
