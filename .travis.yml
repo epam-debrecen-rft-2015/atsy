@@ -17,7 +17,7 @@ notifications:
 deploy:
   provider: openshift
   user: antal_kiss@epam.com
-  password:rft2015
+  password: rft2015
   app: atsy
   domain: epamrft
   on:
