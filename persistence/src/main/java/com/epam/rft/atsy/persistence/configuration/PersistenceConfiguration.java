@@ -2,6 +2,7 @@ package com.epam.rft.atsy.persistence.configuration;
 
 import org.flywaydb.core.Flyway;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
@@ -22,6 +23,7 @@ import java.util.Properties;
  */
 @Configuration
 @EnableTransactionManagement
+@ComponentScan("com.epam.rft.atsy.persistence")
 public class PersistenceConfiguration {
 
     private static final String JNDI_DATA_SOURCE = "jdbc/database";
