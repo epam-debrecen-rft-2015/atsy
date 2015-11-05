@@ -1,38 +1,53 @@
 /**
  * Created by Ikantik on 2015.11.04..
  */
-$(document).ready(function () {
-        $("form button[type=reset], div#add").click(function (event) {
+
+function SettingsForm() {
+    this.init = function (container) {
+        if (typeof container === 'string') {
+            container = $(container);
+        }
+
+        var form = container.find('form'),
+            table = container.find('table'),
+            addAction = container.find('.add');
+
+        form.find('button[type="reset"]').add(addAction).on('click', function (event) {
             event.preventDefault();
-            $("#position-form").find("input").val('');
-            $("#position-form #globalMessage").hide();
+            form.find('input').val('');
+            form.find('#globalMessage').hide();
         });
 
-        $("#position-form").submit(function (event) {
+        form.on('submit', function (event) {
+            var $this = $(this);
             event.preventDefault();
             data = {};
-            $(this).serializeArray().map(function (x) {
+            $this.serializeArray().map(function (x) {
                 data[x.name] = x.value;
             });
-            $("#position-form #globalMessage").hide();
+            $this.find('#globalMessage').hide();
             $.ajax({
-                    url: this.action,
-                    method: this.method,
-                    contentType: "application/json",
-                    data: JSON.stringify(data)
+                url: $this.attr('action'),
+                method: $this.attr('method'),
+                contentType: 'application/json',
+                data: JSON.stringify(data)
+            }).done(function () {
+                if (table instanceof $) {
+                    table.bootstrapTable('refresh');
                 }
-            ).success(function () {
-                    $('table#positions').bootstrapTable('refresh');
-                    $("#position-form").find("input").val('');
-                }).error(function (xhr, status, error) {
-                    $("#position-form #globalMessage #error-message").text(xhr.responseText);
-                    $("#position-form #globalMessage").show();
-                });
+                $this.find('input').val('');
+            }).error(function (xhr) {
+                $this.find('#globalMessage #error-message').text(xhr.responseText);
+                $this.find('#globalMessage').show();
+            });
         });
-
-
     }
-);
+};
+
+$(function () {
+    new SettingsForm().init('#positions_section');
+});
+
 function positionActionFormatter(value, row, index) {
     return [
         '<a class="edit ml10" href="javascript:void(0)" title="Edit">',
@@ -40,8 +55,9 @@ function positionActionFormatter(value, row, index) {
         '</a>'
     ].join('');
 }
+
 window.positionsEvents = {
-    'click .edit': function (e, value, row, index) {
+    'click .edit': function (e, value, row) {
         $('#position-form #name').val(row.name);
         $('#position-form #positionId').val(row.positionId);
     }

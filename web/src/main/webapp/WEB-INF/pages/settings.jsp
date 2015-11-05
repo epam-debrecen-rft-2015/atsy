@@ -34,7 +34,7 @@
                                 </tr>
                                 </thead>
                             </table>
-                            <div id="add" class="button-panel clearfix ">
+                            <div id="settings-add" class="button-panel clearfix add">
                                 <a href="javasript:void(0)" class="btn btn-primary btn-add">Új pozíció</a>
                             </div>
                         </div>
