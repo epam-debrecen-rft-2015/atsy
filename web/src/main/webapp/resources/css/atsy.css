@@ -1,47 +1,75 @@
-
-
 @media all and (max-width: 767px) {
-    .jumbotron{
-        width:100%;
-        margin:10px;
-        padding:20px;
+    #login .jumbotron {
+        width: 100%;
+        margin: 10px;
+        padding: 20px;
     }
 
-    .left_column{
-        text-align:center;
+    #login .left_column {
+        text-align: center;
     }
 
-    .right_column{
-        padding-top:20px;
+    #login .right_column {
+        padding-top: 20px;
     }
+
+            .navbar .glyphicon {
+                vertical-align: bottom;
+            }
 }
 
 @media all and (min-width: 768px) {
 
-    .jumbotron{
-        margin-top:200px;
-        margin-left:auto;
-        margin-right:auto;
-        width:600px;
-        padding-left:20px !important;
-        padding-right:20px !important;
+    #login .jumbotron {
+        margin-top: 200px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 600px;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
     }
 
-    .left_column{
-        text-align:center;
+    #login .left_column {
+        text-align: center;
     }
 
-    .right_column{
-        border-left:1px solid #bdbdbd;
+    #login .right_column {
+        border-left: 1px solid #bdbdbd;
     }
+
+}
+body { padding-top: 70px; }
+.container-fluid {
+    max-width: 1000px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.navbar .glyphicon {
+    font-size: 22px;
+}
+.navbar .navbar-nav > li > a {
+    padding-top: 11px;
+    padding-bottom: 11px;
+    font-size: 17px;
 }
 
-#missingUsername{
-    color:red;
+#positions_section .btn-add {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+#positions_section button {
+    width: 77px;
+    margin-right: 10px;
+}
+
+#missingUsername {
+    color: red;
     display: none;
 }
 
-#missingPassword{
-    color:red;
+#missingPassword {
+    color: red;
     display: none;
 }
