@@ -5,7 +5,7 @@ import static org.testng.Assert.assertNull;
 
 import org.testng.annotations.Test;
 
-import com.epam.rft.atsy.web.encryption.impl.EncryptionUtilMd5HashImpl;
+import com.epam.rft.atsy.web.encryption.impl.Md5EncryptionUtilImpl;
 
 /**
  * Created by tothd on 2015. 10. 26..
@@ -18,11 +18,11 @@ public class EncryptionUtilTest {
 
         //given
         String password = "pass1";
-        EncryptionUtil encryptionUtil = new EncryptionUtilMd5HashImpl();
+        EncryptionUtil encryptionUtil = new Md5EncryptionUtilImpl();
 
         //when
-        String myPassword = encryptionUtil.passwordHash(password);
-        String result = encryptionUtil.passwordHash(password);
+        String myPassword = encryptionUtil.hash(password);
+        String result = encryptionUtil.hash(password);
 
         //then
         assertEquals(myPassword, result);
@@ -36,10 +36,10 @@ public class EncryptionUtilTest {
         //given
         String password = null;
 
-        EncryptionUtil encryptionUtil = new EncryptionUtilMd5HashImpl();
+        EncryptionUtil encryptionUtil = new Md5EncryptionUtilImpl();
 
         //when
-        String result = encryptionUtil.passwordHash(password);
+        String result = encryptionUtil.hash(password);
 
         //then
         assertNull(result);

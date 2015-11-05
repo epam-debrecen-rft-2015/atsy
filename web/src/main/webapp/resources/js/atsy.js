@@ -1,3 +1,4 @@
+window.messages = {};
 $(document).ready(function () {
     $("#login-form").submit(function (event) {
         $("#userDiv").removeClass('has-error');

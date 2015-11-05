@@ -5,6 +5,8 @@ import com.epam.rft.atsy.service.domain.UserDTO;
 import com.epam.rft.atsy.service.exception.BackendException;
 import com.epam.rft.atsy.service.exception.UserNotFoundException;
 import com.epam.rft.atsy.web.encryption.EncryptionUtil;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Base64;
 import java.util.Locale;
 
 /**
@@ -24,7 +27,8 @@ import java.util.Locale;
 @RequestMapping("/login")
 public class LoginController {
     private static final String VIEW_NAME = "login";
-
+    private static final String DEFAULT_REDIRECT = "";
+    private static final String REDIRECT_PARAM = "redirect";
     @Resource
     private UserService userService;
 
@@ -49,13 +53,13 @@ public class LoginController {
             model.addObject("loginErrorKey", "login.backend.validation");
         } else {
             try {
-                userDTO.setPassword(encryptionUtil.passwordHash(userDTO.getPassword()));
+                userDTO.setPassword(encryptionUtil.hash(userDTO.getPassword()));
 
                 UserDTO foundUser = userService.login(userDTO);
 
                 request.getSession().setAttribute("user", foundUser);
 
-                model.setViewName("redirect:http://www.google.com");
+                model.setViewName("redirect:" + resolveRedirect(request));
 
             } catch (UserNotFoundException e) {
                 model.addObject("loginErrorKey", "login.backend.auth.failed");
@@ -64,8 +68,16 @@ public class LoginController {
             }
         }
         return model;
-
     }
 
+
+    private String resolveRedirect(HttpServletRequest request) {
+        String redirectParam = request.getParameter(REDIRECT_PARAM);
+        String redirectTo = DEFAULT_REDIRECT;
+        if (StringUtils.isNotBlank(redirectParam)) {
+            redirectTo = new String(Base64.getDecoder().decode(redirectParam));
+        }
+        return redirectTo;
+    }
 
 }

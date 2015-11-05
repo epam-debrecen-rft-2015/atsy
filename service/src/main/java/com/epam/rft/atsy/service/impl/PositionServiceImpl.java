@@ -8,6 +8,7 @@ import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -38,15 +39,15 @@ public class PositionServiceImpl implements PositionService {
     @Override
     @Transactional(Transactional.TxType.REQUIRED)
     public void saveOrUpdate(PositionDTO position) {
-        PositionEntity entity =modelMapper.map(position, PositionEntity.class);
+        PositionEntity entity = modelMapper.map(position, PositionEntity.class);
         try {
             if (entity.getPositionId() == null) {
                 positionDAO.create(entity);
             } else {
                 positionDAO.update(entity);
             }
-        }catch (ConstraintViolationException constraint){
-            throw new DuplicateRecordException();
+        } catch (ConstraintViolationException | DataIntegrityViolationException constraint) {
+            throw new DuplicateRecordException(position.getName());
         }
     }
 }

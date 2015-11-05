@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -52,14 +53,16 @@ public class SecurityFilterTest {
 
         given(userDTO.getName()).willReturn("test");
         given(userDTO.getPassword()).willReturn("pass1");
-        given(servletRequest.getSession(false)).willReturn(session);
+        given(servletRequest.getSession()).willReturn(session);
+        given(servletRequest.getQueryString()).willReturn("");
+        given(servletRequest.getContextPath()).willReturn("/atsy");
+        given(servletRequest.getRequestURL()).willReturn(new StringBuffer("/atsy/secure/settings"));
         given(session.getAttribute("user")).willReturn(null);
 
-
         //when
-        securityFilter.doFilter(servletRequest,servletResponse,filterChain);
+        securityFilter.doFilter(servletRequest, servletResponse, filterChain);
 
-        verify(((HttpServletResponse) servletResponse)).sendRedirect("/login");
+        verify(servletResponse).sendRedirect(anyString());
 
     }
 
@@ -68,14 +71,14 @@ public class SecurityFilterTest {
 
         given(userDTO.getName()).willReturn("test");
         given(userDTO.getPassword()).willReturn("pass1");
-        given(servletRequest.getSession(false)).willReturn(session);
+        given(servletRequest.getSession()).willReturn(session);
         given(session.getAttribute("user")).willReturn(userDTO);
 
 
         //when
-        securityFilter.doFilter(servletRequest,servletResponse,filterChain);
+        securityFilter.doFilter(servletRequest, servletResponse, filterChain);
 
-        verify(filterChain).doFilter(servletRequest,servletResponse);
+        verify(filterChain).doFilter(servletRequest, servletResponse);
 
     }
 }

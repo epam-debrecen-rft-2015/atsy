@@ -1,6 +1,7 @@
 package com.epam.rft.atsy.service.domain;
 
-import javax.persistence.Column;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
@@ -8,6 +9,8 @@ import java.io.Serializable;
  */
 public class PositionDTO implements Serializable {
     private Long positionId;
+    @NotNull
+    @Size(min = 1)
     private String name;
 
     public Long getPositionId() {

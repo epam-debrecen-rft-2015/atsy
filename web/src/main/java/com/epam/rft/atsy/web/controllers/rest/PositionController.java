@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -18,10 +19,11 @@ import java.util.Locale;
 /**
  * Created by Ikantik.
  */
-@org.springframework.web.bind.annotation.RestController
+@RestController
 @RequestMapping(value = "/secure/positions")
 public class PositionController {
     private static final String DUPLICATE_POSITION_MESSAGE_KEY = "settings.positions.error.duplicate";
+    private static final String EMPTY_POSITION_NAME_MESSAGE_KEY = "settings.positions.error.empty";
     private static final String TECHNICAL_ERROR_MESSAGE_KEY = "technical.error.message";
     private static final Logger LOGGER = LoggerFactory.getLogger(PositionController.class);
     @Resource
@@ -35,20 +37,30 @@ public class PositionController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity saveOrUpdate(@RequestBody PositionDTO positionDTO, Locale locale) {
-        ResponseEntity entity = new ResponseEntity("", HttpStatus.OK);
-        try {
-            positionService.saveOrUpdate(positionDTO);
-        } catch (DuplicateRecordException e) {
-            entity = new ResponseEntity(messageSource.getMessage(DUPLICATE_POSITION_MESSAGE_KEY,
-                    new Object[]{positionDTO.getName()}, locale), HttpStatus.BAD_REQUEST);
-        } catch (Exception unhandled) {
-            entity = new ResponseEntity(messageSource.getMessage(TECHNICAL_ERROR_MESSAGE_KEY,
-                    null, locale), HttpStatus.BAD_REQUEST);
-            LOGGER.error("Error while saving position changes", unhandled);
-        }
+    public ResponseEntity<String> saveOrUpdate(@RequestBody PositionDTO positionDTO, BindingResult result, Locale locale) {
+        ResponseEntity entity = new ResponseEntity<String>("", HttpStatus.OK);
 
+        if (!result.hasErrors()) {
+            positionService.saveOrUpdate(positionDTO);
+        } else {
+            entity = new ResponseEntity<String>(messageSource.getMessage(EMPTY_POSITION_NAME_MESSAGE_KEY,
+                    null, locale), HttpStatus.BAD_REQUEST);
+        }
         return entity;
     }
+
+    @ExceptionHandler(DuplicateRecordException.class)
+    public ResponseEntity handleDuplicateException(Locale locale, DuplicateRecordException ex) {
+        return new ResponseEntity<String>(messageSource.getMessage(DUPLICATE_POSITION_MESSAGE_KEY,
+                new Object[]{ex.getName()}, locale), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity handleException(Locale locale, Exception ex) {
+        LOGGER.error("Error while saving position changes", ex);
+        return new ResponseEntity<String>(messageSource.getMessage(TECHNICAL_ERROR_MESSAGE_KEY,
+                null, locale), HttpStatus.BAD_REQUEST);
+    }
+
 
 }

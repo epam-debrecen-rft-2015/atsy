@@ -5,5 +5,5 @@ package com.epam.rft.atsy.web.encryption;
  */
 public interface EncryptionUtil {
 
-    public String passwordHash(String password);
+    String hash(String input);
 }

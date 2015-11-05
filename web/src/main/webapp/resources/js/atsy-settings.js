@@ -15,32 +15,45 @@ function SettingsForm() {
         form.find('button[type="reset"]').add(addAction).on('click', function (event) {
             event.preventDefault();
             form.find('input').val('');
-            form.find('#globalMessage').hide();
+            hideError($this);
         });
 
         form.on('submit', function (event) {
             var $this = $(this);
             event.preventDefault();
-            data = {};
-            $this.serializeArray().map(function (x) {
-                data[x.name] = x.value;
-            });
-            $this.find('#globalMessage').hide();
-            $.ajax({
-                url: $this.attr('action'),
-                method: $this.attr('method'),
-                contentType: 'application/json',
-                data: JSON.stringify(data)
-            }).done(function () {
-                if (table instanceof $) {
-                    table.bootstrapTable('refresh');
-                }
-                $this.find('input').val('');
-            }).error(function (xhr) {
-                $this.find('#globalMessage #error-message').text(xhr.responseText);
-                $this.find('#globalMessage').show();
-            });
+            if ($this.find("#name").val() === "") {
+                showError($this, window.messages['settings.positions.error.empty']);
+            } else {
+                data = {};
+                $this.serializeArray().map(function (x) {
+                    data[x.name] = x.value;
+                });
+                hideError($this);
+                $.ajax({
+                    url: $this.attr('action'),
+                    method: $this.attr('method'),
+                    contentType: 'application/json',
+                    data: JSON.stringify(data)
+                }).done(function () {
+                    if (table instanceof $) {
+                        table.bootstrapTable('refresh');
+                    }
+                    $this.find('input').val('');
+                }).error(function (xhr) {
+                    showError($this, xhr.responseText);
+                });
+            }
         });
+        function showError(container, message) {
+            container.find('#globalMessage #error-message').text(message);
+            container.find('#globalMessage').show();
+            container.addClass('has-error');
+        }
+
+        function hideError(container) {
+            container.find('#globalMessage').hide();
+            container.removeClass('has-error');
+        }
     }
 };
 
