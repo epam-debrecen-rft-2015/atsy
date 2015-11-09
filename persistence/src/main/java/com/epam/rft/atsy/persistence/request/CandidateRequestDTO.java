@@ -1,4 +1,4 @@
-package com.epam.rft.atsy.service.domain.request;
+package com.epam.rft.atsy.persistence.request;
 
 /**
  * Created by tothd on 2015. 11. 07..
