@@ -1,9 +1,9 @@
-package com.epam.rft.atsy.service.domain.handler;
+package com.epam.rft.atsy.service.domain.request;
 
 /**
  * Created by tothd on 2015. 11. 07..
  */
-public class CandidateHandlerDTO {
+public class CandidateRequestDTO {
 
     private String fieldName;
 

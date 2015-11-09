@@ -1,7 +1,7 @@
 package com.epam.rft.atsy.service;
 
 import com.epam.rft.atsy.service.domain.CandidateDTO;
-import com.epam.rft.atsy.service.domain.handler.CandidateHandlerDTO;
+import com.epam.rft.atsy.service.domain.request.CandidateRequestDTO;
 
 import java.util.Collection;
 
@@ -10,6 +10,6 @@ import java.util.Collection;
  */
 public interface CandidateService {
 
-    Collection<CandidateDTO> getAllCandidate(CandidateHandlerDTO candidateHandlerDTO);
+    Collection<CandidateDTO> getAllCandidate(CandidateRequestDTO candidateRequestDTO);
 
 }
