@@ -1,7 +1,7 @@
 package com.epam.rft.atsy.service;
 
 import com.epam.rft.atsy.service.domain.CandidateDTO;
-import com.epam.rft.atsy.service.domain.request.CandidateRequestDTO;
+import com.epam.rft.atsy.persistence.request.CandidateRequestDTO;
 
 import java.util.Collection;
 

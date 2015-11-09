@@ -27,7 +27,7 @@ public class CandidateDTO {
 
     public void setCandidateId(Long candidateId) {
         this.candidateId = candidateId;
-    }   
+    }
 
     public String getName() {
         return name;
