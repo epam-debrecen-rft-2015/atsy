@@ -27,7 +27,7 @@ import java.util.Locale;
 @RequestMapping("/login")
 public class LoginController {
     private static final String VIEW_NAME = "login";
-    private static final String DEFAULT_REDIRECT = "";
+    private static final String DEFAULT_REDIRECT = "/secure/welcome";
     private static final String REDIRECT_PARAM = "redirect";
     @Resource
     private UserService userService;
