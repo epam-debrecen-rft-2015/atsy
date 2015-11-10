@@ -13,7 +13,7 @@ import java.util.Collection;
 @Service
 public class CandidateServiceImpl implements CandidateService{
     @Override
-    public Collection<CandidateDTO> getAllCandidate(CandidateRequestDTO candidateHandlerDTO) {
+    public Collection<CandidateDTO> getAllCandidate(CandidateRequestDTO candidateRequestDTO) {
         return null;
     }
 }

@@ -7,7 +7,20 @@ public class CandidateRequestDTO {
 
     private String fieldName;
 
-    private String order;
+    public enum Order {
+        ASC,
+        DESC
+    }
+
+    private Order order;
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
     public String getFieldName() {
         return fieldName;
@@ -15,13 +28,5 @@ public class CandidateRequestDTO {
 
     public void setFieldName(String fieldName) {
         this.fieldName = fieldName;
-    }
-
-    public String getOrder() {
-        return order;
-    }
-
-    public void setOrder(String order) {
-        this.order = order;
     }
 }
