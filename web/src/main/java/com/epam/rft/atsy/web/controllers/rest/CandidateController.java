@@ -20,7 +20,7 @@ import java.util.Collection;
 public class CandidateController {
 
     @Resource
-    CandidateService candidateService;
+    private CandidateService candidateService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Collection<CandidateDTO> loadPage(@Valid @RequestBody CandidateRequestDTO candidateRequestDTO) {

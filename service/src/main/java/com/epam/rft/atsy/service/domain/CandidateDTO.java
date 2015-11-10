@@ -21,6 +21,13 @@ public class CandidateDTO {
     @Size(min = 1)
     private String phoneNumber;
 
+    private String place;
+
+    private int englishLevel;
+
+    private String description;
+
+
     public Long getCandidateId() {
         return candidateId;
     }
@@ -51,5 +58,29 @@ public class CandidateDTO {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public int getEnglishLevel() {
+        return englishLevel;
+    }
+
+    public void setEnglishLevel(int englishLevel) {
+        this.englishLevel = englishLevel;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
