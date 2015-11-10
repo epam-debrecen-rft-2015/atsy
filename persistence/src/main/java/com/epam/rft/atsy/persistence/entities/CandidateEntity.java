@@ -1,13 +1,20 @@
 package com.epam.rft.atsy.persistence.entities;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Lob;
+import java.io.Serializable;
 
 /**
  * Created by szabo on 2015. 11. 07..
  */
 @Entity
 @Table(name = "Candidates", schema = "atsy")
-public class CandidateEntity {
+public class CandidateEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,45 +26,79 @@ public class CandidateEntity {
     private String email;
     @Column(name = "phone", length = 12)
     private String phone;
+    @Lob
+    @Column(name = "description")
+    private String description;
+    @Column(name = "referer", length = 255)
+    private String referer;
+    @Column(name = "language_skill")
+    private Byte language_skill;
 
     public CandidateEntity() {
     }
 
-    public CandidateEntity(String name, String email, String phone) {
+    public CandidateEntity(String name, String email, String phone, String description, String referer, Byte language_skill) {
         this.name = name;
         this.email = email;
         this.phone = phone;
+        this.description = description;
+        this.referer = referer;
+        this.language_skill = language_skill;
     }
 
     public Long getCandidateId() {
         return candidateId;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
     public void setCandidateId(Long candidateId) {
         this.candidateId = candidateId;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getReferer() {
+        return referer;
+    }
+
+    public void setReferer(String referer) {
+        this.referer = referer;
+    }
+
+    public Byte getLanguage_skill() {
+        return language_skill;
+    }
+
+    public void setLanguage_skill(Byte language_skill) {
+        this.language_skill = language_skill;
     }
 }

@@ -1,6 +1,7 @@
 package com.epam.rft.atsy.persistence.dao.impl;
 
 import com.epam.rft.atsy.persistence.dao.GenericDAO;
+import com.epam.rft.atsy.persistence.request.CandidateRequestDTO;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -48,6 +49,20 @@ public class GenericDAOImpl<T, PK extends Serializable>
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> cq = cb.createQuery(entityClass);
         Root<T> rootEntry = cq.from(entityClass);
+        CriteriaQuery<T> all = cq.select(rootEntry);
+        TypedQuery<T> allQuery = entityManager.createQuery(all);
+        return allQuery.getResultList();
+    }
+
+    public Collection<T> loadAll(CandidateRequestDTO dto) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<T> cq = cb.createQuery(entityClass);
+        Root<T> rootEntry = cq.from(entityClass);
+        if(dto.getOrder() == CandidateRequestDTO.Order.ASC) {
+            cq.orderBy(cb.asc(rootEntry.get(dto.getFieldName())));
+        } else if (dto.getOrder() == CandidateRequestDTO.Order.DESC) {
+            cq.orderBy(cb.desc(rootEntry.get(dto.getFieldName())));
+        }
         CriteriaQuery<T> all = cq.select(rootEntry);
         TypedQuery<T> allQuery = entityManager.createQuery(all);
         return allQuery.getResultList();
