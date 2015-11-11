@@ -16,7 +16,7 @@
                         <tr>
                             <th data-field="name" data-align="left" data-sortable="true"><spring:message
                                     code="welcome.candidates.table.name.title"/></th>
-                            <th data-field="email" data-align="left">
+                            <th data-field="email" data-align="left" data-sortable="true">
                                 <spring:message code="welcome.candidates.table.email.title"/>
                             </th>
                             <th data-field="phone" data-align="left" data-sortable="true"><spring:message

@@ -19,7 +19,7 @@ public class CandidateDTO {
 
     @NotNull
     @Size(min = 1)
-    private String phoneNumber;
+    private String phone;
 
     private String place;
 
@@ -52,12 +52,12 @@ public class CandidateDTO {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phoneNumber) {
+        this.phone = phoneNumber;
     }
 
     public String getPlace() {
