@@ -11,7 +11,7 @@
         <div id="welcome">
             <div id="candidates_table">
                 <div class="col-lg-12 col-md-12 col-sm-12">
-                    <table data-toggle="table" id="candidates" data-url="${candidates}" data-height="299">
+                    <table data-toggle="table" id="candidates" data-url="${candidates}" data-height="299" data-sort-name="name">
                         <thead>
                         <tr>
                             <th data-field="name" data-align="left" data-sortable="true"><spring:message
