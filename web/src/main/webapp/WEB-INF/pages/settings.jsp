@@ -5,11 +5,13 @@
 <%@taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
 <%@page contentType="text/html;charset=UTF-8" %>
 <spring:url value="/secure/positions" var="positions"/>
+<spring:url value="/secure/channels" var="channels"/>
 <atsy:secure_page>
  <jsp:attribute name="pageJs">
      <script src="<c:url value="/resources/js/atsy-settings.js" />"></script>
      <script type="text/javascript">
          window.messages['settings.positions.error.empty'] = '<spring:message code="settings.positions.error.empty"/>';
+         window.messages['settings.channels.error.empty'] = '<spring:message code="settings.channels.error.empty"/>';
      </script>
     </jsp:attribute>
     <jsp:body>
@@ -28,14 +30,14 @@
                                     <th data-field="name" data-align="left" data-sortable="true"><spring:message
                                             code="settings.positions.table.name.title"/></th>
                                     <th data-field="positionId" data-align="left"
-                                        data-formatter="positionActionFormatter"
+                                        data-formatter="actionFormatter"
                                         data-events="positionsEvents"><spring:message
                                             code="settings.positions.table.action.title"/>
                                     </th>
                                 </tr>
                                 </thead>
                             </table>
-                            <div id="settings-add" class="button-panel clearfix add">
+                            <div class="button-panel clearfix add">
                                 <a href="javasript:void(0)" class="btn btn-primary btn-add"><spring:message
                                         code="settings.positions.new"/></a>
                             </div>
@@ -45,22 +47,74 @@
                                 <legend><spring:message code="settings.positions.form.title"/></legend>
                                 <form role="form" method="POST" id="position-form" action="positions">
 
-                                    <div id="globalMessage" class="alert alert-danger" role="alert"
+                                    <div class="globalMessage alert alert-danger" role="alert"
                                          style="display: none">
                                         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                                        <span id="error-message"></span>
+                                        <span class="error-message"></span>
                                     </div>
 
                                     <div class="form-group">
                                         <input type="hidden" name="positionId" id="positionId">
-                                        <label for="name"><spring:message
+                                        <label for="position_name"><spring:message
                                                 code="settings.positions.position_name"/></label>
-                                        <input type="text" class="form-control" name="name" id="name">
+                                        <input type="text" class="name form-control" name="name" id="position_name">
                                     </div>
-                                    <button id="submit" type="submit" class="btn btn-success"><spring:message
+                                    <button type="submit" class="btn btn-success"><spring:message
                                             code="settings.positions.save"/></button>
-                                    <button id="cancel" type="reset" class="btn btn-danger"><spring:message
+                                    <button type="reset" class="btn btn-danger"><spring:message
                                             code="settings.positions.cancel"/></button>
+                                </form>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="channels_section">
+                <h3><spring:message code="settings.channels.title"/></h3>
+                <div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <table data-toggle="table" id="channels" data-url="${channels}" data-height="299"
+                                   data-sort-name="name"
+                                   data-sort-order="desc">
+                                <thead>
+                                <tr>
+                                    <th data-field="name" data-align="left" data-sortable="true"><spring:message
+                                            code="settings.channels.table.name.title"/></th>
+                                    <th data-field="channelId" data-align="left"
+                                        data-formatter="actionFormatter"
+                                        data-events="channelsEvents"><spring:message
+                                            code="settings.channels.table.action.title"/>
+                                    </th>
+                                </tr>
+                                </thead>
+                            </table>
+                            <div class="button-panel clearfix add">
+                                <a href="javasript:void(0)" class="btn btn-primary btn-add"><spring:message
+                                        code="settings.channels.new"/></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <fieldset>
+                                <legend><spring:message code="settings.channels.form.title"/></legend>
+                                <form role="form" method="POST" id="channel-form" action="channels">
+
+                                    <div class="globalMessage alert alert-danger" role="alert"
+                                         style="display: none">
+                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                        <span class="error-message"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input type="hidden" name="channelId" id="channelId">
+                                        <label for="channel_name"><spring:message
+                                                code="settings.channels.channel_name"/></label>
+                                        <input type="text" class="name form-control" name="name" id="channel_name"/>
+                                    </div>
+                                    <button type="submit" class="btn btn-success"><spring:message
+                                            code="settings.channels.save"/></button>
+                                    <button type="reset" class="btn btn-danger"><spring:message
+                                            code="settings.channels.cancel"/></button>
                                 </form>
                             </fieldset>
                         </div>

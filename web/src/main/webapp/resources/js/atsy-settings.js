@@ -3,7 +3,7 @@
  */
 
 function SettingsForm() {
-    this.init = function (container) {
+    this.init = function (container, validationMessageKey) {
         if (typeof container === 'string') {
             container = $(container);
         }
@@ -15,14 +15,14 @@ function SettingsForm() {
         form.find('button[type="reset"]').add(addAction).on('click', function (event) {
             event.preventDefault();
             form.find('input').val('');
-            hideError($this);
+            hideError(container);
         });
 
         form.on('submit', function (event) {
             var $this = $(this);
             event.preventDefault();
-            if ($this.find("#name").val() === "") {
-                showError($this, window.messages['settings.positions.error.empty']);
+            if ($this.find(".name").val() === "") {
+                showError($this, window.messages[validationMessageKey]);
             } else {
                 data = {};
                 $this.serializeArray().map(function (x) {
@@ -45,23 +45,24 @@ function SettingsForm() {
             }
         });
         function showError(container, message) {
-            container.find('#globalMessage #error-message').text(message);
-            container.find('#globalMessage').show();
+            container.find('.globalMessage .error-message').text(message);
+            container.find('.globalMessage').show();
             container.addClass('has-error');
         }
 
         function hideError(container) {
-            container.find('#globalMessage').hide();
+            container.find('.globalMessage').hide();
             container.removeClass('has-error');
         }
     }
 };
 
 $(function () {
-    new SettingsForm().init('#positions_section');
+    new SettingsForm().init('#positions_section','settings.positions.error.empty');
+    new SettingsForm().init('#channels_section','settings.channels.error.empty');
 });
 
-function positionActionFormatter(value, row, index) {
+function actionFormatter(value, row, index) {
     return [
         '<a class="edit ml10" href="javascript:void(0)" title="Edit">',
         '<i class="glyphicon glyphicon-edit"></i>',
@@ -73,5 +74,11 @@ window.positionsEvents = {
     'click .edit': function (e, value, row) {
         $('#position-form #name').val(row.name);
         $('#position-form #positionId').val(row.positionId);
+    }
+};
+window.channelsEvents = {
+    'click .edit': function (e, value, row) {
+        $('#channel-form .name').val(row.name);
+        $('#channel-form #channelId').val(row.channelId);
     }
 };
