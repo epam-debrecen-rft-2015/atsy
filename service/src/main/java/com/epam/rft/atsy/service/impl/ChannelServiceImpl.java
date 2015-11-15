@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -40,6 +41,7 @@ public class ChannelServiceImpl implements ChannelService {
     @Override
     @Transactional(Transactional.TxType.REQUIRED)
     public void saveOrUpdate(ChannelDTO channel) {
+        Assert.notNull(channel);
         ChannelEntity entity = modelMapper.map(channel, ChannelEntity.class);
         try {
             if (entity.getChannelId() == null) {

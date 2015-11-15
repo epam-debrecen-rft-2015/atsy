@@ -49,40 +49,30 @@ public class UserServiceImplTest {
 
 
     @BeforeMethod
-    public void setUp(){
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 
 
     @Test
     public void loginTest() throws UserNotFoundException {
-
-
         given(userEntity.getUserName()).willReturn("test");
         given(userEntity.getUserPassword()).willReturn("pass1");
         given(userDTO.getName()).willReturn("test");
         given(userDTO.getPassword()).willReturn("pass1");
-
         given(modelMapper.map(userEntity, UserDTO.class)).willReturn(userDTO);
-
         given(userDAO.login("test", "pass1")).willReturn(userEntity);
-
-
-
-
-            //when
-            UserDTO resultUserDTO = userService.login(userDTO);
-
-            //then
-            assertThat(resultUserDTO.getName(), is(equalToIgnoringCase("test")));
-            assertThat(resultUserDTO.getPassword(), is(equalToIgnoringCase("pass1")));
+        //when
+        UserDTO resultUserDTO = userService.login(userDTO);
+        //then
+        assertThat(resultUserDTO.getName(), is(equalToIgnoringCase("test")));
+        assertThat(resultUserDTO.getPassword(), is(equalToIgnoringCase("pass1")));
 
 
     }
 
     @Test(expectedExceptions = BackendException.class)
     public void loginWithBackendException() throws UserNotFoundException {
-
         given(userEntity.getUserName()).willReturn("test");
         given(userEntity.getUserPassword()).willReturn("pass1");
         given(userDTO.getName()).willReturn("test");
@@ -98,17 +88,14 @@ public class UserServiceImplTest {
 
     @Test(expectedExceptions = UserNotFoundException.class)
     public void loginWithNoResultException() throws UserNotFoundException {
-
         given(userEntity.getUserName()).willReturn("test");
         given(userEntity.getUserPassword()).willReturn("pass1");
         given(userDTO.getName()).willReturn("test");
         given(userDTO.getPassword()).willReturn("pass1");
-
-        given(userDAO.login("test","pass1")).willThrow(NoResultException.class);
-
+        given(userDAO.login("test", "pass1")).willThrow(NoResultException.class);
         given(modelMapper.map(userEntity, UserDTO.class)).willReturn(userDTO);
 
-        UserDTO resultUserDTO=userService.login(userDTO);
+        UserDTO resultUserDTO = userService.login(userDTO);
     }
 
     @Test(expectedExceptions = UserNotFoundException.class)
@@ -119,11 +106,11 @@ public class UserServiceImplTest {
         given(userDTO.getName()).willReturn("test");
         given(userDTO.getPassword()).willReturn("pass1");
 
-        given(userDAO.login("test","pass1")).willThrow(NonUniqueResultException.class);
+        given(userDAO.login("test", "pass1")).willThrow(NonUniqueResultException.class);
 
         given(modelMapper.map(userEntity, UserDTO.class)).willReturn(userDTO);
 
-        UserDTO resultUserDTO=userService.login(userDTO);
+        UserDTO resultUserDTO = userService.login(userDTO);
     }
 
     @Test(expectedExceptions = UserNotFoundException.class)
@@ -134,10 +121,10 @@ public class UserServiceImplTest {
         given(userDTO.getName()).willReturn("test");
         given(userDTO.getPassword()).willReturn("pass1");
 
-        given(userDAO.login("test","pass1")).willThrow(EmptyResultDataAccessException.class);
+        given(userDAO.login("test", "pass1")).willThrow(EmptyResultDataAccessException.class);
 
         given(modelMapper.map(userEntity, UserDTO.class)).willReturn(userDTO);
 
-        UserDTO resultUserDTO=userService.login(userDTO);
+        UserDTO resultUserDTO = userService.login(userDTO);
     }
 }

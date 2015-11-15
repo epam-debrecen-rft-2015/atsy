@@ -24,10 +24,15 @@ public class ChannelEntity implements java.io.Serializable {
     /**
      * Full constructor.
      *
-     * @param name       is the name of the position
+     * @param name is the name of the position
      */
 
     public ChannelEntity(String name) {
+        this.name = name;
+    }
+
+    public ChannelEntity(Long channelId, String name) {
+        this.channelId = channelId;
         this.name = name;
     }
 
