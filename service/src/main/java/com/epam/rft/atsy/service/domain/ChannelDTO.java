@@ -10,26 +10,26 @@ import java.io.Serializable;
 /**
  * Created by Ikantik.
  */
-public class PositionDTO implements Serializable {
-    private Long positionId;
+public class ChannelDTO implements Serializable {
+    private Long channelId;
     @NotNull
     @Size(min = 1)
     private String name;
 
-    public PositionDTO(Long positionId, String name) {
-        this.positionId = positionId;
+    public ChannelDTO(Long channelId, String name) {
+        this.channelId = channelId;
         this.name = name;
     }
 
-    public PositionDTO() {
+    public ChannelDTO() {
     }
 
-    public Long getPositionId() {
-        return positionId;
+    public Long getChannelId() {
+        return channelId;
     }
 
-    public void setPositionId(Long positionId) {
-        this.positionId = positionId;
+    public void setChannelId(Long channelId) {
+        this.channelId = channelId;
     }
 
     public String getName() {
@@ -46,10 +46,10 @@ public class PositionDTO implements Serializable {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        PositionDTO that = (PositionDTO) o;
+        ChannelDTO that = (ChannelDTO) o;
 
         return new EqualsBuilder()
-                .append(positionId, that.positionId)
+                .append(channelId, that.channelId)
                 .append(name, that.name)
                 .isEquals();
     }

@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -39,6 +40,7 @@ public class PositionServiceImpl implements PositionService {
     @Override
     @Transactional(Transactional.TxType.REQUIRED)
     public void saveOrUpdate(PositionDTO position) {
+        Assert.notNull(position);
         PositionEntity entity = modelMapper.map(position, PositionEntity.class);
         try {
             if (entity.getPositionId() == null) {
