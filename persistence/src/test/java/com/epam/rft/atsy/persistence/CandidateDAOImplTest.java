@@ -2,10 +2,11 @@ package com.epam.rft.atsy.persistence;
 
 import com.epam.rft.atsy.persistence.dao.impl.CandidateDAOImpl;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
-import com.epam.rft.atsy.persistence.request.CandidateRequestDTO;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyCollectionOf;
 import static org.hamcrest.Matchers.is;
+
+import com.epam.rft.atsy.persistence.request.SortingRequest;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -35,7 +36,7 @@ public class CandidateDAOImplTest {
     CandidateEntity candidateEntity;
 
     @Mock
-    CandidateRequestDTO candidateRequestDTO;
+    SortingRequest sortingRequest;
 
     @Mock
     CriteriaBuilder criteriaBuilder;
@@ -65,17 +66,17 @@ public class CandidateDAOImplTest {
 
     @Test
     public void loadAllTest(){
-        given(candidateRequestDTO.getFieldName()).willReturn("name");
-        given(candidateRequestDTO.getOrder()).willReturn(CandidateRequestDTO.Order.ASC);
+        given(sortingRequest.getFieldName()).willReturn("name");
+        given(sortingRequest.getOrder()).willReturn(SortingRequest.Order.ASC);
         //given(candidateRequestDTO.).willReturn(new CandidateRequestDTO.Order[]{CandidateRequestDTO.Order.ASC,CandidateRequestDTO.Order.DESC});
         given(entityManager.getCriteriaBuilder()).willReturn(criteriaBuilder);
         given(criteriaBuilder.createQuery(CandidateEntity.class)).willReturn(criteriaQuery);
         given(criteriaQuery.from(CandidateEntity.class)).willReturn(root);
-        given(criteriaQuery.orderBy(criteriaBuilder.asc(root.get(candidateRequestDTO.getFieldName())))).willReturn(criteriaQuery);
+        given(criteriaQuery.orderBy(criteriaBuilder.asc(root.get(sortingRequest.getFieldName())))).willReturn(criteriaQuery);
         given(criteriaQuery.select(root)).willReturn(criteriaQueryAll);
         given(entityManager.createQuery(criteriaQueryAll)).willReturn(candidateEntityTypedQuery);
         given(candidateEntityTypedQuery.getResultList()).willReturn(ret);
-        Collection<CandidateEntity> resultList = candidateDAOImpl.loadAll(candidateRequestDTO);
+        Collection<CandidateEntity> resultList = candidateDAOImpl.loadAll(sortingRequest);
         
         assertThat(ret, not(emptyCollectionOf(CandidateEntity.class)));
 

@@ -20,8 +20,4 @@ public class ServiceConfiguration {
     public ModelMapper modelMapper(){
         return new ModelMapper();
     }
-    @Bean
-    public CandidateDAO candidateDAO(){
-        return new CandidateDAOImpl();
-    }
 }

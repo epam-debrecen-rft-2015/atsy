@@ -1,6 +1,6 @@
 package com.epam.rft.atsy.web.controllers.rest;
 
-import com.epam.rft.atsy.persistence.request.CandidateRequestDTO;
+import com.epam.rft.atsy.persistence.request.SortingRequest;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 
@@ -28,9 +28,9 @@ public class CandidateController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Collection<CandidateDTO> loadPage(@RequestParam("order") String order, @RequestParam("sort") String sortField) {
-        CandidateRequestDTO requestDTO = new CandidateRequestDTO();
-        requestDTO.setOrder(CandidateRequestDTO.Order.valueOf(StringUtils.upperCase(order)));
-        requestDTO.setFieldName(sortField);
-        return candidateService.getAllCandidate(requestDTO);
+        SortingRequest sortingRequest = new SortingRequest();
+        sortingRequest.setOrder(SortingRequest.Order.valueOf(StringUtils.upperCase(order)));
+        sortingRequest.setFieldName(sortField);
+        return candidateService.getAllCandidate(sortingRequest);
     }
 }

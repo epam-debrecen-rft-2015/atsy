@@ -32,18 +32,18 @@ public class CandidateEntity implements Serializable {
     @Column(name = "referer", length = 255)
     private String referer;
     @Column(name = "language_skill")
-    private Byte language_skill;
+    private Byte languageSkill;
 
     public CandidateEntity() {
     }
 
-    public CandidateEntity(String name, String email, String phone, String description, String referer, Byte language_skill) {
+    public CandidateEntity(String name, String email, String phone, String description, String referer, Byte languageSkill) {
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.description = description;
         this.referer = referer;
-        this.language_skill = language_skill;
+        this.languageSkill = languageSkill;
     }
 
     public Long getCandidateId() {
@@ -94,11 +94,11 @@ public class CandidateEntity implements Serializable {
         this.referer = referer;
     }
 
-    public Byte getLanguage_skill() {
-        return language_skill;
+    public Byte getLanguageSkill() {
+        return languageSkill;
     }
 
-    public void setLanguage_skill(Byte language_skill) {
-        this.language_skill = language_skill;
+    public void setLanguageSkill(Byte language_skill) {
+        this.languageSkill = languageSkill;
     }
 }
