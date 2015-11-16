@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
          version="3.1">
-
+    <context-param>
+        <param-name>spring.profiles.active</param-name>
+        <param-value>production</param-value>
+    </context-param>
 </web-app>

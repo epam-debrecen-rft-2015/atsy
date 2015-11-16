@@ -1,4 +1,3 @@
-DROP TABLE Candidates;
 CREATE TABLE Candidates(
   candidateId BIGINT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255),
