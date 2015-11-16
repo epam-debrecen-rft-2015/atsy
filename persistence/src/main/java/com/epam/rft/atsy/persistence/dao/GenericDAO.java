@@ -1,5 +1,7 @@
 package com.epam.rft.atsy.persistence.dao;
 
+import com.epam.rft.atsy.persistence.request.SortingRequest;
+
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -12,6 +14,7 @@ public interface GenericDAO<T, PK extends Serializable> {
     T read(PK id);
 
     Collection<T> loadAll();
+    Collection<T> loadAll(SortingRequest sortingRequest);
 
     T update(T t);
 
