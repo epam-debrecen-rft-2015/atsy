@@ -23,14 +23,14 @@ public class CandidateDTO {
 
     private String referer;
 
-    private Byte languageSkill;
+    private Short languageSkill;
 
     private String description;
 
     public CandidateDTO() {
     }
 
-    public CandidateDTO(String name, String email, String phone, String description, String referer, Byte languageSkill) {
+    public CandidateDTO(String name, String email, String phone, String description, String referer, Short languageSkill) {
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -79,11 +79,11 @@ public class CandidateDTO {
         this.referer = referer;
     }
 
-    public int getLanguageSkill() {
+    public Short getLanguageSkill() {
         return languageSkill;
     }
 
-    public void setLanguageSkill(Byte languageSkill) {
+    public void setLanguageSkill(Short languageSkill) {
         this.languageSkill = languageSkill;
     }
 

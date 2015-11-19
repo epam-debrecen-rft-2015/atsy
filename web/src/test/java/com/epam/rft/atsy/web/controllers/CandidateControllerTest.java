@@ -41,20 +41,20 @@ public class CandidateControllerTest {
         SortingRequest sortingRequest = new SortingRequest();
         sortingRequest.setFieldName("name");
         sortingRequest.setOrder(SortingRequest.Order.ASC);
-        given(candidateService.getAllCandidate(sortingRequest)).willReturn(Arrays.asList(new CandidateDTO("name", "email", "phome", "description", "referer", new Byte("1"))));
+        given(candidateService.getAllCandidate(sortingRequest)).willReturn(Arrays.asList(new CandidateDTO("name", "email", "phome", "description", "referer", new Short("1"))));
 
         //when
         Collection<CandidateDTO> result = candidateController.loadPage("ASC", "name");
 
         //then
-        assertThat(result, containsInAnyOrder(new CandidateDTO("name", "email", "phome", "description", "referer", new Byte("1"))));
+        assertThat(result, containsInAnyOrder(new CandidateDTO("name", "email", "phome", "description", "referer", new Short("1"))));
     }
 
     @Test(expectedExceptions = NullPointerException.class)
     public void shouldThrowNullExceptionWhenNullOrderGiven() {
 
         //given
-        given(candidateService.getAllCandidate(new SortingRequest())).willReturn(Arrays.asList(new CandidateDTO("name", "email", "phome", "description", "referer", new Byte("1"))));
+        given(candidateService.getAllCandidate(new SortingRequest())).willReturn(Arrays.asList(new CandidateDTO("name", "email", "phome", "description", "referer", new Short("1"))));
 
         //when
         Collection<CandidateDTO> result = candidateController.loadPage(null, "name");

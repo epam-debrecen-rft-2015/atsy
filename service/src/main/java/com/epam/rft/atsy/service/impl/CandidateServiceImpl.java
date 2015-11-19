@@ -5,10 +5,16 @@ import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.request.SortingRequest;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
+import com.epam.rft.atsy.service.exception.DuplicateRecordException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
@@ -29,5 +35,21 @@ public class CandidateServiceImpl implements CandidateService {
         Type targetListType = new TypeToken<List<CandidateDTO>>() {
         }.getType();
         return modelMapper.map(positionEntities, targetListType);
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.REQUIRED)
+    public void saveOrUpdate(CandidateDTO candidate) {
+        Assert.notNull(candidate);
+        CandidateEntity entity = modelMapper.map(candidate, CandidateEntity.class);
+        try {
+            if (entity.getCandidateId() == null) {
+                candidateDAO.create(entity);
+            } else {
+                candidateDAO.update(entity);
+}
+        } catch (ConstraintViolationException | DataIntegrityViolationException constraint) {
+            throw new DuplicateRecordException(candidate.getName());
+        }
     }
 }

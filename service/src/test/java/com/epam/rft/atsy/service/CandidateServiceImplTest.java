@@ -46,15 +46,15 @@ public class CandidateServiceImplTest {
 
         //given
         SortingRequest sortingRequest = new SortingRequest();
-        given(candidateDAO.loadAll(sortingRequest)).willReturn(Arrays.asList(new CandidateEntity("name", "email", "phome", "description", "referer", new Byte("1"))));
+        given(candidateDAO.loadAll(sortingRequest)).willReturn(Arrays.asList(new CandidateEntity("name", "email", "phome", "description", "referer", new Short("1"))));
         given(modelMapper.map(Matchers.any(Collection.class), Matchers.any(Type.class)))
-                .willReturn(Arrays.asList(new CandidateDTO("name", "email", "phome", "description", "referer", new Byte("1"))));
+                .willReturn(Arrays.asList(new CandidateDTO("name", "email", "phome", "description", "referer", new Short("1"))));
 
         //when
         Collection<CandidateDTO> result = candidateService.getAllCandidate(sortingRequest);
 
         //then
-        assertThat(result, containsInAnyOrder(new CandidateDTO("name", "email", "phome", "description", "referer", new Byte("1"))));
+        assertThat(result, containsInAnyOrder(new CandidateDTO("name", "email", "phome", "description", "referer", new Short("1"))));
 
     }
 
