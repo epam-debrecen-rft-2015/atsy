@@ -1,9 +1,12 @@
 package com.epam.rft.atsy.cucumber.util;
 
+import java.lang.Runtime;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import cucumber.api.java.After;
+import cucumber.runtime.*;
 
 /**
  * Created by Ikantik.
@@ -17,6 +20,11 @@ public class DriverProvider {
             synchronized (this) {
                 if (driver == null) {
                     driver = initiateDriver();
+                    Runtime.getRuntime().addShutdownHook(new Thread() {
+                        public void run() {
+                            driver.close();
+                        }
+                    });
                 }
             }
         }
@@ -27,11 +35,4 @@ public class DriverProvider {
         return new FirefoxDriver();
     }
 
-
-    @After
-    public void tearDown() {
-        if (driver != null) {
-            driver.close();
-        }
-    }
 }
