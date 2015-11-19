@@ -6,6 +6,8 @@
 <%@page contentType="text/html;charset=UTF-8" %>
 <spring:url value="/secure/positions" var="positions"/>
 <spring:url value="/secure/channels" var="channels"/>
+<spring:url value="/secure/welcome" var="welcome"/>
+
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
         <script src="<c:url value="/resources/js/atsy-candidate-create.js" />"></script>
@@ -78,10 +80,8 @@
                          placeholder="${i18ndescription}">
               </div>
               <div class="text-right col-lg-12 col-md-12 col-sm-12">
-                  <button type="button" class="btn btn-danger" id="cancelButton">
-                      <spring:message code="cancel.button"/>
-                  </button>
-                  <button type="submit" class="btn btn-success" id="saveButton">
+                  <a class="btn btn-danger" href="${welcome}" id="cancelButton"><spring:message code="cancel.button"/></a>
+                  <button onclick="window.location='${welcome}';" type="submit" class="btn btn-success" id="saveButton">
                       <spring:message code="save.button"/>
                   </button>
               </div>
