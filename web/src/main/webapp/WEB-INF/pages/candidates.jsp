@@ -5,10 +5,14 @@
 <%@taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
 <%@page contentType="text/html;charset=UTF-8" %>
 <spring:url value="/secure/candidates" var="candidates"/>
+<spring:url value="/secure/newcandidate" var="newcandidate"/>
 
 <atsy:secure_page>
     <jsp:body>
         <div id="welcome">
+            <div id="new_candidate" class="text-right">
+                <a class="btn btn-success" href="${newcandidate}" id="add_candidate_button"><spring:message code="welcome.candidates.add.button"/></a>
+            </div>
             <div id="candidates_table">
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     <table data-toggle="table" id="candidates" data-url="${candidates}" data-height="299" data-sort-name="name">

@@ -78,3 +78,13 @@ body {
     color: red;
     display: none;
 }
+
+#add_candidate_button {
+    margin-bottom: 11px;
+    margin-top: 11px;
+    margin-right: 30px;
+}
+
+#cancelButton {
+    margin-right: 10px;
+}
