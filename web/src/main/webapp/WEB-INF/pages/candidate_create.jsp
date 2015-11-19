@@ -90,8 +90,7 @@
                   <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="description"><spring:message
                           code="candidate.description.label"/></label>
                   <div class="col-lg-10 col-md-10 col-sm-10">
-                      <input type="text" class="form-control" name="description" id="description"
-                             placeholder="${i18ndescription}">
+                      <textarea rows="4" cols="4" class="form-control" id="description" placeholder="${i18ndescription}"></textarea>
                   </div>
 
               </div>
