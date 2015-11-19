@@ -72,15 +72,15 @@ public class GenericDAOImpl<T, PK extends Serializable>
     }
 
     public Collection<T> loadAll(SortingRequest sortingRequest) {
-//        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-//        CriteriaQuery<T> cq = cb.createQuery(entityClass);
-        CriteriaQuery cq=order(sortingRequest.getOrder(),sortingRequest.getFieldName());
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<T> cq = cb.createQuery(entityClass);
+        //CriteriaQuery cq=order(sortingRequest.getOrder(),sortingRequest.getFieldName());
         Root<T> rootEntry = cq.from(entityClass);
-//        if(SortingRequest.Order.ASC == sortingRequest.getOrder()) {
-//            cq.orderBy(cb.asc(rootEntry.get(sortingRequest.getFieldName())));
-//        } else if (SortingRequest.Order.DESC == sortingRequest.getOrder()) {
-//            cq.orderBy(cb.desc(rootEntry.get(sortingRequest.getFieldName())));
-//        }
+        if(SortingRequest.Order.ASC == sortingRequest.getOrder()) {
+            cq.orderBy(cb.asc(rootEntry.get(sortingRequest.getFieldName())));
+        } else if (SortingRequest.Order.DESC == sortingRequest.getOrder()) {
+            cq.orderBy(cb.desc(rootEntry.get(sortingRequest.getFieldName())));
+        }
         CriteriaQuery<T> all = cq.select(rootEntry);
         TypedQuery<T> allQuery = entityManager.createQuery(all);
         return allQuery.getResultList();
