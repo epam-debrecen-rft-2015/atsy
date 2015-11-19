@@ -90,5 +90,32 @@ body {
 }
 
 #fix{
-    margin-top: 40px;
+    margin-top: 50px;
+}
+
+.form-group > label {
+    padding-top: 5px;
+}
+
+#name{
+    margin-bottom: 15px;
+}
+#email{
+    margin-bottom: 15px;
+}
+
+#languageSkill{
+    margin-bottom: 15px;
+}
+
+#referer{
+    margin-bottom: 15px;
+}
+
+#phone{
+    margin-bottom: 15px;
+}
+
+#description{
+    margin-bottom: 15px;
 }

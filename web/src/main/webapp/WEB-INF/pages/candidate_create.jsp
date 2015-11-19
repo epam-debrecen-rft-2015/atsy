@@ -22,7 +22,7 @@
                  id="nameDiv">
               <input type="hidden" name="candidateId" id="candidateId">
               <spring:message code="candidate.name.field" var="i18nname"/>
-              <label class="control-label col-lg-2 col-md-2 col-sm-2" for="name"><spring:message
+              <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="name"><spring:message
                         code="candidate.name.label"/></label>
                 <div class="col-lg-4 col-md-4 col-sm-4">
                     <input type="text" class="form-control " name="name" id="name"
@@ -33,7 +33,7 @@
               <div class="form-group"
                    id="placeDiv">
                   <spring:message code="candidate.place.field" var="i18nplace"/>
-                  <label class="control-label col-lg-2 col-md-2 col-sm-2" for="referer"><spring:message
+                  <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="referer"><spring:message
                           code="candidate.place.label"/></label>
                   <div class="col-lg-4 col-md-4 col-sm-4">
                       <input type="text" class="form-control" name="referer" id="referer"
@@ -44,7 +44,7 @@
               <div class="form-group"
                    id="emailDiv">
                   <spring:message code="candidate.email.field" var="i18nemail"/>
-                  <label class="control-label col-lg-2 col-md-2 col-sm-2" for="email"><spring:message
+                  <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="email"><spring:message
                           code="candidate.email.label"/></label>
                   <div class="col-lg-4 col-md-4 col-sm-4">
                       <input type="text" class="form-control" name="email" id="email"
@@ -54,7 +54,7 @@
               </div>
               <div class="form-group"
                    id="englishDiv">
-                  <label class="control-label col-lg-2 col-md-2 col-sm-2" for="drop"><spring:message
+                  <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="drop"><spring:message
                           code="candidate.english.label"/></label>
                   <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="drop">
                       <select class="form-control" name="color" id="languageSkill">
@@ -75,7 +75,7 @@
               <div class="form-group"
                    id="phoneDiv">
                   <spring:message code="candidate.phone.field" var="i18nphone"/>
-                  <label class="control-label col-lg-2 col-md-2 col-sm-2" for="phone"><spring:message
+                  <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="phone"><spring:message
                           code="candidate.phone.label"/></label>
                   <div class="col-lg-4 col-md-4 col-sm-4">
                       <input type="text" class="form-control" name="phone" id="phone"
@@ -85,9 +85,9 @@
               </div>
               <div class="form-group"
                    id="descriptionDiv">
-                  <div id="fix" class="col-md-6"></div>
+                  <div id="fix" class="col-md-6 col-sm-6 col-lg-6"></div>
                   <spring:message code="candidate.description.field" var="i18ndescription"/>
-                  <label class="control-label col-lg-2 col-md-2 col-sm-2" for="description"><spring:message
+                  <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="description"><spring:message
                           code="candidate.description.label"/></label>
                   <div class="col-lg-10 col-md-10 col-sm-10">
                       <input type="text" class="form-control" name="description" id="description"

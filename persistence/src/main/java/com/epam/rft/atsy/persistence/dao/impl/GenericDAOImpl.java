@@ -59,22 +59,11 @@ public class GenericDAOImpl<T, PK extends Serializable>
         return allQuery.getResultList();
     }
 
-    private CriteriaQuery<T> order(SortingRequest.Order order,String fieldName){
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<T> cq = cb.createQuery(entityClass);
-        Root<T> rootEntry = cq.from(entityClass);
-        if(SortingRequest.Order.ASC == order) {
-            cq.orderBy(cb.asc(rootEntry.get(fieldName)));
-        } else if (SortingRequest.Order.DESC == order) {
-            cq.orderBy(cb.desc(rootEntry.get(fieldName)));
-        }
-        return cq;
-    }
+
 
     public Collection<T> loadAll(SortingRequest sortingRequest) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> cq = cb.createQuery(entityClass);
-        //CriteriaQuery cq=order(sortingRequest.getOrder(),sortingRequest.getFieldName());
         Root<T> rootEntry = cq.from(entityClass);
         if(SortingRequest.Order.ASC == sortingRequest.getOrder()) {
             cq.orderBy(cb.asc(rootEntry.get(sortingRequest.getFieldName())));
@@ -89,17 +78,24 @@ public class GenericDAOImpl<T, PK extends Serializable>
 
 
     public Collection<T> loadAll(FilterRequest filterRequest) {
-        CriteriaBuilder cb= entityManager.getCriteriaBuilder();
 
-        CriteriaQuery cq = order(filterRequest.getOrder(),filterRequest.getFieldName());
-        Root<T> rootEntry = cq.from(entityClass);
 
-        Map<String,String> filters=filterRequest.getFilters();
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<T> cq = cb.createQuery(entityClass);
+            Root<T> rootEntry = cq.from(entityClass);
+        if(SortingRequest.Order.ASC == filterRequest.getOrder()) {
+            cq.orderBy(cb.asc(rootEntry.get(filterRequest.getFieldName())));
+        } else if (SortingRequest.Order.DESC == filterRequest.getOrder()) {
+            cq.orderBy(cb.desc(rootEntry.get(filterRequest.getFieldName())));
+        }
+
+
+
 
         List<Predicate> predicates= new ArrayList<>();
 
-        for(String fieldName:filters.keySet()){
-            Predicate predicate= cb.and(cb.like(rootEntry.get(fieldName), filters.get(fieldName)));
+        for(Map.Entry<String,String> field:filterRequest.getFilters().entrySet()){
+            Predicate predicate= cb.and(cb.like(rootEntry.get(field.getKey()), field.getValue()));
             predicates.add(predicate);
         }
         CriteriaQuery<T> filter = cq.where(cb.and(predicates.toArray(new Predicate[]{})));
