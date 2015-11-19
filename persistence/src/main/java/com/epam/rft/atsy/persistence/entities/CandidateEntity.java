@@ -99,6 +99,6 @@ public class CandidateEntity implements Serializable {
     }
 
     public void setLanguageSkill(Short language_skill) {
-        this.languageSkill = languageSkill;
+        this.languageSkill = language_skill;
     }
 }
