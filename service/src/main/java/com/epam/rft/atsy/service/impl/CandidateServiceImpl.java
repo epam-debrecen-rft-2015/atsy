@@ -29,12 +29,21 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Resource
     ModelMapper modelMapper;
+
+    @Override
+    public CandidateDTO getCandidate(Long id){
+        CandidateDTO candidateDTO;
+        CandidateEntity candidateEntity = candidateDAO.load(id);
+        candidateDTO=modelMapper.map(candidateEntity,CandidateDTO.class);
+        return candidateDTO;
+    }
+
     @Override
     public Collection<CandidateDTO> getAllCandidate(SortingRequest sortingRequest) {
-        Collection<CandidateEntity> positionEntities = candidateDAO.loadAll(sortingRequest);
+        Collection<CandidateEntity> candidateEntities = candidateDAO.loadAll(sortingRequest);
         Type targetListType = new TypeToken<List<CandidateDTO>>() {
         }.getType();
-        return modelMapper.map(positionEntities, targetListType);
+        return modelMapper.map(candidateEntities, targetListType);
     }
 
     @Override

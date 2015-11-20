@@ -10,6 +10,8 @@ import java.util.Collection;
  */
 public interface CandidateService {
 
+    CandidateDTO getCandidate(Long candidateID);
+
     Collection<CandidateDTO> getAllCandidate(SortingRequest sortingRequest);
 
     void saveOrUpdate(CandidateDTO candidate);

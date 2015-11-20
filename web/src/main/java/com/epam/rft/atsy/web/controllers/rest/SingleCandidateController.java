@@ -32,6 +32,11 @@ public class SingleCandidateController {
     @Resource
     private MessageSource messageSource;
 
+    @RequestMapping(method = RequestMethod.GET)
+    public CandidateDTO loadPage(@RequestParam("ID") Long id) {
+        return candidateService.getCandidate(id);
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<String> saveOrUpdate(@RequestBody CandidateDTO candidateDTO, BindingResult result, Locale locale) {
         ResponseEntity entity = new ResponseEntity<String>("", HttpStatus.OK);
