@@ -46,8 +46,8 @@
                 <a class="btn btn-success" href="${newcandidate}" id="add_candidate_button"><spring:message code="welcome.candidates.add.button"/></a>
             </div>
             <div id="candidates_table">
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                    <table data-toggle="table" id="candidates" data-url="${candidates}" data-height="500" data-sort-name="name">
+                <div>
+                    <table class="table table-striped table-hover" data-toggle="table" id="candidates" data-url="${candidates}" data-height="500" data-sort-name="name">
                         <thead>
                         <tr>
                             <th data-field="name" data-align="left" data-sortable="true"><spring:message
