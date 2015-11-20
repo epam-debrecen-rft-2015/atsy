@@ -1,0 +1,1 @@
+INSERT INTO Positions (name) VALUES ('Fejlesztő');

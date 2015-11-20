@@ -26,11 +26,11 @@
              </div>
              <div class="collapse navbar-collapse" id="atsy-navbar-collapse-1">
                  <ul class="nav navbar-nav">
-                     <li><a href="${welcome}"><span class="glyphicon glyphicon-home" aria-hidden="true"/><span class="visible-xs-inline"><spring:message code="header.menu.home"/></span></a></li>
-                     <li><a href="${settings}"><span class="glyphicon glyphicon-cog" aria-hidden="true"/><span class="visible-xs-inline"><spring:message code="header.menu.settings"/></span></a></li>
+                     <li><a href="${welcome}"><span id="home_link" class="glyphicon glyphicon-home" aria-hidden="true"/><span class="visible-xs-inline"><spring:message code="header.menu.home"/></span></a></li>
+                     <li><a href="${settings}"><span id="settings_link" class="glyphicon glyphicon-cog" aria-hidden="true"/><span class="visible-xs-inline"><spring:message code="header.menu.settings"/></span></a></li>
                  </ul>
                  <ul class="nav navbar-nav navbar-right">
-                     <li><a href="${login}"><span class="glyphicon glyphicon-log-out" aria-hidden="true"/><span class="visible-xs-inline"><spring:message code="header.menu.logout"/></span></a></li>
+                     <li><a href="${login}"><span id="logout_link" class="glyphicon glyphicon-log-out" aria-hidden="true"/><span class="visible-xs-inline"><spring:message code="header.menu.logout"/></span></a></li>
                  </ul>
              </div>
          </div>

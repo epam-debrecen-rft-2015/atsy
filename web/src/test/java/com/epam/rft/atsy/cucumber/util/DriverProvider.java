@@ -13,25 +13,28 @@ import cucumber.runtime.*;
  */
 
 public class DriverProvider {
-    private WebDriver driver;
+    private static WebDriver driver;
 
-    public WebDriver getDriver() {
+    public synchronized static WebDriver getDriver() {
         if (driver == null) {
-            synchronized (this) {
-                if (driver == null) {
-                    driver = initiateDriver();
-                    Runtime.getRuntime().addShutdownHook(new Thread() {
-                        public void run() {
-                            driver.close();
-                        }
-                    });
-                }
+
+            try {
+                driver = initiateDriver();
+            } finally {
+                Runtime.getRuntime().addShutdownHook(
+                    new Thread(new BrowserCleanup()));
             }
         }
         return driver;
     }
 
-    private WebDriver initiateDriver() {
+    private static class BrowserCleanup implements Runnable {
+        public void run() {
+            driver.close();
+        }
+    }
+
+    private static WebDriver initiateDriver() {
         return new FirefoxDriver();
     }
 
