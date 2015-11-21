@@ -49,7 +49,7 @@ public class LoginStepDefs {
         //assertThat();
     }
 
-    @Then("$(.*) message appears^")
+    @Then("^(.*) message appears$")
     public void messageAppearance(String message) {
         WebElement messageElement = driverProvider.getDriver().findElement(By.id("globalMessage"));
         assertThat(messageElement.isDisplayed(), is(true));
