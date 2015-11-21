@@ -9,7 +9,7 @@ $(document).ready(function() {
     if ("onhashchange" in window) {
 
         form.submit(function (event){
-            console.log(event);
+
             var values = ["name","email","phone","position"];
             var $this=$(this);
             values = values.map(function (selector){
@@ -27,7 +27,19 @@ $(document).ready(function() {
         })
 
         function locationHashChanged() {
-            alert(location.hash);
+            //alert(location.hash);
+            var nth = 0;
+            var data = location.hash.replace(/["/"]/g, function (match) {
+                nth++;
+                return (nth % 2 === 1) ? ":" : match;
+            }).replace("#","").split("/");
+            var $this=$(this);
+            $.ajax({
+                url: $this.attr('action'),
+                method: $this.attr('method'),
+                contentType: 'application/json',
+                data: JSON.stringify(data)
+            })
         }
 
         window.onhashchange = locationHashChanged;

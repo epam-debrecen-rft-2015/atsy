@@ -17,25 +17,19 @@
             <div id="search" class="col-lg-12 col-md-12 col-sm-12" >
                 <div class="well">
                     <fieldset >
-                        <form id="searchCandidate" class="form-inline" action="candidates" role="form">
+                        <form id="searchCandidate" class="form-inline" action="candidates" method="GET" role="form">
                             <div class="form-group">
                                 <spring:message code="candidate.name.field" var="i18nName"/>
                                 <label><spring:message
                                         code="candidate.search.button"/></label>
                                 <input type="text" class="form-control" name="name" id="filter_name" placeholder="${i18nName}">
-                            <%--</div>--%>
-                            <%--<div class="form-group">--%>
                                 <spring:message code="candidate.email.field" var="i18nEmail"/>
                                 <input type="text" class="form-control" name="email" id="filter_email" placeholder="${i18nEmail}">
-                            <%--</div>--%>
-                            <%--<div class="form-group">--%>
                                 <spring:message code="candidate.phone.field" var="i18nPhone"/>
                                 <input type="text" class="form-control" name="phone" id="filter_phone" placeholder="${i18nPhone}">
-                            <%--</div>--%>
-                            <%--<div class="form-group">--%>
                                 <spring:message code="candidate.position.field" var="i18nPosition"/>
                                 <input type="text" class="form-control" name="position" id="filter_postion" placeholder="${i18nPosition}">
-                                <button type="submit" class="btn btn-success"><spring:message
+                                <button id=searchButton type="submit" class="btn btn-primary"><spring:message
                                         code="candidate.search.button"/></button>
                             </div>
                         </form>

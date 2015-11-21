@@ -123,3 +123,14 @@ body {
 textarea{
     resize: none;
 }
+.form-inline .form-control {
+    width: 185px;
+}
+#searchButton{
+    margin-left: 30px;
+}
+
+#search{
+    padding-right: 0px;
+    padding-left: 0px;
+}
