@@ -29,7 +29,7 @@
         });
     });
 
-var jsonloc = "http://localhost:8080/atsy/secure/candidate?ID=1",
+var jsonloc = "",
 candidateId,
 name,
 email,
@@ -72,6 +72,8 @@ if (!candidateId) {
     $('.input').attr("disabled",false);
     $('#cancelButton').show();
     $('#saveButton').show();
+    $('#cancelButtonModify').hide();
+    $('#saveButtonModify').hide();
 
     $('#candidateId').val("");
     $('#name').val("");
@@ -80,13 +82,6 @@ if (!candidateId) {
     $('#referer').val("");
     $('#languageSkill').val(0);
     $('#description').val("");
-
-    $("#saveButton").button().click(function(){
-        window.location.href = 'welcome';
-    });
-    $("#cancelButton").button().click(function(){
-        window.location.href = 'welcome';
-    });
 }
 
 $("#enableModify").button().click(function(){
@@ -100,10 +95,10 @@ $("#enableModify").button().click(function(){
 
     $('.input').attr("disabled",false);
     $('#enableModify').hide();
-    $('#cancelButton').show();
-    $('#saveButton').show();
+    $('#cancelButtonModify').show();
+    $('#saveButtonModify').show();
 
-    $("#cancelButton").button().click(function(){
+    $("#cancelButtonModify").button().click(function(){
         $("#enableModify").show();
         $('.input').attr("disabled",true);
         $('#cancelButton').hide();
@@ -118,10 +113,10 @@ $("#enableModify").button().click(function(){
         $('#description').val(descriptionOld);
     });
 
-    $("#saveButton").button().click(function(){
+    $("#saveButtonModify").button().click(function(){
         $("#enableModify").show();
         $('.input').attr("disabled",true);
-        $('#cancelButton').hide();
-        $('#saveButton').hide();
+        $('#cancelButtonModify').hide();
+        $('#saveButtonModify').hide();
     });
 });

@@ -97,8 +97,12 @@
 
               </div>
               <div class="text-right col-lg-12 col-md-12 col-sm-12">
-                  <button class="btn btn-danger" id="cancelButton"><spring:message code="cancel.button"/></button>
-                  <button type="submit" class="btn btn-success" id="saveButton">
+                  <a class="btn btn-danger" href="${welcome}" id="cancelButton"><spring:message code="cancel.button"/></a>
+                  <button onclick="window.location='${welcome}';" type="submit" class="btn btn-success" id="saveButton">
+                      <spring:message code="save.button"/>
+                  </button>
+                  <button class="btn btn-danger" id="cancelButtonModify"><spring:message code="cancel.button"/></button>
+                  <button type="submit" class="btn btn-success" id="saveButtonModify">
                       <spring:message code="save.button"/>
                   </button>
               </div>
