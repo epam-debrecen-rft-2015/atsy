@@ -157,6 +157,7 @@
                         <exclude>**/*Configuration.*</exclude>
                         <exclude>**/*Test.*</exclude>
                         <exclude>**/*Entity.*</exclude>
+                        <exclude>**/request/*.*</exclude>
                         <exclude>**/*DTO.*</exclude>
                         <exclude>**/*GenericDAOImpl.*</exclude>
                         <exclude>**/*WebAppInitializer.*</exclude>

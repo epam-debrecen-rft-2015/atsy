@@ -68,7 +68,6 @@ public class CandidateDAOImplTest {
     public void loadAllTest(){
         given(sortingRequest.getFieldName()).willReturn("name");
         given(sortingRequest.getOrder()).willReturn(SortingRequest.Order.ASC);
-        //given(candidateRequestDTO.).willReturn(new CandidateRequestDTO.Order[]{CandidateRequestDTO.Order.ASC,CandidateRequestDTO.Order.DESC});
         given(entityManager.getCriteriaBuilder()).willReturn(criteriaBuilder);
         given(criteriaBuilder.createQuery(CandidateEntity.class)).willReturn(criteriaQuery);
         given(criteriaQuery.from(CandidateEntity.class)).willReturn(root);
@@ -78,7 +77,7 @@ public class CandidateDAOImplTest {
         given(candidateEntityTypedQuery.getResultList()).willReturn(ret);
         Collection<CandidateEntity> resultList = candidateDAOImpl.loadAll(sortingRequest);
         
-        assertThat(ret, not(emptyCollectionOf(CandidateEntity.class)));
+        assertThat(resultList, not(emptyCollectionOf(CandidateEntity.class)));
 
     }
 }

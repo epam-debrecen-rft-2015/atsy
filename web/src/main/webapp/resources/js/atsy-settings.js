@@ -72,13 +72,13 @@ function actionFormatter(value, row, index) {
 
 window.positionsEvents = {
     'click .edit': function (e, value, row) {
-        $('#position-form #name').val(row.name);
+        $('#position-form #position_name').val(row.name);
         $('#position-form #positionId').val(row.positionId);
     }
 };
 window.channelsEvents = {
     'click .edit': function (e, value, row) {
-        $('#channel-form .name').val(row.name);
+        $('#channel-form #channel_name').val(row.name);
         $('#channel-form #channelId').val(row.channelId);
     }
 };

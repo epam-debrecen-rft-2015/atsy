@@ -39,7 +39,6 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
-    @Transactional(Transactional.TxType.REQUIRED)
     public void saveOrUpdate(ChannelDTO channel) {
         Assert.notNull(channel);
         ChannelEntity entity = modelMapper.map(channel, ChannelEntity.class);

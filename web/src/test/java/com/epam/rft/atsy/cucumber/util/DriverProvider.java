@@ -2,11 +2,14 @@ package com.epam.rft.atsy.cucumber.util;
 
 import java.lang.Runtime;
 
+import com.google.common.base.Predicate;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import cucumber.api.java.After;
 import cucumber.runtime.*;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Created by Ikantik.
@@ -37,5 +40,8 @@ public class DriverProvider {
     private static WebDriver initiateDriver() {
         return new FirefoxDriver();
     }
-
+    public static void waitForAjax() {
+        WebDriverWait wait = new WebDriverWait(getDriver(), 10);
+        wait.until((Predicate<WebDriver>) driver -> (Boolean) ((JavascriptExecutor) driver).executeScript("return jQuery.active == 0"));
+    }
 }

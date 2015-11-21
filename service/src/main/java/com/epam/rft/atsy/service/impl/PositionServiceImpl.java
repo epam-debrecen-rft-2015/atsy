@@ -38,7 +38,6 @@ public class PositionServiceImpl implements PositionService {
     }
 
     @Override
-    @Transactional(Transactional.TxType.REQUIRED)
     public void saveOrUpdate(PositionDTO position) {
         Assert.notNull(position);
         PositionEntity entity = modelMapper.map(position, PositionEntity.class);

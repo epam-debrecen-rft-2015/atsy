@@ -9,6 +9,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
@@ -32,6 +33,7 @@ public class GenericDAOImpl<T, PK extends Serializable>
                 .getActualTypeArguments()[0];
     }
 
+    @Transactional(Transactional.TxType.REQUIRED)
     public T create(T t) {
         this.entityManager.persist(t);
         return t;
@@ -41,6 +43,7 @@ public class GenericDAOImpl<T, PK extends Serializable>
         return this.entityManager.find(entityClass, id);
     }
 
+    @Transactional(Transactional.TxType.REQUIRED)
     public T update(T t) {
         return this.entityManager.merge(t);
     }
@@ -58,7 +61,7 @@ public class GenericDAOImpl<T, PK extends Serializable>
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> cq = cb.createQuery(entityClass);
         Root<T> rootEntry = cq.from(entityClass);
-        if(SortingRequest.Order.ASC == sortingRequest.getOrder()) {
+        if (SortingRequest.Order.ASC == sortingRequest.getOrder()) {
             cq.orderBy(cb.asc(rootEntry.get(sortingRequest.getFieldName())));
         } else if (SortingRequest.Order.DESC == sortingRequest.getOrder()) {
             cq.orderBy(cb.desc(rootEntry.get(sortingRequest.getFieldName())));
