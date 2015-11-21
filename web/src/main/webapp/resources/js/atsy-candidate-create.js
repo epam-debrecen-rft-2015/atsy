@@ -27,3 +27,27 @@
             })
         });
     });
+
+var jsonloc = "http://localhost:8080/atsy/secure/candidate?ID=1";
+
+$.getJSON(jsonloc, function (json) {
+
+    var candidateId = json.candidateId;
+    var name = json.name;
+    var email = json.email;
+    var phone = json.phone;
+    var referer = json.referer;
+    var languageSkill = json.languageSkill;
+    var description = json.description;
+
+    $(document).ready(function () {
+        $('#id').val(candidateId);
+        $('#name').val(name);
+        $('#email').val(email);
+        $('#phone').val(phone);
+        $('#referer').val(referer);
+        $('#languageSkill').val(languageSkill);
+        $('#description').val(description);
+    });
+
+});
