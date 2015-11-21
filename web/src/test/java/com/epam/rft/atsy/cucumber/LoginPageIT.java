@@ -8,6 +8,6 @@ import org.junit.runner.RunWith;
  * Created by Ikantik.
  */
 @RunWith(Cucumber.class)
-@CucumberOptions(format = {"json:target/report.json"},features = {"com.epam.rft.atsy.cucumber.Login.feature"}, glue = {"com.epam.rft.atsy.cucumber.login", "com.epam.rft.atsy.cucumber.util"})
+@CucumberOptions(format = {"json:target/report.json"},features = {"src/test/resources/com/epam/rft/atsy/cucumber/.feature"}, glue = {"com.epam.rft.atsy.cucumber.login", "com.epam.rft.atsy.cucumber.util"})
 public class LoginPageIT {
 }
