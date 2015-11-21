@@ -14,7 +14,9 @@
     </jsp:attribute>
   <jsp:body>
     <div id="candidate_creation">
-      <h1 class="page-header"><spring:message code="candidate.create.title"/></h1>
+      <h1 class="page-header"><spring:message code="candidate.create.title"/>
+          <button class="btn btn-primary pull-right" id="enableModify"><spring:message code="candidate.modify.button"/></button>
+      </h1>
       <div id="candidate_data">
         <div class="row">
           <form class="form" role="form" method="POST" id="candidate-create-form" action="candidate">
@@ -25,7 +27,7 @@
               <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="name"><spring:message
                         code="candidate.name.label"/></label>
                 <div class="col-lg-4 col-md-4 col-sm-4">
-                    <input type="text" class="form-control " name="name" id="name"
+                    <input type="text" class="input form-control " name="name" id="name"
                            placeholder="${i18nname}">
                 </div>
 
@@ -36,7 +38,7 @@
                   <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="referer"><spring:message
                           code="candidate.place.label"/></label>
                   <div class="col-lg-4 col-md-4 col-sm-4">
-                      <input type="text" class="form-control" name="referer" id="referer"
+                      <input type="text" class="input form-control" name="referer" id="referer"
                              placeholder="${i18nplace}">
                   </div>
 
@@ -47,7 +49,7 @@
                   <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="email"><spring:message
                           code="candidate.email.label"/></label>
                   <div class="col-lg-4 col-md-4 col-sm-4">
-                      <input type="text" class="form-control" name="email" id="email"
+                      <input type="text" class="input form-control" name="email" id="email"
                              placeholder="${i18nemail}">
                   </div>
 
@@ -57,7 +59,7 @@
                   <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="drop"><spring:message
                           code="candidate.english.label"/></label>
                   <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="drop">
-                      <select class="form-control" name="color" id="languageSkill">
+                      <select class="input form-control" name="color" id="languageSkill">
                           <option value=0><spring:message code="candidate.english.level.default"/></option>
                           <option value=1 selected>1</option>
                           <option value=2>2</option>
@@ -78,7 +80,7 @@
                   <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="phone"><spring:message
                           code="candidate.phone.label"/></label>
                   <div class="col-lg-4 col-md-4 col-sm-4">
-                      <input type="text" class="form-control" name="phone" id="phone"
+                      <input type="text" class="input form-control" name="phone" id="phone"
                              placeholder="${i18nphone}">
                   </div>
 
@@ -90,13 +92,13 @@
                   <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="description"><spring:message
                           code="candidate.description.label"/></label>
                   <div class="col-lg-10 col-md-10 col-sm-10">
-                      <textarea rows="4" cols="4" class="form-control" id="description" placeholder="${i18ndescription}"></textarea>
+                      <textarea rows="4" cols="4" class="input form-control" id="description" placeholder="${i18ndescription}"></textarea>
                   </div>
 
               </div>
               <div class="text-right col-lg-12 col-md-12 col-sm-12">
-                  <a class="btn btn-danger" href="${welcome}" id="cancelButton"><spring:message code="cancel.button"/></a>
-                  <button onclick="window.location='${welcome}';" type="submit" class="btn btn-success" id="saveButton">
+                  <button class="btn btn-danger" id="cancelButton"><spring:message code="cancel.button"/></button>
+                  <button type="submit" class="btn btn-success" id="saveButton">
                       <spring:message code="save.button"/>
                   </button>
               </div>
