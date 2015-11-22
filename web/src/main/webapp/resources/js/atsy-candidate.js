@@ -17,9 +17,8 @@ $(document).ready(function () {
         }).map(function (value) {
             return value[0] + "/" + value[1];
         }).join("/");
-        if (values.length > 0) {
-            location.hash = values;
-        }
+        location.hash = values;
+
         event.preventDefault();
         return false;
     })
@@ -37,7 +36,7 @@ $(document).ready(function () {
         });
         var $this = $("#searchCandidate");
         table.bootstrapTable('refresh', {
-            url: $this.attr('action') + "?filter=" + JSON.stringify(result)
+            url: $this.attr('action') + "?filter=" + encodeURIComponent(JSON.stringify(result))
         });
     }
 
