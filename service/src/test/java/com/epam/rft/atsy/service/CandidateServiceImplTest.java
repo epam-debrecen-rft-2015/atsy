@@ -2,6 +2,7 @@ package com.epam.rft.atsy.service;
 
 import com.epam.rft.atsy.persistence.dao.CandidateDAO;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
+import com.epam.rft.atsy.persistence.request.FilterRequest;
 import com.epam.rft.atsy.persistence.request.SortingRequest;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.impl.CandidateServiceImpl;
@@ -45,7 +46,7 @@ public class CandidateServiceImplTest {
     public void shouldReturnCandidates() {
 
         //given
-        SortingRequest sortingRequest = new SortingRequest();
+        FilterRequest sortingRequest = new FilterRequest();
         given(candidateDAO.loadAll(sortingRequest)).willReturn(Arrays.asList(new CandidateEntity("name", "email", "phome", "description", "referer", new Short("1"))));
         given(modelMapper.map(Matchers.any(Collection.class), Matchers.any(Type.class)))
                 .willReturn(Arrays.asList(new CandidateDTO("name", "email", "phome", "description", "referer", new Short("1"))));

@@ -1,5 +1,6 @@
 package com.epam.rft.atsy.service;
 
+import com.epam.rft.atsy.persistence.request.FilterRequest;
 import com.epam.rft.atsy.persistence.request.SortingRequest;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 
@@ -12,7 +13,7 @@ public interface CandidateService {
 
     CandidateDTO getCandidate(Long candidateID);
 
-    Collection<CandidateDTO> getAllCandidate(SortingRequest sortingRequest);
+    Collection<CandidateDTO> getAllCandidate(FilterRequest sortingRequest);
 
     Long saveOrUpdate(CandidateDTO candidate);
 

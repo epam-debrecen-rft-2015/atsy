@@ -97,7 +97,7 @@ public class GenericDAOImpl<T, PK extends Serializable>
         List<Predicate> predicates = new ArrayList<>();
 
         for (Map.Entry<String, String> field : filterRequest.getFilters().entrySet()) {
-            Predicate predicate = cb.and(cb.like(rootEntry.get(field.getKey()), field.getValue()));
+            Predicate predicate = cb.and(cb.like(rootEntry.get(field.getKey()), "%" + field.getValue() + "%"));
             predicates.add(predicate);
         }
         CriteriaQuery<T> filter = cq.where(cb.and(predicates.toArray(new Predicate[]{})));

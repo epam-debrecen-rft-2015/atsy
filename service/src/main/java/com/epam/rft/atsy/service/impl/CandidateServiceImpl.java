@@ -2,6 +2,7 @@ package com.epam.rft.atsy.service.impl;
 
 import com.epam.rft.atsy.persistence.dao.CandidateDAO;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
+import com.epam.rft.atsy.persistence.request.FilterRequest;
 import com.epam.rft.atsy.persistence.request.SortingRequest;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
@@ -39,7 +40,7 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public Collection<CandidateDTO> getAllCandidate(SortingRequest sortingRequest) {
+    public Collection<CandidateDTO> getAllCandidate(FilterRequest sortingRequest) {
         Collection<CandidateEntity> candidateEntities = candidateDAO.loadAll(sortingRequest);
         Type targetListType = new TypeToken<List<CandidateDTO>>() {
         }.getType();
