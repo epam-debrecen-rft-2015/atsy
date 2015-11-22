@@ -26,6 +26,7 @@ $(document).ready(function () {
     function locationHashChanged() {
         var nth = 0;
         result = {};
+        form.reset();
         var data = location.hash.replace(/["/"]/g, function (match) {
             nth++;
             return (nth % 2 === 1) ? ";" : match;
