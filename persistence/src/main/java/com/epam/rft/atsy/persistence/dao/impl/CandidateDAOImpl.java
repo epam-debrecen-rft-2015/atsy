@@ -17,17 +17,4 @@ import javax.transaction.Transactional;
 @Repository
 public class CandidateDAOImpl extends GenericDAOImpl<CandidateEntity, Long> implements CandidateDAO {
 
-    private static final String CANDIDATEID="candidateId";
-
-    @Override
-    public CandidateEntity load(Long id){
-        CriteriaBuilder criteriaBuilder=this.entityManager.getCriteriaBuilder();
-        CriteriaQuery<CandidateEntity> query=criteriaBuilder.createQuery(CandidateEntity.class);
-
-        Root<CandidateEntity> candidateEntityRoot = query.from(CandidateEntity.class);
-        query=query.where(criteriaBuilder.equal(candidateEntityRoot.get(CANDIDATEID), id));
-
-        TypedQuery<CandidateEntity> candidateEntityTypedQuery = entityManager.createQuery(query);
-        return candidateEntityTypedQuery.getSingleResult();
-    }
 }

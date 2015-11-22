@@ -5,7 +5,7 @@
 <%@taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
 <%@page contentType="text/html;charset=UTF-8" %>
 <spring:url value="/secure/candidates" var="candidates"/>
-<spring:url value="/secure/newcandidate" var="newcandidate"/>
+<spring:url value="/secure/candidate" var="newcandidate"/>
 
 
 <atsy:secure_page>
@@ -53,7 +53,7 @@
                                     code="welcome.candidates.table.phone.title"/></th>
                             <th data-field="positions" data-align="left" data-sortable="true"><spring:message
                                     code="welcome.candidates.table.positions.title"/></th>
-                            <th data-field="actions" data-align="left">
+                            <th data-field="actions" data-align="left" data-formatter="actionFormatter">
                                 <spring:message code="welcome.candidates.table.actions.title"/>
                             </th>
                         </tr>

@@ -7,5 +7,4 @@ import com.epam.rft.atsy.persistence.entities.CandidateEntity;
  */
 public interface CandidateDAO extends GenericDAO<CandidateEntity, Long> {
 
-    CandidateEntity load(Long id);
 }

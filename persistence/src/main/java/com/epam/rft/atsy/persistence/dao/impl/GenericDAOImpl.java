@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -37,19 +38,23 @@ public class GenericDAOImpl<T, PK extends Serializable>
                 .getActualTypeArguments()[0];
     }
 
+    @Transactional(Transactional.TxType.REQUIRED)
     public T create(T t) {
         this.entityManager.persist(t);
         return t;
     }
 
+    @Transactional(Transactional.TxType.REQUIRED)
     public T read(PK id) {
         return this.entityManager.find(entityClass, id);
     }
 
+    @Transactional(Transactional.TxType.REQUIRED)
     public T update(T t) {
         return this.entityManager.merge(t);
     }
 
+    @Transactional(Transactional.TxType.REQUIRED)
     public Collection<T> loadAll() {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> cq = cb.createQuery(entityClass);
@@ -60,12 +65,12 @@ public class GenericDAOImpl<T, PK extends Serializable>
     }
 
 
-
+    @Transactional(Transactional.TxType.REQUIRED)
     public Collection<T> loadAll(SortingRequest sortingRequest) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> cq = cb.createQuery(entityClass);
         Root<T> rootEntry = cq.from(entityClass);
-        if(SortingRequest.Order.ASC == sortingRequest.getOrder()) {
+        if (SortingRequest.Order.ASC == sortingRequest.getOrder()) {
             cq.orderBy(cb.asc(rootEntry.get(sortingRequest.getFieldName())));
         } else if (SortingRequest.Order.DESC == sortingRequest.getOrder()) {
             cq.orderBy(cb.desc(rootEntry.get(sortingRequest.getFieldName())));
@@ -76,26 +81,23 @@ public class GenericDAOImpl<T, PK extends Serializable>
     }
 
 
-
     public Collection<T> loadAll(FilterRequest filterRequest) {
 
 
-            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<T> cq = cb.createQuery(entityClass);
-            Root<T> rootEntry = cq.from(entityClass);
-        if(SortingRequest.Order.ASC == filterRequest.getOrder()) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<T> cq = cb.createQuery(entityClass);
+        Root<T> rootEntry = cq.from(entityClass);
+        if (SortingRequest.Order.ASC == filterRequest.getOrder()) {
             cq.orderBy(cb.asc(rootEntry.get(filterRequest.getFieldName())));
         } else if (SortingRequest.Order.DESC == filterRequest.getOrder()) {
             cq.orderBy(cb.desc(rootEntry.get(filterRequest.getFieldName())));
         }
 
 
+        List<Predicate> predicates = new ArrayList<>();
 
-
-        List<Predicate> predicates= new ArrayList<>();
-
-        for(Map.Entry<String,String> field:filterRequest.getFilters().entrySet()){
-            Predicate predicate= cb.and(cb.like(rootEntry.get(field.getKey()), field.getValue()));
+        for (Map.Entry<String, String> field : filterRequest.getFilters().entrySet()) {
+            Predicate predicate = cb.and(cb.like(rootEntry.get(field.getKey()), field.getValue()));
             predicates.add(predicate);
         }
         CriteriaQuery<T> filter = cq.where(cb.and(predicates.toArray(new Predicate[]{})));

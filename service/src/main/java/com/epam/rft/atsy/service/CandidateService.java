@@ -14,6 +14,6 @@ public interface CandidateService {
 
     Collection<CandidateDTO> getAllCandidate(SortingRequest sortingRequest);
 
-    void saveOrUpdate(CandidateDTO candidate);
+    Long saveOrUpdate(CandidateDTO candidate);
 
 }

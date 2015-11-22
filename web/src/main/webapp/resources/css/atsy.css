@@ -89,7 +89,7 @@ body {
     margin-right: 10px;
 }
 
-#fix{
+#fix {
     margin-top: 50px;
 }
 
@@ -97,40 +97,59 @@ body {
     padding-top: 5px;
 }
 
-#name{
-    margin-bottom: 15px;
-}
-#email{
+#name {
     margin-bottom: 15px;
 }
 
-#languageSkill{
+#email {
     margin-bottom: 15px;
 }
 
-#referer{
+#languageSkill {
     margin-bottom: 15px;
 }
 
-#phone{
+#referer {
     margin-bottom: 15px;
 }
 
-#description{
+#phone {
     margin-bottom: 15px;
 }
 
-textarea{
+#description {
+    margin-bottom: 15px;
+}
+
+textarea {
     resize: none;
 }
+
 .form-inline .form-control {
     width: 185px;
 }
-#searchButton{
+
+#searchButton {
     margin-left: 30px;
 }
 
-#search{
+#search {
     padding-right: 0px;
     padding-left: 0px;
+}
+
+#candidate_creation.display .input, #candidate_creation.display .btn, #candidate_creation.display p.edit {
+    display: none;
+}
+
+#candidate_creation.display .showValue {
+    display: block;
+}
+
+#candidate_creation.display .btn.showValue {
+    display: inline-block;
+}
+
+#candidate_creation .showValue {
+    display: none;
 }

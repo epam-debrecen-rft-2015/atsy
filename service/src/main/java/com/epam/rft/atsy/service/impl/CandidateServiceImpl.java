@@ -31,10 +31,10 @@ public class CandidateServiceImpl implements CandidateService {
     ModelMapper modelMapper;
 
     @Override
-    public CandidateDTO getCandidate(Long id){
+    public CandidateDTO getCandidate(Long id) {
         CandidateDTO candidateDTO;
-        CandidateEntity candidateEntity = candidateDAO.load(id);
-        candidateDTO=modelMapper.map(candidateEntity,CandidateDTO.class);
+        CandidateEntity candidateEntity = candidateDAO.read(id);
+        candidateDTO = modelMapper.map(candidateEntity, CandidateDTO.class);
         return candidateDTO;
     }
 
@@ -47,18 +47,19 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    @Transactional(Transactional.TxType.REQUIRED)
-    public void saveOrUpdate(CandidateDTO candidate) {
+    public Long saveOrUpdate(CandidateDTO candidate) {
         Assert.notNull(candidate);
+        Long candidateId = 0l;
         CandidateEntity entity = modelMapper.map(candidate, CandidateEntity.class);
         try {
             if (entity.getCandidateId() == null) {
-                candidateDAO.create(entity);
+                candidateId = candidateDAO.create(entity).getCandidateId();
             } else {
-                candidateDAO.update(entity);
-}
+                candidateId = candidateDAO.update(entity).getCandidateId();
+            }
         } catch (ConstraintViolationException | DataIntegrityViolationException constraint) {
             throw new DuplicateRecordException(candidate.getName());
         }
+        return candidateId;
     }
 }
