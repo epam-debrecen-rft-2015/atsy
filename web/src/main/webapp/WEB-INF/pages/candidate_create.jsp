@@ -8,6 +8,7 @@
 <spring:url value="/secure/positions" var="positions"/>
 <spring:url value="/secure/channels" var="channels"/>
 <spring:url value="/secure/welcome" var="welcome"/>
+<spring:url value="/secure/candidate" var="candidateURL"/>
 
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
@@ -36,7 +37,7 @@
 
             <div id="candidate_data">
                 <div class="row">
-                    <form class="form" role="form" method="POST" id="candidate-create-form" action="./">
+                    <form class="form" role="form" method="POST" id="candidate-create-form" action="${candidateURL}">
                         <div class="globalMessage alert alert-danger" role="alert"
                              style="display: none">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>

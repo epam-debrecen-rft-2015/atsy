@@ -27,7 +27,7 @@ $("#candidate-create-form").submit(function (event) {
             description: description
         })
     }).done(function (xhr) {
-        window.location = $this.attr('action') + xhr;
+        window.location = $this.attr('action')+ '/' + xhr;
     }).error(function (xhr) {
         showError(xhr.responseText);
     });
