@@ -29,17 +29,21 @@ $(document).ready(function() {
         function locationHashChanged() {
             //alert(location.hash);
             var nth = 0;
+            result={};
             var data = location.hash.replace(/["/"]/g, function (match) {
                 nth++;
-                return (nth % 2 === 1) ? ":" : match;
-            }).replace("#","").split("/");
-            var $this=$(this);
+                return (nth % 2 === 1) ? ";" : match;
+            }).replace("#","").split("/").map(function (x) {
+                x=x.split(";");
+                result[x[0]]=x[1];
+            });
+            var $this=$("#searchCandidate");
             $.ajax({
                 url: $this.attr('action'),
                 method: $this.attr('method'),
                 contentType: 'application/json',
-                data: JSON.stringify(data)
-            })
+                data: JSON.stringify(result)
+            });
         }
 
         window.onhashchange = locationHashChanged;
