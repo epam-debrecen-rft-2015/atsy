@@ -32,6 +32,7 @@ $(document).ready(function () {
             return (nth % 2 === 1) ? ";" : match;
         }).replace("#", "").split("/").map(function (x) {
             x = x.split(";");
+            form.find('#filter_' + x[0]).val(x[1]);
             result[x[0]] = x[1];
         });
         var $this = $("#searchCandidate");
@@ -40,6 +41,7 @@ $(document).ready(function () {
         });
     }
 
+    locationHashChanged();
 });
 
 function actionFormatter(value, row, index) {
