@@ -1,5 +1,6 @@
 package com.epam.rft.atsy.service;
 
+import com.epam.rft.atsy.persistence.request.FilterRequest;
 import com.epam.rft.atsy.persistence.request.SortingRequest;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 
@@ -10,6 +11,10 @@ import java.util.Collection;
  */
 public interface CandidateService {
 
-    Collection<CandidateDTO> getAllCandidate(SortingRequest sortingRequest);
+    CandidateDTO getCandidate(Long candidateID);
+
+    Collection<CandidateDTO> getAllCandidate(FilterRequest sortingRequest);
+
+    Long saveOrUpdate(CandidateDTO candidate);
 
 }

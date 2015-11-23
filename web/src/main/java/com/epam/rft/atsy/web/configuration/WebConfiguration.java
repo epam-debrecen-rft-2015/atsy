@@ -2,6 +2,7 @@ package com.epam.rft.atsy.web.configuration;
 
 import com.epam.rft.atsy.persistence.configuration.PersistenceConfiguration;
 import com.epam.rft.atsy.service.configuration.ServiceConfiguration;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -44,8 +45,13 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public HttpMessageConverter jsonMessageConverter() {
-        return new MappingJackson2HttpMessageConverter();
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
+
+    @Bean
+    public HttpMessageConverter jsonMessageConverter(ObjectMapper objectMapper) {
+        return new MappingJackson2HttpMessageConverter(objectMapper);
     }
 
     @Bean

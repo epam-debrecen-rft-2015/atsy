@@ -78,3 +78,78 @@ body {
     color: red;
     display: none;
 }
+
+#add_candidate_button {
+    margin-bottom: 11px;
+    margin-top: 11px;
+    margin-right: 30px;
+}
+
+#cancelButton {
+    margin-right: 10px;
+}
+
+#fix {
+    margin-top: 50px;
+}
+
+.form-group > label {
+    padding-top: 5px;
+}
+
+#name {
+    margin-bottom: 15px;
+}
+
+#email {
+    margin-bottom: 15px;
+}
+
+#languageSkill {
+    margin-bottom: 15px;
+}
+
+#referer {
+    margin-bottom: 15px;
+}
+
+#phone {
+    margin-bottom: 15px;
+}
+
+#description {
+    margin-bottom: 15px;
+}
+
+textarea {
+    resize: none;
+}
+
+.form-inline .form-control {
+    width: 185px;
+}
+
+#searchButton {
+    margin-left: 30px;
+}
+
+#search {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+#candidate_creation.display .input, #candidate_creation.display .btn, #candidate_creation.display p.edit {
+    display: none;
+}
+
+#candidate_creation.display .showValue {
+    display: block;
+}
+
+#candidate_creation.display .btn.showValue {
+    display: inline-block;
+}
+
+#candidate_creation .showValue {
+    display: none;
+}
