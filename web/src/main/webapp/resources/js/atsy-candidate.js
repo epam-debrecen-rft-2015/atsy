@@ -26,7 +26,7 @@ $(document).ready(function () {
     function locationHashChanged() {
         var nth = 0;
         result = {};
-        form.reset();
+        form[0].reset();
         var data = location.hash.replace(/["/"]/g, function (match) {
             nth++;
             return (nth % 2 === 1) ? ";" : match;
@@ -35,9 +35,8 @@ $(document).ready(function () {
             form.find('#filter_' + x[0]).val(x[1]);
             result[x[0]] = x[1];
         });
-        var $this = $("#searchCandidate");
         table.bootstrapTable('refresh', {
-            url: $this.attr('action') + "?filter=" + encodeURIComponent(JSON.stringify(result))
+            url: form.attr('action') + "?filter=" + encodeURIComponent(JSON.stringify(result))
         });
     }
 
