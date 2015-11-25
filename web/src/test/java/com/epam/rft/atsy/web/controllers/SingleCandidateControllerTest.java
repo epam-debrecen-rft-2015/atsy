@@ -48,7 +48,7 @@ public class SingleCandidateControllerTest {
 
     @Test
     public void saveOrUpdate(){
-        Locale locale=new Locale("HU");
+        Locale locale=new Locale("hu");
         given(bindingResult.hasErrors()).willReturn(false);
         given(bindingResultTrue.hasErrors()).willReturn(true);
         given(candidateDTO.getCandidateId()).willReturn(new Long(1));
@@ -65,9 +65,9 @@ public class SingleCandidateControllerTest {
         given(responseEntityTrue.getBody()).willReturn(new Long(1));
         Long candidateId=candidateService.saveOrUpdate(candidateDTO);
         ResponseEntity entity = underTest.saveOrUpdate(candidateDTO,bindingResult,locale);
-        //ResponseEntity entityTrue = underTest.saveOrUpdate(candidateDTO,bindingResultTrue,locale);
+        ResponseEntity entityTrue = underTest.saveOrUpdate(candidateDTO,bindingResultTrue,locale);
 
         assertThat(entity.getStatusCode(),is(HttpStatus.OK));
-        //assertThat(entityTrue.getStatusCode(),is(HttpStatus.BAD_REQUEST));
+        assertThat(entityTrue.getStatusCode(),is(HttpStatus.BAD_REQUEST));
     }
 }

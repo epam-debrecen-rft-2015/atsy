@@ -39,8 +39,10 @@ public class SingleCandidateController {
             Long candidateId = candidateService.saveOrUpdate(candidateDTO);
             entity = new ResponseEntity<Long>(candidateId, HttpStatus.OK);
         } else {
-            entity = new ResponseEntity<String>(messageSource.getMessage("hiba",
-                    null, locale), HttpStatus.BAD_REQUEST);
+            entity =//new ResponseEntity<Long>(new Long(0), HttpStatus.BAD_REQUEST);
+                    new ResponseEntity("hiba",HttpStatus.BAD_REQUEST);
+                    /*new ResponseEntity<String>(messageSource.getMessage(EMPTY_CANDIDATE_NAME_MESSAGE_KEY,
+                    null, locale), HttpStatus.BAD_REQUEST);*/
         }
         return entity;
     }
