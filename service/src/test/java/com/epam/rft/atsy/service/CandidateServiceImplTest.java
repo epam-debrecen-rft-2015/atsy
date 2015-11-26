@@ -20,6 +20,7 @@ import java.util.Collection;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 
 
@@ -36,6 +37,15 @@ public class CandidateServiceImplTest {
 
     @Mock
     CandidateDAO candidateDAO;
+
+    @Mock
+    CandidateDTO candidateDTO;
+
+    @Mock
+    CandidateEntity candidateEntity;
+
+    @Mock
+    CandidateEntity candidateEntity2;
 
     @BeforeMethod
     public void setUp() {
@@ -56,6 +66,56 @@ public class CandidateServiceImplTest {
 
         //then
         assertThat(result, containsInAnyOrder(new CandidateDTO("name", "email", "phome", "description", "referer", new Short("1"))));
+
+    }
+
+    @Test
+    public void updateTest(){
+        Long id=new Long(1);
+        given(candidateDTO.getCandidateId()).willReturn(id);
+        given(candidateDTO.getName()).willReturn("Candidate A");
+        given(candidateDTO.getEmail()).willReturn("candidate.a@atsy.com");
+        given(candidateDTO.getPhone()).willReturn("+36105555555");
+        given(candidateDTO.getReferer()).willReturn("google");
+        given(candidateDTO.getDescription()).willReturn("Elegáns, kicsit furi");
+        given(candidateDTO.getLanguageSkill()).willReturn((short) 5);
+        given(modelMapper.map(candidateDTO,CandidateEntity.class)).willReturn(candidateEntity);
+        given(candidateEntity.getCandidateId()).willReturn(id);
+        given(candidateDAO.update(candidateEntity)).willReturn(candidateEntity);
+        given(candidateDAO.update(candidateEntity).getCandidateId()).willReturn(id);
+
+        Long candidateId=candidateService.saveOrUpdate(candidateDTO);
+
+        assertThat(candidateId, is(id));
+
+    }
+
+    @Test
+    public void saveTest(){
+        Long id=new Long(1);
+        given(candidateDTO.getCandidateId()).willReturn(null);
+        given(candidateDTO.getName()).willReturn("test");
+        given(candidateDTO.getEmail()).willReturn("test@test.com");
+        given(candidateDTO.getPhone()).willReturn("+36105555557");
+        given(candidateDTO.getReferer()).willReturn("fb");
+        given(candidateDTO.getDescription()).willReturn("test");
+        given(candidateDTO.getLanguageSkill()).willReturn((short) 5);
+        given(candidateEntity2.getCandidateId()).willReturn(id);
+        given(candidateEntity2.getName()).willReturn("test");
+        given(candidateEntity2.getEmail()).willReturn("test@test.com");
+        given(candidateEntity2.getPhone()).willReturn("+36105555557");
+        given(candidateEntity2.getReferer()).willReturn("fb");
+        given(candidateEntity2.getDescription()).willReturn("test");
+        given(candidateEntity2.getLanguageSkill()).willReturn((short) 5);
+        given(modelMapper.map(candidateDTO,CandidateEntity.class)).willReturn(candidateEntity);
+        given(candidateDAO.create(candidateEntity)).willReturn(candidateEntity2);
+        given(candidateEntity.getCandidateId()).willReturn(null);
+
+        given(candidateDAO.create(candidateEntity).getCandidateId()).willReturn(id);
+
+        Long candidateId=candidateService.saveOrUpdate(candidateDTO);
+
+        assertThat(candidateId, is(id));
 
     }
 
