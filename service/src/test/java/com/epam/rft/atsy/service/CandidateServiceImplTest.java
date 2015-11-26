@@ -119,4 +119,23 @@ public class CandidateServiceImplTest {
 
     }
 
+    @Test
+    public void getCandidateTest(){
+        //given
+        Long id=new Long(1);
+        given(candidateDTO.getCandidateId()).willReturn(id);
+        given(candidateDTO.getName()).willReturn("Candidate A");
+        given(candidateDTO.getEmail()).willReturn("candidate.a@atsy.com");
+        given(candidateDTO.getPhone()).willReturn("+36105555555");
+        given(candidateDTO.getReferer()).willReturn("google");
+        given(candidateDTO.getDescription()).willReturn("Elegáns, kicsit furi");
+        given(candidateDTO.getLanguageSkill()).willReturn((short) 5);
+        given(candidateDAO.read(id)).willReturn(candidateEntity);
+        given(modelMapper.map(candidateEntity,CandidateDTO.class)).willReturn(candidateDTO);
+
+        CandidateDTO dto=candidateService.getCandidate(id);
+
+        assertThat(dto.getCandidateId(),is(id));
+    }
+
 }
