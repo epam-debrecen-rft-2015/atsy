@@ -5,6 +5,7 @@ import static org.hamcrest.core.Is.is;
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
+import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForAjax;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -68,10 +69,11 @@ public class WelcomeStepDefs {
 
     @And("the user changes the order field to (.*), (.*)")
     public void the_user_changes_the_order_field_to(String field, String order) {
-        List<WebElement> sortElement = getDriver().findElements(By.cssSelector("#candidates_table div.fixed-table-header th[data-field=" + field + "] div.sortable"));
-        String currentOrderCss = sortElement.get(0).getAttribute("class");
+        WebElement sortElement = getDriver().findElement(By.cssSelector("#candidates_table div.fixed-table-header th[data-field=" + field + "] div.sortable"));
+        String currentOrderCss = sortElement.getAttribute("class");
         if (!(currentOrderCss).contains(order)) {
-            sortElement.get(0).click();
+            sortElement.click();
+            waitForAjax();
             the_user_changes_the_order_field_to(field, order);
         }
     }

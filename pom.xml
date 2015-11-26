@@ -18,7 +18,7 @@
         <jacoco.branchRatio>0.80</jacoco.branchRatio>
         <jacoco.complexityRatio>0.80</jacoco.complexityRatio>
         <jacoco.lineRatio>0.80</jacoco.lineRatio>
-        <environment>integration</environment>
+        <environment>production</environment>
     </properties>
 
     <modules>
