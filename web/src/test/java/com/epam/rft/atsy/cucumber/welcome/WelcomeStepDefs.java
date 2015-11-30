@@ -1,25 +1,22 @@
 package com.epam.rft.atsy.cucumber.welcome;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
-
-import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
-import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForAjax;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
+import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForAjax;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 
 /**
  * Created by mates on 2015. 11. 11..
@@ -84,5 +81,35 @@ public class WelcomeStepDefs {
         List<CandidateTableRow> rows = new ArrayList<CandidateTableRow>(expectedCandidates);
         rows.sort(fieldComparator);
         list_of_candidates_shown(rows);
+    }
+
+    @Given("the user fills the search fields")
+    public void fillSearchFields() {
+        getDriver().findElement(By.id("filter_name")).sendKeys("Candidate");
+        getDriver().findElement(By.id("filter_email")).sendKeys("candidate.a");
+        getDriver().findElement(By.id("filter_phone")).sendKeys("+3610");
+    }
+
+    @When("the user clicks on the Keresés button")
+    public void searchClicked() {
+        getDriver().findElement(By.cssSelector("#searchButton")).click();
+        WebDriverWait wait = new WebDriverWait(getDriver(), 5);
+        wait.until(presenceOfElementLocated(By.id("candidates_table")));
+    }
+
+
+
+    @Then("the list of filtered candidates shown in order")
+    public void list_of_filtered_candidates_shown(List<CandidateTableRow> table) {
+        List<WebElement> webElements = getDriver().findElement(By.id("candidates_table")).findElements(By.cssSelector("tbody > tr[data-index]"));
+        assertThat(webElements.size(), is(table.size()));
+        for (int index = 0; index < table.size(); index++) {
+            CandidateTableRow expectedCandidate = table.get(index);
+            List<WebElement> columns = webElements.get(index).findElements(By.tagName("td"));
+            assertThat(columns.get(0).getText(), is(expectedCandidate.getName()));
+            assertThat(columns.get(1).getText(), is(expectedCandidate.getEmail()));
+            assertThat(columns.get(2).getText(), is(expectedCandidate.getPhone()));
+            assertThat(columns.get(3).getText(), is(expectedCandidate.getPositions()));
+        }
     }
 }
