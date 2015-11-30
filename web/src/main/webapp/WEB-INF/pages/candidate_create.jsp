@@ -12,6 +12,7 @@
 
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
+        <script src="<c:url value="/resources/thirdparty/bootstrap-validator/validator.js" />" type="text/javascript"></script>
         <script src="<c:url value="/resources/js/atsy-candidate-create.js" />"></script>
     </jsp:attribute>
     <jsp:body>
@@ -54,7 +55,7 @@
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <input type="text" class="input form-control " name="name" id="name"
                                        value="${candidate.name}"
-                                       placeholder="${i18nname}">
+                                       placeholder="${i18nname}" required maxlength="100">
 
                                 <p class="showValue form-control-static">${candidate.name}</p>
                             </div>
@@ -70,7 +71,7 @@
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <input type="text" class="input form-control" name="referer" id="referer"
                                        value="${candidate.referer}"
-                                       placeholder="${i18nplace}">
+                                       placeholder="${i18nplace}" maxlength="20">
 
                                 <p class="showValue form-control-static">${candidate.referer}</p>
                             </div>
@@ -86,7 +87,7 @@
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <input type="text" class="input form-control" name="email" id="email"
                                        value="${candidate.email}"
-                                       placeholder="${i18nemail}">
+                                       placeholder="${i18nemail}" required maxlength="400">
 
                                 <p class="showValue form-control-static">
                                     <a href="mailto:tesztelek01@te.com"><span class="glyphicon glyphicon-envelope"
@@ -125,7 +126,7 @@
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <input type="text" class="input form-control" name="phone" id="phone"
                                        value="${candidate.phone}"
-                                       placeholder="${i18nphone}">
+                                       placeholder="${i18nphone}" pattern="^\+?[0-9]+" maxlength="20">
 
                                 <p class="showValue form-control-static">${candidate.phone}</p>
                             </div>
