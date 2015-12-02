@@ -10,6 +10,7 @@ import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
+import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import com.epam.rft.atsy.web.controllers.rest.ChannelController;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -58,6 +59,9 @@ public class ChannelControllerTest {
     @Mock
     MessageSource messageSource;
 
+    @Mock
+    DuplicateRecordException ex;
+
 
     @BeforeMethod
     public void setUp() {
@@ -91,5 +95,16 @@ public class ChannelControllerTest {
 
         assertThat(entity.getStatusCode(),is(HttpStatus.OK));
         assertThat(entityTrue.getStatusCode(),is(HttpStatus.BAD_REQUEST));
+    }
+
+    @Test
+    public void handleDuplicateException(){
+        Locale locale=new Locale("hu");
+        given(ex.getName()).willReturn("anything");
+        given(responseEntity.getStatusCode()).willReturn(HttpStatus.BAD_REQUEST);
+
+        ResponseEntity entity = channelController.handleDuplicateException(locale,ex);
+
+        assertThat(entity.getStatusCode(),is(HttpStatus.BAD_REQUEST));
     }
 }
