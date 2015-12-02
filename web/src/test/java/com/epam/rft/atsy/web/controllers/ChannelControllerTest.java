@@ -107,4 +107,15 @@ public class ChannelControllerTest {
 
         assertThat(entity.getStatusCode(),is(HttpStatus.BAD_REQUEST));
     }
+
+    @Test
+    public void handleException(){
+        Locale locale=new Locale("hu");
+        given(ex.getName()).willReturn("anything");
+        given(responseEntity.getStatusCode()).willReturn(HttpStatus.BAD_REQUEST);
+
+        ResponseEntity entity = channelController.handleException(locale,ex);
+
+        assertThat(entity.getStatusCode(),is(HttpStatus.BAD_REQUEST));
+    }
 }
