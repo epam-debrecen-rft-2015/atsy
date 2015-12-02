@@ -20,6 +20,8 @@ import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -71,5 +73,47 @@ public class CandidateControllerTest {
 
         //when
         Collection<CandidateDTO> result = candidateController.loadPage("", null, "name");
+    }
+
+    @Test
+    public void loadPageIOExceptionTest() throws IOException {
+
+        //given
+        FilterRequest filterRequest = new FilterRequest();
+        filterRequest.setFieldName("name");
+        filterRequest.setOrder(SortingRequest.Order.ASC);
+        Map<String,String> filterMap = new HashMap<>();
+        filterMap.put("name","test");
+        filterRequest.setFilters(filterMap);
+        given(candidateService.getAllCandidate(filterRequest)).willReturn(Arrays.asList(new CandidateDTO("test", "email", "phone", "description", "referer", new Short("1"))));
+        String filterJson="{\"name\":\"test\"}";
+        given(objectMapper.readValue(filterJson,Map.class)).willThrow(new IOException("IOexception"));
+
+        //when
+        Collection<CandidateDTO> result = candidateController.loadPage(filterJson, "ASC", "name");
+
+        //then
+        assertThat(result, is(empty()));
+    }
+
+    @Test
+    public void loadPageIOStringUtilIsEmpty() throws IOException {
+
+        //given
+        FilterRequest filterRequest = new FilterRequest();
+        filterRequest.setFieldName("name");
+        filterRequest.setOrder(SortingRequest.Order.ASC);
+        Map<String,String> filterMap = new HashMap<>();
+        filterMap.put("name","test");
+        filterRequest.setFilters(filterMap);
+        given(candidateService.getAllCandidate(filterRequest)).willReturn(Arrays.asList(new CandidateDTO("test", "email", "phone", "description", "referer", new Short("1"))));
+        String filterJson="";
+        //given(objectMapper.readValue(filterJson,Map.class)).willThrow(new IOException("IOexception"));
+
+        //when
+        Collection<CandidateDTO> result = candidateController.loadPage(filterJson, "ASC", "name");
+
+        //then
+        assertThat(result, is(empty()));
     }
 }
