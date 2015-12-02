@@ -5,7 +5,7 @@ CREATE TABLE States(
   position VARCHAR(255) NOT NULL ,
   creation_date DATE,
   language_skill TINYINT unsigned,
-  description LONGTEXT
+  description LONGTEXT,
   first_test_result VARCHAR(255),
   offered_money BIGINT,
   claim BIGINT,
