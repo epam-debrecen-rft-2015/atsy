@@ -11,6 +11,7 @@ import com.epam.rft.atsy.web.controllers.rest.SingleCandidateController;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -40,6 +41,8 @@ public class SingleCandidateControllerTest {
     ResponseEntity responseEntityTrue;
     @Mock
     CandidateService candidateService;
+    @Mock
+    MessageSource messageSource;
 
     @BeforeMethod
     public void setUp() {
