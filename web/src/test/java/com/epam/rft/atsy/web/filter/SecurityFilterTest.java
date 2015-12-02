@@ -42,6 +42,7 @@ public class SecurityFilterTest {
     FilterChain filterChain;
 
 
+
     @BeforeMethod
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -80,5 +81,19 @@ public class SecurityFilterTest {
 
         verify(filterChain).doFilter(servletRequest, servletResponse);
 
+    }
+
+    @Test
+    public void buildRedirectParamStringUtilIsNotBlank() throws IOException, ServletException{
+        given(servletRequest.getQueryString()).willReturn("anything");
+        given(servletRequest.getRequestURL()).willReturn(new StringBuffer("anything"));
+        given(servletRequest.getContextPath()).willReturn("/atsy");
+        given(servletRequest.getSession()).willReturn(session);
+        given(session.getAttribute("user")).willReturn(null);
+        //given(servletRequest.getRequestURL().length()).willReturn(8);
+        //when
+        securityFilter.doFilter(servletRequest,servletResponse,filterChain);
+
+        verify(servletResponse).sendRedirect(anyString());
     }
 }
