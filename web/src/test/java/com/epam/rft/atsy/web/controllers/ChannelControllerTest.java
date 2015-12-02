@@ -17,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.context.MessageSource;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -27,6 +28,8 @@ import java.util.Locale;
  * Created by mates on 2015. 12. 01..
  */
 public class ChannelControllerTest {
+    private static final String EMPTY_POSITION_NAME_MESSAGE_KEY = "settings.channels.error.empty";
+
 
     @InjectMocks
     ChannelController channelController;
@@ -35,13 +38,26 @@ public class ChannelControllerTest {
     ChannelDTO channelDTO;
 
     @Mock
-    BindingResult result;
+    BindingResult bindingResult;
+
+    @Mock
+    BindingResult bindingResultTrue;
 
     @Mock
     ChannelService channelService;
 
     @Mock
     Collection<ChannelDTO> channelDTOs;
+
+    @Mock
+    ResponseEntity responseEntity;
+
+    @Mock
+    ResponseEntity responseEntityTrue;
+
+    @Mock
+    MessageSource messageSource;
+
 
     @BeforeMethod
     public void setUp() {
@@ -58,5 +74,22 @@ public class ChannelControllerTest {
         assertThat(channelDTOs.isEmpty(),is(dtos.isEmpty()));
     }
 
-    
+    @Test
+    public void saveOrUpdate(){
+        Locale locale=new Locale("hu");
+        given(bindingResult.hasErrors()).willReturn(false);
+        given(bindingResultTrue.hasErrors()).willReturn(true);
+        given(channelDTO.getChannelId()).willReturn(new Long(1));
+        given(channelDTO.getName()).willReturn("Email");
+        //given(channelService.saveOrUpdate(channelDTO));
+        given(responseEntity.getStatusCode()).willReturn(HttpStatus.OK);
+        given(responseEntity.getBody()).willReturn("");
+        given(responseEntityTrue.getStatusCode()).willReturn(HttpStatus.BAD_REQUEST);
+        //Long candidateId=candidateService.saveOrUpdate(candidateDTO);
+        ResponseEntity entity = channelController.saveOrUpdate(channelDTO,bindingResult,locale);
+        ResponseEntity entityTrue = channelController.saveOrUpdate(channelDTO,bindingResultTrue,locale);
+
+        assertThat(entity.getStatusCode(),is(HttpStatus.OK));
+        assertThat(entityTrue.getStatusCode(),is(HttpStatus.BAD_REQUEST));
+    }
 }
