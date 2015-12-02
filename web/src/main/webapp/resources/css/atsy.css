@@ -153,3 +153,7 @@ textarea {
 #candidate_creation .showValue {
     display: none;
 }
+
+#candidate_creation .error {
+    color: red;
+}

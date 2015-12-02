@@ -77,6 +77,12 @@
                             </div>
 
                         </div>
+                        <div class="error col-lg-12 col-md-12 col-sm-12">
+                            <p class="nameError col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" ><spring:message
+                                    code="candidate.error.name.empty"/></p>
+                            <p class="refererError col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" ><spring:message
+                                    code="candidate.error.referer.long"/></p>
+                        </div>
                         <div class="form-group"
                              id="emailDiv">
                             <spring:message code="candidate.email.field" var="i18nemail"/>
@@ -116,6 +122,12 @@
                                 <p class="showValue form-control-static">${candidate.languageSkill}</p>
                             </div>
                         </div>
+                        <div class="error col-lg-12 col-md-12 col-sm-12">
+                            <p class="emailError col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" ><spring:message
+                                    code="candidate.error.email.incorrect"/></p>
+                            <p class="languageError col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" ><spring:message
+                                    code="candidate.error.language.incorrect"/></p>
+                        </div>
                         <div class="form-group"
                              id="phoneDiv">
                             <spring:message code="candidate.phone.field" var="i18nphone"/>
@@ -132,9 +144,12 @@
                             </div>
 
                         </div>
+                        <div class="error col-lg-12 col-md-12 col-sm-12">
+                            <p class="phoneError col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" ><spring:message
+                                    code="candidate.error.phone.incorrect"/></p>
+                        </div>
                         <div class="form-group"
                              id="descriptionDiv">
-                            <div id="fix" class="col-md-6 col-sm-6 col-lg-6"></div>
                             <spring:message code="candidate.description.field" var="i18ndescription"/>
                             <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
                                    for="description"><spring:message
@@ -146,7 +161,6 @@
 
                                 <p class="showValue form-control-static">${candidate.description}</p>
                             </div>
-
                         </div>
                         <div class="text-right col-lg-12 col-md-12 col-sm-12">
                             <a class="btn btn-default showValue" href="${welcome}" id="cancelButton"><spring:message
