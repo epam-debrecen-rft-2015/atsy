@@ -5,6 +5,7 @@ import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.request.FilterRequest;
 import com.epam.rft.atsy.persistence.request.SortingRequest;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
+import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import com.epam.rft.atsy.service.impl.CandidateServiceImpl;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
@@ -13,6 +14,8 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.springframework.dao.DataIntegrityViolationException;
+
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -22,6 +25,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 
 /**
@@ -136,6 +140,29 @@ public class CandidateServiceImplTest {
         CandidateDTO dto=candidateService.getCandidate(id);
 
         assertThat(dto.getCandidateId(),is(id));
+    }
+
+    @Test(expectedExceptions = DuplicateRecordException.class)
+    public void updateTestExceptions() throws  DataIntegrityViolationException{
+        Long id=new Long(1);
+        given(candidateDTO.getCandidateId()).willReturn(id);
+        given(candidateDTO.getName()).willReturn("Candidate A");
+        given(candidateDTO.getEmail()).willReturn("candidate.a@atsy.com");
+        given(candidateDTO.getPhone()).willReturn("+36105555555");
+        given(candidateDTO.getReferer()).willReturn("google");
+        given(candidateDTO.getDescription()).willReturn("Elegáns, kicsit furi");
+        given(candidateDTO.getLanguageSkill()).willReturn((short) 5);
+        given(modelMapper.map(candidateDTO,CandidateEntity.class)).willReturn(candidateEntity);
+        given(candidateEntity.getCandidateId()).willReturn(id);
+        given(candidateEntity.getName()).willReturn("Candidate A");
+        given(candidateDTO.getName()).willReturn("Candidate A");
+        given(candidateDAO.update(candidateEntity)).willThrow(new DataIntegrityViolationException("Candidate A") );
+        //given(candidateDAO.update(candidateEntity).getCandidateId()).willReturn(id);
+
+        given(candidateService.saveOrUpdate(candidateDTO)).willThrow(new DataIntegrityViolationException("Candidate A"));
+
+        //assertThat(candidateId, is(01));
+
     }
 
 }
