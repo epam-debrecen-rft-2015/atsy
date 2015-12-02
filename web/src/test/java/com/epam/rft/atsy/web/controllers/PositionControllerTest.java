@@ -6,11 +6,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 
 
-import com.epam.rft.atsy.service.CandidateService;
-import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.PositionService;
-import com.epam.rft.atsy.service.domain.CandidateDTO;
-import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import com.epam.rft.atsy.web.controllers.rest.PositionController;
@@ -31,6 +27,9 @@ import java.util.Locale;
  * Created by mates on 2015. 12. 02..
  */
 public class PositionControllerTest {
+    private static final String EMPTY_POSITION_NAME_MESSAGE_KEY = "settings.positions.error.empty";
+
+
     @InjectMocks
     PositionController positionController;
 
@@ -55,13 +54,19 @@ public class PositionControllerTest {
     @Mock
     ResponseEntity responseEntityTrue;
 
+    @Mock
+    MessageSource messageSource;
+
+    @Mock
+    DuplicateRecordException ex;
+
     @BeforeMethod
     public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void getChannelsTest(){
+    public void getPositionsTest(){
         given(positionDTOs.isEmpty()).willReturn(false);
         given(positionService.getAllPositions()).willReturn(positionDTOs);
         //when
@@ -80,10 +85,12 @@ public class PositionControllerTest {
         given(responseEntity.getStatusCode()).willReturn(HttpStatus.OK);
         given(responseEntity.getBody()).willReturn("");
         given(responseEntityTrue.getStatusCode()).willReturn(HttpStatus.BAD_REQUEST);
+        //given(positionService.saveOrUpdate(positionDTO));
         ResponseEntity entity = positionController.saveOrUpdate(positionDTO,bindingResult,locale);
-        //ResponseEntity entityTrue = positionController.saveOrUpdate(positionDTO,bindingResultTrue,locale);
+        ResponseEntity entityTrue = positionController.saveOrUpdate(positionDTO,bindingResultTrue,locale);
 
         assertThat(entity.getStatusCode(),is(HttpStatus.OK));
-        //assertThat(entityTrue.getStatusCode(),is(HttpStatus.BAD_REQUEST));
+        assertThat(entityTrue.getStatusCode(),is(HttpStatus.BAD_REQUEST));
     }
+
 }
