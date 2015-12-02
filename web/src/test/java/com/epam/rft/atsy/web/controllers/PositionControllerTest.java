@@ -43,6 +43,18 @@ public class PositionControllerTest {
     @Mock
     PositionService positionService;
 
+    @Mock
+    BindingResult bindingResult;
+
+    @Mock
+    BindingResult bindingResultTrue;
+
+    @Mock
+    ResponseEntity responseEntity;
+
+    @Mock
+    ResponseEntity responseEntityTrue;
+
     @BeforeMethod
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -56,5 +68,22 @@ public class PositionControllerTest {
         Collection<PositionDTO> dtos = positionController.getPositions();
         //then
         assertThat(positionDTOs.isEmpty(),is(dtos.isEmpty()));
+    }
+
+    @Test
+    public void saveOrUpdate(){
+        Locale locale=new Locale("hu");
+        given(bindingResult.hasErrors()).willReturn(false);
+        given(bindingResultTrue.hasErrors()).willReturn(true);
+        given(positionDTO.getPositionId()).willReturn(new Long(1));
+        given(positionDTO.getName()).willReturn("Fejlesztő");
+        given(responseEntity.getStatusCode()).willReturn(HttpStatus.OK);
+        given(responseEntity.getBody()).willReturn("");
+        given(responseEntityTrue.getStatusCode()).willReturn(HttpStatus.BAD_REQUEST);
+        ResponseEntity entity = positionController.saveOrUpdate(positionDTO,bindingResult,locale);
+        //ResponseEntity entityTrue = positionController.saveOrUpdate(positionDTO,bindingResultTrue,locale);
+
+        assertThat(entity.getStatusCode(),is(HttpStatus.OK));
+        //assertThat(entityTrue.getStatusCode(),is(HttpStatus.BAD_REQUEST));
     }
 }
