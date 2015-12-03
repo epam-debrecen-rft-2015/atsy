@@ -5,9 +5,9 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
 <%@page contentType="text/html;charset=UTF-8" %>
-<spring:url value="/secure/application" var="application"/>
+<spring:url value="/new_application_popup" var="new_application_popup"/>
 
-<atsy:secure_page>
+<atsy:page>
   <jsp:body>
     <div id="application_page">
       <h1 class="page-header">
@@ -15,4 +15,4 @@
       </h1>
     </div>
   </jsp:body>
-</atsy:secure_page>
+</atsy:page>
