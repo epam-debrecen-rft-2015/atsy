@@ -1,8 +1,8 @@
 CREATE TABLE States(
 
   stateId BIGINT AUTO_INCREMENT PRIMARY KEY,
-  userName VARCHAR(255) UNIQUE NOT NULL  ,
-  position VARCHAR(255) NOT NULL ,
+  candidateId BIGINT NOT NULL  ,
+  positionId BIGINT NOT NULL ,
   creation_date DATE,
   language_skill TINYINT unsigned,
   description LONGTEXT,
@@ -10,6 +10,7 @@ CREATE TABLE States(
   offered_money BIGINT,
   claim BIGINT,
   feedback_date DATE,
-  state_tpye VARCHAR (50)
+  state_type VARCHAR (50),
+  next_state BIGINT
 
 )

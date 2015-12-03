@@ -18,4 +18,28 @@ public class WageOfferStateEntity extends StateEntity{
     private Long claim;
     @Column(name = "feedback_date")
     private Date feedbackDate;
+
+    public Long getOfferedMoney() {
+        return offeredMoney;
+    }
+
+    public void setOfferedMoney(Long offeredMoney) {
+        this.offeredMoney = offeredMoney;
+    }
+
+    public Long getClaim() {
+        return claim;
+    }
+
+    public void setClaim(Long claim) {
+        this.claim = claim;
+    }
+
+    public Date getFeedbackDate() {
+        return feedbackDate;
+    }
+
+    public void setFeedbackDate(Date feedbackDate) {
+        this.feedbackDate = feedbackDate;
+    }
 }
