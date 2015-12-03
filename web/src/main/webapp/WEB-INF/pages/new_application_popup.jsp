@@ -9,7 +9,7 @@
 
 <atsy:page>
   <jsp:body>
-    <div id="application_page">
+    <div id="application_popup">
       <h1 class="page-header">
         <spring:message code="application.create.title"/>
       </h1>
