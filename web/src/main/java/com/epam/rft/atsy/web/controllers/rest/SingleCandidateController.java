@@ -25,8 +25,7 @@ import java.util.Locale;
 @RestController
 @RequestMapping(value = "/secure/candidate")
 public class SingleCandidateController {
-    private static final String DUPLICATE_EMAIL_ERROR_KEY = "candidate.error.email.exist";
-    private static final String DUPLICATE_PHONE_ERROR_KEY = "candidate.error.phone.exist";
+    private static final String DUPLICATE_CANDIDATE_ERROR_KEY = "candidate.error.duplicate";
     private static final String TECHNICAL_ERROR_MESSAGE_KEY = "technical.error.message";
     private static final Logger LOGGER = LoggerFactory.getLogger(SingleCandidateController.class);
     @Resource
@@ -50,7 +49,7 @@ public class SingleCandidateController {
 
     @ExceptionHandler(DuplicateRecordException.class)
     public ResponseEntity handleDuplicateException(Locale locale, DuplicateRecordException ex) {
-        return new ResponseEntity<String>(messageSource.getMessage(DUPLICATE_EMAIL_ERROR_KEY,
+        return new ResponseEntity<String>(messageSource.getMessage(DUPLICATE_CANDIDATE_ERROR_KEY,
                 new Object[]{ex.getName()}, locale), HttpStatus.BAD_REQUEST);
     }
 
