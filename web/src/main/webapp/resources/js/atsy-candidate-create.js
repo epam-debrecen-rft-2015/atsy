@@ -4,7 +4,7 @@
 
 $('#candidate-create-form').validator().on('submit', function (e) {
     if (e.isDefaultPrevented()) {
-        alert('form is not valid');
+
     } else {
         var $this = $(this);
         e.preventDefault();

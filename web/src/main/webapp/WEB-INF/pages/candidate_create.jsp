@@ -38,7 +38,7 @@
 
             <div id="candidate_data">
                 <div class="row">
-                    <form class="form" role="form" method="POST" id="candidate-create-form" action="${candidateURL}">
+                    <form data-toggle="validator" class="form" role="form" method="POST" id="candidate-create-form" action="${candidateURL}">
                         <div class="globalMessage alert alert-danger" role="alert"
                              style="display: none">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
@@ -52,11 +52,14 @@
                                    for="name"><spring:message
                                     code="candidate.name.label"/></label>
 
-                            <div class="col-lg-4 col-md-4 col-sm-4">
+                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
                                 <input type="text" class="input form-control " name="name" id="name"
                                        value="${candidate.name}"
-                                       placeholder="${i18nname}" required maxlength="100">
-
+                                       placeholder="${i18nname}"
+                                       data-error="<spring:message
+                                               code="candidate.error.name.empty"/>"
+                                       required maxlength="100">
+                                <div class="help-block with-errors"></div>
                                 <p class="showValue form-control-static">${candidate.name}</p>
                             </div>
 
@@ -78,10 +81,6 @@
 
                         </div>
                         <div class="error col-lg-12 col-md-12 col-sm-12">
-                            <p class="nameError col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" ><spring:message
-                                    code="candidate.error.name.empty"/></p>
-                            <p class="refererError col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" ><spring:message
-                                    code="candidate.error.referer.long"/></p>
                         </div>
                         <div class="form-group"
                              id="emailDiv">
@@ -90,10 +89,17 @@
                                    for="email"><spring:message
                                     code="candidate.email.label"/></label>
 
-                            <div class="col-lg-4 col-md-4 col-sm-4">
+                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
                                 <input type="text" class="input form-control" name="email" id="email"
                                        value="${candidate.email}"
-                                       placeholder="${i18nemail}" required maxlength="400">
+                                       placeholder="${i18nemail}"
+                                       data-error="<spring:message
+                                    code="candidate.error.email.empty"/>"
+                                       data-pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
+                                       data-pattern-error="<spring:message
+                                    code="candidate.error.email.incorrect"/>"
+                                       required maxlength="400">
+                                <span class="help-block with-errors"></span>
 
                                 <p class="showValue form-control-static">
                                     <a href="mailto:tesztelek01@te.com"><span class="glyphicon glyphicon-envelope"
@@ -123,10 +129,6 @@
                             </div>
                         </div>
                         <div class="error col-lg-12 col-md-12 col-sm-12">
-                            <p class="emailError col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" ><spring:message
-                                    code="candidate.error.email.incorrect"/></p>
-                            <p class="languageError col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" ><spring:message
-                                    code="candidate.error.language.incorrect"/></p>
                         </div>
                         <div class="form-group"
                              id="phoneDiv">
@@ -135,18 +137,19 @@
                                    for="phone"><spring:message
                                     code="candidate.phone.label"/></label>
 
-                            <div class="col-lg-4 col-md-4 col-sm-4">
+                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
                                 <input type="text" class="input form-control" name="phone" id="phone"
                                        value="${candidate.phone}"
-                                       placeholder="${i18nphone}" pattern="^\+?[0-9]+" maxlength="20">
+                                       placeholder="${i18nphone}" data-error="<spring:message
+                                    code="candidate.error.phone.incorrect"/>"
+                                       pattern="^\+?[0-9]+" maxlength="20">
+                                <div class="help-block with-errors"></div>
 
                                 <p class="showValue form-control-static">${candidate.phone}</p>
                             </div>
 
                         </div>
                         <div class="error col-lg-12 col-md-12 col-sm-12">
-                            <p class="phoneError col-lg-4 col-md-4 col-sm-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" ><spring:message
-                                    code="candidate.error.phone.incorrect"/></p>
                         </div>
                         <div class="form-group"
                              id="descriptionDiv">

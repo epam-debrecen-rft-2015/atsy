@@ -89,6 +89,14 @@
         'minlength': function ($el) {
             var minlength = $el.data('minlength')
             return !$el.val() || $el.val().length >= minlength
+        },
+        'pattern': function ($el) {
+            var pattern = $el.data('pattern')
+            if($el.val()) {
+                return $el.val().match(pattern)
+            } else {
+                return true
+            }
         }
     }
 

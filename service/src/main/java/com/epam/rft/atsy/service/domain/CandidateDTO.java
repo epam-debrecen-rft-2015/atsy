@@ -1,6 +1,7 @@
 package com.epam.rft.atsy.service.domain;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
@@ -9,20 +10,21 @@ import javax.validation.constraints.Size;
 public class CandidateDTO {
     private Long candidateId;
     @NotNull
-    @Size(min = 1)
+    @Size(min = 1, max =100, message = "candidate.error.name.long")
     private String name;
 
     @NotNull
-    @Size(min = 1)
+    @Size(min = 1, max = 400, message = "candidate.error.email.long")
     private String email;
 
-
     @NotNull
-    @Size(min = 1)
+    @Size(min = 1, max = 20, message = "candidate.error.phone.long")
     private String phone;
 
+    @Size(min = 1, max = 20, message = "candidate.error.referer.long")
     private String referer;
 
+    @Size(min = 0, max = 10, message = "candidate.error.language.incorrect")
     private Short languageSkill;
 
     private String description;
