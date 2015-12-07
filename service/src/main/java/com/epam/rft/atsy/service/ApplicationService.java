@@ -9,8 +9,8 @@ import java.util.Collection;
  */
 public interface ApplicationService {
 
-    Collection<StateDTO> getStates(Long id);
+    Collection<StateDTO> getStatesByCandidateId(Long id);
 
-    void saveState(StateDTO state);
+    Long saveState(StateDTO state);
 
 }
