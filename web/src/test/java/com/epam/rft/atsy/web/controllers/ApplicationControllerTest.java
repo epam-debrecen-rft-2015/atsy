@@ -23,7 +23,7 @@ public class ApplicationControllerTest {
     @Test
     public void shouldReturnViewModel() {
         //when
-        ModelAndView model = underTest.loadPage();
+        ModelAndView model = underTest.loadPage(1l);
         //then
         assertThat(model.getViewName(), is("application"));
     }

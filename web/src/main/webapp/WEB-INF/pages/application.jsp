@@ -6,7 +6,7 @@
 <%@taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
 <%@page contentType="text/html;charset=UTF-8" %>
 <spring:url value="/secure/application" var="application"/>
-<spring:url value="/new_application_popup" var="new_application_popup"/>
+<spring:url value="/secure/new_application_popup" var="new_application_popup"/>
 
 <atsy:secure_page>
   <jsp:attribute name="pageJs">
@@ -24,7 +24,8 @@
               <h4 class="modal-title">Új jelentkezés</h4>
             </div>
             <div class="modal-body">
-              <form class="form" role="form" method="POST" id="application-create-form" action="${candidateURL}">
+              <form class="form" role="form" method="POST" id="application-create-form" action="${new_application_popup}">
+                <input type="hidden" name="candidateId" id="candidateId" value="${candidateId}">
                 <div class="form-group"
                      id="positionDiv">
                   <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
@@ -32,7 +33,7 @@
                           code="candidate.english.label"/></label>
 
                   <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="drop">
-                    <select class="input form-control" name="position" id="position">
+                    <select class="input form-control" name="position.positionId" id="position">
                       <!--<option value=0 <c:if
                               test="${0 eq candidate.languageSkill}"> selected="selected" </c:if>>
                         <spring:message code="candidate.english.level.default"/></option>
@@ -91,12 +92,15 @@
                     <p class="showValue form-control-static">${candidate.description}</p>
                   </div>
                 </div>
+                <div class="modal-footer">
+                  <a href="candidate-show.html" class="btn btn-danger">Vissza</a>
+                  <button type="submit" class="btn btn-success">
+                    <spring:message code="save.button"/>
+                  </button>
+                </div>
               </form>
             </div>
-            <div class="modal-footer">
-              <a href="candidate-show.html" class="btn btn-danger">Vissza</a>
-              <a href="application.html" class="btn btn-success">Mentés</a>
-            </div>
+
           </div>
         </div>
       </div>

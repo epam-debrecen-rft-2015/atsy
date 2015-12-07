@@ -1,6 +1,7 @@
 package com.epam.rft.atsy.service.impl;
 
 import com.epam.rft.atsy.persistence.dao.ApplicationDAO;
+import com.epam.rft.atsy.persistence.entities.states.NewStateEntity;
 import com.epam.rft.atsy.persistence.entities.states.StateEntity;
 import com.epam.rft.atsy.service.ApplicationService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
@@ -37,7 +38,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public Long saveState(StateDTO state) {
-        StateEntity stateEntity = modelMapper.map(state, StateEntity.class);
+        NewStateEntity stateEntity = modelMapper.map(state, NewStateEntity.class);
 
         Long stateId=applicationDAO.create(stateEntity).getStateId();
 
