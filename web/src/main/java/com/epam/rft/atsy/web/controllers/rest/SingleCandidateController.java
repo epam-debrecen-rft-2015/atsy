@@ -15,9 +15,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import javax.validation.Valid;
+import java.util.*;
 
 /**
  * Created by mates on 2015. 11. 18..
@@ -35,14 +34,14 @@ public class SingleCandidateController {
     private MessageSource messageSource;
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity saveOrUpdate(@RequestBody CandidateDTO candidateDTO, BindingResult result, Locale locale) {
+    public ResponseEntity saveOrUpdate(@Valid @RequestBody CandidateDTO candidateDTO, BindingResult result, Locale locale) {
         ResponseEntity entity;
         if (!result.hasErrors()) {
             Long candidateId = candidateService.saveOrUpdate(candidateDTO);
             entity = new ResponseEntity<Long>(candidateId, HttpStatus.OK);
         } else {
-
-            entity = new ResponseEntity<List<FieldError>>(result.getFieldErrors(), HttpStatus.BAD_REQUEST);
+            Map<String, String> errorMessages =parseValidationErrors(result.getFieldErrors(),locale);
+            entity = new ResponseEntity<>(errorMessages, HttpStatus.BAD_REQUEST);
         }
         return entity;
     }
@@ -58,5 +57,13 @@ public class SingleCandidateController {
         LOGGER.error("Error while saving position changes", ex);
         return new ResponseEntity<String>(messageSource.getMessage(TECHNICAL_ERROR_MESSAGE_KEY,
                 null, locale), HttpStatus.BAD_REQUEST);
+    }
+
+    private Map<String,String> parseValidationErrors(List<FieldError> fieldErrors, Locale locale){
+        Map<String,String> fieldNamesWithError = new HashMap<String,String>();
+        for(FieldError fieldError: fieldErrors){
+            fieldNamesWithError.put(fieldError.getField(), messageSource.getMessage(fieldError.getDefaultMessage(), new Object[0], locale));
+        }
+        return fieldNamesWithError;
     }
 }

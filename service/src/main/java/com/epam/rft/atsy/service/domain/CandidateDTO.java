@@ -1,8 +1,6 @@
 package com.epam.rft.atsy.service.domain;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 /**
  * Created by tothd on 2015. 11. 07..
@@ -18,15 +16,15 @@ public class CandidateDTO {
     @Size(min = 1, max = 400, message = "candidate.error.email.long")
     private String email;
 
-    @NotNull
     @Pattern(regexp = "^\\+?[0-9]+", message = "candidate.error.phone.incorrect")
-    @Size(min = 1, max = 20, message = "candidate.error.phone.long")
+    @Size(max = 20, message = "candidate.error.phone.long")
     private String phone;
 
-    @Size(min = 1, max = 20, message = "candidate.error.referer.long")
+    @Size(max = 20, message = "candidate.error.referer.long")
     private String referer;
 
-    @Size(min = 0, max = 10, message = "candidate.error.language.incorrect")
+    @Min(0)
+    @Max(10)
     private Short languageSkill;
 
     private String description;
