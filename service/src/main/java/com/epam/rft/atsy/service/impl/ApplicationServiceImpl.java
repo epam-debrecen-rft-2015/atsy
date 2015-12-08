@@ -22,10 +22,10 @@ import java.util.List;
 public class ApplicationServiceImpl implements ApplicationService {
 
     @Resource
-    ApplicationDAO applicationDAO;
+    private ApplicationDAO applicationDAO;
 
     @Resource
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
     @Override
     public Collection<StateDTO> getStatesByCandidateId(Long id) {

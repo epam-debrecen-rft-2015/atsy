@@ -3,7 +3,6 @@ package com.epam.rft.atsy.service.impl;
 import com.epam.rft.atsy.persistence.dao.CandidateDAO;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.request.FilterRequest;
-import com.epam.rft.atsy.persistence.request.SortingRequest;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
@@ -26,10 +24,10 @@ import java.util.List;
 @Service
 public class CandidateServiceImpl implements CandidateService {
     @Resource
-    CandidateDAO candidateDAO;
+    private CandidateDAO candidateDAO;
 
     @Resource
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
     @Override
     public CandidateDTO getCandidate(Long id) {

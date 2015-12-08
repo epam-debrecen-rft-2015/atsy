@@ -188,5 +188,31 @@
                 </div>
             </div>
         </div>
+        <div id="new_application" class="text-right">
+            <a class="btn btn-success" href="${welcome}" id="add_application_button"><spring:message code="candidate.new.application.button"/></a>
+        </div>
+        <%--table--%>
+        <div id="application_table">
+            <div>
+                <table class="table table-hover" id="applications" data-url="${applications}" data-height="500" data-sort-name="name">
+                    <thead>
+                    <tr>
+                        <th data-field="position" data-align="left" ><spring:message
+                                code="candidate.table.application.position"/></th>
+                        <th data-field="added_date" data-align="left" >
+                            <spring:message code="candidate.table.application.added.date"/>
+                        </th>
+                        <th data-field="modified_date" data-align="left" ><spring:message
+                                code="candidate.table.application.modified.date"/></th>
+                        <th data-field="state" data-align="left" ><spring:message
+                                code="candidate.table.application.state"/></th>
+                        <th data-field="actions" data-align="left" data-formatter="actionFormatter">
+                            <spring:message code="candidate.table.application.action"/>
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
     </jsp:body>
 </atsy:secure_page>

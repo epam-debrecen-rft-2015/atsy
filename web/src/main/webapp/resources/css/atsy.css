@@ -157,3 +157,8 @@ textarea {
 #candidate_creation .error {
     color: red;
 }
+
+#add_application_button{
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
