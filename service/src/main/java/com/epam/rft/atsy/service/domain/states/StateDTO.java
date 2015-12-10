@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * Created by tothd on 2015. 12. 07..
  */
-public abstract class StateDTO {
+public class StateDTO {
 
     private Long stateId;
     private Long candidateId;
@@ -15,7 +15,20 @@ public abstract class StateDTO {
     private Date creationDate;
     private String description;
     private StateDTO nextState;
+    private String stateType;
 
+    public StateDTO() {
+    }
+
+    public StateDTO(Long stateId, Long candidateId, PositionDTO position, Date creationDate, String description, StateDTO nextState, String stateType) {
+        this.stateId = stateId;
+        this.candidateId = candidateId;
+        this.position = position;
+        this.creationDate = creationDate;
+        this.description = description;
+        this.nextState = nextState;
+        this.stateType = stateType;
+    }
 
     public Long getStateId() {
         return stateId;
@@ -63,5 +76,13 @@ public abstract class StateDTO {
 
     public void setNextState(StateDTO nextState) {
         this.nextState = nextState;
+    }
+
+    public String getStateType() {
+        return stateType;
+    }
+
+    public void setStateType(String stateType) {
+        this.stateType = stateType;
     }
 }

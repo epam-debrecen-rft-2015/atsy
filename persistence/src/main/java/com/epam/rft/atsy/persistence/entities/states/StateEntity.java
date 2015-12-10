@@ -12,6 +12,8 @@ import java.util.Date;
 @Table(name = "States", schema = "atsy")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "state_type")
+
+
 public abstract class StateEntity {
 
     @Id
@@ -30,6 +32,17 @@ public abstract class StateEntity {
     @ManyToOne
     @JoinColumn(name = "next_state", nullable = true)
     private StateEntity nextState;
+
+    @Column(name = "state_type", insertable = false, updatable = false)
+    private String stateType;
+
+    public String getStateType() {
+        return stateType;
+    }
+
+    public void setStateType(String stateType) {
+        this.stateType = stateType;
+    }
 
     public Long getStateId() {
         return stateId;
