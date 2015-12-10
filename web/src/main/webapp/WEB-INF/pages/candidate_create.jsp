@@ -12,7 +12,8 @@
 
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
-        <script src="<c:url value="/resources/thirdparty/bootstrap-validator/validator.js" />" type="text/javascript"></script>
+        <script src="<c:url value="/resources/thirdparty/bootstrap-validator/validator.js" />"
+                type="text/javascript"></script>
         <script src="<c:url value="/resources/js/atsy-candidate-create.js" />"></script>
     </jsp:attribute>
     <jsp:body>
@@ -38,7 +39,8 @@
 
             <div id="candidate_data">
                 <div class="row">
-                    <form data-toggle="validator" class="form" role="form" method="POST" id="candidate-create-form" action="${candidateURL}">
+                    <form data-toggle="validator" class="form" role="form" method="POST" id="candidate-create-form"
+                          action="${candidateURL}">
                         <div class="globalMessage alert alert-danger" role="alert"
                              style="display: none">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
@@ -59,6 +61,7 @@
                                        data-error="<spring:message
                                                code="candidate.error.name.empty"/>"
                                        required maxlength="100">
+
                                 <div class="help-block with-errors"></div>
                                 <p class="showValue form-control-static">${candidate.name}</p>
                             </div>
@@ -143,6 +146,7 @@
                                        placeholder="${i18nphone}" data-error="<spring:message
                                     code="candidate.error.phone.incorrect"/>"
                                        pattern="^\+?[0-9]+" maxlength="20">
+
                                 <div class="help-block with-errors"></div>
 
                                 <p class="showValue form-control-static">${candidate.phone}</p>
@@ -188,31 +192,38 @@
                 </div>
             </div>
         </div>
-        <div id="new_application" class="text-right">
-            <a class="btn btn-success" href="${welcome}" id="add_application_button"><spring:message code="candidate.new.application.button"/></a>
-        </div>
-        <%--table--%>
-        <div id="application_table">
-            <div>
-                <table class="table table-hover" id="applications" data-url="${applications}" data-height="500" data-sort-name="name">
-                    <thead>
-                    <tr>
-                        <th data-field="position" data-align="left" ><spring:message
-                                code="candidate.table.application.position"/></th>
-                        <th data-field="added_date" data-align="left" >
-                            <spring:message code="candidate.table.application.added.date"/>
-                        </th>
-                        <th data-field="modified_date" data-align="left" ><spring:message
-                                code="candidate.table.application.modified.date"/></th>
-                        <th data-field="state" data-align="left" ><spring:message
-                                code="candidate.table.application.state"/></th>
-                        <th data-field="actions" data-align="left" data-formatter="actionFormatter">
-                            <spring:message code="candidate.table.application.action"/>
-                        </th>
-                    </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
+        <c:choose>
+            <c:when test="${not empty candidate.candidateId}">
+                <div id="new_application" class="text-right">
+                    <a class="btn btn-success" href="${welcome}" id="add_application_button"><spring:message
+                            code="candidate.new.application.button"/></a>
+                </div>
+                <%--table--%>
+                <div id="application_table">
+                    <div>
+                        <table class="table table-hover" id="applications_table" data-height="500"
+                               data-sort-name="name">
+                            <thead>
+                            <tr>
+                                <th data-field="position" data-align="left"><spring:message
+                                        code="candidate.table.application.position"/></th>
+                                <th data-field="added_date" data-align="left">
+                                    <spring:message code="candidate.table.application.added.date"/>
+                                </th>
+                                <th data-field="modified_date" data-align="left"><spring:message
+                                        code="candidate.table.application.modified.date"/></th>
+                                <th data-field="state" data-align="left"><spring:message
+                                        code="candidate.table.application.state"/></th>
+                                <th data-field="actions" data-align="left" data-formatter="actionFormatter">
+                                    <spring:message code="candidate.table.application.action"/>
+                                </th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+
+            </c:when>
+        </c:choose>
     </jsp:body>
 </atsy:secure_page>

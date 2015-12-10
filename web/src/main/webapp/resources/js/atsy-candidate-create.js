@@ -47,4 +47,25 @@ $("#enableModify").button().click(function () {
 });
 $("#cancelButtonModify").click(function () {
     $("#candidate_creation").addClass("display");
-})
+});
+
+$('#applications_table').bootstrapTable({
+    url: '../applications/'+ $('#candidateId').val(),
+    columns: [{
+        field: 'positionName',
+    }, {
+        field: 'creationDate',
+    }, {
+        field: 'modificationDate',
+    }, {
+        field: 'stateType',
+    }, ]
+});
+
+function actionFormatter(value, row, index) {
+    return [
+        '<a class="edit ml10" href="candidate/' + row.candidateId + '" title="Edit">',
+        '<i class="glyphicon glyphicon-edit"></i>',
+        '</a>'
+    ].join('');
+}
