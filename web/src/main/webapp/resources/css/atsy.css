@@ -162,3 +162,23 @@ textarea {
     margin-bottom: 20px;
     margin-top: 20px;
 }
+
+#new_application_popup_title{
+    margin-left: 20px;
+}
+
+#drop{
+    margin-top:10px;
+}
+
+#dropSource{
+    margin-top:10px;
+}
+
+#positionLabel{
+    margin-top:10px;
+}
+
+#sourceLabel{
+    margin-top:2px;
+}

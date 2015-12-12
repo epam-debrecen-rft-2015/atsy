@@ -20,17 +20,14 @@
       <div class="modal fade" id="modal">
         <div class="modal-dialog" role="dialog">
           <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Új jelentkezés</h4>
-            </div>
-            <div class="modal-body">
-              <form class="form" role="form" method="POST" id="application-create-form" action="${new_application_popup}">
+            <h4 id="new_application_popup_title">Új jelentkezés</h4>
+            <form class="form" role="form" method="POST" id="application-create-form" action="${new_application_popup}">
                 <input type="hidden" name="candidateId" id="candidateId" value="${candidateId}">
                 <div class="form-group"
                      id="positionDiv">
-                  <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
+                  <label id="positionLabel" class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
                          for="drop"><spring:message
-                          code="candidate.english.label"/></label>
+                          code="application.create.position.label"/></label>
 
                   <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="drop">
                     <select class="input form-control" name="position.positionId" id="position">
@@ -47,9 +44,9 @@
                 </div>
                 <div class="form-group"
                      id="sourceDiv">
-                  <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
+                  <label id="sourceLabel" class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
                          for="source"><spring:message
-                          code="candidate.english.label"/></label>
+                          code="application.create.source.label"/></label>
 
                   <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="dropSource">
                     <select class="input form-control" name="source" id="source">
@@ -81,11 +78,11 @@
                 <div class="form-group"
                      id="descriptionDiv">
                   <spring:message code="candidate.description.field" var="i18ndescription"/>
-                  <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
+                  <label class="control-label col-lg-12 col-md-12 col-sm-12 text-left"
                          for="description"><spring:message
                           code="candidate.description.label"/></label>
 
-                  <div class="col-lg-10 col-md-10 col-sm-10">
+                  <div class="col-lg-12 col-md-12 col-sm-12">
                                 <textarea rows="4" cols="4" class="input form-control" id="description"
                                           placeholder="${i18ndescription}">${candidate.description}</textarea>
 
@@ -98,8 +95,7 @@
                     <spring:message code="save.button"/>
                   </button>
                 </div>
-              </form>
-            </div>
+            </form>
 
           </div>
         </div>
