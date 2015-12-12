@@ -9,6 +9,7 @@
 <spring:url value="/secure/channels" var="channels"/>
 <spring:url value="/secure/welcome" var="welcome"/>
 <spring:url value="/secure/candidate" var="candidateURL"/>
+<spring:url value="/secure/application" var="application"/>
 
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
@@ -195,7 +196,7 @@
         <c:choose>
             <c:when test="${not empty candidate.candidateId}">
                 <div id="new_application" class="text-right">
-                    <a class="btn btn-success" href="${welcome}" id="add_application_button"><spring:message
+                    <a class="btn btn-success" href="${application}?candidateId=${candidate.candidateId}" id="add_application_button"><spring:message
                             code="candidate.new.application.button"/></a>
                 </div>
                 <%--table--%>
