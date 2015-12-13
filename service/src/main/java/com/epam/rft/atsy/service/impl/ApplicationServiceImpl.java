@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         List<CandidateApplicationDTO> candidateApplicationDTOList=new LinkedList<>();
         List<StateDTO> stateDTOs=modelMapper.map(stateEntities, targetListType);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         for (StateDTO stateDTO : stateDTOs){
             CandidateApplicationDTO candidateApplicationDTO=new CandidateApplicationDTO();
@@ -62,6 +63,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public Long saveState(StateDTO state) {
         NewStateEntity stateEntity = modelMapper.map(state, NewStateEntity.class);
+
+        stateEntity.setCreationDate(new Date());
 
         Long stateId=applicationDAO.create(stateEntity).getStateId();
 
