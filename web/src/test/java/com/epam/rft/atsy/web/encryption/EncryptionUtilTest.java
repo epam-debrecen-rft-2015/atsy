@@ -1,11 +1,10 @@
 package com.epam.rft.atsy.web.encryption;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
-
+import com.epam.rft.atsy.web.encryption.impl.Md5EncryptionUtilImpl;
 import org.testng.annotations.Test;
 
-import com.epam.rft.atsy.web.encryption.impl.Md5EncryptionUtilImpl;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
 /**
  * Created by tothd on 2015. 10. 26..

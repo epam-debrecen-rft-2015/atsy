@@ -2,19 +2,12 @@ package com.epam.rft.atsy.persistence;
 
 import com.epam.rft.atsy.persistence.dao.impl.CandidateDAOImpl;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.emptyCollectionOf;
-import static org.hamcrest.Matchers.is;
-
 import com.epam.rft.atsy.persistence.request.SortingRequest;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import static org.hamcrest.Matchers.not;
-import static org.mockito.BDDMockito.given;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -23,6 +16,11 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.Collection;
 import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.emptyCollectionOf;
+import static org.hamcrest.Matchers.not;
+import static org.mockito.BDDMockito.given;
 
 /**
  * Created by szabo on 2015. 11. 11..

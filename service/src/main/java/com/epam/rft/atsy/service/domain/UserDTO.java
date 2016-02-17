@@ -1,7 +1,6 @@
 package com.epam.rft.atsy.service.domain;
 
 import javax.validation.constraints.NotNull;
-
 import java.io.Serializable;
 
 /**

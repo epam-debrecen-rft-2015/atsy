@@ -1,10 +1,9 @@
 package com.epam.rft.atsy.cucumber.util;
 
-import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
-
+import cucumber.api.java.en.Given;
 import org.openqa.selenium.By;
 
-import cucumber.api.java.en.Given;
+import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
 
 /**
  * @author Antal_Kiss on 11/20/2015.

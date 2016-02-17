@@ -5,7 +5,6 @@ import com.epam.rft.atsy.service.domain.UserDTO;
 import com.epam.rft.atsy.service.exception.BackendException;
 import com.epam.rft.atsy.service.exception.UserNotFoundException;
 import com.epam.rft.atsy.web.encryption.EncryptionUtil;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;

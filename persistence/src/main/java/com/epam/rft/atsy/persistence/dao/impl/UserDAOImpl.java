@@ -1,15 +1,14 @@
 package com.epam.rft.atsy.persistence.dao.impl;
 
+import com.epam.rft.atsy.persistence.dao.UserDAO;
+import com.epam.rft.atsy.persistence.entities.UserEntity;
+import org.springframework.stereotype.Repository;
+
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
-
-import org.springframework.stereotype.Repository;
-
-import com.epam.rft.atsy.persistence.dao.UserDAO;
-import com.epam.rft.atsy.persistence.entities.UserEntity;
 
 /**
  * Created by mates on 10/22/2015.

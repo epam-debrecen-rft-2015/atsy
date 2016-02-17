@@ -1,14 +1,9 @@
 package com.epam.rft.atsy.cucumber.util;
 
-import java.lang.Runtime;
-
 import com.google.common.base.Predicate;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-
-import cucumber.api.java.After;
-import cucumber.runtime.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**

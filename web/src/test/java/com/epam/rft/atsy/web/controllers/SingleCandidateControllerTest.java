@@ -1,10 +1,6 @@
 package com.epam.rft.atsy.web.controllers;
 
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalToIgnoringCase;
-import static org.hamcrest.Matchers.is;
-
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.controllers.rest.SingleCandidateController;
@@ -20,6 +16,8 @@ import org.testng.annotations.Test;
 
 import java.util.Locale;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 
 /**

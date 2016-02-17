@@ -2,7 +2,6 @@ package com.epam.rft.atsy.service.impl;
 
 import com.epam.rft.atsy.persistence.dao.ChannelDAO;
 import com.epam.rft.atsy.persistence.entities.ChannelEntity;
-import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import org.hibernate.exception.ConstraintViolationException;

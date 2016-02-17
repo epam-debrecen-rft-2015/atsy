@@ -1,6 +1,5 @@
 package com.epam.rft.atsy.web.configuration;
 
-import com.epam.rft.atsy.persistence.configuration.PersistenceConfiguration;
 import com.epam.rft.atsy.service.configuration.ServiceConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;

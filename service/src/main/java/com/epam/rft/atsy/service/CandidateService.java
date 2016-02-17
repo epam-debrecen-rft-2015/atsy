@@ -1,7 +1,6 @@
 package com.epam.rft.atsy.service;
 
 import com.epam.rft.atsy.persistence.request.FilterRequest;
-import com.epam.rft.atsy.persistence.request.SortingRequest;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 
 import java.util.Collection;

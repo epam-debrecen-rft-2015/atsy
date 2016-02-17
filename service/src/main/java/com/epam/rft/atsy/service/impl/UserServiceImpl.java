@@ -1,21 +1,20 @@
 package com.epam.rft.atsy.service.impl;
 
-import javax.annotation.Resource;
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
-
-import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Service;
-
 import com.epam.rft.atsy.persistence.dao.UserDAO;
 import com.epam.rft.atsy.persistence.entities.UserEntity;
 import com.epam.rft.atsy.service.UserService;
 import com.epam.rft.atsy.service.domain.UserDTO;
 import com.epam.rft.atsy.service.exception.BackendException;
 import com.epam.rft.atsy.service.exception.UserNotFoundException;
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 
 /**
  * Created by tothd on 2015. 10. 21..

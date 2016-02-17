@@ -3,7 +3,6 @@ package com.epam.rft.atsy.service;
 import com.epam.rft.atsy.persistence.dao.CandidateDAO;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.request.FilterRequest;
-import com.epam.rft.atsy.persistence.request.SortingRequest;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import com.epam.rft.atsy.service.impl.CandidateServiceImpl;
@@ -12,10 +11,9 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.springframework.dao.DataIntegrityViolationException;
-
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -25,7 +23,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
 
 
 /**

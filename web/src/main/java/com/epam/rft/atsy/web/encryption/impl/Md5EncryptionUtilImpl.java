@@ -1,14 +1,13 @@
 package com.epam.rft.atsy.web.encryption.impl;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
+import com.epam.rft.atsy.web.encryption.EncryptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.epam.rft.atsy.web.encryption.EncryptionUtil;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by tothd on 2015. 10. 26..

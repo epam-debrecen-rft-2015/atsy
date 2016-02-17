@@ -1,33 +1,23 @@
 package com.epam.rft.atsy.cucumber.settings.positions;
 
-import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForAjax;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
-
-import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import org.hamcrest.CoreMatchers;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
+
+import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
+import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForAjax;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 /**
  * @author Antal_Kiss on 11/20/2015.

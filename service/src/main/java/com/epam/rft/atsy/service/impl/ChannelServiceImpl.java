@@ -3,7 +3,6 @@ package com.epam.rft.atsy.service.impl;
 import com.epam.rft.atsy.persistence.dao.ChannelDAO;
 import com.epam.rft.atsy.persistence.entities.ChannelEntity;
 import com.epam.rft.atsy.service.ChannelService;
-import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import org.hibernate.exception.ConstraintViolationException;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;

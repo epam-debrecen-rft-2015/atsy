@@ -1,6 +1,5 @@
 package com.epam.rft.atsy.persistence;
 
-import com.epam.rft.atsy.persistence.dao.ChannelDAO;
 import com.epam.rft.atsy.persistence.dao.impl.ChannelDAOImpl;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;

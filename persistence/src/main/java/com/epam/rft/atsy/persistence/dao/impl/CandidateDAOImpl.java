@@ -4,10 +4,6 @@ import com.epam.rft.atsy.persistence.dao.CandidateDAO;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 /**
