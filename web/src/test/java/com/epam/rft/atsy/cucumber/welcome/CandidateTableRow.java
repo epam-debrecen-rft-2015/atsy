@@ -58,9 +58,7 @@ public class CandidateTableRow {
                 Field field = CandidateTableRow.class.getDeclaredField(orderField);
                 field.setAccessible(true);
                 value = (String) field.get(row);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (NoSuchFieldException e) {
+            } catch (IllegalAccessException | NoSuchFieldException e) {
                 e.printStackTrace();
             }
             return value;
