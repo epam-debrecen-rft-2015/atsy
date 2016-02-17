@@ -23,7 +23,6 @@ public class WelcomeController {
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView loadPage() {
-        ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
-        return modelAndView;
+        return new ModelAndView(VIEW_NAME);
     }
 }

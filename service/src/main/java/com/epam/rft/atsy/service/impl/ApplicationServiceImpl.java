@@ -66,8 +66,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         stateEntity.setCreationDate(new Date());
 
-        Long stateId=applicationDAO.create(stateEntity).getStateId();
-
-        return stateId;
+        return applicationDAO.create(stateEntity).getStateId();
     }
 }

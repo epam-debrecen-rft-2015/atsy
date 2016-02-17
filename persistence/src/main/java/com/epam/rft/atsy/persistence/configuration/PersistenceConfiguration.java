@@ -59,8 +59,7 @@ public class PersistenceConfiguration {
     public DataSource dataSource() {
         final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
         dsLookup.setResourceRef(true);
-        DataSource dataSource = dsLookup.getDataSource(JNDI_DATA_SOURCE);
-        return dataSource;
+        return dsLookup.getDataSource(JNDI_DATA_SOURCE);
     }
 
     @Bean

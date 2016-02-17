@@ -8,5 +8,5 @@ import com.epam.rft.atsy.service.exception.UserNotFoundException;
  */
 public interface UserService {
 
-    public UserDTO login(UserDTO user) throws UserNotFoundException;
+    UserDTO login(UserDTO user) throws UserNotFoundException;
 }
