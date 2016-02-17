@@ -22,9 +22,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
 
-/**
- * Created by tothd on 2015. 11. 12..
- */
 public class CandidateControllerTest {
 
     @InjectMocks

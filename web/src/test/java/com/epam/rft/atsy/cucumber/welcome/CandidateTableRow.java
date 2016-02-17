@@ -2,9 +2,6 @@ package com.epam.rft.atsy.cucumber.welcome;
 
 import java.lang.reflect.Field;
 
-/**
- * @author Antal_Kiss on 11/18/2015.
- */
 public class CandidateTableRow {
     String name;
     String email;

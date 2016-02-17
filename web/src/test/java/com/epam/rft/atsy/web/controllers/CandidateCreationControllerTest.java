@@ -15,9 +15,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
 
-/**
- * Created by mates on 2015. 11. 25..
- */
 public class CandidateCreationControllerTest {
 
     @InjectMocks

@@ -8,9 +8,6 @@ import org.testng.annotations.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-/**
- * Created by mates on 2015. 12. 04..
- */
 public class ApplicationControllerTest {
     @InjectMocks
     private ApplicationController underTest;

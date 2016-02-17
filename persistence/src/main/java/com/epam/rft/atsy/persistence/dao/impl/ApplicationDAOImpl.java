@@ -14,9 +14,6 @@ import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.Collection;
 
-/**
- * Created by tothd on 2015. 12. 03..
- */
 @Repository
 public class ApplicationDAOImpl extends GenericDAOImpl<StateEntity, Long> implements ApplicationDAO {
 

@@ -5,9 +5,6 @@ import org.openqa.selenium.By;
 
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
 
-/**
- * @author Antal_Kiss on 11/20/2015.
- */
 public class CommonStepDefs {
 
     @Given("The user signed in")

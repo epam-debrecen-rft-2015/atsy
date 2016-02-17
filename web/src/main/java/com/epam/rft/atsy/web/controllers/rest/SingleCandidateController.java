@@ -19,9 +19,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-/**
- * Created by mates on 2015. 11. 18..
- */
 @RestController
 @RequestMapping(value = "/secure/candidate")
 public class SingleCandidateController {

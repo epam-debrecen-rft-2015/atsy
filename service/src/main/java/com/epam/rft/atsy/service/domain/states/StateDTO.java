@@ -4,9 +4,6 @@ import com.epam.rft.atsy.service.domain.PositionDTO;
 
 import java.util.Date;
 
-/**
- * Created by tothd on 2015. 12. 07..
- */
 public class StateDTO {
 
     private Long stateId;

@@ -21,9 +21,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 
-/**
- * Created by mates on 2015. 12. 01..
- */
 public class ChannelControllerTest {
     private static final String EMPTY_POSITION_NAME_MESSAGE_KEY = "settings.channels.error.empty";
 

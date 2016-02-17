@@ -15,10 +15,6 @@ import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.Locale;
 
-
-/**
- * Created by Ikantik.
- */
 @RestController
 @RequestMapping(value = "/secure/channels")
 public class ChannelController {

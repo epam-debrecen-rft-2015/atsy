@@ -21,9 +21,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-/**
- * Created by Ikantik.
- */
 @Configuration
 @EnableTransactionManagement
 @ComponentScan("com.epam.rft.atsy.persistence")

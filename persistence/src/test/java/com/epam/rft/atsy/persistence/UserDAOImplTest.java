@@ -21,9 +21,6 @@ import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 
-/**
- * Created by mates on 10/29/2015.
- */
 public class UserDAOImplTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDAOImplTest.class);

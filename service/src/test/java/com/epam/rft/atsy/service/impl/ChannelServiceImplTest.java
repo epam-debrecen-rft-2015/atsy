@@ -25,7 +25,6 @@ import static org.mockito.Mockito.verify;
 
 /**
  * Unit tests for {@link ChannelServiceImpl}.
- * Created by Ikantik on 2015.11.15..
  */
 public class ChannelServiceImplTest {
     @InjectMocks

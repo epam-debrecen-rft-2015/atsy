@@ -7,9 +7,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-/**
- * Created by Ikantik.
- */
 @Configuration
 @Import({PersistenceConfiguration.class})
 @ComponentScan("com.epam.rft.atsy.service")

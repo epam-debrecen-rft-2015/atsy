@@ -12,9 +12,6 @@ import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.Locale;
 
-/**
- * Created by tothd on 2015. 12. 09..
- */
 @RestController
 @RequestMapping(value = "/secure/applications/{candidateId}")
 public class CandidateApplicationController {

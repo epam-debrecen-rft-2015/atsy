@@ -2,9 +2,6 @@ package com.epam.rft.atsy.persistence.entities;
 
 import javax.persistence.*;
 
-/**
- * Created by mates on 10/22/2015.
- */
 @Entity
 @Table(name = "Positions", schema = "atsy", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class PositionEntity implements java.io.Serializable {

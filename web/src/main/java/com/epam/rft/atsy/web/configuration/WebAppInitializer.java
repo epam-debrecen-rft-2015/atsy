@@ -2,10 +2,6 @@ package com.epam.rft.atsy.web.configuration;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-/**
- * Created by Ikantik.
- */
-
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
     protected Class<?>[] getServletConfigClasses() {

@@ -16,9 +16,6 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Created by mates on 2015. 12. 07..
- */
 @Controller
 @RequestMapping(value = "/secure/new_application_popup")
 public class PopupController {

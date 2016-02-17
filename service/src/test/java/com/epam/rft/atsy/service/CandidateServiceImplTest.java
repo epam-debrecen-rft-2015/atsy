@@ -24,10 +24,6 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 
-
-/**
- * Created by tothd on 2015. 11. 12..
- */
 public class CandidateServiceImplTest {
 
     @InjectMocks

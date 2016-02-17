@@ -2,9 +2,6 @@ package com.epam.rft.atsy.service.domain.states;
 
 import java.util.Date;
 
-/**
- * Created by tothd on 2015. 12. 02..
- */
 public class WageOfferStateDTO extends StateDTO {
 
     private Long offeredMoney;

@@ -6,9 +6,6 @@ import org.testng.annotations.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-/**
- * Created by Ikantik on 2015.11.15..
- */
 public class OptionsControllerTest {
     private OptionsController underTest = new OptionsController();
 

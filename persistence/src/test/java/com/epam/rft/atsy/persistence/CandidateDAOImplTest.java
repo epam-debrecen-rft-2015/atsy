@@ -22,9 +22,6 @@ import static org.hamcrest.Matchers.emptyCollectionOf;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.BDDMockito.given;
 
-/**
- * Created by szabo on 2015. 11. 11..
- */
 public class CandidateDAOImplTest {
 
     @InjectMocks

@@ -24,11 +24,6 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 
-
-/**
- * Created by tothd on 2015. 10. 26..
- */
-
 public class LoginControllerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginControllerTest.class);

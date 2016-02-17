@@ -6,9 +6,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-/**
- * Created by Ikantik.
- */
 public class PositionDTO implements Serializable {
     private Long positionId;
     @NotNull

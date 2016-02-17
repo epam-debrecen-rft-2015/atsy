@@ -6,9 +6,6 @@ import com.epam.rft.atsy.persistence.request.SortingRequest;
 import java.io.Serializable;
 import java.util.Collection;
 
-/**
- * Created by mates on 10/22/2015.
- */
 public interface GenericDAO<T, PK extends Serializable> {
     T create(T t);
 

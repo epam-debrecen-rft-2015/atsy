@@ -6,9 +6,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-/**
- * Created by mates on 2015. 12. 02..
- */
 @Controller
 @RequestMapping(value = "/secure/application")
 public class ApplicationController {

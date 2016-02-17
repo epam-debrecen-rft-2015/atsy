@@ -19,9 +19,6 @@ import static org.hamcrest.Matchers.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
-/**
- * @author Antal_Kiss on 11/20/2015.
- */
 public class PositionsStepDefs {
     private String positionsListContents;
     private String positionName;

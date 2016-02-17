@@ -1,8 +1,5 @@
 package com.epam.rft.atsy.persistence.request;
 
-/**
- * Created by tothd on 2015. 11. 07..
- */
 public class SortingRequest {
 
     private String fieldName;

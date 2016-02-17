@@ -2,9 +2,6 @@ package com.epam.rft.atsy.service.domain;
 
 import javax.validation.constraints.*;
 
-/**
- * Created by tothd on 2015. 11. 07..
- */
 public class CandidateDTO {
     private Long candidateId;
     @NotNull

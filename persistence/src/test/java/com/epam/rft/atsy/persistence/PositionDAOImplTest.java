@@ -6,9 +6,6 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- * Created by mates on 2015. 11. 26..
- */
 public class PositionDAOImplTest {
     @InjectMocks
     PositionDAOImpl channelDAO;

@@ -10,9 +10,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 
-/**
- * Created by mates on 2015. 11. 17..
- */
 @Controller
 @RequestMapping(path = "/secure")
 public class CandidateCreationController {

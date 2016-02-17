@@ -3,9 +3,6 @@ package com.epam.rft.atsy.service.domain;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-/**
- * Created by tothd on 2015. 10. 21..
- */
 public class UserDTO implements Serializable{
 
     private Long userID;

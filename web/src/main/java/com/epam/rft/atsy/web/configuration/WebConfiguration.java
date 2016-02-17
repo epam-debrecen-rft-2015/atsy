@@ -21,9 +21,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.Locale;
 
-/**
- * Created by Ikantik.
- */
 @Configuration
 @EnableWebMvc
 @ComponentScan("com.epam.rft.atsy.web")

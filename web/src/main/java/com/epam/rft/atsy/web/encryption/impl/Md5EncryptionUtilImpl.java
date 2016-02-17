@@ -9,9 +9,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Created by tothd on 2015. 10. 26..
- */
 @Component
 public class Md5EncryptionUtilImpl implements EncryptionUtil{
 

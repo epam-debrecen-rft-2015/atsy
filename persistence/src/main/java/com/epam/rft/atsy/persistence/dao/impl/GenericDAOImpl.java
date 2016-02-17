@@ -19,10 +19,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by mates on 10/22/2015.
- */
-
 public class GenericDAOImpl<T, PK extends Serializable>
         implements GenericDAO<T, PK> {
 

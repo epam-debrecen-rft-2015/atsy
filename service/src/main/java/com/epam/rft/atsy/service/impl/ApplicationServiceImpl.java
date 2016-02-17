@@ -18,10 +18,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by tothd on 2015. 12. 07..
- */
-
 @Service
 public class ApplicationServiceImpl implements ApplicationService {
 

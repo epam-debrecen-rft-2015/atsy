@@ -6,9 +6,6 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 
-/**
- * Created by tothd on 2015. 10. 26..
- */
 public class EncryptionUtilTest {
 
 

@@ -2,9 +2,6 @@ package com.epam.rft.atsy.persistence.request;
 
 import java.util.Map;
 
-/**
- * Created by tothd on 2015. 11. 17..
- */
 public class FilterRequest extends SortingRequest {
 
     private Map<String,String> filters;

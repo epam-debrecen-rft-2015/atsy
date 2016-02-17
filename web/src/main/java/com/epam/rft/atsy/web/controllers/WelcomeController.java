@@ -8,9 +8,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 
-/**
- * Created by tothd on 2015. 11. 07..
- */
 @RestController
 @RequestMapping(value = "/secure/welcome")
 public class WelcomeController {

@@ -16,9 +16,6 @@ import javax.annotation.Resource;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 
-/**
- * Created by tothd on 2015. 10. 21..
- */
 @Service
 public class UserServiceImpl implements UserService {
 

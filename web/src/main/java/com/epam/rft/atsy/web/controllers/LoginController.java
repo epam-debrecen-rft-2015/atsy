@@ -19,9 +19,6 @@ import javax.validation.Valid;
 import java.util.Base64;
 import java.util.Locale;
 
-/**
- * Created by Ikantik.
- */
 @Controller
 @RequestMapping("/login")
 public class LoginController {

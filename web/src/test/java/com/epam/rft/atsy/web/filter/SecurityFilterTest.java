@@ -18,9 +18,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 
-/**
- * Created by tothd on 2015. 11. 02..
- */
 public class SecurityFilterTest {
 
     @InjectMocks

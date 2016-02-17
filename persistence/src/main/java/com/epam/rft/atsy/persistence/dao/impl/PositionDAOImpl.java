@@ -6,9 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 
-/**
- * Created by mates on 10/22/2015.
- */
 @Transactional(Transactional.TxType.REQUIRED)
 @Repository
 public class PositionDAOImpl extends GenericDAOImpl<PositionEntity, Long> implements PositionDAO {

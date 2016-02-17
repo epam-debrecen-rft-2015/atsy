@@ -18,9 +18,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 
-/**
- * Created by mates on 2015. 11. 11..
- */
 public class WelcomeStepDefs {
     private List<CandidateTableRow> expectedCandidates;
 

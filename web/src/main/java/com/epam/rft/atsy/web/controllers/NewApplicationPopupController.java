@@ -5,9 +5,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-/**
- * Created by mates on 2015. 12. 03..
- */
 @Controller
 @RequestMapping(value = "/new_application_popup")
 public class NewApplicationPopupController {

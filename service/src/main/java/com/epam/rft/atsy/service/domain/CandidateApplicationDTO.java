@@ -1,8 +1,5 @@
 package com.epam.rft.atsy.service.domain;
 
-/**
- * Created by tothd on 2015. 12. 10..
- */
 public class CandidateApplicationDTO {
 
     private Long lastStateId;

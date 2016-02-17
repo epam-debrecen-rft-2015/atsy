@@ -19,9 +19,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by tothd on 2015. 11. 07..
- */
 @RestController
 @RequestMapping(value = "/secure/candidates")
 public class CandidateController {

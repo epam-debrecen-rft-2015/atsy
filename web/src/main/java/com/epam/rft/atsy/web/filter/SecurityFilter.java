@@ -10,9 +10,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Base64;
 
-/**
- * Created by tothd on 2015. 10. 28..
- */
 @WebFilter(urlPatterns = "/secure/*")
 public class SecurityFilter implements Filter {
     private static final String LOGIN_PATH = "/login";

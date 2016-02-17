@@ -3,9 +3,6 @@ package com.epam.rft.atsy.persistence.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 
-/**
- * Created by szabo on 2015. 11. 07..
- */
 @Entity
 @Table(name = "Candidates", schema = "atsy")
 public class CandidateEntity implements Serializable {

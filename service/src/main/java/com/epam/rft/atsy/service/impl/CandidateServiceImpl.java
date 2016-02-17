@@ -18,9 +18,6 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Created by tothd on 2015. 11. 07..
- */
 @Service
 public class CandidateServiceImpl implements CandidateService {
     @Resource

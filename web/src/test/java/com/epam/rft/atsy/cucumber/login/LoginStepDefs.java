@@ -10,10 +10,6 @@ import org.openqa.selenium.WebElement;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-/**
- * Created by Ikantik.
- */
-
 public class LoginStepDefs {
 
     private DriverProvider driverProvider;
