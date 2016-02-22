@@ -3,11 +3,13 @@ package com.epam.rft.atsy.service.impl;
 import com.epam.rft.atsy.persistence.dao.ApplicationDAO;
 import com.epam.rft.atsy.persistence.entities.states.NewStateEntity;
 import com.epam.rft.atsy.persistence.entities.states.StateEntity;
+import com.epam.rft.atsy.persistence.repositories.ApplicationRepository;
 import com.epam.rft.atsy.service.ApplicationService;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -27,9 +29,12 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Resource
     private ModelMapper modelMapper;
 
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
     @Override
     public Collection<CandidateApplicationDTO> getStatesByCandidateId(Long id) {
-        Collection<StateEntity> stateEntities = applicationDAO.loadByCandidateId(id);
+        Collection<StateEntity> stateEntities = applicationRepository.findByCandidateId(id);
         Type targetListType = new TypeToken<List<StateDTO>>() {
         }.getType();
 

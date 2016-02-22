@@ -9,6 +9,7 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -23,6 +24,7 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
+@EnableJpaRepositories("com.epam.rft.atsy.persistence.repositories")
 @ComponentScan("com.epam.rft.atsy.persistence")
 public class PersistenceConfiguration {
 
@@ -59,7 +61,7 @@ public class PersistenceConfiguration {
         return dsLookup.getDataSource(JNDI_DATA_SOURCE);
     }
 
-    @Bean
+    @Bean(name = "transactionManager")
     public PlatformTransactionManager txManager(EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
     }

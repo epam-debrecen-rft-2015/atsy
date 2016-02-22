@@ -2,6 +2,7 @@ package com.epam.rft.atsy.service.impl;
 
 import com.epam.rft.atsy.persistence.dao.CandidateDAO;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
+import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.persistence.request.FilterRequest;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
@@ -9,6 +10,7 @@ import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -26,10 +28,13 @@ public class CandidateServiceImpl implements CandidateService {
     @Resource
     private ModelMapper modelMapper;
 
+    @Autowired
+    private CandidateRepository candidateRepository;
+
     @Override
     public CandidateDTO getCandidate(Long id) {
         CandidateDTO candidateDTO;
-        CandidateEntity candidateEntity = candidateDAO.read(id);
+        CandidateEntity candidateEntity = candidateRepository.findOne(id);
         candidateDTO = modelMapper.map(candidateEntity, CandidateDTO.class);
         return candidateDTO;
     }
