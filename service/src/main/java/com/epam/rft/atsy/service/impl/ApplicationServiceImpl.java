@@ -23,8 +23,6 @@ import java.util.List;
 @Service
 public class ApplicationServiceImpl implements ApplicationService {
 
-    @Resource
-    private ApplicationDAO applicationDAO;
 
     @Resource
     private ModelMapper modelMapper;
@@ -67,6 +65,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         stateEntity.setCreationDate(new Date());
 
-        return applicationDAO.create(stateEntity).getStateId();
+        return applicationRepository.save(stateEntity).getStateId();
     }
 }

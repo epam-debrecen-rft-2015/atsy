@@ -24,8 +24,6 @@ import java.util.List;
 public class ChannelServiceImpl implements ChannelService {
 
     @Resource
-    private ChannelDAO ChannelDAO;
-    @Resource
     private ModelMapper modelMapper;
 
     @Autowired
@@ -33,7 +31,7 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     public Collection<ChannelDTO> getAllChannels() {
-        Collection<ChannelEntity> ChannelEntities = makeCollection(channelRepository.findAll());
+        Collection<ChannelEntity> ChannelEntities = channelRepository.findAll();
         Type targetListType = new TypeToken<List<ChannelDTO>>() {
         }.getType();
         return modelMapper.map(ChannelEntities, targetListType);
@@ -44,21 +42,9 @@ public class ChannelServiceImpl implements ChannelService {
         Assert.notNull(channel);
         ChannelEntity entity = modelMapper.map(channel, ChannelEntity.class);
         try {
-            if (entity.getChannelId() == null) {
-                ChannelDAO.create(entity);
-            } else {
-                ChannelDAO.update(entity);
-            }
+            channelRepository.save(entity);
         } catch (ConstraintViolationException | DataIntegrityViolationException constraint) {
             throw new DuplicateRecordException(channel.getName());
         }
-    }
-
-    public <E> Collection<E> makeCollection(Iterable<E> iter) {
-        Collection<E> list = new ArrayList<E>();
-        for (E item : iter) {
-            list.add(item);
-        }
-        return list;
     }
 }

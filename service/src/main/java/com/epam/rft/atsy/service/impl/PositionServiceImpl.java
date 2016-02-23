@@ -24,8 +24,6 @@ import java.util.List;
 public class PositionServiceImpl implements PositionService {
 
     @Resource
-    private PositionDAO positionDAO;
-    @Resource
     private ModelMapper modelMapper;
 
     @Autowired
@@ -33,10 +31,8 @@ public class PositionServiceImpl implements PositionService {
 
     @Override
     public Collection<PositionDTO> getAllPositions() {
-        Collection<PositionEntity> positionEntities = makeCollection(positionRepository.findAll());
-        Type targetListType = new TypeToken<List<PositionDTO>>() {
-        }.getType();
-        return modelMapper.map(positionEntities, targetListType);
+        List<PositionEntity> positionEntities = positionRepository.findAll();
+        return modelMapper.map(positionEntities, new TypeToken<List<PositionDTO>>() {}.getType());
     }
 
     @Override
@@ -44,21 +40,10 @@ public class PositionServiceImpl implements PositionService {
         Assert.notNull(position);
         PositionEntity entity = modelMapper.map(position, PositionEntity.class);
         try {
-            if (entity.getPositionId() == null) {
-                positionDAO.create(entity);
-            } else {
-                positionDAO.update(entity);
-            }
+            positionRepository.save(entity);
         } catch (ConstraintViolationException | DataIntegrityViolationException constraint) {
             throw new DuplicateRecordException(position.getName());
         }
     }
 
-    public <E> Collection<E> makeCollection(Iterable<E> iter) {
-        Collection<E> list = new ArrayList<E>();
-        for (E item : iter) {
-            list.add(item);
-        }
-        return list;
-    }
 }
