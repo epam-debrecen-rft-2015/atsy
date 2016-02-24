@@ -1,13 +1,12 @@
 package com.epam.rft.atsy.persistence;
 
-import com.epam.rft.atsy.persistence.dao.impl.PositionDAOImpl;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class PositionDAOImplTest {
-    @InjectMocks
+    /*@InjectMocks
     PositionDAOImpl channelDAO;
 
     @BeforeMethod
@@ -18,5 +17,5 @@ public class PositionDAOImplTest {
     @Test
     public void emptyTest(){
 
-    }
+    }*/
 }

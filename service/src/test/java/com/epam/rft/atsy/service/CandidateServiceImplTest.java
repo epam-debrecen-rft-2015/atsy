@@ -1,6 +1,5 @@
 package com.epam.rft.atsy.service;
 
-import com.epam.rft.atsy.persistence.dao.CandidateDAO;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.request.FilterRequest;
 import com.epam.rft.atsy.service.domain.CandidateDTO;

@@ -1,6 +1,5 @@
 package com.epam.rft.atsy.service.impl;
 
-import com.epam.rft.atsy.persistence.dao.PositionDAO;
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
 import com.epam.rft.atsy.service.PositionService;

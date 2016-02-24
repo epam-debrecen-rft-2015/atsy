@@ -1,6 +1,5 @@
 package com.epam.rft.atsy.service.impl;
 
-import com.epam.rft.atsy.persistence.dao.PositionDAO;
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;

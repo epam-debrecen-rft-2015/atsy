@@ -1,6 +1,5 @@
 package com.epam.rft.atsy.service.impl;
 
-import com.epam.rft.atsy.persistence.dao.CandidateDAO;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.persistence.request.FilterRequest;
@@ -25,8 +24,6 @@ import java.util.List;
 @Service
 public class CandidateServiceImpl implements CandidateService {
     public static final String C = "c.";
-    @Resource
-    private CandidateDAO candidateDAO;
 
     @Resource
     private ModelMapper modelMapper;

@@ -1,6 +1,5 @@
 package com.epam.rft.atsy.service.impl;
 
-import com.epam.rft.atsy.persistence.dao.ApplicationDAO;
 import com.epam.rft.atsy.persistence.entities.states.NewStateEntity;
 import com.epam.rft.atsy.persistence.entities.states.StateEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationRepository;

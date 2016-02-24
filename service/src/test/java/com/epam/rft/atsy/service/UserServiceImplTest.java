@@ -1,6 +1,5 @@
 package com.epam.rft.atsy.service;
 
-import com.epam.rft.atsy.persistence.dao.UserDAO;
 import com.epam.rft.atsy.persistence.entities.UserEntity;
 import com.epam.rft.atsy.service.domain.UserDTO;
 import com.epam.rft.atsy.service.exception.BackendException;
