@@ -34,7 +34,7 @@ public class ChannelController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<String> saveOrUpdate(@RequestBody ChannelDTO channelDTO, BindingResult result, Locale locale) {
-        ResponseEntity entity = new ResponseEntity<String>("", HttpStatus.OK);
+        ResponseEntity<String> entity = new ResponseEntity<String>("", HttpStatus.OK);
 
         if (!result.hasErrors()) {
             channelService.saveOrUpdate(channelDTO);

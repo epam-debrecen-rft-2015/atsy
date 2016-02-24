@@ -34,7 +34,7 @@ public class PositionController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<String> saveOrUpdate(@RequestBody PositionDTO positionDTO, BindingResult result, Locale locale) {
-        ResponseEntity entity = new ResponseEntity<String>("", HttpStatus.OK);
+        ResponseEntity<String> entity = new ResponseEntity<String>("", HttpStatus.OK);
 
         if (!result.hasErrors()) {
             positionService.saveOrUpdate(positionDTO);

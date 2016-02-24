@@ -49,7 +49,6 @@ public class CandidateController {
                 LOGGER.error("Cannot read filters from json", e);
             }
         }
-        SearchOptions searchOptions = new SearchOptions(filterMap.get("name"),filterMap.get("email"),filterMap.get("phone"));
-        return searchOptions;
+        return new SearchOptions(filterMap.get("name"),filterMap.get("email"),filterMap.get("phone"));
     }
 }
