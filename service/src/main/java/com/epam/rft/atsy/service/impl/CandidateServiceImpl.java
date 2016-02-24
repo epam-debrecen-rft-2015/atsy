@@ -41,7 +41,8 @@ public class CandidateServiceImpl implements CandidateService {
     public Collection<CandidateDTO> getAllCandidate(FilterRequest sortingRequest) {
         SearchOptions searchOptions =sortingRequest.getSearchOptions();
         Collection<CandidateEntity> candidateEntities = candidateRepository.findAllCandidatesByFilterRequest(
-                searchOptions.getName(),searchOptions.getEmail(), searchOptions.getPhone(), C +sortingRequest.getFieldName());
+                searchOptions.getName(),searchOptions.getEmail(), searchOptions.getPhone()
+                ,new Sort(Sort.Direction.fromString(sortingRequest.getOrder().name()),sortingRequest.getFieldName()));
         Type targetListType = new TypeToken<List<CandidateDTO>>() {
         }.getType();
         return modelMapper.map(candidateEntities, targetListType);
