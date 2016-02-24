@@ -1,6 +1,7 @@
 package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.persistence.request.FilterRequest;
+import com.epam.rft.atsy.persistence.request.SearchOptions;
 import com.epam.rft.atsy.persistence.request.SortingRequest;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
@@ -32,15 +33,15 @@ public class CandidateController {
     public Collection<CandidateDTO> loadPage(@RequestParam(value = "filter", required = false) String filter,
                                              @RequestParam("order") String order,
                                              @RequestParam("sort") String sortField) {
-        FilterRequest sortingRequest = new FilterRequest();
-        sortingRequest.setOrder(SortingRequest.Order.valueOf(StringUtils.upperCase(order)));
-        sortingRequest.setFieldName(sortField);
-        sortingRequest.setFilters(parseFilters(filter));
-        return candidateService.getAllCandidate(sortingRequest);
+        FilterRequest filterRequest = new FilterRequest();
+        filterRequest.setOrder(SortingRequest.Order.valueOf(StringUtils.upperCase(order)));
+        filterRequest.setFieldName(sortField);
+        filterRequest.setSearchOptions(parseFilters(filter));
+        return candidateService.getAllCandidate(filterRequest);
     }
 
-    private Map<String, String> parseFilters(String filterJson) {
-        Map filterMap = new HashMap<>();
+    private SearchOptions parseFilters(String filterJson) {
+        Map<String,String> filterMap = new HashMap<>();
         if (StringUtils.isNotBlank(filterJson)) {
             try {
                 filterMap = objectMapper.readValue(filterJson, Map.class);
@@ -48,6 +49,7 @@ public class CandidateController {
                 LOGGER.error("Cannot read filters from json", e);
             }
         }
-        return filterMap;
+        SearchOptions searchOptions = new SearchOptions(filterMap.get("name"),filterMap.get("email"),filterMap.get("phone"));
+        return searchOptions;
     }
 }

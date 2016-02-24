@@ -77,7 +77,7 @@ public class GenericDAOImpl<T, PK extends Serializable>
     }
 
 
-    public Collection<T> loadAll(FilterRequest filterRequest) {
+    /*public Collection<T> loadAll(FilterRequest filterRequest) {
 
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -100,7 +100,7 @@ public class GenericDAOImpl<T, PK extends Serializable>
         TypedQuery<T> filterQuery = entityManager.createQuery(filter);
         return filterQuery.getResultList();
 
-    }
+    }*/
 
     public void delete(T t) {
         t = this.entityManager.merge(t);

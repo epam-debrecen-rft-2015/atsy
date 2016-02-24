@@ -39,7 +39,7 @@ public class CandidateControllerTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test
+    /*@Test
     public void loadPageTest() throws IOException {
 
         //given
@@ -58,7 +58,7 @@ public class CandidateControllerTest {
 
         //then
         assertThat(result, containsInAnyOrder(new CandidateDTO("test", "email", "phone", "description", "referer", new Short("1"))));
-    }
+    }*/
 
     @Test(expectedExceptions = NullPointerException.class)
     public void shouldThrowNullExceptionWhenNullOrderGiven() {
@@ -70,7 +70,7 @@ public class CandidateControllerTest {
         Collection<CandidateDTO> result = candidateController.loadPage("", null, "name");
     }
 
-    @Test
+    /*@Test
     public void loadPageIOExceptionTest() throws IOException {
 
         //given
@@ -89,9 +89,9 @@ public class CandidateControllerTest {
 
         //then
         assertThat(result, is(empty()));
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void loadPageIOStringUtilIsEmpty() throws IOException {
 
         //given
@@ -110,5 +110,5 @@ public class CandidateControllerTest {
 
         //then
         assertThat(result, is(empty()));
-    }
+    }*/
 }

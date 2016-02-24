@@ -13,7 +13,7 @@ public interface GenericDAO<T, PK extends Serializable> {
 
     Collection<T> loadAll();
     Collection<T> loadAll(SortingRequest sortingRequest);
-    Collection<T> loadAll (FilterRequest filterRequest);
+    //Collection<T> loadAll (FilterRequest filterRequest);
 
     T update(T t);
 
