@@ -15,7 +15,7 @@
                         <img src="resources/img/epam-logo-login.png" class="img-rounded">
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 right_column">
-                        <form role="form" method="POST" id="login-form">
+                        <form role="form" method="POST" id="login-form" action="/atsy/j_spring_security_check">
                             <c:if test="${not empty loginErrorKey}">
                                 <div id="globalMessage" class="alert alert-danger" role="alert">
                                     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
