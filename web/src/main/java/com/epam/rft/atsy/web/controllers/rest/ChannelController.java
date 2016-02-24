@@ -3,6 +3,7 @@ package com.epam.rft.atsy.web.controllers.rest;
 import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -34,7 +35,7 @@ public class ChannelController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<String> saveOrUpdate(@RequestBody ChannelDTO channelDTO, BindingResult result, Locale locale) {
-        ResponseEntity<String> entity = new ResponseEntity<String>("", HttpStatus.OK);
+        ResponseEntity<String> entity = new ResponseEntity<String>(StringUtils.EMPTY, HttpStatus.OK);
 
         if (!result.hasErrors()) {
             channelService.saveOrUpdate(channelDTO);

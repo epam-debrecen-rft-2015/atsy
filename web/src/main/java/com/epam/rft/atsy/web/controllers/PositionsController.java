@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping(path = "/secure/position")
+@RequestMapping(path = "/secure/positions/manage")
 public class PositionsController {
 
-    private static final String VIEW_NAME = "position";
+    private static final String VIEW_NAME = "manage_positions";
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView loadPage() {

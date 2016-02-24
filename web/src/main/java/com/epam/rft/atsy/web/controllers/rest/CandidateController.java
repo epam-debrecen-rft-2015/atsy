@@ -23,7 +23,12 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/secure/candidates")
 public class CandidateController {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CandidateController.class);
+    public static final String NAME = "name";
+    public static final String EMAIL = "email";
+    public static final String PHONE = "phone";
+
     @Resource
     private CandidateService candidateService;
     @Resource
@@ -49,6 +54,6 @@ public class CandidateController {
                 LOGGER.error("Cannot read filters from json", e);
             }
         }
-        return new SearchOptions(filterMap.get("name"),filterMap.get("email"),filterMap.get("phone"));
+        return new SearchOptions(filterMap.get(NAME),filterMap.get(EMAIL),filterMap.get(PHONE));
     }
 }
