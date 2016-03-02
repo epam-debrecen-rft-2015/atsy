@@ -15,7 +15,7 @@
                         <img src="resources/img/epam-logo-login.png" class="img-rounded">
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 right_column">
-                        <form role="form" method="POST" id="login-form" action="/atsy/j_spring_security_check">
+                        <form role="form" method="POST" id="login-form" action="/atsy/login">
                             <c:if test="${not empty loginErrorKey}">
                                 <div id="globalMessage" class="alert alert-danger" role="alert">
                                     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
@@ -27,7 +27,7 @@
                                 <spring:message code="uname.field" var="i18nUname"/>
                                 <span id="missingUsername"><spring:message
                                         code="login.frontend.missingUsername"/></span>
-                                <input type="text" class="form-control" name="name" id="name"
+                                <input type="text" class="form-control" name="username" id="name"
                                        placeholder="${i18nUname}">
                             </div>
                             <div class="form-group <c:if test="${not empty loginErrorKey}">has-error </c:if>"
@@ -41,6 +41,7 @@
                             <button type="submit" class="btn btn-success" id="loginButton">
                                 <spring:message code="login.button"/>
                             </button>
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                         </form>
                     </div>
                 </div>

@@ -35,10 +35,10 @@ public class LoginController {
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView pageLoad(HttpServletRequest request) {
         ModelAndView model = new ModelAndView(VIEW_NAME);
-        request.getSession().invalidate();
+        //request.getSession().invalidate();
         return model;
     }
-
+/*
 
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView handleLogin(@Valid @ModelAttribute UserDTO userDTO, Locale userLocale, BindingResult bindingResult, HttpServletRequest request) {
@@ -75,5 +75,5 @@ public class LoginController {
         }
         return redirectTo;
     }
-
+*/
 }

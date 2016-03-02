@@ -24,7 +24,7 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 
-public class LoginControllerTest {
+/*public class LoginControllerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginControllerTest.class);
     private static final Locale LOCALE = Locale.UK;
@@ -161,3 +161,4 @@ public class LoginControllerTest {
 
     }
 }
+*/

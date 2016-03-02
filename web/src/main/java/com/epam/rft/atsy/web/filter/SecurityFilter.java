@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Base64;
 
-@WebFilter(urlPatterns = "/secure/*")
+//@WebFilter(urlPatterns = "/secure/*")
 public class SecurityFilter implements Filter {
     private static final String LOGIN_PATH = "/login";
 
