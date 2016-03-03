@@ -3,7 +3,7 @@
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@attribute name="pageJs" fragment="true" %>
 <spring:url value="/resources/img/epam-logo-navbar.png" var="logo"/>
-<spring:url value="/login" var="login"/>
+<spring:url value="/logout" var="logout"/>
 <spring:url value="/secure/settings" var="settings"/>
 <spring:url value="/secure/welcome" var="welcome"/>
 <atsy:page>
@@ -30,7 +30,12 @@
                      <li><a href="${settings}"><span id="settings_link" class="glyphicon glyphicon-cog" aria-hidden="true"/><span class="visible-xs-inline"><spring:message code="header.menu.settings"/></span></a></li>
                  </ul>
                  <ul class="nav navbar-nav navbar-right">
-                     <li><a href="${login}"><span id="logout_link" class="glyphicon glyphicon-log-out" aria-hidden="true"/><span class="visible-xs-inline"><spring:message code="header.menu.logout"/></span></a></li>
+                 <li>
+                 <form method="POST" action="/atsy/logout">
+                        <input type="submit">
+                     <!-- <a href="${logout}"><span id="logout_link" class="glyphicon glyphicon-log-out" aria-hidden="true"/><span class="visible-xs-inline"><spring:message code="header.menu.logout"/></span></a> -->
+                 </form>
+                 </li>
                  </ul>
              </div>
          </div>

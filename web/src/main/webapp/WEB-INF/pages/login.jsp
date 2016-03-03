@@ -41,7 +41,6 @@
                             <button type="submit" class="btn btn-success" id="loginButton">
                                 <spring:message code="login.button"/>
                             </button>
-                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                         </form>
                     </div>
                 </div>
