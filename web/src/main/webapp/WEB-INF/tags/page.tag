@@ -29,6 +29,7 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="<c:url value="/resources/thirdparty/bootstrap-table/bootstrap-table.min.js" />"></script>
 <script src="<c:url value="/resources/thirdparty/bootstrap-table/locale/bootstrap-table-${pageContext.response.locale}.min.js" />"></script>
+<script src="<c:url value="/resources/thirdparty/knockout-3.4.0/knockout-3.4.0.js" />"></script>
 <!-- Latest compiled and minified Locales -->
 
 <jsp:invoke fragment="refs"/>
