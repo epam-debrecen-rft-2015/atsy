@@ -11,20 +11,17 @@
             <div id="password_section">
                 <h3><spring:message code="settings.password.title"/></h3>
                 <form role="form" method="POST" id="pw-form">
-                    <div class="form-group" id="new-pw-group">
-                        <input type="hidden" class="form-control" name="changeId" id="changeId">
-                    </div>
                     <div class="form-group">
                         <label for="new-pw"><spring:message code="settings.password.new"/></label>
-                        <input type="password" class="form-control" name="new-pw" id="new-pw">
+                        <input type="password" class="form-control" name="newPassword" id="new-pw">
                     </div>
                     <div class="form-group">
                         <label for="new-pw-two"><spring:message code="settings.password.new.two"/></label>
-                        <input type="password" class="form-control" name="new-pw-two" id="new-pw-two">
+                        <input type="password" class="form-control" name="newPasswordConfirm" id="new-pw-two">
                     </div>
                     <div class="form-group">
                         <label for="old-pw"><spring:message code="settings.password.old"/></label>
-                        <input type="password" class="form-control" name="old-pw" id="old-pw">
+                        <input type="password" class="form-control" name="oldPassword" id="old-pw">
                     </div>
                     <button type="submit" class="btn btn-success">
                         <spring:message code="save.button"/>
