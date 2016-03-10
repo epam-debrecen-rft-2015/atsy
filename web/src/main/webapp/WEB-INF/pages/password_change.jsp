@@ -19,12 +19,12 @@
                         <input type="password" class="form-control" name="new-pw" id="new-pw">
                     </div>
                     <div class="form-group">
-                        <label for="old-pw-one"><spring:message code="settings.password.old.one"/></label>
-                        <input type="password" class="form-control" name="old-pw-one" id="old-pw-one">
+                        <label for="new-pw-two"><spring:message code="settings.password.new.two"/></label>
+                        <input type="password" class="form-control" name="new-pw-two" id="new-pw-two">
                     </div>
                     <div class="form-group">
-                        <label for="old-pw-two"><spring:message code="settings.password.old.two"/></label>
-                        <input type="password" class="form-control" name="old-pw-two" id="old-pw-two">
+                        <label for="old-pw"><spring:message code="settings.password.old"/></label>
+                        <input type="password" class="form-control" name="old-pw" id="old-pw">
                     </div>
                     <button type="submit" class="btn btn-success">
                         <spring:message code="save.button"/>
