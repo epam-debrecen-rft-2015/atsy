@@ -8,4 +8,6 @@ public interface UserService {
     UserDTO findUserByName(String username);
 
     UserDTO login(UserDTO user) throws UserNotFoundException;
+
+    Long saveOrUpdate(UserDTO userDTO);
 }

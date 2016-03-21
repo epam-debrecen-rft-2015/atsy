@@ -1,17 +1,23 @@
 package com.epam.rft.atsy.service.impl;
 
+import com.epam.rft.atsy.persistence.entities.PasswordHistoryEntity;
 import com.epam.rft.atsy.persistence.entities.UserEntity;
 import com.epam.rft.atsy.persistence.repositories.UserRepository;
 import com.epam.rft.atsy.service.UserService;
+import com.epam.rft.atsy.service.domain.PasswordHistoryDTO;
 import com.epam.rft.atsy.service.domain.UserDTO;
 import com.epam.rft.atsy.service.exception.BackendException;
+import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import com.epam.rft.atsy.service.exception.UserNotFoundException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import javax.persistence.NoResultException;
@@ -42,6 +48,17 @@ public class UserServiceImpl implements UserService {
 
         return userDTO;
 
+    }
+
+    @Override
+    public Long saveOrUpdate(UserDTO userDTO) {
+        Assert.notNull(userDTO);
+        UserEntity entity = modelMapper.map(userDTO, UserEntity.class);
+        try {
+            return userRepository.save(entity).getUserId();
+        } catch (ConstraintViolationException | DataIntegrityViolationException constraint) {
+            throw new DuplicateRecordException("alma");
+        }
     }
 
     @Override

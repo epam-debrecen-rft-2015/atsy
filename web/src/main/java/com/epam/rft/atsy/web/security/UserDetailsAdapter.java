@@ -8,11 +8,14 @@ import java.util.Collection;
 
 public class UserDetailsAdapter implements UserDetails {
 
+    private Long userId;
+
     private String password;
 
     private String username;
 
-    public UserDetailsAdapter(String password, String username) {
+    public UserDetailsAdapter(Long userId, String password, String username) {
+        this.userId = userId;
         this.password = password;
         this.username = username;
     }
@@ -20,6 +23,10 @@ public class UserDetailsAdapter implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Lists.newArrayList();
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 
     @Override

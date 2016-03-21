@@ -17,8 +17,8 @@ public class PasswordOldPasswordMatchesRule implements PasswordValidationRule {
 
 
         if (principal instanceof UserDetails) {
-            String username = ((UserDetails)principal).getPassword();
-            return bCryptPasswordEncoder.matches(passwordChangeDTO.getOldPassword(),username);
+            String password = ((UserDetails)principal).getPassword();
+            return bCryptPasswordEncoder.matches(passwordChangeDTO.getOldPassword(),password);
         } else {
             String username = principal.toString();
         }
