@@ -16,6 +16,7 @@ public class PasswordValidatorImpl implements PasswordValidator{
         passwordValidationRules = Lists.newArrayList();
         passwordValidationRules.add(new PasswordAllFieldFilledRule());
         passwordValidationRules.add(new PasswordLengthValidationRule());
+        passwordValidationRules.add(new PasswordOldPasswordMatchesRule());
         passwordValidationRules.add(new PasswordContainsRule());
         passwordValidationRules.add(new PasswordNewMatchValidationRule());
     }
