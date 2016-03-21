@@ -28,11 +28,9 @@ public class PasswordUniqueRule implements PasswordValidationRule {
     @Override
     public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String newEncPass=bCryptPasswordEncoder.encode(passwordChangeDTO.getNewPassword());
-        List<String> oldPasswords = new ArrayList<>();
-        oldPasswords = passwordChangeService.isUnique(((UserDetailsAdapter)principal).getUserId());
+        List<String> oldPasswords = passwordChangeService.isUnique(((UserDetailsAdapter)principal).getUserId());
         for(String pass:oldPasswords){
-            if(pass.equals(newEncPass)){
+            if(bCryptPasswordEncoder.matches(passwordChangeDTO.getNewPassword(),pass)){
                 return false;
             }
         }

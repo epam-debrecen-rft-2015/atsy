@@ -10,6 +10,7 @@ import com.epam.rft.atsy.web.passwordchange.validation.PasswordValidator;
 import com.epam.rft.atsy.web.passwordchange.validation.impl.PasswordValidatorImpl;
 import com.epam.rft.atsy.web.security.CustomUserDetailsService;
 import com.epam.rft.atsy.web.security.UserDetailsAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -37,6 +38,9 @@ public class PasswordChangeController {
     @Resource
     UserService userService;
 
+    @Autowired
+    PasswordValidator passwordValidator;
+
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @RequestMapping(method = RequestMethod.GET)
@@ -50,7 +54,6 @@ public class PasswordChangeController {
         ModelAndView model = new ModelAndView(VIEW_NAME);
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        PasswordValidator passwordValidator = new PasswordValidatorImpl();
         try {
             passwordValidator.validate(passwordChangeDTO);
 
