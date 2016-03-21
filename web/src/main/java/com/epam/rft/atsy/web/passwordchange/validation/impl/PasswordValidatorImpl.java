@@ -19,6 +19,7 @@ public class PasswordValidatorImpl implements PasswordValidator{
         passwordValidationRules.add(new PasswordOldPasswordMatchesRule());
         passwordValidationRules.add(new PasswordContainsRule());
         passwordValidationRules.add(new PasswordNewMatchValidationRule());
+        //passwordValidationRules.add(new PasswordUniqueRule());
     }
 
     @Override
