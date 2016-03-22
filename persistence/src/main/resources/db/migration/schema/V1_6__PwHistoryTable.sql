@@ -3,5 +3,5 @@ CREATE TABLE PasswordHistory(
   userId BIGINT,
   FOREIGN KEY (userId) REFERENCES users(userId),
   password VARCHAR(255) NOT NULL,
-  change_date DATE NOT NULL
+  change_date DATETIME NOT NULL
 );

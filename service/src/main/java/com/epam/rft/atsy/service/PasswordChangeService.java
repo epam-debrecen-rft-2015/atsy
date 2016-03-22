@@ -9,4 +9,6 @@ public interface PasswordChangeService {
     Long saveOrUpdate(PasswordHistoryDTO passwordHistoryDTO);
 
     List<String> isUnique(Long id);
+
+    void deleteOldestPassword(Long userId);
 }

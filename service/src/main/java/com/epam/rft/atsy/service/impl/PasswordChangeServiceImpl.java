@@ -52,4 +52,10 @@ public class PasswordChangeServiceImpl implements PasswordChangeService {
         }
         return passwords;
     }
+
+    @Override
+    public void deleteOldestPassword(Long userId) {
+        PasswordHistoryEntity entity = passwordHistoryRepository.findOldestPassword(userId);
+        passwordHistoryRepository.delete(entity);
+    }
 }

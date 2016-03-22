@@ -65,7 +65,7 @@ public class PasswordChangeController {
             UserDTO user = userService.findUserByName(((UserDetailsAdapter)principal).getUsername());
             user.setPassword(bCryptPasswordEncoder.encode(passwordChangeDTO.getNewPassword()));
             userService.saveOrUpdate(user);
-
+            passwordChangeService.deleteOldestPassword(((UserDetailsAdapter)principal).getUserId());
             passwordChangeService.saveOrUpdate(passwordHistoryDTO);
         } catch (PasswordValidationException e) {
             e.printStackTrace();
