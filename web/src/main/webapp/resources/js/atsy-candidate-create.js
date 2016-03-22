@@ -49,22 +49,10 @@ $("#cancelButtonModify").click(function () {
     $("#candidate_creation").addClass("display");
 });
 
-$('#applications_table').bootstrapTable({
-    url: '../applications/'+ $('#candidateId').val(),
-    columns: [{
-        field: 'positionName',
-    }, {
-        field: 'creationDate',
-    }, {
-        field: 'modificationDate',
-    }, {
-        field: 'stateType',
-    }, ]
-});
 
 function actionFormatter(value, row, index) {
     return [
-        '<a class="edit ml10" href="candidate/' + row.candidateId + '" title="Edit">',
+        '<a class="edit ml10" href="../application_state?stateId=' + row.lastStateId + '" title="Edit">',
         '<i class="glyphicon glyphicon-edit"></i>',
         '</a>'
     ].join('');

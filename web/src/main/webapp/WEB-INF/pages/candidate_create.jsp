@@ -202,18 +202,18 @@
                 <%--table--%>
                 <div id="application_table">
                     <div>
-                        <table class="table table-hover" id="applications_table" data-height="500"
+                        <table class="table table-hover" id="applications_table"  data-toggle="table" data-url="../applications/${candidate.candidateId}" data-height="500"
                                data-sort-name="name">
                             <thead>
                             <tr>
-                                <th data-field="position" data-align="left"><spring:message
+                                <th data-field="positionName" data-align="left"><spring:message
                                         code="candidate.table.application.position"/></th>
-                                <th data-field="added_date" data-align="left">
+                                <th data-field="creationDate" data-align="left">
                                     <spring:message code="candidate.table.application.added.date"/>
                                 </th>
-                                <th data-field="modified_date" data-align="left"><spring:message
+                                <th data-field="modificationDate" data-align="left"><spring:message
                                         code="candidate.table.application.modified.date"/></th>
-                                <th data-field="state" data-align="left"><spring:message
+                                <th data-field="stateType" data-align="left"><spring:message
                                         code="candidate.table.application.state"/></th>
                                 <th data-field="actions" data-align="left" data-formatter="actionFormatter">
                                     <spring:message code="candidate.table.application.action"/>
