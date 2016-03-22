@@ -83,7 +83,7 @@
                           code="candidate.description.label"/></label>
 
                   <div class="col-lg-12 col-md-12 col-sm-12">
-                                <textarea rows="4" cols="4" class="input form-control" id="description"
+                                <textarea rows="4" cols="4" class="input form-control" id="description" name="description"
                                           placeholder="${i18ndescription}">${candidate.description}</textarea>
 
                     <p class="showValue form-control-static">${candidate.description}</p>
