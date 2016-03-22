@@ -9,19 +9,21 @@ public class PasswordContainsRule implements PasswordValidationRule {
 
     @Override
     public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
-        return containsLetters(passwordChangeDTO) && containsNumbers(passwordChangeDTO) && containsSpecial(passwordChangeDTO);
+        return containsLetters(passwordChangeDTO.getNewPassword()) &&
+                containsNumbers(passwordChangeDTO.getNewPassword()) &&
+                containsSpecial(passwordChangeDTO.getNewPassword());
     }
 
-    private boolean containsLetters(PasswordChangeDTO passwordChangeDTO){
-        return passwordChangeDTO.getNewPassword().matches(".*[a-zA-Z]+.*");
+    private boolean containsLetters(String password){
+        return password.matches(".*[a-zA-Z]+.*");
     }
 
-    private boolean containsNumbers(PasswordChangeDTO passwordChangeDTO) {
-        return passwordChangeDTO.getNewPassword().matches(".*[0-9]+.*");
+    private boolean containsNumbers(String password) {
+        return password.matches(".*[0-9]+.*");
     }
 
-    private boolean containsSpecial(PasswordChangeDTO passwordChangeDTO) {
-        return passwordChangeDTO.getNewPassword().matches(".*[!@#$%^&_.,;:-]+.*");
+    private boolean containsSpecial(String password) {
+        return password.matches(".*[!@#$%^&_.,;:-]+.*");
     }
 
     @Override

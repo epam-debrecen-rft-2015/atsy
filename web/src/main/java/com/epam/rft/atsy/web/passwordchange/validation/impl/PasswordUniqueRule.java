@@ -30,9 +30,6 @@ public class PasswordUniqueRule implements PasswordValidationRule {
                 return false;
             }
         }
-        if(oldPasswords.size()>=5){
-            passwordChangeService.deleteOldestPassword(((UserDetailsAdapter)principal).getUserId());
-        }
         return true;
     }
 

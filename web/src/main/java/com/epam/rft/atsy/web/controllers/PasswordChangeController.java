@@ -52,21 +52,22 @@ public class PasswordChangeController {
     public ModelAndView changePassword(@ModelAttribute PasswordChangeDTO passwordChangeDTO, Locale userLocale, BindingResult bindingResult, HttpServletRequest request) {
 
         ModelAndView model = new ModelAndView(VIEW_NAME);
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetailsAdapter userDetailsAdapter = (UserDetailsAdapter)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         try {
             passwordValidator.validate(passwordChangeDTO);
 
+            String newPassword = bCryptPasswordEncoder.encode(passwordChangeDTO.getNewPassword());
             PasswordHistoryDTO passwordHistoryDTO = new PasswordHistoryDTO();
-            passwordHistoryDTO.setUserId(((UserDetailsAdapter)principal).getUserId());
-            passwordHistoryDTO.setPassword(bCryptPasswordEncoder.encode(passwordChangeDTO.getNewPassword()));
+            passwordHistoryDTO.setUserId(userDetailsAdapter.getUserId());
+            passwordHistoryDTO.setPassword(newPassword);
             passwordHistoryDTO.setChangeDate(new Date());
 
-            UserDTO user = userService.findUserByName(((UserDetailsAdapter)principal).getUsername());
-            user.setPassword(bCryptPasswordEncoder.encode(passwordChangeDTO.getNewPassword()));
+            UserDTO user = userService.findUserByName(userDetailsAdapter.getUsername());
+            user.setPassword(newPassword);
             userService.saveOrUpdate(user);
-
             passwordChangeService.saveOrUpdate(passwordHistoryDTO);
+            userDetailsAdapter.setPassword(newPassword);
         } catch (PasswordValidationException e) {
             e.printStackTrace();
         }

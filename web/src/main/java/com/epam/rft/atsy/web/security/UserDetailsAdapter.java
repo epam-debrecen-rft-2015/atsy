@@ -29,6 +29,10 @@ public class UserDetailsAdapter implements UserDetails {
         return userId;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String getPassword() {
         return this.password;

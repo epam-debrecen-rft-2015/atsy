@@ -2,6 +2,7 @@ package com.epam.rft.atsy.web.passwordchange.validation.impl;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.web.passwordchange.validation.PasswordValidationRule;
+import org.apache.commons.lang3.StringUtils;
 
 public class PasswordAllFieldFilledRule implements PasswordValidationRule {
 
@@ -9,11 +10,9 @@ public class PasswordAllFieldFilledRule implements PasswordValidationRule {
 
     @Override
     public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
-        if(!passwordChangeDTO.getNewPassword().isEmpty() &&
-           !passwordChangeDTO.getNewPasswordConfirm().isEmpty() &&
-           !passwordChangeDTO.getOldPassword().isEmpty())
-            return true;
-        return false;
+        return StringUtils.isNotBlank(passwordChangeDTO.getNewPassword()) &&
+                StringUtils.isNotBlank(passwordChangeDTO.getNewPasswordConfirm()) &&
+                StringUtils.isNotBlank(passwordChangeDTO.getOldPassword());
     }
 
     @Override

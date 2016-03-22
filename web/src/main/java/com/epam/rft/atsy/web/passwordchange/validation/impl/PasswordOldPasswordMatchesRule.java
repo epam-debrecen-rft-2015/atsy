@@ -12,17 +12,9 @@ public class PasswordOldPasswordMatchesRule implements PasswordValidationRule {
 
     @Override
     public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-
-
-        if (principal instanceof UserDetails) {
-            String password = ((UserDetails)principal).getPassword();
-            return bCryptPasswordEncoder.matches(passwordChangeDTO.getOldPassword(),password);
-        } else {
-            String username = principal.toString();
-        }
-        return false;
+        return bCryptPasswordEncoder.matches(passwordChangeDTO.getOldPassword(), userDetails.getPassword());
     }
 
     @Override
