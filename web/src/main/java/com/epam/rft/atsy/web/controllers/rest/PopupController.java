@@ -27,7 +27,7 @@ public class PopupController {
 
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity saveOrUpdate(@ModelAttribute NewStateDTO candidateDTO, BindingResult result, Locale locale) {
+    public String saveOrUpdate(@ModelAttribute NewStateDTO candidateDTO, BindingResult result, Locale locale) {
         ResponseEntity entity;
         if (!result.hasErrors()) {
             Long stateId =  applicationService.saveState(candidateDTO);
@@ -36,6 +36,6 @@ public class PopupController {
 
             entity = new ResponseEntity<List<FieldError>>(result.getFieldErrors(), HttpStatus.BAD_REQUEST);
         }
-        return entity;
+        return "redirect:/secure/candidate/"+candidateDTO.getCandidateId();
     }
 }

@@ -90,7 +90,7 @@
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <a href="candidate-show.html" class="btn btn-danger">Vissza</a>
+                  <a href="candidate/${candidateId}" class="btn btn-danger">Vissza</a>
                   <button type="submit" class="btn btn-success">
                     <spring:message code="save.button"/>
                   </button>
