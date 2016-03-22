@@ -2,17 +2,13 @@ package com.epam.rft.atsy.web.passwordchange.validation.impl;
 
 import com.epam.rft.atsy.service.PasswordChangeService;
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
-import com.epam.rft.atsy.service.impl.PasswordChangeServiceImpl;
 import com.epam.rft.atsy.web.passwordchange.validation.PasswordValidationRule;
 import com.epam.rft.atsy.web.security.UserDetailsAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -28,11 +24,14 @@ public class PasswordUniqueRule implements PasswordValidationRule {
     @Override
     public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<String> oldPasswords = passwordChangeService.isUnique(((UserDetailsAdapter)principal).getUserId());
+        List<String> oldPasswords = passwordChangeService.getOldPasswords(((UserDetailsAdapter)principal).getUserId());
         for(String pass:oldPasswords){
             if(bCryptPasswordEncoder.matches(passwordChangeDTO.getNewPassword(),pass)){
                 return false;
             }
+        }
+        if(oldPasswords.size()>=5){
+            passwordChangeService.deleteOldestPassword(((UserDetailsAdapter)principal).getUserId());
         }
         return true;
     }

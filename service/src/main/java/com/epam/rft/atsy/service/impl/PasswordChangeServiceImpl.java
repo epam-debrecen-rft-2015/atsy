@@ -44,7 +44,7 @@ public class PasswordChangeServiceImpl implements PasswordChangeService {
     }
 
     @Override
-    public List<String> isUnique(Long id) {
+    public List<String> getOldPasswords(Long id) {
         List<PasswordHistoryEntity> oldPasswords = passwordHistoryRepository.findByUserEntity(userRepository.findOne(id));
         List<String> passwords = new ArrayList<>();
         for(PasswordHistoryEntity pass:oldPasswords){

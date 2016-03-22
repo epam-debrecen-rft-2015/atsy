@@ -8,7 +8,7 @@ public interface PasswordChangeService {
 
     Long saveOrUpdate(PasswordHistoryDTO passwordHistoryDTO);
 
-    List<String> isUnique(Long id);
+    List<String> getOldPasswords(Long id);
 
     void deleteOldestPassword(Long userId);
 }
