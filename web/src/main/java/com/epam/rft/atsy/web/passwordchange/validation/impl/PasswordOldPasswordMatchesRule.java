@@ -8,7 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class PasswordOldPasswordMatchesRule implements PasswordValidationRule {
 
-    public static final String MESSAGE_KEY="A régi jelszó nem egyezik!";
+    public static final String MESSAGE_KEY="passwordchange.validation.oldpasswordmatch";
 
     @Override
     public boolean isValid(PasswordChangeDTO passwordChangeDTO) {

@@ -6,7 +6,7 @@ import com.epam.rft.atsy.web.passwordchange.validation.PasswordValidationRule;
 public class PasswordLengthValidationRule implements PasswordValidationRule {
 
     public static final int PASSWORD_MIN_LENGTH = 6;
-    public static final String MESSAGE_KEY="Az új jelszó hossza legalább 6 karakter kell legyen!";
+    public static final String MESSAGE_KEY="passwordchange.validation.length";
 
     @Override
     public boolean isValid(PasswordChangeDTO passwordChangeDTO) {

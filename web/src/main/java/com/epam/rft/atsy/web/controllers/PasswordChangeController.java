@@ -10,6 +10,8 @@ import com.epam.rft.atsy.web.passwordchange.validation.PasswordValidator;
 import com.epam.rft.atsy.web.passwordchange.validation.impl.PasswordValidatorImpl;
 import com.epam.rft.atsy.web.security.CustomUserDetailsService;
 import com.epam.rft.atsy.web.security.UserDetailsAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,6 +33,7 @@ import java.util.Locale;
 @RequestMapping(path = "/secure/password/manage")
 public class PasswordChangeController {
     private static final String VIEW_NAME = "password_change";
+    private static Logger logger = LoggerFactory.getLogger(PasswordChangeController.class);
 
     @Resource
     PasswordChangeService passwordChangeService;
@@ -52,24 +55,29 @@ public class PasswordChangeController {
     public ModelAndView changePassword(@ModelAttribute PasswordChangeDTO passwordChangeDTO, Locale userLocale, BindingResult bindingResult, HttpServletRequest request) {
 
         ModelAndView model = new ModelAndView(VIEW_NAME);
-        UserDetailsAdapter userDetailsAdapter = (UserDetailsAdapter)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (bindingResult.hasErrors()) {
+            model.addObject("loginErrorKey", "login.backend.validation");
+        } else {
+            try {
+                UserDetailsAdapter userDetailsAdapter = (UserDetailsAdapter) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                passwordValidator.validate(passwordChangeDTO);
 
-        try {
-            passwordValidator.validate(passwordChangeDTO);
+                String newPassword = bCryptPasswordEncoder.encode(passwordChangeDTO.getNewPassword());
+                PasswordHistoryDTO passwordHistoryDTO = new PasswordHistoryDTO();
+                passwordHistoryDTO.setUserId(userDetailsAdapter.getUserId());
+                passwordHistoryDTO.setPassword(newPassword);
+                passwordHistoryDTO.setChangeDate(new Date());
 
-            String newPassword = bCryptPasswordEncoder.encode(passwordChangeDTO.getNewPassword());
-            PasswordHistoryDTO passwordHistoryDTO = new PasswordHistoryDTO();
-            passwordHistoryDTO.setUserId(userDetailsAdapter.getUserId());
-            passwordHistoryDTO.setPassword(newPassword);
-            passwordHistoryDTO.setChangeDate(new Date());
-
-            UserDTO user = userService.findUserByName(userDetailsAdapter.getUsername());
-            user.setPassword(newPassword);
-            userService.saveOrUpdate(user);
-            passwordChangeService.saveOrUpdate(passwordHistoryDTO);
-            userDetailsAdapter.setPassword(newPassword);
-        } catch (PasswordValidationException e) {
-            e.printStackTrace();
+                UserDTO user = userService.findUserByName(userDetailsAdapter.getUsername());
+                user.setPassword(newPassword);
+                userService.saveOrUpdate(user);
+                passwordChangeService.saveOrUpdate(passwordHistoryDTO);
+                userDetailsAdapter.setPassword(newPassword);
+                model.addObject("validationSuccessKey","passwordchange.validation.success");
+            } catch (PasswordValidationException e) {
+                logger.error(e.getMessage());
+                model.addObject("validationErrorKey",e.getMessage());
+            }
         }
 
         return model;

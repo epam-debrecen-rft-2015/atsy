@@ -5,7 +5,7 @@ import com.epam.rft.atsy.web.passwordchange.validation.PasswordValidationRule;
 
 public class PasswordNewMatchValidationRule implements PasswordValidationRule {
 
-    public static final String MESSAGE_KEY="A új jelszavak nem egyeznek!";
+    public static final String MESSAGE_KEY="passwordchange.validation.newpasswordmatch";
 
     @Override
     public boolean isValid(PasswordChangeDTO passwordChangeDTO) {

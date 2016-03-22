@@ -11,6 +11,18 @@
             <div id="password_section">
                 <h3><spring:message code="settings.password.title"/></h3>
                 <form role="form" method="POST" id="pw-form">
+                    <c:if test="${not empty validationErrorKey}">
+                        <div id="globalMessage" class="alert alert-danger" role="alert">
+                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
+                             <spring:message code="${validationErrorKey}"/>
+                        </div>
+                    </c:if>
+                    <c:if test="${not empty validationSuccessKey}">
+                         <div id="globalMessage" class="alert alert-success" role="alert">
+                             <span class="glyphicon glyphicon-ok" aria-hidden="false"></span>
+                             <spring:message code="${validationSuccessKey}"/>
+                         </div>
+                    </c:if>
                     <div class="form-group">
                         <label for="new-pw"><spring:message code="settings.password.new"/></label>
                         <input type="password" class="form-control" name="newPassword" id="new-pw">

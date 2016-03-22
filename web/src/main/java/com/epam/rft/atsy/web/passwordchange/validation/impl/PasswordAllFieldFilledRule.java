@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class PasswordAllFieldFilledRule implements PasswordValidationRule {
 
-    public static final String MESSAGE_KEY="Az összes mező kitöltése kötelező!";
+    public static final String MESSAGE_KEY="passwordchange.validation.allfieldfilled";
 
     @Override
     public boolean isValid(PasswordChangeDTO passwordChangeDTO) {

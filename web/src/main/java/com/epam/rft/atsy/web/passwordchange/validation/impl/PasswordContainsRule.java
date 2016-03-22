@@ -5,7 +5,7 @@ import com.epam.rft.atsy.web.passwordchange.validation.PasswordValidationRule;
 
 public class PasswordContainsRule implements PasswordValidationRule {
 
-    public static final String MESSAGE_KEY="Az új jelszónak tartalmaznia kell legalább 1 betűt, számot és speciális karaktert!";
+    public static final String MESSAGE_KEY="passwordchange.validation.contains";
 
     @Override
     public boolean isValid(PasswordChangeDTO passwordChangeDTO) {

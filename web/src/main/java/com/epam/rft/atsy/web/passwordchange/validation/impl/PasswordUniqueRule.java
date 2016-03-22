@@ -19,7 +19,7 @@ public class PasswordUniqueRule implements PasswordValidationRule {
 
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-    public static final String MESSAGE_KEY="Ezt a jelszót már használta!";
+    public static final String MESSAGE_KEY="passwordchange.validation.unique";
 
     @Override
     public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
