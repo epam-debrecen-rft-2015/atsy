@@ -13,11 +13,16 @@ public class StateDTO {
     private String description;
     private StateDTO nextState;
     private String stateType;
+    private String result;
+    private Short languageSkill;
+    private Long offeredMoney;
+    private Long claim;
+    private Date feedbackDate;
 
     public StateDTO() {
     }
 
-    public StateDTO(Long stateId, Long candidateId, PositionDTO position, Date creationDate, String description, StateDTO nextState, String stateType) {
+    public StateDTO(Long stateId, Long candidateId, PositionDTO position, Date creationDate, String description, StateDTO nextState, String stateType, String result, Short languageSkill, Long offeredMoney, Long claim, Date feedbackDate) {
         this.stateId = stateId;
         this.candidateId = candidateId;
         this.position = position;
@@ -25,6 +30,11 @@ public class StateDTO {
         this.description = description;
         this.nextState = nextState;
         this.stateType = stateType;
+        this.result = result;
+        this.languageSkill = languageSkill;
+        this.offeredMoney = offeredMoney;
+        this.claim = claim;
+        this.feedbackDate = feedbackDate;
     }
 
     public Long getStateId() {
@@ -81,5 +91,45 @@ public class StateDTO {
 
     public void setStateType(String stateType) {
         this.stateType = stateType;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
+    public Short getLanguageSkill() {
+        return languageSkill;
+    }
+
+    public void setLanguageSkill(Short languageSkill) {
+        this.languageSkill = languageSkill;
+    }
+
+    public Long getOfferedMoney() {
+        return offeredMoney;
+    }
+
+    public void setOfferedMoney(Long offeredMoney) {
+        this.offeredMoney = offeredMoney;
+    }
+
+    public Long getClaim() {
+        return claim;
+    }
+
+    public void setClaim(Long claim) {
+        this.claim = claim;
+    }
+
+    public Date getFeedbackDate() {
+        return feedbackDate;
+    }
+
+    public void setFeedbackDate(Date feedbackDate) {
+        this.feedbackDate = feedbackDate;
     }
 }

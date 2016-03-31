@@ -7,11 +7,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "States", schema = "atsy")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "state_type")
-
-
-public abstract class StateEntity {
+public class StateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,9 +25,18 @@ public abstract class StateEntity {
     @ManyToOne
     @JoinColumn(name = "next_state", nullable = true)
     private StateEntity nextState;
-
-    @Column(name = "state_type", insertable = false, updatable = false)
+    @Column(name = "state_type", updatable = false)
     private String stateType;
+    @Column(name = "first_test_result")
+    private String result;
+    @Column(name = "language_skill")
+    private Short languageSkill;
+    @Column(name = "offered_money")
+    private Long offeredMoney;
+    @Column(name = "claim")
+    private Long claim;
+    @Column(name = "feedback_date")
+    private Date feedbackDate;
 
     public String getStateType() {
         return stateType;
@@ -87,6 +92,46 @@ public abstract class StateEntity {
 
     public void setNextState(StateEntity nextState) {
         this.nextState = nextState;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
+    public Short getLanguageSkill() {
+        return languageSkill;
+    }
+
+    public void setLanguageSkill(Short languageSkill) {
+        this.languageSkill = languageSkill;
+    }
+
+    public Long getOfferedMoney() {
+        return offeredMoney;
+    }
+
+    public void setOfferedMoney(Long offeredMoney) {
+        this.offeredMoney = offeredMoney;
+    }
+
+    public Long getClaim() {
+        return claim;
+    }
+
+    public void setClaim(Long claim) {
+        this.claim = claim;
+    }
+
+    public Date getFeedbackDate() {
+        return feedbackDate;
+    }
+
+    public void setFeedbackDate(Date feedbackDate) {
+        this.feedbackDate = feedbackDate;
     }
 }
 

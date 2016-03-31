@@ -1,10 +1,11 @@
 package com.epam.rft.atsy.service.impl;
 
-import com.epam.rft.atsy.persistence.entities.states.NewStateEntity;
+import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.entities.states.StateEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationRepository;
 import com.epam.rft.atsy.service.ApplicationService;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
+import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -14,10 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ApplicationServiceImpl implements ApplicationService {
@@ -60,10 +58,35 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public Long saveState(StateDTO state) {
-        NewStateEntity stateEntity = modelMapper.map(state, NewStateEntity.class);
+        StateEntity stateEntity = modelMapper.map(state, StateEntity.class);
 
         stateEntity.setCreationDate(new Date());
 
         return applicationRepository.save(stateEntity).getStateId();
+    }
+
+    @Override
+    public List<StateDTO> getStatesByPositionId(PositionDTO positionDTO, Long latestStateId) {
+        List<StateEntity> stateEntities = applicationRepository.findByPositionId(modelMapper.map(positionDTO, PositionEntity.class));
+        Type targetListType = new TypeToken<List<StateDTO>>() {
+        }.getType();
+        List<StateDTO> stateDTOs = modelMapper.map(stateEntities, targetListType);
+        List<StateDTO> newstates = new ArrayList<>();
+        for(StateDTO stateDTO:stateDTOs){
+            if (stateDTO.getStateType().equals("newstate"))
+                newstates.add(stateDTO);
+        }
+        List<StateDTO> ret = new ArrayList<>();
+        for(StateDTO stateDTO:newstates){
+            while(stateDTO.getNextState()!= null){
+                ret.add(stateDTO);
+            }
+            if(ret.get(ret.size()-1).getStateId() == latestStateId){
+                return ret;
+            } else {
+                ret.clear();
+            }
+        }
+        return ret;
     }
 }

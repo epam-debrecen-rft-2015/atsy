@@ -1,12 +1,9 @@
 package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.ApplicationService;
-import com.epam.rft.atsy.service.domain.states.NewStateDTO;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.epam.rft.atsy.service.domain.states.StateDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,8 +27,9 @@ public class NewApplicationPopupController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/secure/new_application_popup")
-    public String saveOrUpdate(@ModelAttribute NewStateDTO candidateDTO, BindingResult result, Locale locale) {
+    public String saveOrUpdate(@ModelAttribute StateDTO candidateDTO, BindingResult result, Locale locale) {
         if (!result.hasErrors()) {
+            candidateDTO.setStateType("newstate");
             applicationService.saveState(candidateDTO);
         }
         return "redirect:/secure/candidate/"+candidateDTO.getCandidateId();
