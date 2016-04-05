@@ -9,6 +9,19 @@
     <jsp:body>
         <div id="settings">
             <h1 class="page-header"><spring:message code="settings.title"/></h1>
+            <div id="state_table">
+                                <div>
+                                    <table class="table table-hover" id="states_table"  data-toggle="table" data-url="../secure/applications_states/${stateId}" data-height="500"
+                                           data-sort-name="name">
+                                        <thead>
+                                        <tr>
+                                            <th data-field="position.name" data-align="left"><spring:message
+                                                    code="candidate.table.application.position"/></th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
         </div>
     </jsp:body>
 </atsy:secure_page>
