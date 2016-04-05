@@ -9,6 +9,4 @@ import java.util.List;
 public interface ApplicationRepository extends CrudRepository<StateEntity, Long> {
 
     List<StateEntity> findByCandidateId(Long candidateId);
-
-    List<StateEntity> findByPositionId(PositionEntity positionEntity);
 }
