@@ -38,13 +38,16 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+        StateDTO lastStateDTO = null;
         for (StateDTO stateDTO : stateDTOs){
+            if(stateDTO.equals(lastStateDTO))
+                continue;
             CandidateApplicationDTO candidateApplicationDTO=new CandidateApplicationDTO();
             candidateApplicationDTO.setCreationDate(simpleDateFormat.format(stateDTO.getCreationDate()));
             while(stateDTO.getNextState()!=null){
                 stateDTO=stateDTO.getNextState();
             }
-
+            lastStateDTO = stateDTO;
             candidateApplicationDTO.setStateType(stateDTO.getStateType());
             candidateApplicationDTO.setPositionName(stateDTO.getPosition().getName());
             candidateApplicationDTO.setLastStateId(stateDTO.getStateId());
