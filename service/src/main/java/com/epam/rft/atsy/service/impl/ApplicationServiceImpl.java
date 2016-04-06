@@ -29,7 +29,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public Collection<CandidateApplicationDTO> getStatesByCandidateId(Long id) {
-        Collection<StateEntity> stateEntities = applicationRepository.findByCandidateId(id);
+        Collection<StateEntity> stateEntities = applicationRepository.findByCandidateIdOrderByApplicationIdAscStateIndexAsc(id);
         Type targetListType = new TypeToken<List<StateDTO>>() {
         }.getType();
 
@@ -38,24 +38,30 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        StateDTO lastStateDTO = null;
-        for (StateDTO stateDTO : stateDTOs){
-            if(stateDTO.equals(lastStateDTO))
-                continue;
-            CandidateApplicationDTO candidateApplicationDTO=new CandidateApplicationDTO();
-            candidateApplicationDTO.setCreationDate(simpleDateFormat.format(stateDTO.getCreationDate()));
-            while(stateDTO.getNextState()!=null){
-                stateDTO=stateDTO.getNextState();
+        CandidateApplicationDTO candidateApplicationDTO = null;
+        for(int i=0;i<stateDTOs.size();i++){
+            if(stateDTOs.get(i).getStateIndex()==0){
+                candidateApplicationDTO=new CandidateApplicationDTO();
+                candidateApplicationDTO.setCreationDate(simpleDateFormat.format(stateDTOs.get(i).getCreationDate()));
             }
-            lastStateDTO = stateDTO;
-            candidateApplicationDTO.setStateType(stateDTO.getStateType());
-            candidateApplicationDTO.setPositionName(stateDTO.getPosition().getName());
-            candidateApplicationDTO.setLastStateId(stateDTO.getStateId());
-            candidateApplicationDTO.setModificationDate(simpleDateFormat.format(stateDTO.getCreationDate()));
+            //a baj az hogy rendezetlenül jönnek fel
+            if(i+1<stateDTOs.size() && stateDTOs.get(i+1).getApplicationId() != stateDTOs.get(i).getApplicationId()){
+                candidateApplicationDTO.setStateType(stateDTOs.get(i).getStateType());
+                candidateApplicationDTO.setPositionName(stateDTOs.get(i).getPosition().getName());
+                candidateApplicationDTO.setLastStateId(stateDTOs.get(i).getStateId());
+                candidateApplicationDTO.setModificationDate(simpleDateFormat.format(stateDTOs.get(i).getCreationDate()));
 
-            candidateApplicationDTOList.add(candidateApplicationDTO);
+                candidateApplicationDTOList.add(candidateApplicationDTO);
+            }
+            if(i+1>=stateDTOs.size()){
+                candidateApplicationDTO.setStateType(stateDTOs.get(i).getStateType());
+                candidateApplicationDTO.setPositionName(stateDTOs.get(i).getPosition().getName());
+                candidateApplicationDTO.setLastStateId(stateDTOs.get(i).getStateId());
+                candidateApplicationDTO.setModificationDate(simpleDateFormat.format(stateDTOs.get(i).getCreationDate()));
+
+                candidateApplicationDTOList.add(candidateApplicationDTO);
+            }
         }
-
         return candidateApplicationDTOList;
     }
 
@@ -69,8 +75,13 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public List<StateDTO> getStatesByStateId(Long latestStateId) {
-        List<StateDTO> stateDTOs = new ArrayList<>();
+    public Long getNewApplicationId(){
+        return applicationRepository.getMaxApplicationId() != null ? applicationRepository.getMaxApplicationId()+1 : 0;
+    }
+
+    @Override
+    public List<StateDTO> getStatesByApplicationId(Long latestStateId) {
+        /*List<StateDTO> stateDTOs = new ArrayList<>();
         for (StateEntity stateEntity: applicationRepository.findAll()) {
             stateDTOs.add(modelMapper.map(stateEntity,StateDTO.class));
         }
@@ -91,6 +102,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                 return ret;
             }
         }
-        return ret;
+        return ret;*/
+        return null;
     }
 }

@@ -18,33 +18,26 @@ public class StateEntity {
     @ManyToOne
     @JoinColumn(name = "positionId", nullable = true)
     private PositionEntity positionId;
+    @Column(name = "applicationId")
+    private Long applicationId;
     @Column(name = "creation_date")
     private Date creationDate;
-    @Column(name = "description")
-    private String description;
-    @ManyToOne
-    @JoinColumn(name = "next_state", nullable = true)
-    private StateEntity nextState;
-    @Column(name = "state_type", updatable = false)
-    private String stateType;
-    @Column(name = "first_test_result")
-    private String result;
     @Column(name = "language_skill")
     private Short languageSkill;
+    @Column(name = "description")
+    private String description;
+    @Column(name = "first_test_result")
+    private String result;
     @Column(name = "offered_money")
     private Long offeredMoney;
     @Column(name = "claim")
     private Long claim;
     @Column(name = "feedback_date")
     private Date feedbackDate;
-
-    public String getStateType() {
-        return stateType;
-    }
-
-    public void setStateType(String stateType) {
-        this.stateType = stateType;
-    }
+    @Column(name = "state_type", updatable = false)
+    private String stateType;
+    @Column(name = "state_index")
+    private Integer stateIndex;
 
     public Long getStateId() {
         return stateId;
@@ -70,12 +63,28 @@ public class StateEntity {
         this.positionId = positionId;
     }
 
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
+    }
+
     public Date getCreationDate() {
         return creationDate;
     }
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public Short getLanguageSkill() {
+        return languageSkill;
+    }
+
+    public void setLanguageSkill(Short languageSkill) {
+        this.languageSkill = languageSkill;
     }
 
     public String getDescription() {
@@ -86,28 +95,12 @@ public class StateEntity {
         this.description = description;
     }
 
-    public StateEntity getNextState() {
-        return nextState;
-    }
-
-    public void setNextState(StateEntity nextState) {
-        this.nextState = nextState;
-    }
-
     public String getResult() {
         return result;
     }
 
     public void setResult(String result) {
         this.result = result;
-    }
-
-    public Short getLanguageSkill() {
-        return languageSkill;
-    }
-
-    public void setLanguageSkill(Short languageSkill) {
-        this.languageSkill = languageSkill;
     }
 
     public Long getOfferedMoney() {
@@ -132,6 +125,22 @@ public class StateEntity {
 
     public void setFeedbackDate(Date feedbackDate) {
         this.feedbackDate = feedbackDate;
+    }
+
+    public String getStateType() {
+        return stateType;
+    }
+
+    public void setStateType(String stateType) {
+        this.stateType = stateType;
+    }
+
+    public Integer getStateIndex() {
+        return stateIndex;
+    }
+
+    public void setStateIndex(Integer stateIndex) {
+        this.stateIndex = stateIndex;
     }
 }
 

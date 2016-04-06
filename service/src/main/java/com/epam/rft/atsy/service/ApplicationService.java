@@ -13,6 +13,8 @@ public interface ApplicationService {
 
     Long saveState(StateDTO state);
 
-    List<StateDTO> getStatesByStateId(Long latestStateId);
+    List<StateDTO> getStatesByApplicationId(Long latestStateId);
+
+    Long getNewApplicationId();
 
 }

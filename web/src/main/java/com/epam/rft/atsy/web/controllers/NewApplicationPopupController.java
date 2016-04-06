@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Locale;
 
 @Controller
@@ -27,11 +26,13 @@ public class NewApplicationPopupController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/secure/new_application_popup")
-    public String saveOrUpdate(@ModelAttribute StateDTO candidateDTO, BindingResult result, Locale locale) {
+    public String saveOrUpdate(@ModelAttribute StateDTO stateDTO, BindingResult result, Locale locale) {
         if (!result.hasErrors()) {
-            candidateDTO.setStateType("newstate");
-            applicationService.saveState(candidateDTO);
+            stateDTO.setStateType("newstate");
+            stateDTO.setApplicationId(applicationService.getNewApplicationId());
+            stateDTO.setStateIndex(0);
+            applicationService.saveState(stateDTO);
         }
-        return "redirect:/secure/candidate/"+candidateDTO.getCandidateId();
+        return "redirect:/secure/candidate/"+stateDTO.getCandidateId();
     }
 }
