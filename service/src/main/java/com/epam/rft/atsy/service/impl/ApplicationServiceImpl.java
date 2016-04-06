@@ -43,6 +43,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             if(stateDTOs.get(i).getStateIndex()==0){
                 candidateApplicationDTO=new CandidateApplicationDTO();
                 candidateApplicationDTO.setCreationDate(simpleDateFormat.format(stateDTOs.get(i).getCreationDate()));
+                candidateApplicationDTO.setApplicationId(stateDTOs.get(i).getApplicationId());
             }
             //a baj az hogy rendezetlenül jönnek fel
             if(i+1<stateDTOs.size() && stateDTOs.get(i+1).getApplicationId() != stateDTOs.get(i).getApplicationId()){
@@ -80,29 +81,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public List<StateDTO> getStatesByApplicationId(Long latestStateId) {
-        /*List<StateDTO> stateDTOs = new ArrayList<>();
-        for (StateEntity stateEntity: applicationRepository.findAll()) {
-            stateDTOs.add(modelMapper.map(stateEntity,StateDTO.class));
-        }
-        List<StateDTO> newstates = new ArrayList<>();
-        for(StateDTO stateDTO:stateDTOs){
-            if (stateDTO.getStateType().equals("newstate"))
-                newstates.add(stateDTO);
-        }
-        List<StateDTO> ret = new ArrayList<>();
-        for(StateDTO stateDTO:newstates){
-            while(stateDTO.getNextState()!= null){
-                ret.add(stateDTO);
-                stateDTO=stateDTO.getNextState();
-            }
-            if (ret.size()==0){
-                ret.clear();
-            } else if (ret.get(ret.size()-1).getStateId() == latestStateId) {
-                return ret;
-            }
-        }
-        return ret;*/
-        return null;
+    public List<StateDTO> getStatesByApplicationId(Long applicationId) {
+        Collection<StateEntity> stateEntities = applicationRepository.findByApplicationIdOrderByStateIndexDesc(applicationId);
+        Type targetListType = new TypeToken<List<StateDTO>>() {
+        }.getType();
+        return modelMapper.map(stateEntities, targetListType);
     }
 }

@@ -12,15 +12,15 @@ import java.util.Collection;
 import java.util.Locale;
 
 @RestController
-@RequestMapping(value = "/secure/applications_states/{stateId}")
+@RequestMapping(value = "/secure/applications_states/{applicationId}")
 public class ApplicationStatesController {
 
     @Resource
     private ApplicationService applicationService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public Collection<StateDTO> loadApplications(@PathVariable(value = "stateId") Long stateId, Locale locale) {
-        Collection<StateDTO> applicationStates = applicationService.getStatesByApplicationId(stateId);
+    public Collection<StateDTO> loadApplications(@PathVariable(value = "applicationId") Long applicationId, Locale locale) {
+        Collection<StateDTO> applicationStates = applicationService.getStatesByApplicationId(applicationId);
         return applicationStates;
     }
 }

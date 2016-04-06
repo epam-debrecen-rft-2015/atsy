@@ -3,6 +3,7 @@ package com.epam.rft.atsy.service.domain;
 public class CandidateApplicationDTO {
 
     private Long lastStateId;
+    private Long applicationId;
     private String positionName;
     private String creationDate;
     private String modificationDate;
@@ -14,6 +15,14 @@ public class CandidateApplicationDTO {
 
     public void setLastStateId(Long lastStateId) {
         this.lastStateId = lastStateId;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
     }
 
     public String getPositionName() {

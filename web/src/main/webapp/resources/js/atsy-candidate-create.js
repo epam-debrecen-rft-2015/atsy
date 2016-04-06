@@ -52,7 +52,7 @@ $("#cancelButtonModify").click(function () {
 
 function actionFormatter(value, row, index) {
     return [
-        '<a class="edit ml10" href="../application_state?stateId=' + row.lastStateId + '" title="Edit">',
+        '<a class="edit ml10" href="../application_state?applicationId=' + row.applicationId + '" title="Edit">',
         '<i class="glyphicon glyphicon-edit"></i>',
         '</a>'
     ].join('');

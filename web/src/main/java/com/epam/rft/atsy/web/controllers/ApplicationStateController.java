@@ -13,9 +13,9 @@ public class ApplicationStateController {
     private static final String VIEW_NAME = "application_state";
 
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView loadPage(@RequestParam Long stateId) {
+    public ModelAndView loadPage(@RequestParam Long applicationId) {
         ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
-        modelAndView.addObject("stateId",stateId);
+        modelAndView.addObject("applicationId",applicationId);
         return modelAndView;
     }
 }

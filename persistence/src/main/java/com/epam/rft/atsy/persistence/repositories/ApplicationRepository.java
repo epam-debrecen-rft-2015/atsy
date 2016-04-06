@@ -15,4 +15,6 @@ public interface ApplicationRepository extends CrudRepository<StateEntity, Long>
     Long getMaxApplicationId();
 
     List<StateEntity> findByCandidateIdOrderByApplicationIdAscStateIndexAsc(Long candidateId);
+
+    List<StateEntity> findByApplicationIdOrderByStateIndexDesc(Long applicationId);
 }

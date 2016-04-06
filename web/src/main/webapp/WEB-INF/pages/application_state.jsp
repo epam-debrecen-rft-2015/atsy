@@ -10,18 +10,22 @@
         <div id="settings">
             <h1 class="page-header"><spring:message code="settings.title"/></h1>
             <div id="state_table">
-                                <div>
-                                    <table class="table table-hover" id="states_table"  data-toggle="table" data-url="../secure/applications_states/${stateId}" data-height="500"
-                                           data-sort-name="name">
-                                        <thead>
-                                        <tr>
-                                            <th data-field="position.name" data-align="left"><spring:message
-                                                    code="candidate.table.application.position"/></th>
-                                        </tr>
-                                        </thead>
-                                    </table>
-                                </div>
-                            </div>
+                <div>
+                    <table class="table table-hover" id="states_table"  data-toggle="table" data-url="../secure/applications_states/${applicationId}" data-height="500"
+                    data-sort-name="name">
+                        <thead>
+                            <tr>
+                                <th data-field="stateType" data-align="left"><spring:message
+                                                code="application.table.state"/></th>
+                                <th data-field="creationDate" data-align="left"><spring:message
+                                                code="application.table.creationdate"/></th>
+                                <th data-field="description" data-align="left"><spring:message
+                                                code="application.table.description"/></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
         </div>
     </jsp:body>
 </atsy:secure_page>
