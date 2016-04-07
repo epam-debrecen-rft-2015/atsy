@@ -8,7 +8,7 @@
 <atsy:secure_page>
     <jsp:body>
         <div id="settings">
-            <h1 class="page-header"><spring:message code="settings.title"/></h1>
+            <h1 class="page-header"><spring:message code="application.state.title"/></h1>
             <div id="state_table">
                 <div>
                     <table class="table table-hover" id="states_table"  data-toggle="table" data-url="../secure/applications_states/${applicationId}" data-height="500"
