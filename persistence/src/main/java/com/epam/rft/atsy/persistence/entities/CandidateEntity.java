@@ -9,7 +9,7 @@ public class CandidateEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "candidateId")
+    @Column(name = "id")
     private Long candidateId;
     @Column(name = "name", length = 255)
     private String name;

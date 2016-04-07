@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class PositionEntity implements java.io.Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "positionId")
+    @Column(name = "id")
     private Long positionId;
     @Column(name = "name", nullable = false, length = 255, unique = true)
     private String name;

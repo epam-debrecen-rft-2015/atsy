@@ -11,14 +11,14 @@ public class StateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "stateId")
+    @Column(name = "id")
     private Long stateId;
-    @Column(name = "candidateId")
+    @Column(name = "candidate_id")
     private Long candidateId;
     @ManyToOne
-    @JoinColumn(name = "positionId", nullable = true)
+    @JoinColumn(name = "position_id", nullable = true)
     private PositionEntity positionId;
-    @Column(name = "applicationId")
+    @Column(name = "application_id")
     private Long applicationId;
     @Column(name = "creation_date")
     private Date creationDate;

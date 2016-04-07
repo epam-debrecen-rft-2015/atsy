@@ -5,22 +5,22 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "PasswordHistory", schema = "atsy")
+@Table(name = "password_history", schema = "atsy")
 public class PasswordHistoryEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "changeId", table = "PasswordHistory")
+    @Column(name = "id", table = "password_history")
     private Long changeId;
 
     @ManyToOne(targetEntity = UserEntity.class)
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "users_id", nullable = false)
     private UserEntity userEntity;
 
-    @Column(name ="password", table = "PasswordHistory", nullable = false)
+    @Column(name ="password", table = "password_history", nullable = false)
     private String password;
 
-    @Column(name ="change_date", table = "PasswordHistory", length = 255, nullable = false)
+    @Column(name ="change_date", table = "password_history", length = 255, nullable = false)
     private Date changeDate;
 
     public PasswordHistoryEntity() {

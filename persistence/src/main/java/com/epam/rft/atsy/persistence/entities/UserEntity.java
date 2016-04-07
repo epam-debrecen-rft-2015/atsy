@@ -3,15 +3,15 @@ package com.epam.rft.atsy.persistence.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Users", schema = "atsy", uniqueConstraints = @UniqueConstraint(columnNames = "userName"))
+@Table(name = "Users", schema = "atsy", uniqueConstraints = @UniqueConstraint(columnNames = "user_name"))
 public class UserEntity implements java.io.Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "userId", table = "Users")
+    @Column(name = "id", table = "Users")
     private long userId;
-    @Column(name = "userName", nullable = false, length = 255, table = "Users")
+    @Column(name = "user_name", nullable = false, length = 255, table = "Users")
     private String userName;
-    @Column(name = "userPwd", nullable = false, length = 255, table = "Users")
+    @Column(name = "user_pwd", nullable = false, length = 255, table = "Users")
     private String userPassword;
 
     /**

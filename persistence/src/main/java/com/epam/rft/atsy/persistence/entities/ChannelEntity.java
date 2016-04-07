@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class ChannelEntity implements java.io.Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "channelId")
+    @Column(name = "id")
     private Long channelId;
     @Column(name = "name", nullable = false, length = 255, unique = true)
     private String name;

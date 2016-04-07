@@ -11,6 +11,6 @@ public interface PasswordHistoryRepository extends JpaRepository<PasswordHistory
 
     List<PasswordHistoryEntity> findByUserEntity(UserEntity userEntity);
 
-    @Query(value = "SELECT * FROM atsy.PasswordHistory WHERE userid=? ORDER BY change_date LIMIT 1", nativeQuery = true)
+    @Query(value = "SELECT * FROM atsy.password_history WHERE users_id=? ORDER BY change_date LIMIT 1", nativeQuery = true)
     PasswordHistoryEntity findOldestPassword(Long id);
 }

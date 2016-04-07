@@ -11,7 +11,7 @@ public interface ApplicationRepository extends CrudRepository<StateEntity, Long>
 
     List<StateEntity> findByCandidateId(Long candidateId);
 
-    @Query(value = "select max(applicationId) from States", nativeQuery = true)
+    @Query(value = "select max(application_id) from States", nativeQuery = true)
     Long getMaxApplicationId();
 
     List<StateEntity> findByCandidateIdOrderByApplicationIdAscStateIndexAsc(Long candidateId);
