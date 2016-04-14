@@ -14,11 +14,6 @@ public class StateEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long stateId;
-    @Column(name = "candidate_id")
-    private Long candidateId;
-    @ManyToOne
-    @JoinColumn(name = "position_id", nullable = true)
-    private PositionEntity positionId;
     @OneToOne
     @JoinColumn(name = "application_id")
     private ApplicationEntity applicationEntity;
@@ -47,22 +42,6 @@ public class StateEntity {
 
     public void setStateId(Long stateId) {
         this.stateId = stateId;
-    }
-
-    public Long getCandidateId() {
-        return candidateId;
-    }
-
-    public void setCandidateId(Long candidateId) {
-        this.candidateId = candidateId;
-    }
-
-    public PositionEntity getPositionId() {
-        return positionId;
-    }
-
-    public void setPositionId(PositionEntity positionId) {
-        this.positionId = positionId;
     }
 
     public ApplicationEntity getApplicationEntity() {

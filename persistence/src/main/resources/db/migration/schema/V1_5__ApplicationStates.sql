@@ -1,8 +1,6 @@
 CREATE TABLE States(
 
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  candidate_id BIGINT NOT NULL  ,
-  position_id BIGINT NOT NULL ,
   application_id BIGINT NOT NULL,
   creation_date DATETIME,
   language_skill TINYINT unsigned,

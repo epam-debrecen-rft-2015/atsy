@@ -16,14 +16,18 @@ public class ApplicationEntity {
     @OneToOne
     @JoinColumn(name = "candidate_id")
     private CandidateEntity candidateEntity;
+    @OneToOne
+    @JoinColumn(name = "position_id")
+    private PositionEntity positionEntity;
 
     public ApplicationEntity() {
     }
 
-    public ApplicationEntity(Long applicationId, Date creationDate, CandidateEntity candidateEntity) {
+    public ApplicationEntity(Long applicationId, Date creationDate, CandidateEntity candidateEntity, PositionEntity positionEntity) {
         this.applicationId = applicationId;
         this.creationDate = creationDate;
         this.candidateEntity = candidateEntity;
+        this.positionEntity = positionEntity;
     }
 
     public Long getApplicationId() {
@@ -48,5 +52,13 @@ public class ApplicationEntity {
 
     public void setCandidateEntity(CandidateEntity candidateEntity) {
         this.candidateEntity = candidateEntity;
+    }
+
+    public PositionEntity getPositionEntity() {
+        return positionEntity;
+    }
+
+    public void setPositionEntity(PositionEntity positionEntity) {
+        this.positionEntity = positionEntity;
     }
 }
