@@ -15,7 +15,6 @@ import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 

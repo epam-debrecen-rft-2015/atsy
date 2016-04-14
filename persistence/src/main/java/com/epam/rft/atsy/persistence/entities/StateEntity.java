@@ -1,8 +1,5 @@
 package com.epam.rft.atsy.persistence.entities;
 
-import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
-import com.epam.rft.atsy.persistence.entities.PositionEntity;
-
 import javax.persistence.*;
 import java.util.Date;
 

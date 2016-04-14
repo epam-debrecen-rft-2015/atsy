@@ -1,7 +1,5 @@
 package com.epam.rft.atsy.web.controllers;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-
 /*public class LoginControllerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginControllerTest.class);

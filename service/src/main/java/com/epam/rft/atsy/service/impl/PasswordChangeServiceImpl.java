@@ -4,7 +4,6 @@ import com.epam.rft.atsy.persistence.entities.PasswordHistoryEntity;
 import com.epam.rft.atsy.persistence.repositories.PasswordHistoryRepository;
 import com.epam.rft.atsy.persistence.repositories.UserRepository;
 import com.epam.rft.atsy.service.PasswordChangeService;
-import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.domain.PasswordHistoryDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import org.hibernate.exception.ConstraintViolationException;

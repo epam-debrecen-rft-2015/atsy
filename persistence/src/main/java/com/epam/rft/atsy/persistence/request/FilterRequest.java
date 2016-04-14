@@ -1,7 +1,5 @@
 package com.epam.rft.atsy.persistence.request;
 
-import java.util.Map;
-
 public class FilterRequest extends SortingRequest {
 
 

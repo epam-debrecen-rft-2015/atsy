@@ -1,7 +1,6 @@
 package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.persistence.request.FilterRequest;
-import com.epam.rft.atsy.persistence.request.SortingRequest;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.controllers.rest.CandidateController;
@@ -12,14 +11,9 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
 
 public class CandidateControllerTest {

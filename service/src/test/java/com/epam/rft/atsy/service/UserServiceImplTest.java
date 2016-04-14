@@ -1,28 +1,5 @@
 package com.epam.rft.atsy.service;
 
-import com.epam.rft.atsy.persistence.entities.UserEntity;
-import com.epam.rft.atsy.service.domain.UserDTO;
-import com.epam.rft.atsy.service.exception.BackendException;
-import com.epam.rft.atsy.service.exception.UserNotFoundException;
-import com.epam.rft.atsy.service.impl.UserServiceImpl;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalToIgnoringCase;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.BDDMockito.given;
-
 /*public class UserServiceImplTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImplTest.class);

@@ -1,7 +1,6 @@
 package com.epam.rft.atsy.service;
 
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
-import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateViewDTO;
 

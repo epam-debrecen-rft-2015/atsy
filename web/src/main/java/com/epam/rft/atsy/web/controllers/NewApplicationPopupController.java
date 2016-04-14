@@ -1,7 +1,7 @@
 package com.epam.rft.atsy.web.controllers;
 
-import com.epam.rft.atsy.service.StatesService;
 import com.epam.rft.atsy.service.ApplicationsService;
+import com.epam.rft.atsy.service.StatesService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import org.springframework.stereotype.Controller;

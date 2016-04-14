@@ -1,26 +1,5 @@
 package com.epam.rft.atsy.persistence;
 
-import com.epam.rft.atsy.persistence.entities.CandidateEntity;
-import com.epam.rft.atsy.persistence.request.SortingRequest;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import java.util.Collection;
-import java.util.List;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.emptyCollectionOf;
-import static org.hamcrest.Matchers.not;
-import static org.mockito.BDDMockito.given;
-
 public class CandidateDAOImplTest {
 
     /*@InjectMocks
