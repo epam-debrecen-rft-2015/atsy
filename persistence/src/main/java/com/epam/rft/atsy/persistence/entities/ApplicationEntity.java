@@ -1,7 +1,5 @@
 package com.epam.rft.atsy.persistence.entities;
 
-import com.epam.rft.atsy.persistence.entities.states.StateEntity;
-
 import javax.persistence.*;
 import java.util.Date;
 

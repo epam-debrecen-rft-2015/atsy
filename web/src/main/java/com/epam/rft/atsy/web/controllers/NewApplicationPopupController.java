@@ -1,6 +1,6 @@
 package com.epam.rft.atsy.web.controllers;
 
-import com.epam.rft.atsy.service.ApplicationService;
+import com.epam.rft.atsy.service.StatesService;
 import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
@@ -19,7 +19,7 @@ import java.util.Locale;
 public class NewApplicationPopupController {
 
     @Resource
-    private ApplicationService applicationService;
+    private StatesService statesService;
 
     @Resource
     private ApplicationsService applicationsService;
@@ -40,7 +40,7 @@ public class NewApplicationPopupController {
             applicationDTO.setCreationDate(new Date());
             applicationDTO.setCandidateId(stateDTO.getCandidateId());
             Long applicationId = applicationsService.saveOrUpdate(applicationDTO);
-            applicationService.saveState(stateDTO, applicationId);
+            statesService.saveState(stateDTO, applicationId);
         }
         return "redirect:/secure/candidate/"+stateDTO.getCandidateId();
     }

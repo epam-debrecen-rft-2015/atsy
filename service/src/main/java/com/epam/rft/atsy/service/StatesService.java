@@ -8,7 +8,7 @@ import com.epam.rft.atsy.service.domain.states.StateViewDTO;
 import java.util.Collection;
 import java.util.List;
 
-public interface ApplicationService {
+public interface StatesService {
 
     Collection<CandidateApplicationDTO> getStatesByCandidateId(Long id);
 

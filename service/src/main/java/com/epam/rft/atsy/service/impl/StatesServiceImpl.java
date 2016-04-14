@@ -1,14 +1,12 @@
 package com.epam.rft.atsy.service.impl;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
-import com.epam.rft.atsy.persistence.entities.PositionEntity;
-import com.epam.rft.atsy.persistence.entities.states.StateEntity;
-import com.epam.rft.atsy.persistence.repositories.ApplicationRepository;
+import com.epam.rft.atsy.persistence.entities.StateEntity;
+import com.epam.rft.atsy.persistence.repositories.StatesRepository;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
-import com.epam.rft.atsy.service.ApplicationService;
+import com.epam.rft.atsy.service.StatesService;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
-import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateViewDTO;
 import org.modelmapper.ModelMapper;
@@ -22,14 +20,14 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
-public class ApplicationServiceImpl implements ApplicationService {
+public class StatesServiceImpl implements StatesService {
 
 
     @Resource
     private ModelMapper modelMapper;
 
     @Autowired
-    private ApplicationRepository applicationRepository;
+    private StatesRepository applicationRepository;
 
     @Autowired
     private ApplicationsRepository applicationsRepository;

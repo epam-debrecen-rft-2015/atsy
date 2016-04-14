@@ -1,6 +1,6 @@
 package com.epam.rft.atsy.web.controllers.rest;
 
-import com.epam.rft.atsy.service.ApplicationService;
+import com.epam.rft.atsy.service.StatesService;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,14 +19,14 @@ public class CandidateApplicationController {
     private static final String APPLICATION_STATE= "candidate.table.state.";
 
     @Resource
-    private ApplicationService applicationService;
+    private StatesService statesService;
 
     @Resource
     private MessageSource messageSource;
 
     @RequestMapping(method = RequestMethod.GET)
     public Collection<CandidateApplicationDTO> loadApplications(@PathVariable(value = "candidateId") Long candidateId, Locale locale) {
-        Collection<CandidateApplicationDTO> applicationStates = applicationService.getStatesByCandidateId(candidateId);
+        Collection<CandidateApplicationDTO> applicationStates = statesService.getStatesByCandidateId(candidateId);
 
         for(CandidateApplicationDTO candidateApplicationDTO : applicationStates){
             String stateType = candidateApplicationDTO.getStateType();

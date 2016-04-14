@@ -1,4 +1,4 @@
-package com.epam.rft.atsy.persistence.entities.states;
+package com.epam.rft.atsy.persistence.entities;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
