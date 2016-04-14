@@ -13,5 +13,4 @@ CREATE TABLE States(
   feedback_date DATETIME,
   state_type VARCHAR (50),
   state_index INT
-
 )

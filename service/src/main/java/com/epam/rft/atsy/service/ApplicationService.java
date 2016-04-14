@@ -12,10 +12,9 @@ public interface ApplicationService {
 
     Collection<CandidateApplicationDTO> getStatesByCandidateId(Long id);
 
-    Long saveState(StateDTO state);
+    Long saveState(StateDTO state, Long applicationId);
 
     List<StateViewDTO> getStatesByApplicationId(Long latestStateId);
 
-    Long getNewApplicationId();
 
 }

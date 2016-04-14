@@ -1,5 +1,6 @@
 package com.epam.rft.atsy.persistence.repositories;
 
+import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.entities.states.StateEntity;
 import org.springframework.data.jpa.repository.Query;
@@ -11,10 +12,12 @@ public interface ApplicationRepository extends CrudRepository<StateEntity, Long>
 
     List<StateEntity> findByCandidateId(Long candidateId);
 
-    @Query(value = "select max(application_id) from States", nativeQuery = true)
-    Long getMaxApplicationId();
+    /*@Query(value = "select max(application_id) from States", nativeQuery = true)
+    Long getMaxApplicationId();*/
 
-    List<StateEntity> findByCandidateIdOrderByApplicationIdAscStateIndexAsc(Long candidateId);
+    List<StateEntity> findByCandidateIdOrderByApplicationEntityAscStateIndexAsc(Long candidateId);
 
-    List<StateEntity> findByApplicationIdOrderByStateIndexDesc(Long applicationId);
+    List<StateEntity> findByApplicationEntityOrderByStateIndexDesc(ApplicationEntity applicationEntity);
+
+    StateEntity findTopByApplicationEntityOrderByStateIndexDesc(ApplicationEntity applicationEntity);
 }

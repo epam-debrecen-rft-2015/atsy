@@ -1,8 +1,11 @@
 package com.epam.rft.atsy.service.impl;
 
+import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.entities.states.StateEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationRepository;
+import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
+import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.service.ApplicationService;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
@@ -28,61 +31,49 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Autowired
     private ApplicationRepository applicationRepository;
 
+    @Autowired
+    private ApplicationsRepository applicationsRepository;
+
+    @Autowired
+    private CandidateRepository candidateRepository;
+
     @Override
     public Collection<CandidateApplicationDTO> getStatesByCandidateId(Long id) {
-        Collection<StateEntity> stateEntities = applicationRepository.findByCandidateIdOrderByApplicationIdAscStateIndexAsc(id);
-        Type targetListType = new TypeToken<List<StateDTO>>() {
-        }.getType();
-
         List<CandidateApplicationDTO> candidateApplicationDTOList=new LinkedList<>();
-        List<StateDTO> stateDTOs=modelMapper.map(stateEntities, targetListType);
-
+        List<ApplicationEntity> applicationList = applicationsRepository.findByCandidateEntity(candidateRepository.findOne(id));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        CandidateApplicationDTO candidateApplicationDTO = null;
-        for(int i=0;i<stateDTOs.size();i++){
-            if(stateDTOs.get(i).getStateIndex()==0){
-                candidateApplicationDTO=new CandidateApplicationDTO();
-                candidateApplicationDTO.setCreationDate(simpleDateFormat.format(stateDTOs.get(i).getCreationDate()));
-                candidateApplicationDTO.setApplicationId(stateDTOs.get(i).getApplicationId());
-            }
+        for (ApplicationEntity applicationEntity: applicationList){
+            StateEntity stateEntity = applicationRepository.findTopByApplicationEntityOrderByStateIndexDesc(applicationEntity);
 
-            if(i+1<stateDTOs.size() && stateDTOs.get(i+1).getApplicationId() != stateDTOs.get(i).getApplicationId()){
-                convertStateDTOToApplicationDTO(candidateApplicationDTOList, stateDTOs, simpleDateFormat, candidateApplicationDTO, i);
-            }
-            if(i+1>=stateDTOs.size()){
-                convertStateDTOToApplicationDTO(candidateApplicationDTOList, stateDTOs, simpleDateFormat, candidateApplicationDTO, i);
-            }
+            CandidateApplicationDTO candidateApplicationDTO = new CandidateApplicationDTO();
+            candidateApplicationDTO.setApplicationId(applicationEntity.getApplicationId());
+            candidateApplicationDTO.setCreationDate(simpleDateFormat.format(applicationEntity.getCreationDate()));
+
+            candidateApplicationDTO.setStateType(stateEntity.getStateType());
+            candidateApplicationDTO.setPositionName(stateEntity.getPositionId().getName());
+            candidateApplicationDTO.setLastStateId(stateEntity.getStateId());
+            candidateApplicationDTO.setModificationDate(simpleDateFormat.format(stateEntity.getCreationDate()));
+
+            candidateApplicationDTOList.add(candidateApplicationDTO);
         }
-        return candidateApplicationDTOList;
-    }
-
-    private void convertStateDTOToApplicationDTO(List<CandidateApplicationDTO> candidateApplicationDTOList, List<StateDTO> stateDTOs, SimpleDateFormat simpleDateFormat, CandidateApplicationDTO candidateApplicationDTO, int i) {
-        candidateApplicationDTO.setStateType(stateDTOs.get(i).getStateType());
-        candidateApplicationDTO.setPositionName(stateDTOs.get(i).getPosition().getName());
-        candidateApplicationDTO.setLastStateId(stateDTOs.get(i).getStateId());
-        candidateApplicationDTO.setModificationDate(simpleDateFormat.format(stateDTOs.get(i).getCreationDate()));
-
-        candidateApplicationDTOList.add(candidateApplicationDTO);
+        return  candidateApplicationDTOList;
     }
 
     @Override
-    public Long saveState(StateDTO state) {
+    public Long saveState(StateDTO state, Long applicationId) {
         StateEntity stateEntity = modelMapper.map(state, StateEntity.class);
 
         stateEntity.setCreationDate(new Date());
+        stateEntity.setApplicationEntity(applicationsRepository.findOne(applicationId));
 
         return applicationRepository.save(stateEntity).getStateId();
     }
 
-    @Override
-    public Long getNewApplicationId(){
-        return applicationRepository.getMaxApplicationId() != null ? applicationRepository.getMaxApplicationId()+1 : 0;
-    }
 
     @Override
     public List<StateViewDTO> getStatesByApplicationId(Long applicationId) {
-        List<StateEntity> stateEntities = applicationRepository.findByApplicationIdOrderByStateIndexDesc(applicationId);
+        List<StateEntity> stateEntities = applicationRepository.findByApplicationEntityOrderByStateIndexDesc(applicationsRepository.findOne(1L));
         Type targetListType = new TypeToken<List<StateViewDTO>>() {
         }.getType();
         List<StateViewDTO> stateDTOs=modelMapper.map(stateEntities, targetListType);

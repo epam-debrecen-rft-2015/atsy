@@ -1,5 +1,6 @@
 package com.epam.rft.atsy.service.domain.states;
 
+import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 
 import java.util.Date;
@@ -9,7 +10,7 @@ public abstract class AbstractStateDTO {
     private Long stateId;
     private Long candidateId;
     private PositionDTO position;
-    private Long applicationId;
+    private ApplicationDTO applicationDTO;
     private Short languageSkill;
     private String description;
     private String result;
@@ -22,11 +23,11 @@ public abstract class AbstractStateDTO {
     public AbstractStateDTO() {
     }
 
-    public AbstractStateDTO(Long stateId, Long candidateId, PositionDTO position, Long applicationId, Short languageSkill, String description, String result, Long offeredMoney, Long claim, Date feedbackDate, String stateType, Integer stateIndex) {
+    public AbstractStateDTO(Long stateId, Long candidateId, PositionDTO position, ApplicationDTO applicationDTO, Short languageSkill, String description, String result, Long offeredMoney, Long claim, Date feedbackDate, String stateType, Integer stateIndex) {
         this.stateId = stateId;
         this.candidateId = candidateId;
         this.position = position;
-        this.applicationId = applicationId;
+        this.applicationDTO = applicationDTO;
         this.languageSkill = languageSkill;
         this.description = description;
         this.result = result;
@@ -61,12 +62,12 @@ public abstract class AbstractStateDTO {
         this.position = position;
     }
 
-    public Long getApplicationId() {
-        return applicationId;
+    public ApplicationDTO getApplicationDTO() {
+        return applicationDTO;
     }
 
-    public void setApplicationId(Long applicationId) {
-        this.applicationId = applicationId;
+    public void setApplicationDTO(ApplicationDTO applicationDTO) {
+        this.applicationDTO = applicationDTO;
     }
 
     public Short getLanguageSkill() {

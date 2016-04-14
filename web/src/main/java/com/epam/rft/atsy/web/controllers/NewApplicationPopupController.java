@@ -1,6 +1,8 @@
 package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.ApplicationService;
+import com.epam.rft.atsy.service.ApplicationsService;
+import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.Locale;
 
 @Controller
@@ -17,6 +20,9 @@ public class NewApplicationPopupController {
 
     @Resource
     private ApplicationService applicationService;
+
+    @Resource
+    private ApplicationsService applicationsService;
 
     private static final String VIEW_NAME = "new_application_popup";
 
@@ -29,9 +35,12 @@ public class NewApplicationPopupController {
     public String saveOrUpdate(@ModelAttribute StateDTO stateDTO, BindingResult result, Locale locale) {
         if (!result.hasErrors()) {
             stateDTO.setStateType("newstate");
-            stateDTO.setApplicationId(applicationService.getNewApplicationId());
             stateDTO.setStateIndex(0);
-            applicationService.saveState(stateDTO);
+            ApplicationDTO applicationDTO = new ApplicationDTO();
+            applicationDTO.setCreationDate(new Date());
+            applicationDTO.setCandidateId(stateDTO.getCandidateId());
+            Long applicationId = applicationsService.saveOrUpdate(applicationDTO);
+            applicationService.saveState(stateDTO, applicationId);
         }
         return "redirect:/secure/candidate/"+stateDTO.getCandidateId();
     }

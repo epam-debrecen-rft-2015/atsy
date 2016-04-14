@@ -1,5 +1,6 @@
 package com.epam.rft.atsy.persistence.entities.states;
 
+import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
 
 import javax.persistence.*;
@@ -18,8 +19,9 @@ public class StateEntity {
     @ManyToOne
     @JoinColumn(name = "position_id", nullable = true)
     private PositionEntity positionId;
-    @Column(name = "application_id")
-    private Long applicationId;
+    @OneToOne
+    @JoinColumn(name = "application_id")
+    private ApplicationEntity applicationEntity;
     @Column(name = "creation_date")
     private Date creationDate;
     @Column(name = "language_skill")
@@ -63,12 +65,12 @@ public class StateEntity {
         this.positionId = positionId;
     }
 
-    public Long getApplicationId() {
-        return applicationId;
+    public ApplicationEntity getApplicationEntity() {
+        return applicationEntity;
     }
 
-    public void setApplicationId(Long applicationId) {
-        this.applicationId = applicationId;
+    public void setApplicationEntity(ApplicationEntity applicationEntity) {
+        this.applicationEntity = applicationEntity;
     }
 
     public Date getCreationDate() {
