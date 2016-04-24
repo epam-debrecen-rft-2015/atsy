@@ -49,4 +49,19 @@ public class ChannelDTO implements Serializable {
                 .append(name, that.name)
                 .isEquals();
     }
+
+    @Override
+    public int hashCode() {
+        int result = channelId != null ? channelId.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ChannelDTO{" +
+                "channelId=" + channelId +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

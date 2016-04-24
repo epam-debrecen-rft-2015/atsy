@@ -48,4 +48,31 @@ public class ChannelEntity implements java.io.Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ChannelEntity that = (ChannelEntity) o;
+
+        if (channelId != null ? !channelId.equals(that.channelId) : that.channelId != null) return false;
+        return !(name != null ? !name.equals(that.name) : that.name != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = channelId != null ? channelId.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ChannelEntity{" +
+                "channelId=" + channelId +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

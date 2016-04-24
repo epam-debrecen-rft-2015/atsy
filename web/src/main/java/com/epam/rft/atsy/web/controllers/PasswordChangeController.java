@@ -29,6 +29,11 @@ import java.util.Locale;
 @RequestMapping(path = "/secure/password/manage")
 public class PasswordChangeController {
     private static final String VIEW_NAME = "password_change";
+    public static final String LOGIN_ERROR_KEY = "loginErrorKey";
+    public static final String VALIDATION_SUCCESS_KEY = "validationSuccessKey";
+    public static final String VALIDATION_ERROR_KEY = "validationErrorKey";
+    public static final String LOGIN_BACKEND_VALIDATION = "login.backend.validation";
+    public static final String PASSWORDCHANGE_VALIDATION_SUCCESS = "passwordchange.validation.success";
     private static Logger logger = LoggerFactory.getLogger(PasswordChangeController.class);
 
     @Resource
@@ -52,7 +57,7 @@ public class PasswordChangeController {
 
         ModelAndView model = new ModelAndView(VIEW_NAME);
         if (bindingResult.hasErrors()) {
-            model.addObject("loginErrorKey", "login.backend.validation");
+            model.addObject(LOGIN_ERROR_KEY, LOGIN_BACKEND_VALIDATION);
         } else {
             try {
                 UserDetailsAdapter userDetailsAdapter = (UserDetailsAdapter) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -69,13 +74,12 @@ public class PasswordChangeController {
                 userService.saveOrUpdate(user);
                 passwordChangeService.saveOrUpdate(passwordHistoryDTO);
                 userDetailsAdapter.setPassword(newPassword);
-                model.addObject("validationSuccessKey","passwordchange.validation.success");
+                model.addObject(VALIDATION_SUCCESS_KEY, PASSWORDCHANGE_VALIDATION_SUCCESS);
             } catch (PasswordValidationException e) {
                 logger.error(e.getMessage());
-                model.addObject("validationErrorKey",e.getMessage());
+                model.addObject(VALIDATION_ERROR_KEY,e.getMessage());
             }
         }
-
         return model;
     }
 }

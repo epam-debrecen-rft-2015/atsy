@@ -15,14 +15,15 @@ import javax.annotation.Resource;
 public class CandidateCreationController {
 
     private static final String VIEW_NAME = "candidate_create";
+    public static final String CANDIDATE_OBJECT_KEY = "candidate";
     @Resource
-    private CandidateService service;
+    private CandidateService candidateService;
 
     @RequestMapping(method = RequestMethod.GET, path = "/candidate/{candidateId}")
     public ModelAndView loadCandidate(@PathVariable(value = "candidateId") Long candidateId) {
         ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
 
-        modelAndView.addObject("candidate", service.getCandidate(candidateId));
+        modelAndView.addObject(CANDIDATE_OBJECT_KEY, candidateService.getCandidate(candidateId));
 
         return modelAndView;
     }
@@ -31,7 +32,7 @@ public class CandidateCreationController {
     public ModelAndView loadCandidate() {
         ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
 
-        modelAndView.addObject("candidate", new CandidateDTO());
+        modelAndView.addObject(CANDIDATE_OBJECT_KEY, new CandidateDTO());
 
         return modelAndView;
     }

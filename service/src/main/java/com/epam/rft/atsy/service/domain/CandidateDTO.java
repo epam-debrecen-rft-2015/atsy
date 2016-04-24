@@ -123,4 +123,17 @@ public class CandidateDTO {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "CandidateDTO{" +
+                "candidateId=" + candidateId +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", referer='" + referer + '\'' +
+                ", languageSkill=" + languageSkill +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

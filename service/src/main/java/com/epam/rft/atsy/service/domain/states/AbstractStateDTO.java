@@ -133,4 +133,63 @@ public abstract class AbstractStateDTO {
     public void setStateIndex(Integer stateIndex) {
         this.stateIndex = stateIndex;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AbstractStateDTO that = (AbstractStateDTO) o;
+
+        if (stateId != null ? !stateId.equals(that.stateId) : that.stateId != null) return false;
+        if (candidateId != null ? !candidateId.equals(that.candidateId) : that.candidateId != null) return false;
+        if (position != null ? !position.equals(that.position) : that.position != null) return false;
+        if (applicationDTO != null ? !applicationDTO.equals(that.applicationDTO) : that.applicationDTO != null)
+            return false;
+        if (languageSkill != null ? !languageSkill.equals(that.languageSkill) : that.languageSkill != null)
+            return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        if (result != null ? !result.equals(that.result) : that.result != null) return false;
+        if (offeredMoney != null ? !offeredMoney.equals(that.offeredMoney) : that.offeredMoney != null) return false;
+        if (claim != null ? !claim.equals(that.claim) : that.claim != null) return false;
+        if (feedbackDate != null ? !feedbackDate.equals(that.feedbackDate) : that.feedbackDate != null) return false;
+        if (stateType != null ? !stateType.equals(that.stateType) : that.stateType != null) return false;
+        return !(stateIndex != null ? !stateIndex.equals(that.stateIndex) : that.stateIndex != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result1 = stateId != null ? stateId.hashCode() : 0;
+        result1 = 31 * result1 + (candidateId != null ? candidateId.hashCode() : 0);
+        result1 = 31 * result1 + (position != null ? position.hashCode() : 0);
+        result1 = 31 * result1 + (applicationDTO != null ? applicationDTO.hashCode() : 0);
+        result1 = 31 * result1 + (languageSkill != null ? languageSkill.hashCode() : 0);
+        result1 = 31 * result1 + (description != null ? description.hashCode() : 0);
+        result1 = 31 * result1 + (result != null ? result.hashCode() : 0);
+        result1 = 31 * result1 + (offeredMoney != null ? offeredMoney.hashCode() : 0);
+        result1 = 31 * result1 + (claim != null ? claim.hashCode() : 0);
+        result1 = 31 * result1 + (feedbackDate != null ? feedbackDate.hashCode() : 0);
+        result1 = 31 * result1 + (stateType != null ? stateType.hashCode() : 0);
+        result1 = 31 * result1 + (stateIndex != null ? stateIndex.hashCode() : 0);
+        return result1;
+    }
+
+    @Override
+    public String toString() {
+        return "AbstractStateDTO{" +
+                "stateId=" + stateId +
+                ", candidateId=" + candidateId +
+                ", position=" + position +
+                ", applicationDTO=" + applicationDTO +
+                ", languageSkill=" + languageSkill +
+                ", description='" + description + '\'' +
+                ", result='" + result + '\'' +
+                ", offeredMoney=" + offeredMoney +
+                ", claim=" + claim +
+                ", feedbackDate=" + feedbackDate +
+                ", stateType='" + stateType + '\'' +
+                ", stateIndex=" + stateIndex +
+                '}';
+    }
 }

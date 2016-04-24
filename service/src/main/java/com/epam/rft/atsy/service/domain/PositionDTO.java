@@ -49,4 +49,19 @@ public class PositionDTO implements Serializable {
                 .append(name, that.name)
                 .isEquals();
     }
+
+    @Override
+    public int hashCode() {
+        int result = positionId != null ? positionId.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "PositionDTO{" +
+                "positionId=" + positionId +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

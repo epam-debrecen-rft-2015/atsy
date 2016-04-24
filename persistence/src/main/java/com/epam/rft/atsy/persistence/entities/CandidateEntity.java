@@ -92,4 +92,46 @@ public class CandidateEntity implements Serializable {
     public void setLanguageSkill(Short language_skill) {
         this.languageSkill = language_skill;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CandidateEntity that = (CandidateEntity) o;
+
+        if (candidateId != null ? !candidateId.equals(that.candidateId) : that.candidateId != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (email != null ? !email.equals(that.email) : that.email != null) return false;
+        if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        if (referer != null ? !referer.equals(that.referer) : that.referer != null) return false;
+        return !(languageSkill != null ? !languageSkill.equals(that.languageSkill) : that.languageSkill != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = candidateId != null ? candidateId.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (referer != null ? referer.hashCode() : 0);
+        result = 31 * result + (languageSkill != null ? languageSkill.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "CandidateEntity{" +
+                "candidateId=" + candidateId +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", description='" + description + '\'' +
+                ", referer='" + referer + '\'' +
+                ", languageSkill=" + languageSkill +
+                '}';
+    }
 }

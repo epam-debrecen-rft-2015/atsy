@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
         try {
             return userRepository.save(entity).getUserId();
         } catch (ConstraintViolationException | DataIntegrityViolationException constraint) {
-            throw new DuplicateRecordException("alma");
+            throw new DuplicateRecordException("User already exists!");
         }
     }
 

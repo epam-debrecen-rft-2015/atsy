@@ -14,8 +14,7 @@ public class LoginController {
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView pageLoad(HttpServletRequest request) {
-        ModelAndView model = new ModelAndView(VIEW_NAME);
-        return model;
+        return new ModelAndView(VIEW_NAME);
     }
 
 }

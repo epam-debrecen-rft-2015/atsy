@@ -44,4 +44,37 @@ public class PasswordHistoryDTO implements Serializable {
     public void setChangeDate(Date changeDate) {
         this.changeDate = changeDate;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PasswordHistoryDTO that = (PasswordHistoryDTO) o;
+
+        if (changeId != null ? !changeId.equals(that.changeId) : that.changeId != null) return false;
+        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
+        if (password != null ? !password.equals(that.password) : that.password != null) return false;
+        return !(changeDate != null ? !changeDate.equals(that.changeDate) : that.changeDate != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = changeId != null ? changeId.hashCode() : 0;
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (changeDate != null ? changeDate.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "PasswordHistoryDTO{" +
+                "changeId=" + changeId +
+                ", userId=" + userId +
+                ", password='" + password + '\'' +
+                ", changeDate=" + changeDate +
+                '}';
+    }
 }

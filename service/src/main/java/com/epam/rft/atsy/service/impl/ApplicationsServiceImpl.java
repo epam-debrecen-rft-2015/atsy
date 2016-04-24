@@ -19,9 +19,6 @@ public class ApplicationsServiceImpl implements ApplicationsService {
     @Resource
     private ModelMapper modelMapper;
 
-    @Resource
-    private StatesService statesService;
-
     @Autowired
     private ApplicationsRepository applicationsRepository;
 

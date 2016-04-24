@@ -23,7 +23,6 @@ import java.util.List;
 
 @Service
 public class CandidateServiceImpl implements CandidateService {
-    public static final String C = "c.";
 
     @Resource
     private ModelMapper modelMapper;
