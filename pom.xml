@@ -19,6 +19,7 @@
         <jacoco.complexityRatio>0.80</jacoco.complexityRatio>
         <jacoco.lineRatio>0.80</jacoco.lineRatio>
         <environment>integration</environment>
+        <com.epam.rft>1.0-SNAPSHOT</com.epam.rft>
         <maven.war.plugin.version>2.3</maven.war.plugin.version>
         <maven.compiler.plugin.version>3.3</maven.compiler.plugin.version>
         <maven.surefire.plugin.version>2.18.1</maven.surefire.plugin.version>
@@ -45,6 +46,13 @@
         <flyway.core.version>3.2.1</flyway.core.version>
         <modelmapper.version>0.7.5</modelmapper.version>
         <hibernate.validator.version>5.2.2.Final</hibernate.validator.version>
+        <javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
+        <com.fasterxml.jackson.core.version>2.2.3</com.fasterxml.jackson.core.version>
+        <javax.servlet.api.version>3.1.0</javax.servlet.api.version>
+        <info.cukes.cucumber.version>1.1.6</info.cukes.cucumber.version>
+        <org.seleniumhq.selenium.version>2.48.2</org.seleniumhq.selenium.version>
+        <junit.version>4.11</junit.version>
+        <org.springframework.security.version>4.0.3.RELEASE</org.springframework.security.version>
     </properties>
 
     <modules>
@@ -355,6 +363,11 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
+                <groupId>com.epam.rft</groupId>
+                <artifactId>persistence</artifactId>
+                <version>${com.epam.rft}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.modelmapper</groupId>
                 <artifactId>modelmapper</artifactId>
                 <version>${modelmapper.version}</version>
@@ -367,91 +380,91 @@
             <dependency>
                 <groupId>com.epam.rft</groupId>
                 <artifactId>service</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>${com.epam.rft}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-webmvc</artifactId>
-                <version>4.2.1.RELEASE</version>
+                <version>${org.springframework.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>jstl</artifactId>
-                <version>1.2</version>
+                <version>${javax.servlet.jstl.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.2.3</version>
+                <version>${com.fasterxml.jackson.core.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
-                <version>3.1.0</version>
+                <version>${javax.servlet.api.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>info.cukes</groupId>
                 <artifactId>cucumber-junit</artifactId>
-                <version>1.1.6</version>
+                <version>${info.cukes.cucumber.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>info.cukes</groupId>
                 <artifactId>cucumber-core</artifactId>
-                <version>1.1.6</version>
+                <version>${info.cukes.cucumber.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>info.cukes</groupId>
                 <artifactId>cucumber-java</artifactId>
-                <version>1.1.6</version>
+                <version>${info.cukes.cucumber.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>info.cukes</groupId>
                 <artifactId>cucumber-picocontainer</artifactId>
-                <version>1.1.6</version>
+                <version>${info.cukes.cucumber.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
-                <version>4.2.1.RELEASE</version>
+                <version>${org.springframework.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-firefox-driver</artifactId>
-                <version>2.48.2</version>
+                <version>${org.seleniumhq.selenium.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-java</artifactId>
-                <version>2.48.2</version>
+                <version>${org.seleniumhq.selenium.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.11</version>
+                <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-core</artifactId>
-                <version>4.0.3.RELEASE</version>
+                <version>${org.springframework.security.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-web</artifactId>
-                <version>4.0.3.RELEASE</version>
+                <version>${org.springframework.security.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-config</artifactId>
-                <version>4.0.3.RELEASE</version>
+                <version>${org.springframework.security.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
