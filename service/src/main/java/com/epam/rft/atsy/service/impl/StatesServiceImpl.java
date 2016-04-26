@@ -75,7 +75,7 @@ public class StatesServiceImpl implements StatesService {
 
     @Override
     public List<StateViewDTO> getStatesByApplicationId(Long applicationId) {
-        List<StateEntity> stateEntities = statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationsRepository.findOne(1L));
+        List<StateEntity> stateEntities = statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationsRepository.findOne(applicationId));
         Type targetListType = new TypeToken<List<StateViewDTO>>() {
         }.getType();
         List<StateViewDTO> stateDTOs=modelMapper.map(stateEntities, targetListType);
