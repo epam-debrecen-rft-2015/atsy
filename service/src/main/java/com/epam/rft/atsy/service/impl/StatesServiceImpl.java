@@ -80,7 +80,7 @@ public class StatesServiceImpl implements StatesService {
         }.getType();
         List<StateViewDTO> stateDTOs=modelMapper.map(stateEntities, targetListType);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
         for(int i=0;i<stateDTOs.size();i++){
             stateDTOs.get(i).setCreationDate(simpleDateFormat.format(stateEntities.get(i).getCreationDate()));

@@ -7,9 +7,11 @@ import com.epam.rft.atsy.persistence.repositories.PositionRepository;
 import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.StatesService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
+import com.epam.rft.atsy.service.domain.states.StateDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -18,6 +20,9 @@ public class ApplicationsServiceImpl implements ApplicationsService {
 
     @Resource
     private ModelMapper modelMapper;
+
+    @Resource
+    private StatesService statesService;
 
     @Autowired
     private ApplicationsRepository applicationsRepository;
@@ -35,6 +40,14 @@ public class ApplicationsServiceImpl implements ApplicationsService {
         applicationEntity.setCandidateEntity(candidateRepository.findOne(applicationDTO.getCandidateId()));
         applicationEntity.setPositionEntity(positionRepository.findOne(applicationDTO.getPositionId()));
         return applicationsRepository.save(applicationEntity).getApplicationId();
+    }
+
+    @Transactional
+    @Override
+    public Long saveApplicaton(ApplicationDTO applicationDTO, StateDTO stateDTO) {
+        Long applicationId = saveOrUpdate(applicationDTO);
+        statesService.saveState(stateDTO, applicationId);
+        return applicationId;
     }
 
 }

@@ -40,8 +40,7 @@ public class NewApplicationPopupController {
             applicationDTO.setCreationDate(new Date());
             applicationDTO.setCandidateId(stateDTO.getCandidateId());
             applicationDTO.setPositionId(stateDTO.getPosition().getPositionId());
-            Long applicationId = applicationsService.saveOrUpdate(applicationDTO);
-            statesService.saveState(stateDTO, applicationId);
+            applicationsService.saveApplicaton(applicationDTO,stateDTO);
         }
         return "redirect:/secure/candidate/"+stateDTO.getCandidateId();
     }
