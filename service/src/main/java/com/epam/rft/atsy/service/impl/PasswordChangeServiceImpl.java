@@ -36,13 +36,13 @@ public class PasswordChangeServiceImpl implements PasswordChangeService {
 
         entity.setUserEntity(userRepository.findOne(passwordHistoryDTO.getUserId()));
         try {
-            Long retId = passwordHistoryRepository.save(entity).getChangeId();
+            Long retId = passwordHistoryRepository.save(entity).getId();
             if(passwordHistoryRepository.findByUserEntity(entity.getUserEntity()).size()>=5){
                 deleteOldestPassword(passwordHistoryDTO.getUserId());
             }
             return retId;
         } catch (ConstraintViolationException | DataIntegrityViolationException constraint) {
-            throw new DuplicateRecordException(passwordHistoryDTO.getChangeId().toString());
+            throw new DuplicateRecordException(passwordHistoryDTO.getId().toString());
         }
     }
 

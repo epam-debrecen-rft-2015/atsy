@@ -49,7 +49,7 @@ public class SingleCandidateControllerTest {
         Locale locale=new Locale("hu");
         given(bindingResult.hasErrors()).willReturn(false);
         given(bindingResultTrue.hasErrors()).willReturn(true);
-        given(candidateDTO.getCandidateId()).willReturn(new Long(1));
+        given(candidateDTO.getId()).willReturn(new Long(1));
         given(candidateDTO.getName()).willReturn("Candidate A");
         given(candidateDTO.getEmail()).willReturn("candidate.a@atsy.com");
         given(candidateDTO.getPhone()).willReturn("+36105555555");

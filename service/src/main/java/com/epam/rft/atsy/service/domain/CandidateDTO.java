@@ -3,7 +3,7 @@ package com.epam.rft.atsy.service.domain;
 import javax.validation.constraints.*;
 
 public class CandidateDTO {
-    private Long candidateId;
+    private Long id;
     @NotNull
     @Size(min = 1, max =100, message = "candidate.error.name.long")
     private String name;
@@ -38,12 +38,12 @@ public class CandidateDTO {
         this.languageSkill = languageSkill;
     }
 
-    public Long getCandidateId() {
-        return candidateId;
+    public Long getId() {
+        return id;
     }
 
-    public void setCandidateId(Long candidateId) {
-        this.candidateId = candidateId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -101,7 +101,7 @@ public class CandidateDTO {
 
         CandidateDTO that = (CandidateDTO) o;
 
-        if (candidateId != null ? !candidateId.equals(that.candidateId) : that.candidateId != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
         if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
@@ -114,7 +114,7 @@ public class CandidateDTO {
 
     @Override
     public int hashCode() {
-        int result = candidateId != null ? candidateId.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
@@ -127,7 +127,7 @@ public class CandidateDTO {
     @Override
     public String toString() {
         return "CandidateDTO{" +
-                "candidateId=" + candidateId +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +

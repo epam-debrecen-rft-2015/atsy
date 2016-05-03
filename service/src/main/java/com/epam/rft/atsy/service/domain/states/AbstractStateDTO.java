@@ -7,7 +7,7 @@ import java.util.Date;
 
 public abstract class AbstractStateDTO {
 
-    private Long stateId;
+    private Long id;
     private Long candidateId;
     private PositionDTO position;
     private ApplicationDTO applicationDTO;
@@ -23,8 +23,8 @@ public abstract class AbstractStateDTO {
     public AbstractStateDTO() {
     }
 
-    public AbstractStateDTO(Long stateId, Long candidateId, PositionDTO position, ApplicationDTO applicationDTO, Short languageSkill, String description, String result, Long offeredMoney, Long claim, Date feedbackDate, String stateType, Integer stateIndex) {
-        this.stateId = stateId;
+    public AbstractStateDTO(Long id, Long candidateId, PositionDTO position, ApplicationDTO applicationDTO, Short languageSkill, String description, String result, Long offeredMoney, Long claim, Date feedbackDate, String stateType, Integer stateIndex) {
+        this.id = id;
         this.candidateId = candidateId;
         this.position = position;
         this.applicationDTO = applicationDTO;
@@ -38,12 +38,12 @@ public abstract class AbstractStateDTO {
         this.stateIndex = stateIndex;
     }
 
-    public Long getStateId() {
-        return stateId;
+    public Long getId() {
+        return id;
     }
 
-    public void setStateId(Long stateId) {
-        this.stateId = stateId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getCandidateId() {
@@ -141,7 +141,7 @@ public abstract class AbstractStateDTO {
 
         AbstractStateDTO that = (AbstractStateDTO) o;
 
-        if (stateId != null ? !stateId.equals(that.stateId) : that.stateId != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (candidateId != null ? !candidateId.equals(that.candidateId) : that.candidateId != null) return false;
         if (position != null ? !position.equals(that.position) : that.position != null) return false;
         if (applicationDTO != null ? !applicationDTO.equals(that.applicationDTO) : that.applicationDTO != null)
@@ -160,7 +160,7 @@ public abstract class AbstractStateDTO {
 
     @Override
     public int hashCode() {
-        int result1 = stateId != null ? stateId.hashCode() : 0;
+        int result1 = id != null ? id.hashCode() : 0;
         result1 = 31 * result1 + (candidateId != null ? candidateId.hashCode() : 0);
         result1 = 31 * result1 + (position != null ? position.hashCode() : 0);
         result1 = 31 * result1 + (applicationDTO != null ? applicationDTO.hashCode() : 0);
@@ -178,7 +178,7 @@ public abstract class AbstractStateDTO {
     @Override
     public String toString() {
         return "AbstractStateDTO{" +
-                "stateId=" + stateId +
+                "id=" + id +
                 ", candidateId=" + candidateId +
                 ", position=" + position +
                 ", applicationDTO=" + applicationDTO +

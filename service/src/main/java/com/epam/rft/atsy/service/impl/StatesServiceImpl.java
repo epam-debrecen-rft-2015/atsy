@@ -49,12 +49,12 @@ public class StatesServiceImpl implements StatesService {
             StateEntity stateEntity = statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(applicationEntity);
 
             CandidateApplicationDTO candidateApplicationDTO = new CandidateApplicationDTO();
-            candidateApplicationDTO.setApplicationId(applicationEntity.getApplicationId());
+            candidateApplicationDTO.setApplicationId(applicationEntity.getId());
             candidateApplicationDTO.setCreationDate(simpleDateFormat.format(applicationEntity.getCreationDate()));
 
             candidateApplicationDTO.setStateType(stateEntity.getStateType());
             candidateApplicationDTO.setPositionName(applicationEntity.getPositionEntity().getName());
-            candidateApplicationDTO.setLastStateId(stateEntity.getStateId());
+            candidateApplicationDTO.setLastStateId(stateEntity.getId());
             candidateApplicationDTO.setModificationDate(simpleDateFormat.format(stateEntity.getCreationDate()));
 
             candidateApplicationDTOList.add(candidateApplicationDTO);
@@ -69,7 +69,7 @@ public class StatesServiceImpl implements StatesService {
         stateEntity.setCreationDate(new Date());
         stateEntity.setApplicationEntity(applicationsRepository.findOne(applicationId));
 
-        return statesRepository.save(stateEntity).getStateId();
+        return statesRepository.save(stateEntity).getId();
     }
 
 

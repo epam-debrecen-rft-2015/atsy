@@ -75,7 +75,7 @@ public class PositionControllerTest {
         Locale locale=new Locale("hu");
         given(bindingResult.hasErrors()).willReturn(false);
         given(bindingResultTrue.hasErrors()).willReturn(true);
-        given(positionDTO.getPositionId()).willReturn(new Long(1));
+        given(positionDTO.getId()).willReturn(new Long(1));
         given(positionDTO.getName()).willReturn("Fejlesztő");
         given(responseEntity.getStatusCode()).willReturn(HttpStatus.OK);
         given(responseEntity.getBody()).willReturn("");

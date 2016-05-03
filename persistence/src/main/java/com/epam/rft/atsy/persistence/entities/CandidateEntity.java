@@ -5,12 +5,8 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "Candidates", schema = "atsy")
-public class CandidateEntity implements Serializable {
+public class CandidateEntity extends SuperEntity implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Long candidateId;
     @Column(name = "name", length = 255)
     private String name;
     @Column(name = "email", length = 255)
@@ -28,21 +24,14 @@ public class CandidateEntity implements Serializable {
     public CandidateEntity() {
     }
 
-    public CandidateEntity(String name, String email, String phone, String description, String referer, Short languageSkill) {
+    public CandidateEntity(Long id, String name, String email, String phone, String description, String referer, Short languageSkill) {
+        super(id);
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.description = description;
         this.referer = referer;
         this.languageSkill = languageSkill;
-    }
-
-    public Long getCandidateId() {
-        return candidateId;
-    }
-
-    public void setCandidateId(Long candidateId) {
-        this.candidateId = candidateId;
     }
 
     public String getName() {
@@ -97,10 +86,10 @@ public class CandidateEntity implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         CandidateEntity that = (CandidateEntity) o;
 
-        if (candidateId != null ? !candidateId.equals(that.candidateId) : that.candidateId != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
         if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
@@ -112,7 +101,7 @@ public class CandidateEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = candidateId != null ? candidateId.hashCode() : 0;
+        int result = super.hashCode();
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
@@ -125,8 +114,7 @@ public class CandidateEntity implements Serializable {
     @Override
     public String toString() {
         return "CandidateEntity{" +
-                "candidateId=" + candidateId +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", description='" + description + '\'' +

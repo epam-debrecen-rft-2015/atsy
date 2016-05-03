@@ -76,7 +76,7 @@ public class ChannelControllerTest {
         Locale locale=new Locale("hu");
         given(bindingResult.hasErrors()).willReturn(false);
         given(bindingResultTrue.hasErrors()).willReturn(true);
-        given(channelDTO.getChannelId()).willReturn(new Long(1));
+        given(channelDTO.getId()).willReturn(new Long(1));
         given(channelDTO.getName()).willReturn("Email");
         //given(channelService.saveOrUpdate(channelDTO));
         given(responseEntity.getStatusCode()).willReturn(HttpStatus.OK);

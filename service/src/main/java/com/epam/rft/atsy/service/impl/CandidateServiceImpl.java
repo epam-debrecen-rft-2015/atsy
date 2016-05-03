@@ -52,7 +52,7 @@ public class CandidateServiceImpl implements CandidateService {
         Assert.notNull(candidate);
         CandidateEntity entity = modelMapper.map(candidate, CandidateEntity.class);
         try {
-            return candidateRepository.save(entity).getCandidateId();
+            return candidateRepository.save(entity).getId();
         } catch (ConstraintViolationException | DataIntegrityViolationException constraint) {
             throw new DuplicateRecordException(candidate.getName());
         }

@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
         Assert.notNull(userDTO);
         UserEntity entity = modelMapper.map(userDTO, UserEntity.class);
         try {
-            return userRepository.save(entity).getUserId();
+            return userRepository.save(entity).getId();
         } catch (ConstraintViolationException | DataIntegrityViolationException constraint) {
             throw new DuplicateRecordException("User already exists!");
         }

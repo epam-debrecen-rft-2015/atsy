@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class ApplicationDTO {
 
-    private Long applicationId;
+    private Long id;
     private Date creationDate;
     private Long candidateId;
     private Long positionId;
@@ -13,19 +13,19 @@ public class ApplicationDTO {
     public ApplicationDTO() {
     }
 
-    public ApplicationDTO(Long applicationId, Date creationDate, Long candidateId, Long positionId) {
-        this.applicationId = applicationId;
+    public ApplicationDTO(Long id, Date creationDate, Long candidateId, Long positionId) {
+        this.id = id;
         this.creationDate = creationDate;
         this.candidateId = candidateId;
         this.positionId = positionId;
     }
 
-    public Long getApplicationId() {
-        return applicationId;
+    public Long getId() {
+        return id;
     }
 
-    public void setApplicationId(Long applicationId) {
-        this.applicationId = applicationId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Date getCreationDate() {
@@ -59,7 +59,7 @@ public class ApplicationDTO {
 
         ApplicationDTO that = (ApplicationDTO) o;
 
-        if (applicationId != null ? !applicationId.equals(that.applicationId) : that.applicationId != null)
+        if (id != null ? !id.equals(that.id) : that.id != null)
             return false;
         if (creationDate != null ? !creationDate.equals(that.creationDate) : that.creationDate != null) return false;
         if (candidateId != null ? !candidateId.equals(that.candidateId) : that.candidateId != null) return false;
@@ -69,7 +69,7 @@ public class ApplicationDTO {
 
     @Override
     public int hashCode() {
-        int result = applicationId != null ? applicationId.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
         result = 31 * result + (candidateId != null ? candidateId.hashCode() : 0);
         result = 31 * result + (positionId != null ? positionId.hashCode() : 0);
@@ -79,7 +79,7 @@ public class ApplicationDTO {
     @Override
     public String toString() {
         return "ApplicationDTO{" +
-                "applicationId=" + applicationId +
+                "id=" + id +
                 ", creationDate=" + creationDate +
                 ", candidateId=" + candidateId +
                 ", positionId=" + positionId +

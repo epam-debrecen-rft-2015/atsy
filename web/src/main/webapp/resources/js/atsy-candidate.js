@@ -45,7 +45,7 @@ $(document).ready(function () {
 
 function actionFormatter(value, row, index) {
     return [
-        '<a class="edit ml10" href="candidate/' + row.candidateId + '" title="Edit">',
+        '<a class="edit ml10" href="candidate/' + row.id + '" title="Edit">',
         '<i class="glyphicon glyphicon-edit"></i>',
         '</a>'
     ].join('');

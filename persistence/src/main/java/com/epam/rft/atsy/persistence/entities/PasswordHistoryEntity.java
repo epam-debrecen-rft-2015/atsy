@@ -6,12 +6,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "password_history", schema = "atsy")
-public class PasswordHistoryEntity implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", table = "password_history")
-    private Long changeId;
+public class PasswordHistoryEntity extends SuperEntity implements Serializable {
 
     @ManyToOne(targetEntity = UserEntity.class)
     @JoinColumn(name = "users_id", nullable = false)
@@ -26,19 +21,11 @@ public class PasswordHistoryEntity implements Serializable {
     public PasswordHistoryEntity() {
     }
 
-    public PasswordHistoryEntity(Long changeId, UserEntity userEntity, Long userId, String password, Date changeDate) {
-        this.changeId = changeId;
+    public PasswordHistoryEntity(Long id, UserEntity userEntity, String password, Date changeDate) {
+        super(id);
         this.userEntity = userEntity;
         this.password = password;
         this.changeDate = changeDate;
-    }
-
-    public Long getChangeId() {
-        return changeId;
-    }
-
-    public void setChangeId(Long changeId) {
-        this.changeId = changeId;
     }
 
     public UserEntity getUserEntity() {
@@ -69,18 +56,20 @@ public class PasswordHistoryEntity implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
-        PasswordHistoryEntity that = (PasswordHistoryEntity) o;
+        PasswordHistoryEntity entity = (PasswordHistoryEntity) o;
 
-        if (changeId != null ? !changeId.equals(that.changeId) : that.changeId != null) return false;
-        if (password != null ? !password.equals(that.password) : that.password != null) return false;
-        return !(changeDate != null ? !changeDate.equals(that.changeDate) : that.changeDate != null);
+        if (userEntity != null ? !userEntity.equals(entity.userEntity) : entity.userEntity != null) return false;
+        if (password != null ? !password.equals(entity.password) : entity.password != null) return false;
+        return !(changeDate != null ? !changeDate.equals(entity.changeDate) : entity.changeDate != null);
 
     }
 
     @Override
     public int hashCode() {
-        int result = changeId != null ? changeId.hashCode() : 0;
+        int result = super.hashCode();
+        result = 31 * result + (userEntity != null ? userEntity.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (changeDate != null ? changeDate.hashCode() : 0);
         return result;
@@ -89,8 +78,7 @@ public class PasswordHistoryEntity implements Serializable {
     @Override
     public String toString() {
         return "PasswordHistoryEntity{" +
-                "changeId=" + changeId +
-                "userId=" + userEntity.getUserId() +
+                "userEntity=" + userEntity +
                 ", password='" + password + '\'' +
                 ", changeDate=" + changeDate +
                 '}';

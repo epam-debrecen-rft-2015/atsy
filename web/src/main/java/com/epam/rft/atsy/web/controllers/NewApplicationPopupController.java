@@ -39,7 +39,7 @@ public class NewApplicationPopupController {
             ApplicationDTO applicationDTO = new ApplicationDTO();
             applicationDTO.setCreationDate(new Date());
             applicationDTO.setCandidateId(stateDTO.getCandidateId());
-            applicationDTO.setPositionId(stateDTO.getPosition().getPositionId());
+            applicationDTO.setPositionId(stateDTO.getPosition().getId());
             applicationsService.saveApplicaton(applicationDTO,stateDTO);
         }
         return "redirect:/secure/candidate/"+stateDTO.getCandidateId();

@@ -52,7 +52,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <input type="hidden" name="positionId" id="positionId">
+                                        <input type="hidden" name="id" id="positionId">
                                         <label for="position_name"><spring:message
                                                 code="settings.positions.position_name"/></label>
                                         <input type="text" class="name form-control" name="name" id="position_name">

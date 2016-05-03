@@ -5,12 +5,8 @@ import java.util.Date;
 
 @Entity
 @Table(name = "States", schema = "atsy")
-public class StateEntity {
+public class StateEntity extends SuperEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Long stateId;
     @OneToOne
     @JoinColumn(name = "application_id")
     private ApplicationEntity applicationEntity;
@@ -32,14 +28,6 @@ public class StateEntity {
     private String stateType;
     @Column(name = "state_index")
     private Integer stateIndex;
-
-    public Long getStateId() {
-        return stateId;
-    }
-
-    public void setStateId(Long stateId) {
-        this.stateId = stateId;
-    }
 
     public ApplicationEntity getApplicationEntity() {
         return applicationEntity;
@@ -125,10 +113,10 @@ public class StateEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         StateEntity that = (StateEntity) o;
 
-        if (stateId != null ? !stateId.equals(that.stateId) : that.stateId != null) return false;
         if (applicationEntity != null ? !applicationEntity.equals(that.applicationEntity) : that.applicationEntity != null)
             return false;
         if (creationDate != null ? !creationDate.equals(that.creationDate) : that.creationDate != null) return false;
@@ -146,7 +134,7 @@ public class StateEntity {
 
     @Override
     public int hashCode() {
-        int result1 = stateId != null ? stateId.hashCode() : 0;
+        int result1 = super.hashCode();
         result1 = 31 * result1 + (applicationEntity != null ? applicationEntity.hashCode() : 0);
         result1 = 31 * result1 + (creationDate != null ? creationDate.hashCode() : 0);
         result1 = 31 * result1 + (languageSkill != null ? languageSkill.hashCode() : 0);
@@ -163,8 +151,7 @@ public class StateEntity {
     @Override
     public String toString() {
         return "StateEntity{" +
-                "stateId=" + stateId +
-                ", applicationEntity=" + applicationEntity +
+                "applicationEntity=" + applicationEntity +
                 ", creationDate=" + creationDate +
                 ", languageSkill=" + languageSkill +
                 ", description='" + description + '\'' +

@@ -29,7 +29,7 @@
                                     code="application.create.position.label"/></label>
 
                                 <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="drop">
-                                    <select class="input form-control" name="position.positionId" id="position">
+                                    <select class="input form-control" name="position.id" id="position">
                                     </select>
                                 </div>
                             </div>

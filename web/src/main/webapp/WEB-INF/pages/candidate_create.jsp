@@ -18,10 +18,10 @@
         <script src="<c:url value="/resources/js/atsy-candidate-create.js" />"></script>
     </jsp:attribute>
     <jsp:body>
-        <div id="candidate_creation" class="<c:if test="${not empty candidate.candidateId}">display</c:if>">
+        <div id="candidate_creation" class="<c:if test="${not empty candidate.id}">display</c:if>">
             <h1 class="page-header">
                 <c:choose>
-                    <c:when test="${not empty candidate.candidateId}">
+                    <c:when test="${not empty candidate.id}">
                         <p class="showValue">
                             <spring:message code="candidate.show.title" arguments="<small>${candidate.name}</small>"
                                             htmlEscape="false"/>
@@ -49,7 +49,7 @@
                         </div>
                         <div class="form-group"
                              id="nameDiv">
-                            <input type="hidden" name="candidateId" id="candidateId" value="${candidate.candidateId}">
+                            <input type="hidden" name="candidateId" id="candidateId" value="${candidate.id}">
                             <spring:message code="candidate.name.field" var="i18nname"/>
                             <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
                                    for="name"><spring:message
@@ -176,7 +176,7 @@
                             <button class="btn btn-primary showValue" id="enableModify"><spring:message
                                     code="candidate.modify.button"/></button>
                             <c:choose>
-                                <c:when test="${not empty candidate.candidateId}">
+                                <c:when test="${not empty candidate.id}">
                                     <button class="btn btn-danger " id="cancelButtonModify" type="reset"><spring:message
                                             code="cancel.button"/></button>
                                 </c:when>
@@ -194,15 +194,15 @@
             </div>
         </div>
         <c:choose>
-            <c:when test="${not empty candidate.candidateId}">
+            <c:when test="${not empty candidate.id}">
                 <div id="new_application" class="text-right">
-                    <a class="btn btn-success" href="${application}?candidateId=${candidate.candidateId}" id="add_application_button"><spring:message
+                    <a class="btn btn-success" href="${application}?candidateId=${candidate.id}" id="add_application_button"><spring:message
                             code="candidate.new.application.button"/></a>
                 </div>
                 <%--table--%>
                 <div id="application_table">
                     <div>
-                        <table class="table table-hover" id="applications_table"  data-toggle="table" data-url="../applications/${candidate.candidateId}" data-height="500"
+                        <table class="table table-hover" id="applications_table"  data-toggle="table" data-url="../applications/${candidate.id}" data-height="500"
                                data-sort-name="name">
                             <thead>
                             <tr>

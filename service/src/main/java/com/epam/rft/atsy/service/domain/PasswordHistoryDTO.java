@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class PasswordHistoryDTO implements Serializable {
 
-    private Long changeId;
+    private Long id;
 
     private Long userId;
 
@@ -13,12 +13,12 @@ public class PasswordHistoryDTO implements Serializable {
 
     private Date changeDate;
 
-    public Long getChangeId() {
-        return changeId;
+    public Long getId() {
+        return id;
     }
 
-    public void setChangeId(Long changeId) {
-        this.changeId = changeId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getUserId() {
@@ -52,7 +52,7 @@ public class PasswordHistoryDTO implements Serializable {
 
         PasswordHistoryDTO that = (PasswordHistoryDTO) o;
 
-        if (changeId != null ? !changeId.equals(that.changeId) : that.changeId != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
         if (password != null ? !password.equals(that.password) : that.password != null) return false;
         return !(changeDate != null ? !changeDate.equals(that.changeDate) : that.changeDate != null);
@@ -61,7 +61,7 @@ public class PasswordHistoryDTO implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = changeId != null ? changeId.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (changeDate != null ? changeDate.hashCode() : 0);
@@ -71,7 +71,7 @@ public class PasswordHistoryDTO implements Serializable {
     @Override
     public String toString() {
         return "PasswordHistoryDTO{" +
-                "changeId=" + changeId +
+                "id=" + id +
                 ", userId=" + userId +
                 ", password='" + password + '\'' +
                 ", changeDate=" + changeDate +

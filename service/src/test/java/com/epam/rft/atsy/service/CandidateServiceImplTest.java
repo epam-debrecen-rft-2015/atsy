@@ -45,7 +45,7 @@ package com.epam.rft.atsy.service;
     @Test
     public void updateTest(){
         Long id=new Long(1);
-        given(candidateDTO.getCandidateId()).willReturn(id);
+        given(candidateDTO.getId()).willReturn(id);
         given(candidateDTO.getName()).willReturn("Candidate A");
         given(candidateDTO.getEmail()).willReturn("candidate.a@atsy.com");
         given(candidateDTO.getPhone()).willReturn("+36105555555");
@@ -53,9 +53,9 @@ package com.epam.rft.atsy.service;
         given(candidateDTO.getDescription()).willReturn("Elegáns, kicsit furi");
         given(candidateDTO.getLanguageSkill()).willReturn((short) 5);
         given(modelMapper.map(candidateDTO,CandidateEntity.class)).willReturn(candidateEntity);
-        given(candidateEntity.getCandidateId()).willReturn(id);
+        given(candidateEntity.getId()).willReturn(id);
         given(candidateDAO.update(candidateEntity)).willReturn(candidateEntity);
-        given(candidateDAO.update(candidateEntity).getCandidateId()).willReturn(id);
+        given(candidateDAO.update(candidateEntity).getId()).willReturn(id);
 
         Long candidateId=candidateService.saveOrUpdate(candidateDTO);
 
@@ -66,14 +66,14 @@ package com.epam.rft.atsy.service;
     @Test
     public void saveTest(){
         Long id=new Long(1);
-        given(candidateDTO.getCandidateId()).willReturn(null);
+        given(candidateDTO.getId()).willReturn(null);
         given(candidateDTO.getName()).willReturn("test");
         given(candidateDTO.getEmail()).willReturn("test@test.com");
         given(candidateDTO.getPhone()).willReturn("+36105555557");
         given(candidateDTO.getReferer()).willReturn("fb");
         given(candidateDTO.getDescription()).willReturn("test");
         given(candidateDTO.getLanguageSkill()).willReturn((short) 5);
-        given(candidateEntity2.getCandidateId()).willReturn(id);
+        given(candidateEntity2.getId()).willReturn(id);
         given(candidateEntity2.getName()).willReturn("test");
         given(candidateEntity2.getEmail()).willReturn("test@test.com");
         given(candidateEntity2.getPhone()).willReturn("+36105555557");
@@ -82,9 +82,9 @@ package com.epam.rft.atsy.service;
         given(candidateEntity2.getLanguageSkill()).willReturn((short) 5);
         given(modelMapper.map(candidateDTO,CandidateEntity.class)).willReturn(candidateEntity);
         given(candidateDAO.create(candidateEntity)).willReturn(candidateEntity2);
-        given(candidateEntity.getCandidateId()).willReturn(null);
+        given(candidateEntity.getId()).willReturn(null);
 
-        given(candidateDAO.create(candidateEntity).getCandidateId()).willReturn(id);
+        given(candidateDAO.create(candidateEntity).getId()).willReturn(id);
 
         Long candidateId=candidateService.saveOrUpdate(candidateDTO);
 
@@ -96,7 +96,7 @@ package com.epam.rft.atsy.service;
     public void getCandidateTest(){
         //given
         Long id=new Long(1);
-        given(candidateDTO.getCandidateId()).willReturn(id);
+        given(candidateDTO.getId()).willReturn(id);
         given(candidateDTO.getName()).willReturn("Candidate A");
         given(candidateDTO.getEmail()).willReturn("candidate.a@atsy.com");
         given(candidateDTO.getPhone()).willReturn("+36105555555");
@@ -108,13 +108,13 @@ package com.epam.rft.atsy.service;
 
         CandidateDTO dto=candidateService.getCandidate(id);
 
-        assertThat(dto.getCandidateId(),is(id));
+        assertThat(dto.getId(),is(id));
     }
 
     @Test(expectedExceptions = DuplicateRecordException.class)
     public void updateTestExceptions() throws  DataIntegrityViolationException{
         Long id=new Long(1);
-        given(candidateDTO.getCandidateId()).willReturn(id);
+        given(candidateDTO.getId()).willReturn(id);
         given(candidateDTO.getName()).willReturn("Candidate A");
         given(candidateDTO.getEmail()).willReturn("candidate.a@atsy.com");
         given(candidateDTO.getPhone()).willReturn("+36105555555");
@@ -122,11 +122,11 @@ package com.epam.rft.atsy.service;
         given(candidateDTO.getDescription()).willReturn("Elegáns, kicsit furi");
         given(candidateDTO.getLanguageSkill()).willReturn((short) 5);
         given(modelMapper.map(candidateDTO,CandidateEntity.class)).willReturn(candidateEntity);
-        given(candidateEntity.getCandidateId()).willReturn(id);
+        given(candidateEntity.getId()).willReturn(id);
         given(candidateEntity.getName()).willReturn("Candidate A");
         given(candidateDTO.getName()).willReturn("Candidate A");
         given(candidateDAO.update(candidateEntity)).willThrow(new DataIntegrityViolationException("Candidate A") );
-        //given(candidateDAO.update(candidateEntity).getCandidateId()).willReturn(id);
+        //given(candidateDAO.update(candidateEntity).getId()).willReturn(id);
 
         given(candidateService.saveOrUpdate(candidateDTO)).willThrow(new DataIntegrityViolationException("Candidate A"));
 

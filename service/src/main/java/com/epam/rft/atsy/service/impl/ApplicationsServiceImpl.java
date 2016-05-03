@@ -39,7 +39,7 @@ public class ApplicationsServiceImpl implements ApplicationsService {
         ApplicationEntity applicationEntity = modelMapper.map(applicationDTO, ApplicationEntity.class);
         applicationEntity.setCandidateEntity(candidateRepository.findOne(applicationDTO.getCandidateId()));
         applicationEntity.setPositionEntity(positionRepository.findOne(applicationDTO.getPositionId()));
-        return applicationsRepository.save(applicationEntity).getApplicationId();
+        return applicationsRepository.save(applicationEntity).getId();
     }
 
     @Transactional

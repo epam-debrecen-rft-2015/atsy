@@ -4,11 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "Users", schema = "atsy", uniqueConstraints = @UniqueConstraint(columnNames = "user_name"))
-public class UserEntity implements java.io.Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", table = "Users")
-    private long userId;
+public class UserEntity extends SuperEntity implements java.io.Serializable{
     @Column(name = "user_name", nullable = false, length = 255, table = "Users")
     private String userName;
     @Column(name = "user_pwd", nullable = false, length = 255, table = "Users")
@@ -21,18 +17,6 @@ public class UserEntity implements java.io.Serializable {
     }
 
     /**
-     * Full constructor.
-     * @param userId is the ID of the user
-     * @param userName is the name of the user
-     * @param userPassword is the password of the user
-     */
-    public UserEntity(long userId, String userName, String userPassword) {
-        this.userId = userId;
-        this.userName = userName;
-        this.userPassword = userPassword;
-    }
-
-    /**
      * Constructor for users without id.
      * @param userName is the name of the user
      * @param userPassword is the password of the user
@@ -42,21 +26,10 @@ public class UserEntity implements java.io.Serializable {
         this.userPassword = userPassword;
     }
 
-    /**
-     * Getter for the userId field.
-     * Returns a long value represents the userId.
-     * @return long value represents the userId
-     */
-    public long getUserId() {
-        return userId;
-    }
-
-    /**
-     * Setter for the userId field.
-     * @param userId is a long value for the userId field
-     */
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public UserEntity(Long id, String userName, String userPassword) {
+        super(id);
+        this.userName = userName;
+        this.userPassword = userPassword;
     }
 
     /**
@@ -97,10 +70,10 @@ public class UserEntity implements java.io.Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         UserEntity that = (UserEntity) o;
 
-        if (userId != that.userId) return false;
         if (userName != null ? !userName.equals(that.userName) : that.userName != null) return false;
         return !(userPassword != null ? !userPassword.equals(that.userPassword) : that.userPassword != null);
 
@@ -108,7 +81,7 @@ public class UserEntity implements java.io.Serializable {
 
     @Override
     public int hashCode() {
-        int result = (int) (userId ^ (userId >>> 32));
+        int result = super.hashCode();
         result = 31 * result + (userName != null ? userName.hashCode() : 0);
         result = 31 * result + (userPassword != null ? userPassword.hashCode() : 0);
         return result;
@@ -117,8 +90,7 @@ public class UserEntity implements java.io.Serializable {
     @Override
     public String toString() {
         return "UserEntity{" +
-                "userId=" + userId +
-                ", userName='" + userName + '\'' +
+                "userName='" + userName + '\'' +
                 ", userPassword='" + userPassword + '\'' +
                 '}';
     }

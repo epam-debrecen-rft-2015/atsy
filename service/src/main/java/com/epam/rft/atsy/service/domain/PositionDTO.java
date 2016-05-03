@@ -7,25 +7,25 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 public class PositionDTO implements Serializable {
-    private Long positionId;
+    private Long id;
     @NotNull
     @Size(min = 1)
     private String name;
 
-    public PositionDTO(Long positionId, String name) {
-        this.positionId = positionId;
+    public PositionDTO(Long id, String name) {
+        this.id = id;
         this.name = name;
     }
 
     public PositionDTO() {
     }
 
-    public Long getPositionId() {
-        return positionId;
+    public Long getId() {
+        return id;
     }
 
-    public void setPositionId(Long positionId) {
-        this.positionId = positionId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -45,14 +45,14 @@ public class PositionDTO implements Serializable {
         PositionDTO that = (PositionDTO) o;
 
         return new EqualsBuilder()
-                .append(positionId, that.positionId)
+                .append(id, that.id)
                 .append(name, that.name)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = positionId != null ? positionId.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
@@ -60,7 +60,7 @@ public class PositionDTO implements Serializable {
     @Override
     public String toString() {
         return "PositionDTO{" +
-                "positionId=" + positionId +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
     }

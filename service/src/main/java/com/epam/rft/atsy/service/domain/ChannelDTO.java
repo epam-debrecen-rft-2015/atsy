@@ -7,25 +7,25 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 public class ChannelDTO implements Serializable {
-    private Long channelId;
+    private Long id;
     @NotNull
     @Size(min = 1)
     private String name;
 
-    public ChannelDTO(Long channelId, String name) {
-        this.channelId = channelId;
+    public ChannelDTO(Long id, String name) {
+        this.id = id;
         this.name = name;
     }
 
     public ChannelDTO() {
     }
 
-    public Long getChannelId() {
-        return channelId;
+    public Long getId() {
+        return id;
     }
 
-    public void setChannelId(Long channelId) {
-        this.channelId = channelId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -45,14 +45,14 @@ public class ChannelDTO implements Serializable {
         ChannelDTO that = (ChannelDTO) o;
 
         return new EqualsBuilder()
-                .append(channelId, that.channelId)
+                .append(id, that.id)
                 .append(name, that.name)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = channelId != null ? channelId.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
@@ -60,7 +60,7 @@ public class ChannelDTO implements Serializable {
     @Override
     public String toString() {
         return "ChannelDTO{" +
-                "channelId=" + channelId +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
     }

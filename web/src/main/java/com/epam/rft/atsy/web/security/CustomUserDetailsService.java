@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("No such user: " + username);
         }
 
-        return new UserDetailsAdapter(user.getUserID(), user.getPassword(), user.getName());
+        return new UserDetailsAdapter(user.getId(), user.getPassword(), user.getName());
     }
 
 }

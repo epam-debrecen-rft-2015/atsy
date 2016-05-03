@@ -5,12 +5,8 @@ import java.util.Date;
 
 @Entity
 @Table(name = "applications", schema = "atsy")
-public class ApplicationEntity {
+public class ApplicationEntity extends SuperEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Long applicationId;
     @Column(name = "creation_date")
     private Date creationDate;
     @OneToOne
@@ -23,19 +19,11 @@ public class ApplicationEntity {
     public ApplicationEntity() {
     }
 
-    public ApplicationEntity(Long applicationId, Date creationDate, CandidateEntity candidateEntity, PositionEntity positionEntity) {
-        this.applicationId = applicationId;
+    public ApplicationEntity(Long id, Date creationDate, CandidateEntity candidateEntity, PositionEntity positionEntity) {
+        super(id);
         this.creationDate = creationDate;
         this.candidateEntity = candidateEntity;
         this.positionEntity = positionEntity;
-    }
-
-    public Long getApplicationId() {
-        return applicationId;
-    }
-
-    public void setApplicationId(Long applicationId) {
-        this.applicationId = applicationId;
     }
 
     public Date getCreationDate() {
@@ -69,8 +57,6 @@ public class ApplicationEntity {
 
         ApplicationEntity that = (ApplicationEntity) o;
 
-        if (applicationId != null ? !applicationId.equals(that.applicationId) : that.applicationId != null)
-            return false;
         if (creationDate != null ? !creationDate.equals(that.creationDate) : that.creationDate != null) return false;
         if (candidateEntity != null ? !candidateEntity.equals(that.candidateEntity) : that.candidateEntity != null)
             return false;
@@ -80,8 +66,7 @@ public class ApplicationEntity {
 
     @Override
     public int hashCode() {
-        int result = applicationId != null ? applicationId.hashCode() : 0;
-        result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
+        int result = creationDate != null ? creationDate.hashCode() : 0;
         result = 31 * result + (candidateEntity != null ? candidateEntity.hashCode() : 0);
         result = 31 * result + (positionEntity != null ? positionEntity.hashCode() : 0);
         return result;
@@ -90,8 +75,7 @@ public class ApplicationEntity {
     @Override
     public String toString() {
         return "ApplicationEntity{" +
-                "applicationId=" + applicationId +
-                ", creationDate=" + creationDate +
+                "creationDate=" + creationDate +
                 ", candidateEntity=" + candidateEntity +
                 ", positionEntity=" + positionEntity +
                 '}';
