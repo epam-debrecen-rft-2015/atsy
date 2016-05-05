@@ -1,1 +1,11 @@
-INSERT INTO Channels (name) VALUES ('Email');
+INSERT INTO Channels (name) VALUES ('direkt');
+INSERT INTO Channels (name) VALUES ('profession hírdetés');
+INSERT INTO Channels (name) VALUES ('profession adatbázis');
+INSERT INTO Channels (name) VALUES ('facebook');
+INSERT INTO Channels (name) VALUES ('linkedin hírdetés');
+INSERT INTO Channels (name) VALUES ('linkedin adatbázis');
+INSERT INTO Channels (name) VALUES ('belső ajánlás');
+INSERT INTO Channels (name) VALUES ('állásbörze');
+INSERT INTO Channels (name) VALUES ('szakmai napok');
+INSERT INTO Channels (name) VALUES ('schönherz');
+INSERT INTO Channels (name) VALUES ('dtk');

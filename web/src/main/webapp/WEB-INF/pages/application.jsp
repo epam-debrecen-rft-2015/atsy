@@ -40,28 +40,6 @@
 
                                 <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="dropSource">
                                     <select class="input form-control" name="source" id="source">
-                                        <option value="0"  selected="selected">
-                                            <spring:message code="application.create.source.direct"/></option>
-                                        <option value="1">
-                                            <spring:message code="application.create.source.professionad"/></option>
-                                        <option value="2">
-                                            <spring:message code="application.create.source.professiondb"/></option>
-                                        <option value="3">
-                                            <spring:message code="application.create.source.fb"/></option>
-                                        <option value="4">
-                                            <spring:message code="application.create.source.linkedinad"/></option>
-                                        <option value="5">
-                                            <spring:message code="application.create.source.linkedindb"/></option>
-                                        <option value="6">
-                                            <spring:message code="application.create.source.suggest"/></option>
-                                        <option value="7">
-                                            <spring:message code="application.create.source.job"/></option>
-                                        <option value="8">
-                                            <spring:message code="application.create.source.professionalday"/></option>
-                                        <option value="9">
-                                            <spring:message code="application.create.source.schonerz"/></option>
-                                        <option value="10">
-                                            <spring:message code="application.create.source.dtk"/></option>
                                     </select>
                                 </div>
                             </div>
