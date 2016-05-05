@@ -39,7 +39,7 @@
                                     code="application.create.source.label"/></label>
 
                                 <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="dropSource">
-                                    <select class="input form-control" name="source" id="source">
+                                    <select class="input form-control" name="channel.id" id="channel">
                                     </select>
                                 </div>
                             </div>

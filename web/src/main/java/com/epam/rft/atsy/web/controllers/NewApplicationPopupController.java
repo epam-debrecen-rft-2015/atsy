@@ -40,6 +40,7 @@ public class NewApplicationPopupController {
             applicationDTO.setCreationDate(new Date());
             applicationDTO.setCandidateId(stateDTO.getCandidateId());
             applicationDTO.setPositionId(stateDTO.getPosition().getId());
+            applicationDTO.setChannelId(stateDTO.getChannel().getId());
             applicationsService.saveApplicaton(applicationDTO,stateDTO);
         }
         return "redirect:/secure/candidate/"+stateDTO.getCandidateId();

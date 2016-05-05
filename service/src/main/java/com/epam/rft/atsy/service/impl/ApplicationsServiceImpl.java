@@ -3,6 +3,7 @@ package com.epam.rft.atsy.service.impl;
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
+import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
 import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.StatesService;
@@ -33,12 +34,16 @@ public class ApplicationsServiceImpl implements ApplicationsService {
     @Autowired
     private PositionRepository positionRepository;
 
+    @Autowired
+    private ChannelRepository channelRepository;
+
 
     @Override
     public Long saveOrUpdate(ApplicationDTO applicationDTO) {
         ApplicationEntity applicationEntity = modelMapper.map(applicationDTO, ApplicationEntity.class);
         applicationEntity.setCandidateEntity(candidateRepository.findOne(applicationDTO.getCandidateId()));
         applicationEntity.setPositionEntity(positionRepository.findOne(applicationDTO.getPositionId()));
+        applicationEntity.setChannelEntity(channelRepository.findOne(applicationDTO.getChannelId()));
         return applicationsRepository.save(applicationEntity).getId();
     }
 
