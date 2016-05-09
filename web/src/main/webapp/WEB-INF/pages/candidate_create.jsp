@@ -18,7 +18,7 @@
         <script src="<c:url value="/resources/js/atsy-candidate-create.js" />"></script>
     </jsp:attribute>
     <jsp:body>
-        <div id="candidate_creation" class="<c:if test="${not empty candidate.id}">display</c:if>">
+        <div id="candidate_creation" data-bind="<c:if test="${not empty candidate.id}">initDisplay: value</c:if>, css: { display: modify() == true }">
             <h1 class="page-header">
                 <c:choose>
                     <c:when test="${not empty candidate.id}">
@@ -172,11 +172,11 @@
                         <div class="text-right col-lg-12 col-md-12 col-sm-12">
                             <a class="btn btn-default showValue" href="${welcome}" id="cancelButton"><spring:message
                                     code="back.button"/></a>
-                            <button class="btn btn-primary showValue" id="enableModify"><spring:message
+                            <button class="btn btn-primary showValue" id="enableModify" data-bind="click: modify_display_false"><spring:message
                                     code="candidate.modify.button"/></button>
                             <c:choose>
                                 <c:when test="${not empty candidate.id}">
-                                    <button class="btn btn-danger " id="cancelButtonModify" type="reset"><spring:message
+                                    <button class="btn btn-danger " id="cancelButtonModify" type="reset" data-bind="click: modify_display_true"><spring:message
                                             code="cancel.button"/></button>
                                 </c:when>
                                 <c:otherwise>
@@ -184,7 +184,7 @@
                                             code="cancel.button"/></a>
                                 </c:otherwise>
                             </c:choose>
-                            <button type="submit" class="btn btn-success">
+                            <button type="submit" class="btn btn-success" data-bind="click: save_button">
                                 <spring:message code="save.button"/>
                             </button>
                         </div>

@@ -11,25 +11,6 @@ function showError(message) {
 
 var savedModel;
 
-$("#enableModify").button().click(function () {
-    $("#candidate_creation").removeClass("display");
-    savedModel = ko.toJS(candidateModel);
-    console.log(savedModel);
-    return false;
-});
-
-$("#cancelButtonModify").click(function () {
-    $("#candidate_creation").addClass("display");
-    candidateModel.id(savedModel.id);
-    candidateModel.name(savedModel.name);
-    candidateModel.referer(savedModel.referer);
-    candidateModel.email(savedModel.email);
-    candidateModel.languageSkill(savedModel.languageSkill);
-    candidateModel.phone(savedModel.phone);
-    candidateModel.referer(savedModel.referer);
-});
-
-
 function actionFormatter(value, row, index) {
     return [
         '<a class="edit ml10" href="../application_state?applicationId=' + row.applicationId + '" title="Edit">',
@@ -56,6 +37,12 @@ function CandidateCreateModel(){
         }
     };
 
+    ko.bindingHandlers.initDisplay = {
+                init: function(element, valueAccessor, allBindingsAccessor, data) {
+                    self.modify(true);
+                }
+            };
+
 
     var self = this;
 
@@ -80,6 +67,34 @@ function CandidateCreateModel(){
                 showError(xhr.responseText);
             });
     }
+
+    self.modify = ko.observable(false);
+    modify_display_true = function() {
+        self.modify(true);
+        candidateModel.id(savedModel.id);
+        candidateModel.name(savedModel.name);
+        candidateModel.referer(savedModel.referer);
+        candidateModel.email(savedModel.email);
+        candidateModel.languageSkill(savedModel.languageSkill);
+        candidateModel.phone(savedModel.phone);
+        candidateModel.referer(savedModel.referer);
+    };
+    modify_display_false = function() {
+        self.modify(false);
+        savedModel = ko.toJS(candidateModel);
+        console.log(savedModel);
+    };
+    save_button = function() {
+        self.ajaxCall();
+    };
+
+    self.cssclass = ko.computed(function() {
+            if (self.modify == true) {
+                return "display";
+            } else {
+                return "";
+            }
+        });
 }
 
 var candidateModel = new CandidateCreateModel();
