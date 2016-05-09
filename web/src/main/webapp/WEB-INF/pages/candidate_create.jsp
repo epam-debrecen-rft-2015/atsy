@@ -40,8 +40,7 @@
 
             <div id="candidate_data">
                 <div class="row">
-                    <form data-toggle="validator" class="form" role="form" method="POST" id="candidate-create-form"
-                          action="${candidateURL}">
+                    <form data-toggle="validator" class="form" role="form" method="POST" id="candidate-create-form" action="${candidateURL}" data-bind="submit: ajaxCall">
                         <div class="globalMessage alert alert-danger" role="alert"
                              style="display: none">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
@@ -49,14 +48,14 @@
                         </div>
                         <div class="form-group"
                              id="nameDiv">
-                            <input type="hidden" name="candidateId" id="candidateId" value="${candidate.id}">
+                            <input type="hidden" name="candidateId" id="candidateId" data-bind="valueWithInit: 'id'" value="${candidate.id}" >
                             <spring:message code="candidate.name.field" var="i18nname"/>
                             <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
                                    for="name"><spring:message
                                     code="candidate.name.label"/></label>
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
-                                <input type="text" class="input form-control " name="name" id="name"
+                                <input type="text" class="input form-control " name="name" id="name" data-bind="valueWithInit: 'name'"
                                        value="${candidate.name}"
                                        placeholder="${i18nname}"
                                        data-error="<spring:message
@@ -76,7 +75,7 @@
                                     code="candidate.place.label"/></label>
 
                             <div class="col-lg-4 col-md-4 col-sm-4">
-                                <input type="text" class="input form-control" name="referer" id="referer"
+                                <input type="text" class="input form-control" name="referer" id="referer" data-bind="valueWithInit: 'referer'"
                                        value="${candidate.referer}"
                                        placeholder="${i18nplace}" maxlength="20">
 
@@ -94,7 +93,7 @@
                                     code="candidate.email.label"/></label>
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
-                                <input type="text" class="input form-control" name="email" id="email"
+                                <input type="text" class="input form-control" name="email" id="email" data-bind="valueWithInit: 'email'"
                                        value="${candidate.email}"
                                        placeholder="${i18nemail}"
                                        data-error="<spring:message
@@ -119,7 +118,7 @@
                                     code="candidate.english.label"/></label>
 
                             <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="drop">
-                                <select class="input form-control" name="languageSkill" id="languageSkill">
+                                <select class="input form-control" name="languageSkill" id="languageSkill" data-bind="valueWithInit: 'languageSkill'">
                                     <option value=0 <c:if
                                             test="${0 eq candidate.languageSkill}"> selected="selected" </c:if>>
                                         <spring:message code="candidate.english.level.default"/></option>
@@ -142,7 +141,7 @@
                                     code="candidate.phone.label"/></label>
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
-                                <input type="text" class="input form-control" name="phone" id="phone"
+                                <input type="text" class="input form-control" name="phone" id="phone" data-bind="valueWithInit: 'phone'"
                                        value="${candidate.phone}"
                                        placeholder="${i18nphone}" data-error="<spring:message
                                     code="candidate.error.phone.incorrect"/>"
@@ -164,7 +163,7 @@
                                     code="candidate.description.label"/></label>
 
                             <div class="col-lg-10 col-md-10 col-sm-10">
-                                <textarea rows="4" cols="4" class="input form-control" id="description"
+                                <textarea rows="4" cols="4" class="input form-control" id="description" data-bind="valueWithInit: 'description'"
                                           placeholder="${i18ndescription}">${candidate.description}</textarea>
 
                                 <p class="showValue form-control-static">${candidate.description}</p>
