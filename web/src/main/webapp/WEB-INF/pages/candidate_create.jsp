@@ -40,7 +40,7 @@
 
             <div id="candidate_data">
                 <div class="row">
-                    <form data-toggle="validator" class="form" role="form" method="POST" id="candidate-create-form" action="${candidateURL}" data-bind="submit: ajaxCall, css: { 'has-error': showError }">
+                    <form data-toggle="validator" class="form" role="form" method="POST" id="candidate-create-form" action="${candidateURL}" data-bind="css: { 'has-error': showError }">
                         <div class="globalMessage alert alert-danger" role="alert"
                              data-bind="visible: showError">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
@@ -184,7 +184,7 @@
                                             code="cancel.button"/></a>
                                 </c:otherwise>
                             </c:choose>
-                            <button type="submit" class="btn btn-success" data-bind="click: save_button">
+                            <button type="submit" class="btn btn-success">
                                 <spring:message code="save.button"/>
                             </button>
                         </div>

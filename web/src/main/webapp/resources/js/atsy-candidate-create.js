@@ -9,7 +9,6 @@ function actionFormatter(value, row, index) {
 }
 
 function CandidateCreateModel(){
-
     ko.bindingHandlers.valueWithInit = {
         init: function(element, valueAccessor, allBindingsAccessor, data) {
             var property = valueAccessor(),
@@ -64,6 +63,7 @@ function CandidateCreateModel(){
     modify_display_true = function() {
         self.modify(true);
         self.showError(false);
+        $("#candidate-create-form").validator('destroy');
         candidateModel.id(savedModel.id);
         candidateModel.name(savedModel.name);
         candidateModel.referer(savedModel.referer);
@@ -90,5 +90,14 @@ function CandidateCreateModel(){
 }
 
 var candidateModel = new CandidateCreateModel();
+
+$('#candidate-create-form').validator().on('submit', function (e) {
+  if (e.isDefaultPrevented()) {
+    // handle the invalid form...
+  } else {
+    event.preventDefault();
+    candidateModel.ajaxCall();
+  }
+});
 
 ko.applyBindings(candidateModel);

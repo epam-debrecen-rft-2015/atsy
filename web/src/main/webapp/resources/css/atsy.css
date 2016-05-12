@@ -69,6 +69,16 @@ body {
     margin-right: 10px;
 }
 
+#channels_section .btn-add {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+#channels_section button {
+    width: 77px;
+    margin-right: 10px;
+}
+
 #missingUsername {
     color: red;
     display: none;
