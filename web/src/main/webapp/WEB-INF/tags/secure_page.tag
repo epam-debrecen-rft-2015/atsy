@@ -31,10 +31,10 @@
                  </ul>
                  <ul class="nav navbar-nav navbar-right">
                  <li>
-                 <form method="POST" action="/atsy/logout">
-                        <input type="submit">
-                     <!-- <a href="${logout}"><span id="logout_link" class="glyphicon glyphicon-log-out" aria-hidden="true"/><span class="visible-xs-inline"><spring:message code="header.menu.logout"/></span></a> -->
+                 <form method="POST" action="/atsy/logout" class="hidden" id="secure_logout">
+                        <input type="submit" >
                  </form>
+                 <a data-bind="click: aClick"><span id="logout_link" class="glyphicon glyphicon-log-out" aria-hidden="true"/><span class="visible-xs-inline"><spring:message code="header.menu.logout"/></span></a>
                  </li>
                  </ul>
              </div>
