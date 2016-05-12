@@ -1,9 +1,9 @@
-/**
- * Created by mates on 2015. 11. 18..
- */
-
-
 function showError(message) {
+/*
+első sor text binding
+második visible binding egy bool propertyvel
+harmadikat is ez a bool property állítja
+*/
     $("#candidate-create-form").find('.globalMessage .error-message').text(message);
     $("#candidate-create-form").find('.globalMessage').show();
     $("#candidate-create-form").addClass('has-error');

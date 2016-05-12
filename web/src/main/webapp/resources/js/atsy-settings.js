@@ -1,7 +1,3 @@
-/**
- * Created by Ikantik on 2015.11.04..
- */
-
 function SettingsForm() {
     this.init = function (container, validationMessageKey) {
         if (typeof container === 'string') {

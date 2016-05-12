@@ -17,10 +17,13 @@
             <h1 class="page-header">
               <spring:message code="application.create.title"/>
             </h1>
-        <div class="modal fade" id="modal">
-            <div class="modal-dialog" role="dialog">
+        <div class="modal fade" id="modal" role="dialog">
+            <div class="modal-dialog" >
                 <div class="modal-content">
+                    <div class="modal-header">
                     <h4 id="new_application_popup_title">Új jelentkezés</h4>
+                    </div>
+                    <div class="modal-body">
                         <form class="form" role="form" method="POST" id="application-create-form" action="${new_application_popup}">
                             <input type="hidden" name="candidateId" id="candidateId" value="${candidateId}">
                             <div class="form-group" id="positionDiv">
@@ -54,13 +57,16 @@
                                     <p class="showValue form-control-static">${candidate.description}</p>
                                 </div>
                             </div>
-                            <div class="modal-footer">
+                            <div class="col-lg-offset-8 col-md-offset-8 col-sm-offset-8 col-lg-4 col-md-4 col-sm-4">
                                 <a href="candidate/${candidateId}" class="btn btn-danger">Vissza</a>
                                 <button type="submit" class="btn btn-success">
                                     <spring:message code="save.button"/>
                                 </button>
                             </div>
                         </form>
+                        </div>
+                        <div class="modal-footer" id="footer">
+                        </div>
                     </div>
                 </div>
             </div>

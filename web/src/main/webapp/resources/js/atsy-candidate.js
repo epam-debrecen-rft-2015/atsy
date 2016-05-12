@@ -1,6 +1,3 @@
-/**
- * Created by tothd on 2015. 11. 19..
- */
 $(document).ready(function () {
     var form = $("#searchCandidate"),
         table = $("#candidates");

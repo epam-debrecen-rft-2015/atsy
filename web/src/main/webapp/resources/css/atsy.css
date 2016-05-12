@@ -182,3 +182,7 @@ textarea {
 #sourceLabel{
     margin-top:2px;
 }
+
+#application_page .modal-footer{
+    border-top:none;
+}
