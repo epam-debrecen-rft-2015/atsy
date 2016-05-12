@@ -31,7 +31,6 @@
 <script src="<c:url value="/resources/thirdparty/bootstrap-table/locale/bootstrap-table-${pageContext.response.locale}.min.js" />"></script>
 <script src="<c:url value="/resources/thirdparty/knockout-3.4.0/knockout-3.4.0.js" />"></script>
 <!-- Latest compiled and minified Locales -->
-<script src="<c:url value="/resources/js/atsy-secure.js" />"></script>
 
 <jsp:invoke fragment="refs"/>
 </body>
