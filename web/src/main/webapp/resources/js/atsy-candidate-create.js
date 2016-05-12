@@ -1,14 +1,3 @@
-function showError(message) {
-/*
-első sor text binding
-második visible binding egy bool propertyvel
-harmadikat is ez a bool property állítja
-*/
-    $("#candidate-create-form").find('.globalMessage .error-message').text(message);
-    $("#candidate-create-form").find('.globalMessage').show();
-    $("#candidate-create-form").addClass('has-error');
-}
-
 var savedModel;
 
 function actionFormatter(value, row, index) {
@@ -38,39 +27,43 @@ function CandidateCreateModel(){
     };
 
     ko.bindingHandlers.initDisplay = {
-                init: function(element, valueAccessor, allBindingsAccessor, data) {
-                    self.modify(true);
-                }
-            };
+        init: function(element, valueAccessor, allBindingsAccessor, data) {
+            self.modify(true);
+        }
+    };
 
 
     var self = this;
+    self.errorMessage = ko.observable();
+    self.showError = ko.observable(false);
 
     self.ajaxCall = function() {
-    var form = $("#candidate-create-form");
-    $.ajax({
-                url: form.attr('action'),
-                method: form.attr('method'),
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    id: self.id(),
-                    name: self.name(),
-                    referer: self.referer(),
-                    email: self.email(),
-                    languageSkill: self.languageSkill()[0],
-                    phone: self.phone(),
-                    description: self.description()
-                })
-            }).done(function (xhr) {
-                window.location = form.attr('action')+ '/' + xhr;
-            }).error(function (xhr) {
-                showError(xhr.responseText);
-            });
+        var form = $("#candidate-create-form");
+        $.ajax({
+            url: form.attr('action'),
+            method: form.attr('method'),
+            contentType: 'application/json',
+            data: JSON.stringify({
+                id: self.id(),
+                name: self.name(),
+                referer: self.referer(),
+                email: self.email(),
+                languageSkill: self.languageSkill()[0],
+                phone: self.phone(),
+                description: self.description()
+            })
+        }).done(function (xhr) {
+            window.location = form.attr('action')+ '/' + xhr;
+        }).error(function (xhr) {
+            self.errorMessage(xhr.responseText);
+            self.showError(true);
+        });
     }
 
     self.modify = ko.observable(false);
     modify_display_true = function() {
         self.modify(true);
+        self.showError(false);
         candidateModel.id(savedModel.id);
         candidateModel.name(savedModel.name);
         candidateModel.referer(savedModel.referer);
@@ -82,19 +75,18 @@ function CandidateCreateModel(){
     modify_display_false = function() {
         self.modify(false);
         savedModel = ko.toJS(candidateModel);
-        console.log(savedModel);
     };
     save_button = function() {
         self.ajaxCall();
     };
 
     self.cssclass = ko.computed(function() {
-            if (self.modify == true) {
-                return "display";
-            } else {
-                return "";
-            }
-        });
+        if (self.modify == true) {
+            return "display";
+        } else {
+            return "";
+        }
+    });
 }
 
 var candidateModel = new CandidateCreateModel();

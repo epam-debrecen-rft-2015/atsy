@@ -40,11 +40,11 @@
 
             <div id="candidate_data">
                 <div class="row">
-                    <form data-toggle="validator" class="form" role="form" method="POST" id="candidate-create-form" action="${candidateURL}" data-bind="submit: ajaxCall">
+                    <form data-toggle="validator" class="form" role="form" method="POST" id="candidate-create-form" action="${candidateURL}" data-bind="submit: ajaxCall, css: { 'has-error': showError }">
                         <div class="globalMessage alert alert-danger" role="alert"
-                             style="display: none">
+                             data-bind="visible: showError">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                            <span class="error-message"></span>
+                            <span class="error-message" data-bind="text: errorMessage"></span>
                         </div>
                         <div class="form-group"
                              id="nameDiv">
