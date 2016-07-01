@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "Candidates", schema = "atsy")
+@Table(name = "candidates", schema = "atsy")
 public class CandidateEntity extends SuperEntity implements Serializable {
 
     @Column(name = "name", length = 255)

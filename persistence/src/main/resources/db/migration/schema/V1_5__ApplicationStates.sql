@@ -1,4 +1,4 @@
-CREATE TABLE States(
+CREATE TABLE states(
 
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   application_id BIGINT NOT NULL,
