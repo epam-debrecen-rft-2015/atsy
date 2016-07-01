@@ -6,6 +6,8 @@ Feature: As the user
     Given The user signed in
     And the Beállítások menu point clicked
     And the options screen appears
+    And the positions link is clicked
+    And the positions screen appears
 
   Scenario: user can list existing positions
     Then the list filled with positions appears on the page

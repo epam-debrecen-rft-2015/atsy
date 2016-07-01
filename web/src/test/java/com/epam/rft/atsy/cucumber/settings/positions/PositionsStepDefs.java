@@ -33,11 +33,24 @@ public class PositionsStepDefs {
         getDriver().findElement(By.id("settings_link")).click();
     }
 
-    @Then("^the options screen appears$")
+    @And("^the options screen appears$")
     public void the_options_screen_appears() throws Throwable {
+        WebDriverWait wait = new WebDriverWait(getDriver(), 5);
+        wait.until(presenceOfElementLocated(By.id("positions_link")));
+        assertThat(getDriver().findElement(By.id("settings")).isDisplayed(), is(true));
+    }
+
+    @And("^the positions link is clicked$")
+    public void the_positions_link_is_clicked() throws Throwable {
+        getDriver().findElement(By.id("positions_link")).click();
+    }
+
+    @And("^the positions screen appears$")
+    public void the_positions_screen_appears() throws Throwable {
         WebDriverWait wait = new WebDriverWait(getDriver(), 5);
         wait.until(presenceOfElementLocated(By.id("positions")));
         assertThat(getDriver().findElement(By.id("settings")).isDisplayed(), is(true));
+        assertThat(getDriver().findElement(By.id("positions")).getTagName(), is("table"));
     }
 
     @Given("^the user in on the \"([^\"]*)\" page$")

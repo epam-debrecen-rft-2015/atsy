@@ -36,8 +36,21 @@ public class ChannelsStepDefs {
     @Then("^the options screen appears$")
     public void the_options_screen_appears() throws Throwable {
         WebDriverWait wait = new WebDriverWait(getDriver(), 5);
+        wait.until(presenceOfElementLocated(By.id("channels_link")));
+        assertThat(getDriver().findElement(By.id("settings")).isDisplayed(), is(true));
+    }
+
+    @And("^the channels link is clicked$")
+    public void the_positions_link_is_clicked() throws Throwable {
+        getDriver().findElement(By.id("channels_link")).click();
+    }
+
+    @And("^the channels screen appears$")
+    public void the_positions_screen_appears() throws Throwable {
+        WebDriverWait wait = new WebDriverWait(getDriver(), 5);
         wait.until(presenceOfElementLocated(By.id("channels")));
         assertThat(getDriver().findElement(By.id("settings")).isDisplayed(), is(true));
+        assertThat(getDriver().findElement(By.id("channels")).getTagName(), is("table"));
     }
 
     @Given("^the user in on the \"([^\"]*)\" page$")
