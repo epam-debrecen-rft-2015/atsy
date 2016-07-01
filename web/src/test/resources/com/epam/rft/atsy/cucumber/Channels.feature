@@ -6,6 +6,8 @@ Feature: As the user
     Given The user signed in
     And the Beállítások menu point clicked
     And the options screen appears
+    And the channels link is clicked
+    And the channels screen appears
 
   Scenario: user can list existing channels
     Then the list filled with channels appears on the page

@@ -15,9 +15,9 @@
         <div id="settings">
             <h1 class="page-header"><spring:message code="settings.title"/></h1>
             <ul>
-              <li><a href="${position}"><spring:message code="settings.positions.title"/></a></li>
-              <li><a href="${channel}"><spring:message code="settings.channels.title"/></a></li>
-              <li><a href="${password}"><spring:message code="settings.password.title"/></a></li>
+              <li><a id="positions_link" href="${position}"><spring:message code="settings.positions.title"/></a></li>
+              <li><a id="channels_link" href="${channel}"><spring:message code="settings.channels.title"/></a></li>
+              <li><a id="password_link" href="${password}"><spring:message code="settings.password.title"/></a></li>
             </ul>
         </div>
     </jsp:body>
