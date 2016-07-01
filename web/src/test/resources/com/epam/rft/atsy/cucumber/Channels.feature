@@ -25,7 +25,7 @@ Feature: As the user
       | title       |
       | Új csatorna |
 
-  Scenario Outline: user can save new channel
+  Scenario Outline: user cannot save new channel if channel name exists
     When the Új csatorna button clicked
     And user enters "<title>" into the title
     And the Mentés button clicked
@@ -51,9 +51,9 @@ Feature: As the user
     And the Mentés button clicked
     Then error message appears <message>
     Examples:
-      | title | message                |
-      | Email | Már létezik csatorna   |
-      |       | Név megadása kötelező! |
+      | title    | message                |
+      | facebook | Már létezik csatorna   |
+      |          | Név megadása kötelező! |
 
   Scenario: user can modify an existing channel
     When the Edit button clicked on a channel
