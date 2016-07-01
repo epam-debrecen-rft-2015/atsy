@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "States", schema = "atsy")
+@Table(name = "states", schema = "atsy")
 public class StateEntity extends SuperEntity {
 
     @OneToOne

@@ -3,11 +3,11 @@ package com.epam.rft.atsy.persistence.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Users", schema = "atsy", uniqueConstraints = @UniqueConstraint(columnNames = "user_name"))
+@Table(name = "users", schema = "atsy", uniqueConstraints = @UniqueConstraint(columnNames = "user_name"))
 public class UserEntity extends SuperEntity implements java.io.Serializable{
-    @Column(name = "user_name", nullable = false, length = 255, table = "Users")
+    @Column(name = "user_name", nullable = false, length = 255, table = "users")
     private String userName;
-    @Column(name = "user_pwd", nullable = false, length = 255, table = "Users")
+    @Column(name = "user_pwd", nullable = false, length = 255, table = "users")
     private String userPassword;
 
     /**

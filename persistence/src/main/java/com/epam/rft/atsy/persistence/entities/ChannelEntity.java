@@ -3,7 +3,7 @@ package com.epam.rft.atsy.persistence.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Channels", schema = "atsy", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+@Table(name = "channels", schema = "atsy", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class ChannelEntity extends SuperEntity implements java.io.Serializable {
 
     @Column(name = "name", nullable = false, length = 255, unique = true)
