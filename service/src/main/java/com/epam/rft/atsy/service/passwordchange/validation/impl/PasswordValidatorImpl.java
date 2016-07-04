@@ -1,9 +1,9 @@
-package com.epam.rft.atsy.web.passwordchange.validation.impl;
+package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
+import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
+import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
 import com.epam.rft.atsy.web.exception.PasswordValidationException;
-import com.epam.rft.atsy.web.passwordchange.validation.PasswordValidationRule;
-import com.epam.rft.atsy.web.passwordchange.validation.PasswordValidator;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class PasswordValidatorImpl implements PasswordValidator{
+public class PasswordValidatorImpl implements PasswordValidator {
 
     List<PasswordValidationRule> passwordValidationRules;
 

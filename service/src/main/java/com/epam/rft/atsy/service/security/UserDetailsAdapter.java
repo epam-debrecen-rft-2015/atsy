@@ -1,4 +1,4 @@
-package com.epam.rft.atsy.web.security;
+package com.epam.rft.atsy.service.security;
 
 import com.google.common.collect.Lists;
 import org.springframework.security.core.GrantedAuthority;
