@@ -1,9 +1,20 @@
 package com.epam.rft.atsy.service.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.*;
 
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CandidateDTO {
+
+
     private Long id;
+
     @NotNull
     @Size(min = 1, max =100, message = "candidate.error.name.long")
     private String name;
@@ -26,8 +37,6 @@ public class CandidateDTO {
 
     private String description;
 
-    public CandidateDTO() {
-    }
 
     public CandidateDTO(String name, String email, String phone, String description, String referer, Short languageSkill) {
         this.name = name;
@@ -38,102 +47,4 @@ public class CandidateDTO {
         this.languageSkill = languageSkill;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phoneNumber) {
-        this.phone = phoneNumber;
-    }
-
-    public String getReferer() {
-        return referer;
-    }
-
-    public void setReferer(String referer) {
-        this.referer = referer;
-    }
-
-    public Short getLanguageSkill() {
-        return languageSkill;
-    }
-
-    public void setLanguageSkill(Short languageSkill) {
-        this.languageSkill = languageSkill;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CandidateDTO that = (CandidateDTO) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (email != null ? !email.equals(that.email) : that.email != null) return false;
-        if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
-        if (referer != null ? !referer.equals(that.referer) : that.referer != null) return false;
-        if (languageSkill != null ? !languageSkill.equals(that.languageSkill) : that.languageSkill != null)
-            return false;
-        return !(description != null ? !description.equals(that.description) : that.description != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (phone != null ? phone.hashCode() : 0);
-        result = 31 * result + (referer != null ? referer.hashCode() : 0);
-        result = 31 * result + (languageSkill != null ? languageSkill.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "CandidateDTO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", referer='" + referer + '\'' +
-                ", languageSkill=" + languageSkill +
-                ", description='" + description + '\'' +
-                '}';
-    }
 }

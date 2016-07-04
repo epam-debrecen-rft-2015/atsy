@@ -52,6 +52,8 @@
         <info.cukes.cucumber.version>1.2.4</info.cukes.cucumber.version>
         <org.seleniumhq.selenium.version>2.53.0</org.seleniumhq.selenium.version>
         <org.springframework.security.version>4.0.3.RELEASE</org.springframework.security.version>
+
+        <org.projectlombok.version>1.16.8</org.projectlombok.version>
     </properties>
 
     <modules>
@@ -464,6 +466,13 @@
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-config</artifactId>
                 <version>${org.springframework.security.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${org.projectlombok.version}</version>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
