@@ -1,6 +1,6 @@
 package com.epam.rft.atsy.web.controllers;
 
-import com.epam.rft.atsy.persistence.request.FilterRequest;
+import com.epam.rft.atsy.service.request.FilterRequest;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.controllers.rest.CandidateController;

@@ -1,4 +1,4 @@
-package com.epam.rft.atsy.persistence.request;
+package com.epam.rft.atsy.service.request;
 
 public class SortingRequest {
 
