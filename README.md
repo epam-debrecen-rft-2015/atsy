@@ -40,7 +40,7 @@ Definition of Done
 Lombok
 ======
 
-1. homepage:
+1. home page:
 https://projectlombok.org/index.html
 
 1. features:
