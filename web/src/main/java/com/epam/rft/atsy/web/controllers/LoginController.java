@@ -13,7 +13,7 @@ public class LoginController {
     private static final String VIEW_NAME = "login";
 
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView pageLoad(HttpServletRequest request) {
+    public ModelAndView pageLoad() {
         return new ModelAndView(VIEW_NAME);
     }
 
