@@ -35,11 +35,17 @@ public class NewApplicationPopupController {
         if (!result.hasErrors()) {
             stateDTO.setStateType("newstate");
             stateDTO.setStateIndex(0);
-            ApplicationDTO applicationDTO = new ApplicationDTO();
-            applicationDTO.setCreationDate(new Date());
-            applicationDTO.setCandidateId(stateDTO.getCandidateId());
-            applicationDTO.setPositionId(stateDTO.getPosition().getId());
-            applicationDTO.setChannelId(stateDTO.getChannel().getId());
+
+
+
+            ApplicationDTO applicationDTO = ApplicationDTO.builder()
+                    .creationDate(new Date())
+                    .candidateId(stateDTO.getCandidateId())
+                    .positionId(stateDTO.getPosition().getId())
+                    .channelId(stateDTO.getChannel().getId())
+                    .build();
+
+
             applicationsService.saveApplicaton(applicationDTO,stateDTO);
         }
         return "redirect:/secure/candidate/"+stateDTO.getCandidateId();

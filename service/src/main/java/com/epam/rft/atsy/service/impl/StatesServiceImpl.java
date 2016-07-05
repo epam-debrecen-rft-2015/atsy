@@ -50,16 +50,17 @@ public class StatesServiceImpl implements StatesService {
         for (ApplicationEntity applicationEntity: applicationList){
             StateEntity stateEntity = statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(applicationEntity);
 
-            CandidateApplicationDTO candidateApplicationDTO = new CandidateApplicationDTO();
-            candidateApplicationDTO.setApplicationId(applicationEntity.getId());
-            candidateApplicationDTO.setCreationDate(simpleDateFormat.format(applicationEntity.getCreationDate()));
 
-            candidateApplicationDTO.setStateType(stateEntity.getStateType());
-            candidateApplicationDTO.setPositionName(applicationEntity.getPositionEntity().getName());
-            candidateApplicationDTO.setLastStateId(stateEntity.getId());
-            candidateApplicationDTO.setModificationDate(simpleDateFormat.format(stateEntity.getCreationDate()));
+            CandidateApplicationDTO candidateApplicationDTO = CandidateApplicationDTO.builder()
+                    .applicationId(applicationEntity.getId())
+                    .creationDate(simpleDateFormat.format(applicationEntity.getCreationDate()))
+                    .stateType(stateEntity.getStateType())
+                    .positionName(applicationEntity.getPositionEntity().getName())
+                    .lastStateId(stateEntity.getId())
+                    .modificationDate(simpleDateFormat.format(stateEntity.getCreationDate())).build();
 
             candidateApplicationDTOList.add(candidateApplicationDTO);
+
         }
         return  candidateApplicationDTOList;
     }

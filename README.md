@@ -48,3 +48,18 @@ Definition of Done
 1. All integration tests pass
 1. CI server could build the project
 1. CI server could run tests
+
+Lombok
+======
+
+1. home page:
+https://projectlombok.org/index.html
+
+1. features:
+https://projectlombok.org/features/
+
+1. download:
+https://projectlombok.org/download.html
+
+1. installion details:
+https://github.com/mplushnikov/lombok-intellij-plugin

@@ -62,10 +62,14 @@ public class PasswordChangeController {
                 passwordValidator.validate(passwordChangeDTO);
 
                 String newPassword = bCryptPasswordEncoder.encode(passwordChangeDTO.getNewPassword());
-                PasswordHistoryDTO passwordHistoryDTO = new PasswordHistoryDTO();
-                passwordHistoryDTO.setUserId(userDetailsAdapter.getUserId());
-                passwordHistoryDTO.setPassword(newPassword);
-                passwordHistoryDTO.setChangeDate(new Date());
+
+
+                PasswordHistoryDTO passwordHistoryDTO = PasswordHistoryDTO.builder()
+                        .userId(userDetailsAdapter.getUserId())
+                        .password(newPassword)
+                        .changeDate(new Date())
+                        .build();
+
 
                 UserDTO user = userService.findUserByName(userDetailsAdapter.getUsername());
                 user.setPassword(newPassword);
