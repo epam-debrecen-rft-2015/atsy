@@ -8,12 +8,9 @@ import java.io.Serializable;
 
 
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
 public class PositionDTO implements Serializable {
 
     private Long id;

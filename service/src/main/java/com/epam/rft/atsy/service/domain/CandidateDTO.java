@@ -7,12 +7,9 @@ import javax.validation.constraints.*;
 
 
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
 public class CandidateDTO {
 
 

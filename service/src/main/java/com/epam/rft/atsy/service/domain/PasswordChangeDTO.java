@@ -6,12 +6,9 @@ import java.io.Serializable;
 
 
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
 public class PasswordChangeDTO implements Serializable {
 
     private String newPassword;

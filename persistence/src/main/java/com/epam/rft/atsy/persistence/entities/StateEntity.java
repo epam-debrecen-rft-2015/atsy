@@ -6,11 +6,8 @@ import javax.persistence.*;
 import java.util.Date;
 
 
-@Builder
+@Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Entity
@@ -49,5 +46,20 @@ public class StateEntity extends SuperEntity {
     @Column(name = "state_index")
     private Integer stateIndex;
 
+
+    @Builder
+    public StateEntity(Long id, ApplicationEntity applicationEntity, Date creationDate, Short languageSkill, String description, String result, Long offeredMoney, Long claim, Date feedbackDate, String stateType, Integer stateIndex) {
+        super(id);
+        this.applicationEntity = applicationEntity;
+        this.creationDate = creationDate;
+        this.languageSkill = languageSkill;
+        this.description = description;
+        this.result = result;
+        this.offeredMoney = offeredMoney;
+        this.claim = claim;
+        this.feedbackDate = feedbackDate;
+        this.stateType = stateType;
+        this.stateIndex = stateIndex;
+    }
 }
 

@@ -7,12 +7,9 @@ import java.util.Date;
 
 
 @Builder
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+@AllArgsConstructor
 public class PasswordHistoryDTO implements Serializable {
 
 

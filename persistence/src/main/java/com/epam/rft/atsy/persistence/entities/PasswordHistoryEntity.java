@@ -6,11 +6,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-@Builder
+@Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Entity
@@ -27,5 +24,14 @@ public class PasswordHistoryEntity extends SuperEntity implements Serializable {
 
     @Column(name ="change_date", table = "password_history", length = 255, nullable = false)
     private Date changeDate;
+
+
+    @Builder
+    public PasswordHistoryEntity(Long id, UserEntity userEntity, String password, Date changeDate) {
+        super(id);
+        this.userEntity = userEntity;
+        this.password = password;
+        this.changeDate = changeDate;
+    }
 
 }

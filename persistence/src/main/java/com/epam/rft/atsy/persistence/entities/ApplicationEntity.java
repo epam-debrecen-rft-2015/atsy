@@ -6,11 +6,8 @@ import javax.persistence.*;
 import java.util.Date;
 
 
-@Builder
+@Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Entity
@@ -32,5 +29,15 @@ public class ApplicationEntity extends SuperEntity {
     @OneToOne
     @JoinColumn(name = "channel_id")
     private ChannelEntity channelEntity;
+
+
+    @Builder
+    public ApplicationEntity(Long id, Date creationDate, CandidateEntity candidateEntity, PositionEntity positionEntity, ChannelEntity channelEntity) {
+        super(id);
+        this.creationDate = creationDate;
+        this.candidateEntity = candidateEntity;
+        this.positionEntity = positionEntity;
+        this.channelEntity = channelEntity;
+    }
 
 }

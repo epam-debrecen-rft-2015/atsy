@@ -5,12 +5,9 @@ import lombok.*;
 
 
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
 public class CandidateApplicationDTO {
 
     private Long lastStateId;

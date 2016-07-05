@@ -1,6 +1,8 @@
 package com.epam.rft.atsy.persistence.request;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Data
