@@ -1,15 +1,16 @@
 package com.epam.rft.atsy.service.domain;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
-
-@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
 public class CandidateApplicationDTO {
 
     private Long lastStateId;

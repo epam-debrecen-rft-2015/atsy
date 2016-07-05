@@ -20,7 +20,7 @@
         <jacoco.lineRatio>0.80</jacoco.lineRatio>
         <environment>integration</environment>
         <com.epam.rft>1.0-SNAPSHOT</com.epam.rft>
-        <maven.war.plugin.version>2.3</maven.war.plugin.version>
+        <maven.war.plugin.version>2.2</maven.war.plugin.version>
         <maven.compiler.plugin.version>3.3</maven.compiler.plugin.version>
         <maven.surefire.plugin.version>2.18.1</maven.surefire.plugin.version>
         <maven.failsafe.plugin.version>2.12</maven.failsafe.plugin.version>
@@ -50,7 +50,7 @@
         <com.fasterxml.jackson.core.version>2.2.3</com.fasterxml.jackson.core.version>
         <javax.servlet.api.version>3.1.0</javax.servlet.api.version>
         <info.cukes.cucumber.version>1.2.4</info.cukes.cucumber.version>
-        <org.seleniumhq.selenium.version>2.53.0</org.seleniumhq.selenium.version>
+        <org.seleniumhq.selenium.version>2.53.1</org.seleniumhq.selenium.version>
         <org.springframework.security.version>4.0.3.RELEASE</org.springframework.security.version>
 
         <org.projectlombok.version>1.16.8</org.projectlombok.version>

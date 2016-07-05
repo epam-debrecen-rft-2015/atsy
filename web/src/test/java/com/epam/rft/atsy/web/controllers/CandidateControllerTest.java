@@ -58,7 +58,7 @@ public class CandidateControllerTest {
     public void shouldThrowNullExceptionWhenNullOrderGiven() {
 
         //given
-        given(candidateService.getAllCandidate(new FilterRequest())).willReturn(Arrays.asList(new CandidateDTO("name", "email", "phome", "description", "referer", new Short("1"))));
+        given(candidateService.getAllCandidate(new FilterRequest())).willReturn(Arrays.asList(new CandidateDTO(null, "name", "email", "phome", "referer", Short.parseShort("1"), "description")));
 
         //when
         Collection<CandidateDTO> result = candidateController.loadPage("", null, "name");

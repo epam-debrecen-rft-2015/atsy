@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 
 @Data
+@NoArgsConstructor
 public class SearchOptions {
 
 

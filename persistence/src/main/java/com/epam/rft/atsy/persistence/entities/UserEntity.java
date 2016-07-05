@@ -1,15 +1,17 @@
 package com.epam.rft.atsy.persistence.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 
-@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Entity
 @Table(name = "users", schema = "atsy", uniqueConstraints = @UniqueConstraint(columnNames = "user_name"))
 public class UserEntity extends SuperEntity implements java.io.Serializable{
@@ -22,9 +24,4 @@ public class UserEntity extends SuperEntity implements java.io.Serializable{
     private String userPassword;
 
 
-    public UserEntity(Long id, String userName, String userPassword) {
-        super(id);
-        this.userName = userName;
-        this.userPassword = userPassword;
-    }
 }

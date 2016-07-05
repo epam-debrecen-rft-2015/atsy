@@ -1,16 +1,18 @@
 package com.epam.rft.atsy.persistence.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 
 
-@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Entity
 @Table(name = "states", schema = "atsy")
 public class StateEntity extends SuperEntity {
@@ -47,19 +49,5 @@ public class StateEntity extends SuperEntity {
     @Column(name = "state_index")
     private Integer stateIndex;
 
-
-    public StateEntity(Long id, ApplicationEntity applicationEntity, Date creationDate, Short languageSkill, String description, String result, Long offeredMoney, Long claim, Date feedbackDate, String stateType, Integer stateIndex) {
-        super(id);
-        this.applicationEntity = applicationEntity;
-        this.creationDate = creationDate;
-        this.languageSkill = languageSkill;
-        this.description = description;
-        this.result = result;
-        this.offeredMoney = offeredMoney;
-        this.claim = claim;
-        this.feedbackDate = feedbackDate;
-        this.stateType = stateType;
-        this.stateIndex = stateIndex;
-    }
 }
 

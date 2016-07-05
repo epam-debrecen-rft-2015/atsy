@@ -1,6 +1,7 @@
 package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.CandidateService;
+import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -42,7 +43,8 @@ public class CandidateCreationControllerTest {
     public void loadCandidateTestSpecified(){
         //given
         Long candidateId=new Long(1);
-        given(service.getCandidate(candidateId)).willReturn(new CandidateDTO("Candidate A", "candidate.a@atsy.com", "+36105555555", "Elegáns, kicsit furi", "google", (short)5));
+        given(service.getCandidate(candidateId)).willReturn(new CandidateDTO(candidateId,"Candidate A", "candidate.a@atsy.com", "+36105555555", "Elegáns, kicsit furi", Short.parseShort("5"), "google"));
+
         //when
         ModelAndView model = underTest.loadCandidate(candidateId);
         Map<String, Object> testMap = model.getModel();

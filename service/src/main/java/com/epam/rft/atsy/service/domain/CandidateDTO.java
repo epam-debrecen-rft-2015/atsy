@@ -1,15 +1,18 @@
 package com.epam.rft.atsy.service.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.*;
 
 
-@Data
+
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
 public class CandidateDTO {
 
 
@@ -36,15 +39,5 @@ public class CandidateDTO {
     private Short languageSkill;
 
     private String description;
-
-
-    public CandidateDTO(String name, String email, String phone, String description, String referer, Short languageSkill) {
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-        this.description = description;
-        this.referer = referer;
-        this.languageSkill = languageSkill;
-    }
 
 }

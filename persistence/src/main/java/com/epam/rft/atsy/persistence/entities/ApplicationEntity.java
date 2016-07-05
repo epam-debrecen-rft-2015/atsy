@@ -1,16 +1,18 @@
 package com.epam.rft.atsy.persistence.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 
 
-@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Entity
 @Table(name = "applications", schema = "atsy")
 public class ApplicationEntity extends SuperEntity {
@@ -30,14 +32,5 @@ public class ApplicationEntity extends SuperEntity {
     @OneToOne
     @JoinColumn(name = "channel_id")
     private ChannelEntity channelEntity;
-
-
-    public ApplicationEntity(Long id, Date creationDate, CandidateEntity candidateEntity, PositionEntity positionEntity, ChannelEntity channelEntity) {
-        super(id);
-        this.creationDate = creationDate;
-        this.candidateEntity = candidateEntity;
-        this.positionEntity = positionEntity;
-        this.channelEntity = channelEntity;
-    }
 
 }

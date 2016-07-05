@@ -1,17 +1,18 @@
 package com.epam.rft.atsy.persistence.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-
-@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Entity
 @Table(name = "password_history", schema = "atsy")
 public class PasswordHistoryEntity extends SuperEntity implements Serializable {
@@ -27,11 +28,4 @@ public class PasswordHistoryEntity extends SuperEntity implements Serializable {
     @Column(name ="change_date", table = "password_history", length = 255, nullable = false)
     private Date changeDate;
 
-
-    public PasswordHistoryEntity(Long id, UserEntity userEntity, String password, Date changeDate) {
-        super(id);
-        this.userEntity = userEntity;
-        this.password = password;
-        this.changeDate = changeDate;
-    }
 }
