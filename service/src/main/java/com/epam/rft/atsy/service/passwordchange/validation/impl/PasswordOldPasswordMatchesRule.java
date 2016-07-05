@@ -1,7 +1,7 @@
-package com.epam.rft.atsy.web.passwordchange.validation.impl;
+package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
-import com.epam.rft.atsy.web.passwordchange.validation.PasswordValidationRule;
+import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
