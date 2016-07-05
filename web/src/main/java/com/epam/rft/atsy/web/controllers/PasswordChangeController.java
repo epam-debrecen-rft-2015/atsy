@@ -53,7 +53,7 @@ public class PasswordChangeController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ModelAndView changePassword(@ModelAttribute PasswordChangeDTO passwordChangeDTO, Locale userLocale, BindingResult bindingResult, HttpServletRequest request) {
+    public ModelAndView changePassword(@ModelAttribute PasswordChangeDTO passwordChangeDTO, BindingResult bindingResult) {
 
         ModelAndView model = new ModelAndView(VIEW_NAME);
         if (bindingResult.hasErrors()) {
