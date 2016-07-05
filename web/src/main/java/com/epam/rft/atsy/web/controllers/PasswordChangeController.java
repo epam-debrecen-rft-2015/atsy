@@ -21,9 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.Locale;
 
 @Controller
 @RequestMapping(path = "/secure/password/manage")
