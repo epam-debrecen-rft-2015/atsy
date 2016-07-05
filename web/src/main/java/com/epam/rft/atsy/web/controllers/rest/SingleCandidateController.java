@@ -36,7 +36,7 @@ public class SingleCandidateController {
         ResponseEntity entity;
         if (!result.hasErrors()) {
             Long candidateId = candidateService.saveOrUpdate(candidateDTO);
-            entity = new ResponseEntity<Long>(candidateId, HttpStatus.OK);
+            entity = new ResponseEntity<>(candidateId, HttpStatus.OK);
         } else {
             Map<String, String> errorMessages =parseValidationErrors(result.getFieldErrors(),locale);
             entity = new ResponseEntity<>(errorMessages, HttpStatus.BAD_REQUEST);
@@ -46,19 +46,19 @@ public class SingleCandidateController {
 
     @ExceptionHandler(DuplicateRecordException.class)
     public ResponseEntity handleDuplicateException(Locale locale, DuplicateRecordException ex) {
-        return new ResponseEntity<String>(messageSource.getMessage(DUPLICATE_CANDIDATE_ERROR_KEY,
+        return new ResponseEntity<>(messageSource.getMessage(DUPLICATE_CANDIDATE_ERROR_KEY,
                 new Object[]{ex.getName()}, locale), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity handleException(Locale locale, Exception ex) {
         LOGGER.error("Error while saving position changes", ex);
-        return new ResponseEntity<String>(messageSource.getMessage(TECHNICAL_ERROR_MESSAGE_KEY,
+        return new ResponseEntity<>(messageSource.getMessage(TECHNICAL_ERROR_MESSAGE_KEY,
                 null, locale), HttpStatus.BAD_REQUEST);
     }
 
     private Map<String,String> parseValidationErrors(List<FieldError> fieldErrors, Locale locale){
-        Map<String,String> fieldNamesWithError = new HashMap<String,String>();
+        Map<String,String> fieldNamesWithError = new HashMap<>();
         for(FieldError fieldError: fieldErrors){
             fieldNamesWithError.put(fieldError.getField(), messageSource.getMessage(fieldError.getDefaultMessage(), new Object[0], locale));
         }
