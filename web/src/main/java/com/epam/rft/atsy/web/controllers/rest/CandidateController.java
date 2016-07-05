@@ -1,8 +1,8 @@
 package com.epam.rft.atsy.web.controllers.rest;
 
-import com.epam.rft.atsy.persistence.request.FilterRequest;
-import com.epam.rft.atsy.persistence.request.SearchOptions;
-import com.epam.rft.atsy.persistence.request.SortingRequest;
+import com.epam.rft.atsy.service.request.FilterRequest;
+import com.epam.rft.atsy.service.request.SearchOptions;
+import com.epam.rft.atsy.service.request.SortingRequest;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
