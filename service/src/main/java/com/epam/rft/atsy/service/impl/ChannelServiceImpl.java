@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Type;
@@ -19,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
+@Slf4j
 public class ChannelServiceImpl implements ChannelService {
 
     @Resource
@@ -41,8 +43,13 @@ public class ChannelServiceImpl implements ChannelService {
         ChannelEntity entity = modelMapper.map(channel, ChannelEntity.class);
         try {
             channelRepository.save(entity);
-        } catch (ConstraintViolationException | DataIntegrityViolationException constraint) {
-            throw new DuplicateRecordException(channel.getName());
+        } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
+            log.error("Save to repository failed.", ex);
+
+            String channelName = channel.getName();
+
+            throw new DuplicateRecordException(channelName,
+                                               "Duplication occurred when saving channel: " + channelName, ex);
         }
     }
 }

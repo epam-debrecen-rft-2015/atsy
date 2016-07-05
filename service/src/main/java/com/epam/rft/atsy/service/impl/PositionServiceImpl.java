@@ -12,12 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
 
 @Service
+@Slf4j
 public class PositionServiceImpl implements PositionService {
 
     @Resource
@@ -38,8 +40,13 @@ public class PositionServiceImpl implements PositionService {
         PositionEntity entity = modelMapper.map(position, PositionEntity.class);
         try {
             positionRepository.save(entity);
-        } catch (ConstraintViolationException | DataIntegrityViolationException constraint) {
-            throw new DuplicateRecordException(position.getName());
+        } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
+            log.error("Save to repository failed.", ex);
+
+            String positionName = position.getName();
+
+            throw new DuplicateRecordException(positionName,
+                                               "Duplication occurred when saving position: " + positionName, ex);
         }
     }
 

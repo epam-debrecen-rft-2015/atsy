@@ -12,12 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class PasswordChangeServiceImpl implements PasswordChangeService {
 
     @Resource
@@ -41,8 +43,13 @@ public class PasswordChangeServiceImpl implements PasswordChangeService {
                 deleteOldestPassword(passwordHistoryDTO.getUserId());
             }
             return retId;
-        } catch (ConstraintViolationException | DataIntegrityViolationException constraint) {
-            throw new DuplicateRecordException(passwordHistoryDTO.getId().toString());
+        } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
+            log.error("Save to repository failed.", ex);
+
+            String historyId = passwordHistoryDTO.getId().toString();
+
+            throw new DuplicateRecordException(historyId, "Duplication occurred when saving password history with ID: "
+                                               + historyId, ex);
         }
     }
 

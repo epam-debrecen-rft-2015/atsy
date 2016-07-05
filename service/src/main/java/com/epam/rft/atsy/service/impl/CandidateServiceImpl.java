@@ -15,6 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Type;
@@ -22,6 +23,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
+@Slf4j
 public class CandidateServiceImpl implements CandidateService {
 
     @Resource
@@ -53,8 +55,13 @@ public class CandidateServiceImpl implements CandidateService {
         CandidateEntity entity = modelMapper.map(candidate, CandidateEntity.class);
         try {
             return candidateRepository.save(entity).getId();
-        } catch (ConstraintViolationException | DataIntegrityViolationException constraint) {
-            throw new DuplicateRecordException(candidate.getName());
+        } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
+            log.error("Save to repository failed.", ex);
+
+            String candidateName = candidate.getName();
+
+            throw new DuplicateRecordException(candidateName,
+                                               "Duplication occurred when saving candidate: " + candidateName, ex);
         }
     }
 }
