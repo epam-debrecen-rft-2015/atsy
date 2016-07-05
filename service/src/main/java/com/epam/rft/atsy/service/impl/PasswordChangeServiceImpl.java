@@ -20,6 +20,8 @@ import java.util.List;
 @Service
 public class PasswordChangeServiceImpl implements PasswordChangeService {
 
+    private static final int PASSWORD_HISTORY_LIMIT = 5;
+
     @Resource
     private ModelMapper modelMapper;
 
@@ -37,7 +39,7 @@ public class PasswordChangeServiceImpl implements PasswordChangeService {
         entity.setUserEntity(userRepository.findOne(passwordHistoryDTO.getUserId()));
         try {
             Long retId = passwordHistoryRepository.save(entity).getId();
-            if(passwordHistoryRepository.findByUserEntity(entity.getUserEntity()).size()>=5){
+            if(passwordHistoryRepository.findByUserEntity(entity.getUserEntity()).size() >= PASSWORD_HISTORY_LIMIT){
                 deleteOldestPassword(passwordHistoryDTO.getUserId());
             }
             return retId;
