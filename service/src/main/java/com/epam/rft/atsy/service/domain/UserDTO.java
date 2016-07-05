@@ -5,8 +5,8 @@ import lombok.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-
 @Builder
+@ToString(exclude="password")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

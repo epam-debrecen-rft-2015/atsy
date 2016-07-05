@@ -15,4 +15,8 @@ public class PasswordChangeDTO implements Serializable {
     private String newPasswordConfirm;
     private String oldPassword;
 
+    @Override
+    public String toString() {
+        return "PasswordChangeDTO{FIELDS_HIDDEN_FOR_SECURITY_REASONS}";
+    }
 }
