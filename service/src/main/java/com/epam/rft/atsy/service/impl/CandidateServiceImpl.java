@@ -2,8 +2,8 @@ package com.epam.rft.atsy.service.impl;
 
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
-import com.epam.rft.atsy.persistence.request.FilterRequest;
-import com.epam.rft.atsy.persistence.request.SearchOptions;
+import com.epam.rft.atsy.service.request.FilterRequest;
+import com.epam.rft.atsy.service.request.SearchOptions;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
@@ -30,6 +30,8 @@ public class CandidateServiceImpl implements CandidateService {
     @Autowired
     private CandidateRepository candidateRepository;
 
+    private final static Type CANDIDATEDTO_LIST_TYPE = new TypeToken<List<CandidateDTO>>() {}.getType();
+
     @Override
     public CandidateDTO getCandidate(Long id) {
         CandidateEntity candidateEntity = candidateRepository.findOne(id);
@@ -42,9 +44,7 @@ public class CandidateServiceImpl implements CandidateService {
         Collection<CandidateEntity> candidateEntities = candidateRepository.findAllCandidatesByFilterRequest(
                 searchOptions.getName(),searchOptions.getEmail(), searchOptions.getPhone()
                 ,new Sort(Sort.Direction.fromString(sortingRequest.getOrder().name()),sortingRequest.getFieldName()));
-        Type targetListType = new TypeToken<List<CandidateDTO>>() {
-        }.getType();
-        return modelMapper.map(candidateEntities, targetListType);
+        return modelMapper.map(candidateEntities, CANDIDATEDTO_LIST_TYPE);
     }
 
     @Override

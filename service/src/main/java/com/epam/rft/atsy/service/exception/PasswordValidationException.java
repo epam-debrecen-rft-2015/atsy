@@ -1,4 +1,4 @@
-package com.epam.rft.atsy.web.exception;
+package com.epam.rft.atsy.service.exception;
 
 public class PasswordValidationException extends Exception {
 

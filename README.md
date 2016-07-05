@@ -23,6 +23,21 @@ Running integration tests as part of the build:
 Definition of Done
 ==================
 
+1. Code is well documented:
+  * All public service methods have JavaDoc comments. 
+  * Where necessary for understanding, non-public methods have JavaDoc as well. 
+1. Data container objects have (Lombok can be used for method generation)
+  * private fields
+  * getter methods, 
+  * setter methods,
+  * toString() method overridden, 
+  * hashCode() method overridden, 
+  * equals() method overridden.
+1. Logging is added
+  * when an exepction happens,
+  * when a significant event happens (user is deleted, candidate added, etc.). 
+1. Migration script is added if the changes require database modifications.
+1. README.md is updated if there are some changes in the application setup process.
 1. Code is placed in a task related branch (feature branch)
 1. Code for subtasks have a separate branch (sub-task branch)
 1. Before pushing changes in branch which is not tracked remotely use git rebase
@@ -33,9 +48,6 @@ Definition of Done
 1. All integration tests pass
 1. CI server could build the project
 1. CI server could run tests
-
-
-==========================================================
 
 Lombok
 ======
@@ -51,4 +63,3 @@ https://projectlombok.org/download.html
 
 1. installion details:
 https://github.com/mplushnikov/lombok-intellij-plugin
-

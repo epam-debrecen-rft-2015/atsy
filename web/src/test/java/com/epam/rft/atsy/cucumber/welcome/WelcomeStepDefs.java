@@ -75,7 +75,7 @@ public class WelcomeStepDefs {
     @And("the list of candidates shown ordered by (.*) as (.*)")
     public void the_list_of_candidates_shown_ordered_by(final String orderField, String order) {
         Comparator<CandidateTableRow> fieldComparator = new CandidateTableRow.Comparator(orderField, order);
-        List<CandidateTableRow> rows = new ArrayList<CandidateTableRow>(expectedCandidates);
+        List<CandidateTableRow> rows = new ArrayList<>(expectedCandidates);
         rows.sort(fieldComparator);
         list_of_candidates_shown(rows);
     }

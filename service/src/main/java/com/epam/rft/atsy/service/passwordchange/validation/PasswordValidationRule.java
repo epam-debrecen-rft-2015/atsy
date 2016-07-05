@@ -1,4 +1,4 @@
-package com.epam.rft.atsy.web.passwordchange.validation;
+package com.epam.rft.atsy.service.passwordchange.validation;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 

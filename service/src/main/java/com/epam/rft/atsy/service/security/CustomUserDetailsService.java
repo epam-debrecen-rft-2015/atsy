@@ -1,4 +1,4 @@
-package com.epam.rft.atsy.web.security;
+package com.epam.rft.atsy.service.security;
 
 import com.epam.rft.atsy.service.UserService;
 import com.epam.rft.atsy.service.domain.UserDTO;

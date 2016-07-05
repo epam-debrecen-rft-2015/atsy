@@ -1,7 +1,7 @@
-package com.epam.rft.atsy.web.passwordchange.validation;
+package com.epam.rft.atsy.service.passwordchange.validation;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
-import com.epam.rft.atsy.web.exception.PasswordValidationException;
+import com.epam.rft.atsy.service.exception.PasswordValidationException;
 
 public interface PasswordValidator {
     boolean validate(PasswordChangeDTO passwordChangeDTO) throws PasswordValidationException;
