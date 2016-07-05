@@ -16,9 +16,6 @@ public class PasswordAllFieldFilledRule implements PasswordValidationRule {
                 StringUtils.isNotBlank(newPassword);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getErrorMessageKey() {
         return MESSAGE_KEY;

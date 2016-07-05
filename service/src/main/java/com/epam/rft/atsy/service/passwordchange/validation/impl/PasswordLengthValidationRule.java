@@ -12,9 +12,6 @@ public class PasswordLengthValidationRule implements PasswordValidationRule {
         return passwordChangeDTO.getNewPassword().length() >= PASSWORD_MIN_LENGTH;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getErrorMessageKey() {
         return MESSAGE_KEY;

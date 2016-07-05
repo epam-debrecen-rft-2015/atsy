@@ -24,9 +24,6 @@ public class PasswordOldPasswordMatchesRule implements PasswordValidationRule {
         return bCryptPasswordEncoder.matches(passwordChangeDTO.getOldPassword(), userDetails.getPassword());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getErrorMessageKey() {
         return MESSAGE_KEY;

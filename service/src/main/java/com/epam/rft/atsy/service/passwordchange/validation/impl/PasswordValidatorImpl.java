@@ -35,8 +35,6 @@ public class PasswordValidatorImpl implements PasswordValidator {
             }
         }
 
-        // Is this really necessary? At this point all rules have been satisfied therefore
-        // the method might be void instead of returning such a non-informative value.
         return true;
     }
 }

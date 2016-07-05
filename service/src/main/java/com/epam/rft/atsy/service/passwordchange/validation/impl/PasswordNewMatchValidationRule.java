@@ -11,9 +11,6 @@ public class PasswordNewMatchValidationRule implements PasswordValidationRule {
         return passwordChangeDTO.getNewPassword().equals(passwordChangeDTO.getNewPasswordConfirm());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getErrorMessageKey() {
         return MESSAGE_KEY;

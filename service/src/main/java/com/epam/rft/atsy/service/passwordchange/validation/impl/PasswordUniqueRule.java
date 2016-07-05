@@ -40,9 +40,6 @@ public class PasswordUniqueRule implements PasswordValidationRule {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getErrorMessageKey() {
         return MESSAGE_KEY;

@@ -27,9 +27,6 @@ public class PasswordContainsRule implements PasswordValidationRule {
         return password.matches(".*[!@#$%^&_.,;:-]+.*");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getErrorMessageKey() {
         return MESSAGE_KEY;
