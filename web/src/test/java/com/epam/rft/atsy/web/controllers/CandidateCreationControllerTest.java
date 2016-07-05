@@ -43,7 +43,7 @@ public class CandidateCreationControllerTest {
     public void loadCandidateTestSpecified(){
         //given
         Long candidateId=new Long(1);
-        given(service.getCandidate(candidateId)).willReturn(new CandidateDTO(candidateId,"Candidate A", "candidate.a@atsy.com", "+36105555555", "Elegáns, kicsit furi", Short.parseShort("5"), "google"));
+        given(service.getCandidate(candidateId)).willReturn(new CandidateDTO(candidateId,"Candidate A", "candidate.a@atsy.com", "+36105555555", "Elegáns, kicsit furi", (short) 5, "google"));
 
         //when
         ModelAndView model = underTest.loadCandidate(candidateId);

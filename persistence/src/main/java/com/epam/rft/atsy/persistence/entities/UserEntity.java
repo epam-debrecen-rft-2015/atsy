@@ -10,6 +10,7 @@ import javax.persistence.UniqueConstraint;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Entity

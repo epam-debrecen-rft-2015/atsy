@@ -38,10 +38,14 @@ public class CandidateController {
     public Collection<CandidateDTO> loadPage(@RequestParam(value = "filter", required = false) String filter,
                                              @RequestParam("order") String order,
                                              @RequestParam("sort") String sortField) {
-        FilterRequest filterRequest = new FilterRequest();
-        filterRequest.setOrder(SortingRequest.Order.valueOf(StringUtils.upperCase(order)));
-        filterRequest.setFieldName(sortField);
-        filterRequest.setSearchOptions(parseFilters(filter));
+
+        FilterRequest filterRequest = FilterRequest.builder()
+                .order(SortingRequest.Order.valueOf(StringUtils.upperCase(order)))
+                .fieldName(sortField)
+                .searchOptions(parseFilters(filter))
+                .build();
+
+
         return candidateService.getAllCandidate(filterRequest);
     }
 
@@ -54,6 +58,12 @@ public class CandidateController {
                 LOGGER.error("Cannot read filters from json", e);
             }
         }
-        return new SearchOptions(filterMap.get(NAME),filterMap.get(EMAIL),filterMap.get(PHONE));
+        
+
+        return SearchOptions.builder()
+                .name(filterMap.get(NAME))
+                .email(filterMap.get(EMAIL))
+                .phone(filterMap.get(PHONE))
+                .build();
     }
 }

@@ -1,12 +1,13 @@
 package com.epam.rft.atsy.persistence.request;
 
 import com.google.common.base.MoreObjects;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 
-
+@Builder
 @Data
 @NoArgsConstructor
 public class SearchOptions {
