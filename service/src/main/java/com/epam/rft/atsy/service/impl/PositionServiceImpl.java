@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,10 +27,12 @@ public class PositionServiceImpl implements PositionService {
     @Autowired
     private PositionRepository positionRepository;
 
+    private final Type POSITIONDTO_LIST_TYPE = new TypeToken<List<PositionDTO>>() {}.getType();
+
     @Override
     public Collection<PositionDTO> getAllPositions() {
         List<PositionEntity> positionEntities = positionRepository.findAll();
-        return modelMapper.map(positionEntities, new TypeToken<List<PositionDTO>>() {}.getType());
+        return modelMapper.map(positionEntities, POSITIONDTO_LIST_TYPE);
     }
 
     @Override
