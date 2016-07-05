@@ -27,7 +27,7 @@ public class ChannelServiceImpl implements ChannelService {
     @Autowired
     private ChannelRepository channelRepository;
 
-    private final Type CHANNELDTO_LIST_TYPE = new TypeToken<List<ChannelDTO>>() {}.getType();
+    private final static Type CHANNELDTO_LIST_TYPE = new TypeToken<List<ChannelDTO>>() {}.getType();
 
     @Override
     public Collection<ChannelDTO> getAllChannels() {

@@ -30,7 +30,7 @@ public class CandidateServiceImpl implements CandidateService {
     @Autowired
     private CandidateRepository candidateRepository;
 
-    private final Type CANDIDATEDTO_LIST_TYPE = new TypeToken<List<CandidateDTO>>() {}.getType();
+    private final static Type CANDIDATEDTO_LIST_TYPE = new TypeToken<List<CandidateDTO>>() {}.getType();
 
     @Override
     public CandidateDTO getCandidate(Long id) {

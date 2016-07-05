@@ -39,7 +39,7 @@ public class StatesServiceImpl implements StatesService {
     @Autowired
     private CandidateRepository candidateRepository;
 
-    private final Type STATEVIEWDTO_LIST_TYPE = new TypeToken<List<StateViewDTO>>() {}.getType();
+    private final static Type STATEVIEWDTO_LIST_TYPE = new TypeToken<List<StateViewDTO>>() {}.getType();
 
     @Override
     public Collection<CandidateApplicationDTO> getStatesByCandidateId(Long id) {

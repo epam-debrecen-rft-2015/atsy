@@ -27,7 +27,7 @@ public class PositionServiceImpl implements PositionService {
     @Autowired
     private PositionRepository positionRepository;
 
-    private final Type POSITIONDTO_LIST_TYPE = new TypeToken<List<PositionDTO>>() {}.getType();
+    private final static Type POSITIONDTO_LIST_TYPE = new TypeToken<List<PositionDTO>>() {}.getType();
 
     @Override
     public Collection<PositionDTO> getAllPositions() {
