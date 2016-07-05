@@ -13,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.Date;
-import java.util.Locale;
 
 @Controller
 public class NewApplicationPopupController {
@@ -32,7 +31,7 @@ public class NewApplicationPopupController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/secure/new_application_popup")
-    public String saveOrUpdate(@ModelAttribute StateDTO stateDTO, BindingResult result, Locale locale) {
+    public String saveOrUpdate(@ModelAttribute StateDTO stateDTO, BindingResult result) {
         if (!result.hasErrors()) {
             stateDTO.setStateType("newstate");
             stateDTO.setStateIndex(0);

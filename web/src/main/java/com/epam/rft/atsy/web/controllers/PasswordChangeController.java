@@ -21,9 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.Locale;
 
 @Controller
 @RequestMapping(path = "/secure/password/manage")
@@ -53,7 +51,7 @@ public class PasswordChangeController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ModelAndView changePassword(@ModelAttribute PasswordChangeDTO passwordChangeDTO, Locale userLocale, BindingResult bindingResult, HttpServletRequest request) {
+    public ModelAndView changePassword(@ModelAttribute PasswordChangeDTO passwordChangeDTO, BindingResult bindingResult) {
 
         ModelAndView model = new ModelAndView(VIEW_NAME);
         if (bindingResult.hasErrors()) {
