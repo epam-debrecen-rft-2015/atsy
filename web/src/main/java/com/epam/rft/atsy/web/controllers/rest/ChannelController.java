@@ -35,12 +35,12 @@ public class ChannelController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<String> saveOrUpdate(@RequestBody ChannelDTO channelDTO, BindingResult result, Locale locale) {
-        ResponseEntity<String> entity = new ResponseEntity<String>(StringUtils.EMPTY, HttpStatus.OK);
+        ResponseEntity<String> entity = new ResponseEntity<>(StringUtils.EMPTY, HttpStatus.OK);
 
         if (!result.hasErrors()) {
             channelService.saveOrUpdate(channelDTO);
         } else {
-            entity = new ResponseEntity<String>(messageSource.getMessage(EMPTY_POSITION_NAME_MESSAGE_KEY,
+            entity = new ResponseEntity<>(messageSource.getMessage(EMPTY_POSITION_NAME_MESSAGE_KEY,
                     null, locale), HttpStatus.BAD_REQUEST);
         }
         return entity;
@@ -48,14 +48,14 @@ public class ChannelController {
 
     @ExceptionHandler(DuplicateRecordException.class)
     public ResponseEntity handleDuplicateException(Locale locale, DuplicateRecordException ex) {
-        return new ResponseEntity<String>(messageSource.getMessage(DUPLICATE_POSITION_MESSAGE_KEY,
+        return new ResponseEntity<>(messageSource.getMessage(DUPLICATE_POSITION_MESSAGE_KEY,
                 new Object[]{ex.getName()}, locale), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity handleException(Locale locale, Exception ex) {
         LOGGER.error("Error while saving channel changes", ex);
-        return new ResponseEntity<String>(messageSource.getMessage(TECHNICAL_ERROR_MESSAGE_KEY,
+        return new ResponseEntity<>(messageSource.getMessage(TECHNICAL_ERROR_MESSAGE_KEY,
                 null, locale), HttpStatus.BAD_REQUEST);
     }
 
