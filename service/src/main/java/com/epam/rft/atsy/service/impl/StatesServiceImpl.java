@@ -25,8 +25,8 @@ import java.util.List;
 @Service
 public class StatesServiceImpl implements StatesService {
 
-
     public static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
+
     @Resource
     private ModelMapper modelMapper;
 
@@ -38,6 +38,8 @@ public class StatesServiceImpl implements StatesService {
 
     @Autowired
     private CandidateRepository candidateRepository;
+
+    private final static Type STATEVIEWDTO_LIST_TYPE = new TypeToken<List<StateViewDTO>>() {}.getType();
 
     @Override
     public Collection<CandidateApplicationDTO> getStatesByCandidateId(Long id) {
@@ -76,9 +78,7 @@ public class StatesServiceImpl implements StatesService {
     @Override
     public List<StateViewDTO> getStatesByApplicationId(Long applicationId) {
         List<StateEntity> stateEntities = statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationsRepository.findOne(applicationId));
-        Type targetListType = new TypeToken<List<StateViewDTO>>() {
-        }.getType();
-        List<StateViewDTO> stateDTOs=modelMapper.map(stateEntities, targetListType);
+        List<StateViewDTO> stateDTOs=modelMapper.map(stateEntities, STATEVIEWDTO_LIST_TYPE);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 

@@ -27,12 +27,12 @@ public class ChannelServiceImpl implements ChannelService {
     @Autowired
     private ChannelRepository channelRepository;
 
+    private final static Type CHANNELDTO_LIST_TYPE = new TypeToken<List<ChannelDTO>>() {}.getType();
+
     @Override
     public Collection<ChannelDTO> getAllChannels() {
         Collection<ChannelEntity> ChannelEntities = channelRepository.findAll();
-        Type targetListType = new TypeToken<List<ChannelDTO>>() {
-        }.getType();
-        return modelMapper.map(ChannelEntities, targetListType);
+        return modelMapper.map(ChannelEntities, CHANNELDTO_LIST_TYPE);
     }
 
     @Override
