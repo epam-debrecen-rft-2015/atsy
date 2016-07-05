@@ -8,17 +8,27 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class PasswordOldPasswordMatchesRule implements PasswordValidationRule {
 
-    public static final String MESSAGE_KEY="passwordchange.validation.oldpasswordmatch";
+    private static final String MESSAGE_KEY = "passwordchange.validation.oldpasswordmatch";
 
-    @Override
-    public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
-        UserDetails userDetails = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        return bCryptPasswordEncoder.matches(passwordChangeDTO.getOldPassword(), userDetails.getPassword());
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public PasswordOldPasswordMatchesRule() {
+        bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
     @Override
-    public String getErrorMessage() {
+    public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
+        UserDetails userDetails =
+                (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return bCryptPasswordEncoder.matches(passwordChangeDTO.getOldPassword(), userDetails.getPassword());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getErrorMessageKey() {
         return MESSAGE_KEY;
     }
 }

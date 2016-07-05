@@ -76,8 +76,9 @@ public class PasswordChangeController {
                 userDetailsAdapter.setPassword(newPassword);
                 model.addObject(VALIDATION_SUCCESS_KEY, PASSWORDCHANGE_VALIDATION_SUCCESS);
             } catch (PasswordValidationException e) {
-                logger.error(e.getMessage());
-                model.addObject(VALIDATION_ERROR_KEY,e.getMessage());
+                logger.error(e.getMessage(), e);
+
+                model.addObject(VALIDATION_ERROR_KEY, e.getMessageKey());
             }
         }
         return model;

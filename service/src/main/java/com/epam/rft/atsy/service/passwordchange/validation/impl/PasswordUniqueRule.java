@@ -13,28 +13,38 @@ import java.util.List;
 
 @Component
 public class PasswordUniqueRule implements PasswordValidationRule {
+    private static final String MESSAGE_KEY = "passwordchange.validation.unique";
 
     @Resource
     private PasswordChangeService passwordChangeService;
 
-    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public static final String MESSAGE_KEY="passwordchange.validation.unique";
-
-    @Override
-    public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<String> oldPasswords = passwordChangeService.getOldPasswords(((UserDetailsAdapter)principal).getUserId());
-        for(String pass:oldPasswords){
-            if(bCryptPasswordEncoder.matches(passwordChangeDTO.getNewPassword(),pass)){
-                return false;
-            }
-        }
-        return true;
+    public PasswordUniqueRule() {
+        bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
     @Override
-    public String getErrorMessage() {
+    public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
+        UserDetailsAdapter userDetails =
+                (UserDetailsAdapter)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        List<String> oldPasswords = passwordChangeService.getOldPasswords(userDetails.getUserId());
+
+        for (String password : oldPasswords) {
+            if (bCryptPasswordEncoder.matches(passwordChangeDTO.getNewPassword(), password)){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getErrorMessageKey() {
         return MESSAGE_KEY;
     }
 }

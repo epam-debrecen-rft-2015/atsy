@@ -4,17 +4,19 @@ import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
 
 public class PasswordLengthValidationRule implements PasswordValidationRule {
-
-    public static final int PASSWORD_MIN_LENGTH = 6;
-    public static final String MESSAGE_KEY="passwordchange.validation.length";
+    private static final int PASSWORD_MIN_LENGTH = 6;
+    private static final String MESSAGE_KEY = "passwordchange.validation.length";
 
     @Override
     public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
-        return passwordChangeDTO.getNewPassword().length()>= PASSWORD_MIN_LENGTH;
+        return passwordChangeDTO.getNewPassword().length() >= PASSWORD_MIN_LENGTH;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getErrorMessage() {
+    public String getErrorMessageKey() {
         return MESSAGE_KEY;
     }
 }
