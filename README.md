@@ -12,8 +12,8 @@ Running Atsy locally:
 
     mvn tomcat7:run
 
-Pre: U have mysql locally which has a database called atsy, and a user in it with details:
-     travis - no password
+Prerequisites: You have mysql locally which has a database called 'atsy', and a user in it with details:
+     'travis' - no password
 
 Running integration tests as part of the build:
 ===============================================
@@ -48,3 +48,14 @@ Definition of Done
 1. All integration tests pass
 1. CI server could build the project
 1. CI server could run tests
+
+User credentials
+=================
+
+User | Password | Stored hash | Environment description  
+---- | -------- | ----------- | -----------------------  
+Dev | pass2 | $2a$04$QSJkUouEDGfbWAtuxnlf/.Ajen6lviIhrNwKFPPZ.juRn6nLgvBi6 | integration  
+Test | pass3 | $2a$04$6r2eBlucnE3/m0fDYgE3e.eI5akUx55qPMID3O/SlptCIqOFFcCPK | integration  
+Brigi | pass1 | $2a$04$BkbZFudrQjtETU83hFiS3uWNsh7us3wOOnLF3yop9BByd9ZQLdIlq | production  
+
+
