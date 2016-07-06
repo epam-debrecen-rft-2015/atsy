@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.Date;
 
 @Controller
@@ -31,7 +32,7 @@ public class NewApplicationPopupController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/secure/new_application_popup")
-    public String saveOrUpdate(@ModelAttribute StateDTO stateDTO, BindingResult result) {
+    public String saveOrUpdate(@Valid @ModelAttribute StateDTO stateDTO, BindingResult result) {
         if (!result.hasErrors()) {
             stateDTO.setStateType("newstate");
             stateDTO.setStateIndex(0);
