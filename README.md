@@ -36,18 +36,24 @@ Definition of Done
 1. Logging is added
   * when an exepction happens,
   * when a significant event happens (user is deleted, candidate added, etc.). 
-1. Migration script is added if the changes require database modifications.
-1. README.md is updated if there are some changes in the application setup process.
-1. Code is placed in a task related branch (feature branch)
-1. Code for subtasks have a separate branch (sub-task branch)
-1. Before pushing changes in branch which is not tracked remotely use git rebase
+1. Database migrations scripts are honored:
+  * Migration script is added if the changes require database modifications.
+1. Project documentation is kept up-to-date:
+  * README.md is updated if there are some changes in the application setup process.
+1. Version control is kept clean:
+  * Code is placed in a task related branch (feature branch)
+  * Code for subtasks have a separate branch (sub-task branch)
+  * Before pushing changes in branch which is not tracked remotely use git rebase
 1. Pull request is created
-1. mvn tomcat7:run works (manual check)
-1. changed feature does not break (manual check)
-1. All unit tests pass
-1. All integration tests pass
-1. CI server could build the project
-1. CI server could run tests
+1. Functionality does not break:
+  * mvn tomcat7:run works (manual check)
+  * changed feature does not break (manual check)
+  * All unit tests pass
+  * All integration tests pass
+  * CI server could build the project
+  * CI server could run tests
+1. Functionality is complete:
+  * Acceptance criteria is met
 
 Lombok
 ======
