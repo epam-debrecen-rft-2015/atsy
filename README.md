@@ -69,3 +69,12 @@ https://projectlombok.org/download.html
 
 1. installion details:
 https://github.com/mplushnikov/lombok-intellij-plugin
+
+User credentials
+=================
+
+User | Password | Stored hash | Environment description  
+---- | -------- | ----------- | -----------------------  
+Dev | pass2 | $2a$04$QSJkUouEDGfbWAtuxnlf/.Ajen6lviIhrNwKFPPZ.juRn6nLgvBi6 | integration  
+Test | pass3 | $2a$04$6r2eBlucnE3/m0fDYgE3e.eI5akUx55qPMID3O/SlptCIqOFFcCPK | integration  
+Brigi | pass1 | $2a$04$BkbZFudrQjtETU83hFiS3uWNsh7us3wOOnLF3yop9BByd9ZQLdIlq | production  
