@@ -33,7 +33,7 @@ public class RepositoryITApplciationContextInitializer implements ApplicationCon
 
     private void dataSource(ConfigurableApplicationContext configurableApplicationContext) throws NamingException {
         MysqlDataSource dataSource = new MysqlDataSource();
-        dataSource.setUrl("jdbc:mysql://localhost:3306/atsy");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/atsy?useUnicode=true&characterEncoding=utf8");
         dataSource.setUser("travis");
         dataSource.setPassword("");
 
