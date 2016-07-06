@@ -5,8 +5,8 @@ import lombok.*;
 import java.io.Serializable;
 import java.util.Date;
 
-
 @Builder
+@ToString(exclude="password")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

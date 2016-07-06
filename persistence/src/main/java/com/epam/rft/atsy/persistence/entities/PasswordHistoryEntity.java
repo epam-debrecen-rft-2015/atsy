@@ -10,7 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = "password")
 @Entity
 @Table(name = "password_history", schema = "atsy")
 public class PasswordHistoryEntity extends SuperEntity implements Serializable {
