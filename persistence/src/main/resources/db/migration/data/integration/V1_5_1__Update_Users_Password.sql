@@ -1,0 +1,1 @@
+UPDATE users SET user_pwd='$2a$04$QSJkUouEDGfbWAtuxnlf/.Ajen6lviIhrNwKFPPZ.juRn6nLgvBi6' WHERE user_name='Dev';

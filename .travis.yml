@@ -15,11 +15,3 @@ script: mvn clean verify -Pintegration
 notifications:
   email:
   - epam-debrecen-rft-2015@googlegroups.com
-deploy:
-  provider: openshift
-  user: antal_kiss@epam.com
-  password: rft2015
-  app: atsy
-  domain: epamrft
-  on:
-    repo: epam-debrecen-rft-2015/atsy

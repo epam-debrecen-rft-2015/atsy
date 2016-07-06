@@ -32,7 +32,7 @@ Feature: Welcome
     And the user changes the order field to <field>, <order>
     Then the Candidates page appears
     And the list of candidates shown ordered by <field> as <order>
-    Examples:
+  Examples:
       | field     | order |
       | name      | asc   |
       | email     | asc   |
