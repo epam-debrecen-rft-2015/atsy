@@ -11,6 +11,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skipITs>true</skipITs>
         <jacoco.classRatio>0.80</jacoco.classRatio>
         <jacoco.instructionRatio>0.80</jacoco.instructionRatio>
