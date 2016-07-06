@@ -25,9 +25,6 @@ import javax.persistence.NonUniqueResultException;
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
-
-    private static final Logger LOGGER= LoggerFactory.getLogger(UserServiceImpl.class);
-
     @Autowired
     private UserRepository userRepository;
     @Resource
@@ -42,7 +39,7 @@ public class UserServiceImpl implements UserService {
         } catch (NoResultException | EmptyResultDataAccessException | NonUniqueResultException e) {
             throw new UserNotFoundException(e);
         }catch (Exception e){
-            LOGGER.error("User failed to login",e);
+            log.error("User failed to login",e);
             throw new BackendException(e);
         }
 

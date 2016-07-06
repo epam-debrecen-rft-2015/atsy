@@ -46,10 +46,11 @@ public class PasswordChangeServiceImpl implements PasswordChangeService {
         } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
             log.error("Save to repository failed.", ex);
 
-            String historyId = passwordHistoryDTO.getId().toString();
+            String userId = passwordHistoryDTO.getUserId().toString();
 
-            throw new DuplicateRecordException(historyId, "Duplication occurred when saving password history with ID: "
-                                               + historyId, ex);
+            throw new DuplicateRecordException(userId,
+                                               "Duplication occurred when saving password history for user with ID: "
+                                               + userId, ex);
         }
     }
 
