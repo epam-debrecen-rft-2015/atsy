@@ -1,5 +1,6 @@
 package com.epam.rft.atsy.cucumber.welcome;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -66,8 +67,8 @@ public class WelcomeStepDefs {
     @And("the user changes the order field to (.*), (.*)")
     public void the_user_changes_the_order_field_to(String field, String order) {
         WebDriverWait wait = new WebDriverWait(getDriver(), 10);
-        wait.until((Predicate<WebDriver>) (driver -> driver.findElement(By.cssSelector("#candidates_table div.fixed-table-header")) != null));
-        WebElement sortElement = getDriver().findElement(By.cssSelector("#candidates_table div.fixed-table-header th[data-field=" + field + "] div.sortable"));
+        WebElement sortElement = wait.until((Function<WebDriver, WebElement>) (driver -> driver.findElement(By.cssSelector("#candidates_table div.fixed-table-header"))))
+            .findElement(By.cssSelector("th[data-field=" + field + "] div.sortable"));
         String currentOrderCss = sortElement.getAttribute("class");
         if (!(currentOrderCss).contains(order)) {
             sortElement.click();
