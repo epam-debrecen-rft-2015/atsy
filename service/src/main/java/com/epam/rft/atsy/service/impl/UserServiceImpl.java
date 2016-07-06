@@ -16,16 +16,15 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
-
-    private static final Logger LOGGER= LoggerFactory.getLogger(UserServiceImpl.class);
-
     @Autowired
     private UserRepository userRepository;
     @Resource
@@ -40,7 +39,7 @@ public class UserServiceImpl implements UserService {
         } catch (NoResultException | EmptyResultDataAccessException | NonUniqueResultException e) {
             throw new UserNotFoundException(e);
         }catch (Exception e){
-            LOGGER.error("User failed to login",e);
+            log.error("User failed to login",e);
             throw new BackendException(e);
         }
 
@@ -54,8 +53,13 @@ public class UserServiceImpl implements UserService {
         UserEntity entity = modelMapper.map(userDTO, UserEntity.class);
         try {
             return userRepository.save(entity).getId();
-        } catch (ConstraintViolationException | DataIntegrityViolationException constraint) {
-            throw new DuplicateRecordException("User already exists!");
+        } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
+            log.error("Save to repository failed.", ex);
+
+            String userName = entity.getUserName();
+
+            throw new DuplicateRecordException(userName,
+                                               "Duplication occurred when saving user: " + userName, ex);
         }
     }
 
