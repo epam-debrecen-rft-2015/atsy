@@ -28,9 +28,7 @@ Feature: Welcome
       | Candidate A | candidate.a@atsy.com | +36105555555 | -         |
       | Candidate B | candidate.b@atsy.com | +36106666666 | -         |
       | Candidate C | candidate.c@atsy.com | +36107777777 | -         |
-    When the user clicks on the Főoldal button
-    And the Candidate page appears
-    And the user changes the order field to <field>, <order>
+    When the user changes the order field to <field>, <order>
     Then the Candidates page appears
     And the list of candidates shown ordered by <field> as <order>
     Examples:
