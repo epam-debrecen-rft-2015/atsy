@@ -12,7 +12,6 @@ import java.util.List;
 
 @Component
 public class PasswordValidatorImpl implements PasswordValidator {
-
     private final List<PasswordValidationRule> passwordValidationRules;
 
     @Autowired
@@ -31,8 +30,8 @@ public class PasswordValidatorImpl implements PasswordValidator {
     @Override
     public boolean validate(PasswordChangeDTO passwordChangeDTO) throws PasswordValidationException {
         for (PasswordValidationRule passwordValidationRule : passwordValidationRules) {
-            if(!passwordValidationRule.isValid(passwordChangeDTO)) {
-                throw new PasswordValidationException(passwordValidationRule.getErrorMessage());
+            if (!passwordValidationRule.isValid(passwordChangeDTO)) {
+                throw new PasswordValidationException(passwordValidationRule.getErrorMessageKey());
             }
         }
 

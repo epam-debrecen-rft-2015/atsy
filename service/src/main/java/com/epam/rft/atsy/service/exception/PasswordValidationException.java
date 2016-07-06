@@ -1,11 +1,19 @@
 package com.epam.rft.atsy.service.exception;
 
 public class PasswordValidationException extends Exception {
+    private String messageKey;
 
-    public PasswordValidationException() {
+    public PasswordValidationException(String messageKey) {
+        this.messageKey = messageKey;
     }
 
-    public PasswordValidationException(String message) {
-        super(message);
+    public String getMessageKey() {
+        return messageKey;
     }
+
+    @Override
+    public String getMessage() {
+        return "Password validation failed. The message key: " + messageKey;
+    }
+
 }

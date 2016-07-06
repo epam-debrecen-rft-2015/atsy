@@ -4,8 +4,7 @@ import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
 
 public class PasswordNewMatchValidationRule implements PasswordValidationRule {
-
-    public static final String MESSAGE_KEY="passwordchange.validation.newpasswordmatch";
+    private static final String MESSAGE_KEY = "passwordchange.validation.newpasswordmatch";
 
     @Override
     public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
@@ -13,7 +12,7 @@ public class PasswordNewMatchValidationRule implements PasswordValidationRule {
     }
 
     @Override
-    public String getErrorMessage() {
+    public String getErrorMessageKey() {
         return MESSAGE_KEY;
     }
 }
