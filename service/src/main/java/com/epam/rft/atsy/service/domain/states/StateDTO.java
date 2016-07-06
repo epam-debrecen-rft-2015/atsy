@@ -1,8 +1,7 @@
 package com.epam.rft.atsy.service.domain.states;
 
-import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
-import com.epam.rft.atsy.service.domain.PositionDTO;
+import com.epam.rft.atsy.service.domain.states.builder.AbstractStateBuilder;
 import lombok.*;
 
 import java.util.Date;
@@ -19,11 +18,34 @@ public class StateDTO extends AbstractStateDTO {
     private ChannelDTO channel;
 
 
-    @Builder
-    public StateDTO(Long id, Long candidateId, PositionDTO position, ApplicationDTO applicationDTO, Short languageSkill, String description, String result, Long offeredMoney, Long claim, Date feedbackDate, String stateType, Integer stateIndex, Date creationDate, ChannelDTO channel) {
-        super(id, candidateId, position, applicationDTO, languageSkill, description, result, offeredMoney, claim, feedbackDate, stateType, stateIndex);
-        this.creationDate = creationDate;
-        this.channel = channel;
+    public static StateDTOBuilder builder() {
+        return new StateDTOBuilder();
+    }
+
+    public StateDTOBuilder construct() {
+        return new StateDTOBuilder(this);
+    }
+
+
+    public static class StateDTOBuilder extends AbstractStateBuilder<StateDTOBuilder, StateDTO> {
+
+        private StateDTOBuilder(StateDTO stateDTO) {
+            super("StateDTOBuilder", stateDTO);
+        }
+
+        private StateDTOBuilder() {
+            this(new StateDTO());
+        }
+
+        public StateDTOBuilder creationDate(Date creationDate) {
+            object.setCreationDate(creationDate);
+            return this;
+        }
+
+        public StateDTOBuilder channel(ChannelDTO channel) {
+            object.setChannel(channel);
+            return this;
+        }
     }
 
 }
