@@ -14,6 +14,7 @@ import java.util.List;
 
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForAjax;
+import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForPageLoadAfter;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
@@ -23,7 +24,7 @@ public class WelcomeStepDefs {
 
     @When("the user clicks on the Főoldal button")
     public void homeClicked() {
-        getDriver().findElement(By.cssSelector(".navbar .navbar-nav :first-child > a")).click();
+        waitForPageLoadAfter(driver -> driver.findElement(By.cssSelector(".navbar .navbar-nav :first-child > a")).click());
     }
 
     @Then("the Candidates page appears")
