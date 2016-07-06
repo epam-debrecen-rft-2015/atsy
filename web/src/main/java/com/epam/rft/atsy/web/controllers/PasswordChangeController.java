@@ -21,9 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.Locale;
 
 @Controller
 @RequestMapping(path = "/secure/password/manage")
@@ -53,7 +51,7 @@ public class PasswordChangeController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ModelAndView changePassword(@ModelAttribute PasswordChangeDTO passwordChangeDTO, Locale userLocale, BindingResult bindingResult, HttpServletRequest request) {
+    public ModelAndView changePassword(@ModelAttribute PasswordChangeDTO passwordChangeDTO, BindingResult bindingResult) {
 
         ModelAndView model = new ModelAndView(VIEW_NAME);
         if (bindingResult.hasErrors()) {
@@ -64,10 +62,14 @@ public class PasswordChangeController {
                 passwordValidator.validate(passwordChangeDTO);
 
                 String newPassword = bCryptPasswordEncoder.encode(passwordChangeDTO.getNewPassword());
-                PasswordHistoryDTO passwordHistoryDTO = new PasswordHistoryDTO();
-                passwordHistoryDTO.setUserId(userDetailsAdapter.getUserId());
-                passwordHistoryDTO.setPassword(newPassword);
-                passwordHistoryDTO.setChangeDate(new Date());
+
+
+                PasswordHistoryDTO passwordHistoryDTO = PasswordHistoryDTO.builder()
+                        .userId(userDetailsAdapter.getUserId())
+                        .password(newPassword)
+                        .changeDate(new Date())
+                        .build();
+
 
                 UserDTO user = userService.findUserByName(userDetailsAdapter.getUsername());
                 user.setPassword(newPassword);
@@ -76,8 +78,9 @@ public class PasswordChangeController {
                 userDetailsAdapter.setPassword(newPassword);
                 model.addObject(VALIDATION_SUCCESS_KEY, PASSWORDCHANGE_VALIDATION_SUCCESS);
             } catch (PasswordValidationException e) {
-                logger.error(e.getMessage());
-                model.addObject(VALIDATION_ERROR_KEY,e.getMessage());
+                logger.error(e.getMessage(), e);
+
+                model.addObject(VALIDATION_ERROR_KEY, e.getMessageKey());
             }
         }
         return model;

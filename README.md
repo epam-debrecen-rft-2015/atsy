@@ -12,8 +12,8 @@ Running Atsy locally:
 
     mvn tomcat7:run
 
-Prerequisites: You have mysql locally which has a database called 'atsy', and a user in it with details:
-     'travis' - no password
+Pre: U have mysql locally which has a database called atsy, and a user in it with details:
+     travis - no password
 
 Running integration tests as part of the build:
 ===============================================
@@ -36,18 +36,39 @@ Definition of Done
 1. Logging is added
   * when an exepction happens,
   * when a significant event happens (user is deleted, candidate added, etc.). 
-1. Migration script is added if the changes require database modifications.
-1. README.md is updated if there are some changes in the application setup process.
-1. Code is placed in a task related branch (feature branch)
-1. Code for subtasks have a separate branch (sub-task branch)
-1. Before pushing changes in branch which is not tracked remotely use git rebase
+1. Database migrations scripts are honored:
+  * Migration script is added if the changes require database modifications.
+1. Project documentation is kept up-to-date:
+  * README.md is updated if there are some changes in the application setup process.
+1. Version control is kept clean:
+  * Code is placed in a task related branch (feature branch)
+  * Code for subtasks have a separate branch (sub-task branch)
+  * Before pushing changes in branch which is not tracked remotely use git rebase
 1. Pull request is created
-1. mvn tomcat7:run works (manual check)
-1. changed feature does not break (manual check)
-1. All unit tests pass
-1. All integration tests pass
-1. CI server could build the project
-1. CI server could run tests
+1. Functionality does not break:
+  * mvn tomcat7:run works (manual check)
+  * changed feature does not break (manual check)
+  * All unit tests pass
+  * All integration tests pass
+  * CI server could build the project
+  * CI server could run tests
+1. Functionality is complete:
+  * Acceptance criteria is met
+
+Lombok
+======
+
+1. home page:
+https://projectlombok.org/index.html
+
+1. features:
+https://projectlombok.org/features/
+
+1. download:
+https://projectlombok.org/download.html
+
+1. installion details:
+https://github.com/mplushnikov/lombok-intellij-plugin
 
 User credentials
 =================
@@ -57,5 +78,3 @@ User | Password | Stored hash | Environment description
 Dev | pass2 | $2a$04$QSJkUouEDGfbWAtuxnlf/.Ajen6lviIhrNwKFPPZ.juRn6nLgvBi6 | integration  
 Test | pass3 | $2a$04$6r2eBlucnE3/m0fDYgE3e.eI5akUx55qPMID3O/SlptCIqOFFcCPK | integration  
 Brigi | pass1 | $2a$04$BkbZFudrQjtETU83hFiS3uWNsh7us3wOOnLF3yop9BByd9ZQLdIlq | production  
-
-

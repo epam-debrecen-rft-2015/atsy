@@ -5,18 +5,19 @@ import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRul
 import org.apache.commons.lang3.StringUtils;
 
 public class PasswordAllFieldFilledRule implements PasswordValidationRule {
-
-    public static final String MESSAGE_KEY="passwordchange.validation.allfieldfilled";
+    private static final String MESSAGE_KEY = "passwordchange.validation.allfieldfilled";
 
     @Override
     public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
-        return StringUtils.isNotBlank(passwordChangeDTO.getNewPassword()) &&
-                StringUtils.isNotBlank(passwordChangeDTO.getNewPasswordConfirm()) &&
-                StringUtils.isNotBlank(passwordChangeDTO.getOldPassword());
+        String newPassword = passwordChangeDTO.getNewPassword();
+
+        return StringUtils.isNotBlank(newPassword) &&
+                StringUtils.isNotBlank(newPassword) &&
+                StringUtils.isNotBlank(newPassword);
     }
 
     @Override
-    public String getErrorMessage() {
+    public String getErrorMessageKey() {
         return MESSAGE_KEY;
     }
 }

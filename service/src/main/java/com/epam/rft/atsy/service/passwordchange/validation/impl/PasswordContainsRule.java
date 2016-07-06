@@ -4,14 +4,15 @@ import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
 
 public class PasswordContainsRule implements PasswordValidationRule {
-
-    public static final String MESSAGE_KEY="passwordchange.validation.contains";
+    private static final String MESSAGE_KEY = "passwordchange.validation.contains";
 
     @Override
     public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
-        return containsLetters(passwordChangeDTO.getNewPassword()) &&
-                containsNumbers(passwordChangeDTO.getNewPassword()) &&
-                containsSpecial(passwordChangeDTO.getNewPassword());
+        String newPassword = passwordChangeDTO.getNewPassword();
+
+        return containsLetters(newPassword) &&
+                containsNumbers(newPassword) &&
+                containsSpecial(newPassword);
     }
 
     private boolean containsLetters(String password){
@@ -27,7 +28,7 @@ public class PasswordContainsRule implements PasswordValidationRule {
     }
 
     @Override
-    public String getErrorMessage() {
+    public String getErrorMessageKey() {
         return MESSAGE_KEY;
     }
 }
