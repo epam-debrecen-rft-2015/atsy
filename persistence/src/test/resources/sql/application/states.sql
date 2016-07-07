@@ -36,8 +36,6 @@ INSERT INTO states (application_id, state_index)
 
 
 
-
-
 INSERT INTO states (application_id, state_index)
     VALUES ((SELECT id FROM applications a WHERE a.candidate_id = (SELECT id FROM candidates c WHERE c.name = 'Candidate C')
                                                  AND a.channel_id = (SELECT id FROM channels ch WHERE ch.name = 'facebook')
