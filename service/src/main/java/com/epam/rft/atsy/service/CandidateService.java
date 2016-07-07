@@ -1,5 +1,6 @@
 package com.epam.rft.atsy.service;
 
+import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.service.request.FilterRequest;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 
@@ -33,5 +34,8 @@ public interface CandidateService {
      * @return the id of candidate
      */
     Long saveOrUpdate(CandidateDTO candidate);
+
+
+    CandidateDTO getCandidateByName(String name);
 
 }

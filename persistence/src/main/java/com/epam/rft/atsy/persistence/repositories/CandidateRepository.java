@@ -23,4 +23,7 @@ public interface CandidateRepository extends JpaRepository<CandidateEntity, Long
      */
     @Query("select c from CandidateEntity c where c.name like %?1% and c.email like %?2% and c.phone like %?3%")
     List<CandidateEntity> findAllCandidatesByFilterRequest(String name, String email, String phone, Sort sort);
+
+
+    CandidateEntity findByName(String name);
 }
