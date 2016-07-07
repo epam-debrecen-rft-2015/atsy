@@ -1,7 +1,6 @@
 package com.epam.rft.atsy.persistence.repositories;
 
 import com.epam.rft.atsy.persistence.entities.UserEntity;
-import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,7 +17,7 @@ public class UserRepositoryIT extends AbstractRepositoryIT {
     private final String REGISTERED_USER_PASSWORD = "$2a$04$6r2eBlucnE3/m0fDYgE3e.eI5akUx55qPMID3O/SlptCIqOFFcCPK";
 
     @Autowired
-    UserRepository repository;
+    private UserRepository repository;
 
     @Test
     public void findByUserNameAndUserPasswordShouldFindUserForMatchingCredentials() {
@@ -79,6 +78,6 @@ public class UserRepositoryIT extends AbstractRepositoryIT {
         assertThat(registeredUser, notNullValue());
         assertThat(registeredUser.getUserName(),is(REGISTERED_USER_NAME));
         assertThat(registeredUser.getId(), is(1L));
-        assertThat(registeredUser.getUserPassword(), is("$2a$04$6r2eBlucnE3/m0fDYgE3e.eI5akUx55qPMID3O/SlptCIqOFFcCPK"));
+        assertThat(registeredUser.getUserPassword(), is(REGISTERED_USER_PASSWORD));
     }
 }
