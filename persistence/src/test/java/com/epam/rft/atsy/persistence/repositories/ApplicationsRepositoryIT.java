@@ -9,6 +9,9 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -54,7 +57,7 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
                 .id(1L)
                 .name("Fejlesztő")
                 .build();
-        Date currentDate = new Date();
+        Date nearNow = currentDateMinus(5);
 
         // When
         List<ApplicationEntity> result = this.repository.findByCandidateEntity(candidateEntityA);
@@ -63,7 +66,7 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
         assertThat(result, notNullValue());
         assertThat(result.size(), is(1));
 
-        assertApplicationEntity(result.get(0), candidateEntityA, expectedChannelEntity, expectedPositionEntity, currentDate);
+        assertApplicationEntity(result.get(0), candidateEntityA, expectedChannelEntity, expectedPositionEntity, nearNow);
     }
 
     @Test
@@ -86,7 +89,7 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
                 .id(1L)
                 .name("Fejlesztő")
                 .build();
-        Date currentDate = new Date();
+        Date nearNow = currentDateMinus(5);
 
         // When
         List<ApplicationEntity> result = this.repository.findByCandidateEntity(candidateEntityC);
@@ -95,12 +98,12 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
         assertThat(result, notNullValue());
         assertThat(result.size(), is(3));
 
-        assertApplicationEntity(result.get(0), candidateEntityC, expectedChannelEntity, expectedPositionEntity, currentDate);
-        assertApplicationEntity(result.get(1), candidateEntityC, expectedSecondChannelEntity, expectedPositionEntity, currentDate);
-        assertApplicationEntity(result.get(2), candidateEntityC, expectedThirdChannelEntity, expectedPositionEntity, currentDate);
+        assertApplicationEntity(result.get(0), candidateEntityC, expectedChannelEntity, expectedPositionEntity, nearNow);
+        assertApplicationEntity(result.get(1), candidateEntityC, expectedSecondChannelEntity, expectedPositionEntity, nearNow);
+        assertApplicationEntity(result.get(2), candidateEntityC, expectedThirdChannelEntity, expectedPositionEntity, nearNow);
     }
 
-    private void assertApplicationEntity(ApplicationEntity application, CandidateEntity expectedCandidateEntity, ChannelEntity expectedChannelEntity, PositionEntity expectedPositionEntity, Date currentDate) {
+    private void assertApplicationEntity(ApplicationEntity application, CandidateEntity expectedCandidateEntity, ChannelEntity expectedChannelEntity, PositionEntity expectedPositionEntity, Date threshold) {
         assertThat(application, notNullValue());
 
         assertThat(application.getCandidateEntity(), notNullValue());
@@ -113,7 +116,11 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
         assertThat(application.getPositionEntity(), is(expectedPositionEntity));
 
         assertThat(application.getCreationDate(), notNullValue());
-        assertThat(application.getCreationDate(), lessThanOrEqualTo(currentDate));
+        assertThat(application.getCreationDate(), greaterThan(threshold));
+    }
+
+    private Date currentDateMinus(long seconds) {
+        return Date.from(ZonedDateTime.now().minusSeconds(seconds).toInstant());
     }
 
 }
