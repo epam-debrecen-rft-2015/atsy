@@ -64,4 +64,10 @@ public class CandidateServiceImpl implements CandidateService {
                                                "Duplication occurred when saving candidate: " + candidateName, ex);
         }
     }
+
+    @Override
+    public CandidateDTO getCandidateByName(String name) {
+        CandidateEntity candidateEntity = candidateRepository.findByName(name);
+        return modelMapper.map(candidateEntity, CandidateDTO.class);
+    }
 }
