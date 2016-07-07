@@ -1,16 +1,17 @@
 package com.epam.rft.atsy.persistence.repositories;
 
 import com.epam.rft.atsy.persistence.entities.*;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
 
 
@@ -26,9 +27,20 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
     public static final String CANDIDATE_NAME_B = "Candidate B";
     public static final String CANDIDATE_NAME_C = "Candidate C";
 
+    public static final String CHANNELNAME_AS_DIRECT = "direkt";
+    public static final String CHANNELNAME_AS_FACEBOOK = "facebook";
+    public static final String POSITIONNAME_AS_DEVELOPER = "Fejlesztő";
+
     public static final int ZEROTH_ELEMENT = 0;
     public static final int ZERO_ELEMENT = 0;
     public static final int ONE_ELEMENT = 1;
+    public static final int THREE_ELEMENT = 3;
+    public static final long FIRST_ID = 1L;
+    public static final long CHANNEL_ID = 4L;
+
+    public static final int biggestStateIndexNumber = 5;
+    public static final int middleStateIndexNumber = 3;
+    public static final int smallestStateIndexNumber = 1;
 
     @Autowired
     private ApplicationsRepository applicationsRepository;
@@ -73,7 +85,7 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
         StateEntity stateEntity = stateEntityList.get(ZEROTH_ELEMENT);
 
         assertThat(stateEntity, notNullValue());
-        assertApplicationEntity(stateEntity.getApplicationEntity(), getExpectedApplicationEntityForSingleState());
+        assertApplicationEntity(stateEntity.getApplicationEntity(), getExpectedApplicationEntity(CANDIDATE_NAME_B, FIRST_ID, CHANNELNAME_AS_DIRECT, FIRST_ID, POSITIONNAME_AS_DEVELOPER));
         assertThat(stateEntity.getStateIndex(), is(ONE_ELEMENT));
     }
 
@@ -86,9 +98,48 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
         // When
         List<StateEntity> stateEntityList = this.statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationEntityList.get(ZEROTH_ELEMENT));
 
+        // Then
+
+        assertThat(stateEntityList, notNullValue());
+        assertThat(stateEntityList.size(), is(THREE_ELEMENT));
+
+        checkSortingValidationWithThreeElements(stateEntityList);
+
+    }
 
 
+    private void checkSortingValidationWithThreeElements(List<StateEntity> stateEntityList) {
+        List<StateEntity> expectedStateEntityList = getExpectedSortingEntityListWithThreeElements();
 
+        assertThat(stateEntityList, notNullValue());
+        assertThat(expectedStateEntityList, notNullValue());
+        assertThat(stateEntityList.size(), is(expectedStateEntityList.size()));
+
+
+        for (int i = 0; i < expectedStateEntityList.size(); ++i) {
+            assertStateEntity(stateEntityList.get(i), expectedStateEntityList.get(i));
+        }
+    }
+
+
+    private List<StateEntity> getExpectedSortingEntityListWithThreeElements() {
+
+        List<StateEntity> stateEntityList = Arrays.asList(StateEntity.builder()
+                .applicationEntity(getExpectedApplicationEntity(CANDIDATE_NAME_C, CHANNEL_ID, CHANNELNAME_AS_FACEBOOK, FIRST_ID, POSITIONNAME_AS_DEVELOPER))
+                .stateIndex(biggestStateIndexNumber)
+                .build(),
+
+                StateEntity.builder()
+                        .applicationEntity(getExpectedApplicationEntity(CANDIDATE_NAME_C, CHANNEL_ID, CHANNELNAME_AS_FACEBOOK, FIRST_ID, POSITIONNAME_AS_DEVELOPER))
+                        .stateIndex(middleStateIndexNumber)
+                        .build(),
+                StateEntity.builder()
+                        .applicationEntity(getExpectedApplicationEntity(CANDIDATE_NAME_C, CHANNEL_ID, CHANNELNAME_AS_FACEBOOK, FIRST_ID, POSITIONNAME_AS_DEVELOPER))
+                        .stateIndex(smallestStateIndexNumber)
+                        .build()
+        );
+
+        return stateEntityList;
     }
 
 
@@ -96,10 +147,10 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
 
     private List<ApplicationEntity> checkValidationGivenProcedureAndGetApplicationListByCandidateNameAndSizeOfApplicationList(String candidateName, Integer expectedSizeOfApplicationList) {
         // Given
-        CandidateEntity candidateEntityB = this.candidateRepository.findByName(candidateName);
-        assertThat(candidateEntityB, notNullValue());
+        CandidateEntity candidateEntity = this.candidateRepository.findByName(candidateName);
+        assertThat(candidateEntity, notNullValue());
 
-        List<ApplicationEntity> applicationEntityList = this.applicationsRepository.findByCandidateEntity(candidateEntityB);
+        List<ApplicationEntity> applicationEntityList = this.applicationsRepository.findByCandidateEntity(candidateEntity);
         assertThat(applicationEntityList, notNullValue());
         assertThat(applicationEntityList.size(), is(expectedSizeOfApplicationList));
 
@@ -107,41 +158,47 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
     }
 
 
-    private ApplicationEntity getExpectedApplicationEntityForSingleState() {
-        CandidateEntity candidateEntityB = this.candidateRepository.findByName(CANDIDATE_NAME_B);
+
+    private ApplicationEntity getExpectedApplicationEntity(String candidateName, Long channelId, String channelName, Long positionId, String positionName) {
+
+        CandidateEntity candidateEntity = this.candidateRepository.findByName(candidateName);
 
         ChannelEntity expectedChannelEntity = ChannelEntity.builder()
-                .id(1L)
-                .name("direkt")
+                .id(channelId)
+                .name(channelName)
                 .build();
 
         PositionEntity expectedPositionEntity = PositionEntity.builder()
-                .id(1L)
-                .name("Fejlesztő")
+                .id(positionId)
+                .name(positionName)
                 .build();
 
         Date currentDate = new Date();
 
-
-        Long expectedApplicationId = this.applicationsRepository.findByCandidateEntity(candidateEntityB).get(0).getId();
+        Long expectedApplicationId = this.applicationsRepository.findByCandidateEntity(candidateEntity).get(ZEROTH_ELEMENT).getId();
         ApplicationEntity expectedApplicationEntity = ApplicationEntity.builder()
                 .id(expectedApplicationId)
                 .positionEntity(expectedPositionEntity)
                 .channelEntity(expectedChannelEntity)
-                .candidateEntity(candidateEntityB)
+                .candidateEntity(candidateEntity)
                 .creationDate(currentDate)
                 .build();
 
         return expectedApplicationEntity;
-
     }
 
 
+    private void assertStateEntity(StateEntity stateEntity, StateEntity expectedStateEntity) {
+        assertThat(stateEntity, notNullValue());
+        assertThat(expectedStateEntity, notNullValue());
 
+        assertThat(stateEntity.getStateIndex(), notNullValue());
+        assertThat(expectedStateEntity.getStateIndex(), notNullValue());
+        assertThat(stateEntity.getStateIndex(), is(expectedStateEntity.getStateIndex()));
 
-
-    private void assertStateEntityTest(StateEntity stateEntity, StateEntity exptectedStateEntity) {
-
+        assertThat(stateEntity.getApplicationEntity(), notNullValue());
+        assertThat(expectedStateEntity.getApplicationEntity(), notNullValue());
+        assertApplicationEntity(stateEntity.getApplicationEntity(), expectedStateEntity.getApplicationEntity());
     }
 
     private void assertApplicationEntity(ApplicationEntity application, ApplicationEntity expectedApplicationEntity) {
