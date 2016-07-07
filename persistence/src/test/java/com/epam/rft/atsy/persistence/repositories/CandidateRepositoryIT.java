@@ -1,10 +1,14 @@
 package com.epam.rft.atsy.persistence.repositories;
 
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
+import com.epam.rft.atsy.persistence.entities.ChannelEntity;
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -13,33 +17,38 @@ import static org.junit.Assert.assertThat;
 
 public class CandidateRepositoryIT extends AbstractRepositoryIT {
 
+    private static String possibleName = "date A";
+    private static String possibleEmail = "atsy.";
+    private static String possiblePhone = "77";
+
+    private static List<CandidateEntity> positiveTestCases =
+            Arrays.asList(
+                    CandidateEntity.builder().name("").email("").phone("").build(),
+                    CandidateEntity.builder().name("").email("").phone(possiblePhone).build(),
+                    CandidateEntity.builder().name("").email(possibleEmail).phone("").build(),
+                    CandidateEntity.builder().name(possibleName).email("").phone("").build(),
+                    CandidateEntity.builder().name("").email(possibleEmail).phone(possiblePhone).build(),
+                    CandidateEntity.builder().name(possibleName).email("").phone(possiblePhone).build(),
+                    CandidateEntity.builder().name(possibleName).email(possibleEmail).phone("").build(),
+                    CandidateEntity.builder().name(possibleName).email(possibleEmail).phone(possiblePhone).build()
+
+            );
+
     @Autowired
     private CandidateRepository candidateRepository;
 
     @Test
     public void findAllCandidatesByFilterRequestWithValidData() {
-        for (int i = 1; i < 9; i++) {
-
+        for (CandidateEntity candidate : positiveTestCases) {
             //Given
-            String name = "", email = "", phone = "";
-
-            if (i / 2 > 0) {
-                name = "date";
-            }
-
-            if (i % 4 == 0) {
-                email = "atsy.";
-            }
-
-            if (i % 8 == 0) {
-                phone = "36";
-            }
+            String name = candidate.getName();
+            String email = candidate.getEmail();
+            String phone = candidate.getPhone();
 
             //When
             List<CandidateEntity> result
                     = this.candidateRepository.findAllCandidatesByFilterRequest(name, email, phone, new Sort(Sort.DEFAULT_DIRECTION, "name"));
 
-            System.err.println("i="+ i);
             System.err.println("name:" + name);
             System.err.println("email:" + email);
             System.err.println("phone:" + phone);
