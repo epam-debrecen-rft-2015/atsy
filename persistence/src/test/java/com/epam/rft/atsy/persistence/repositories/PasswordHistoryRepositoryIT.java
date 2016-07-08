@@ -2,10 +2,12 @@ package com.epam.rft.atsy.persistence.repositories;
 
 import com.epam.rft.atsy.persistence.entities.PasswordHistoryEntity;
 import com.epam.rft.atsy.persistence.entities.UserEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -49,7 +51,7 @@ public class PasswordHistoryRepositoryIT extends AbstractRepositoryIT {
     public void findByUserEntityShouldFindSinglePasswordHistoryForUserWithSinglePasswordHistory() {
         //Given
         UserEntity user = this.userRepository.findByUserName(TEST_USERNAME_WITH_SINGLE_PASSWORD_HISTORY);
-        Date currentDate = new Date();
+        Date nearNow = currentDateMinus(5);
 
         //When
         List<PasswordHistoryEntity> result = this.repository.findByUserEntity(user);
@@ -57,14 +59,14 @@ public class PasswordHistoryRepositoryIT extends AbstractRepositoryIT {
         //Then
         assertThat(result, notNullValue());
         assertThat(result.size(), is(1));
-        assertPasswordHistoryEntity(result.get(0), user, user.getUserPassword(), currentDate);
+        assertPasswordHistoryEntity(result.get(0), user, user.getUserPassword(), nearNow);
     }
 
     @Test
     public void findByUserEntityShouldFindThreePasswordHistoryForUserWithThreePasswordHistory() {
         //Given
         UserEntity user = this.userRepository.findByUserName(TEST_USERNAME_WITH_THREE_PASSWORD_HISTORY);
-        Date currentDate = new Date();
+        Date nearNow = currentDateMinus(5);
 
         //When
         List<PasswordHistoryEntity> result = this.repository.findByUserEntity(user);
@@ -76,17 +78,17 @@ public class PasswordHistoryRepositoryIT extends AbstractRepositoryIT {
         assertPasswordHistoryEntity(result.get(0),
                 user,
                 user.getUserPassword(),
-                currentDate);
+                nearNow);
 
         assertPasswordHistoryEntity(result.get(1),
                 user,
                 TEST_PASSWORD_1_FOR_USER_WITH_THREE_PASSWORD_HISTORY,
-                currentDate);
+                nearNow);
 
         assertPasswordHistoryEntity(result.get(2),
                 user,
                 TEST_PASSWORD_2_FOR_USER_WITH_THREE_PASSWORD_HISTORY,
-                currentDate);
+                nearNow);
 
     }
 
@@ -103,14 +105,14 @@ public class PasswordHistoryRepositoryIT extends AbstractRepositoryIT {
     public void findOldestPasswordShouldFindOldestPasswordHistoryForUserWithThreePasswordHistory() {
         //Given
         UserEntity user = this.userRepository.findByUserName(TEST_USERNAME_WITH_THREE_PASSWORD_HISTORY);
-        Date currentDate = new Date();
+        Date nearNow = currentDateMinus(5);
 
         //When
         PasswordHistoryEntity pwHistory = this.repository.findOldestPassword(TEST_USER_ID_WITH_THREE_PASSWORD_HISTORY);
 
         //Then
         assertThat(pwHistory, notNullValue());
-        assertPasswordHistoryEntity(pwHistory, user, ACTUAL_PASSWORD_FOR_USER_WITH_THREE_PASSWORD_HISTORY, currentDate);
+        assertPasswordHistoryEntity(pwHistory, user, ACTUAL_PASSWORD_FOR_USER_WITH_THREE_PASSWORD_HISTORY, nearNow);
     }
 
     private void assertPasswordHistoryEntity(PasswordHistoryEntity actual,
@@ -127,8 +129,12 @@ public class PasswordHistoryRepositoryIT extends AbstractRepositoryIT {
         assertThat(actual.getPassword(), is(expectedPassword));
 
         assertThat(actual.getChangeDate(), notNullValue());
-        assertThat(actual.getChangeDate(), lessThanOrEqualTo(currentDate));
+        assertThat(actual.getChangeDate(), greaterThan(currentDate));
 
+    }
+
+    private Date currentDateMinus(long seconds) {
+        return Date.from(ZonedDateTime.now().minusSeconds(seconds).toInstant());
     }
 
 }
