@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class PositionController {
         return positionService.getAllPositions();
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> saveOrUpdate(@RequestBody PositionDTO positionDTO, BindingResult result, Locale locale) {
         ResponseEntity<String> entity = new ResponseEntity<>(StringUtils.EMPTY, HttpStatus.OK);
 
