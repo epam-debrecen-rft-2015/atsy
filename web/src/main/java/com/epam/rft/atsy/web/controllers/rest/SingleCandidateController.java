@@ -3,6 +3,7 @@ package com.epam.rft.atsy.web.controllers.rest;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
+import com.epam.rft.atsy.web.MediaTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -29,9 +30,6 @@ public class SingleCandidateController {
     private static final String TECHNICAL_ERROR_MESSAGE_KEY = "technical.error.message";
     private static final Logger LOGGER = LoggerFactory.getLogger(SingleCandidateController.class);
 
-    private static final MediaType TEXT_PLAIN_UTF8 =
-            new MediaType("text", "plain", Charset.forName("UTF-8"));
-
     @Resource
     private CandidateService candidateService;
 
@@ -55,7 +53,7 @@ public class SingleCandidateController {
     public ResponseEntity handleDuplicateException(Locale locale, DuplicateRecordException ex) {
         HttpHeaders headers = new HttpHeaders();
 
-        headers.setContentType(TEXT_PLAIN_UTF8);
+        headers.setContentType(MediaTypes.TEXT_PLAIN_UTF8);
 
         return new ResponseEntity<>(messageSource.getMessage(DUPLICATE_CANDIDATE_ERROR_KEY,
                 new Object[]{ex.getName()}, locale), headers, HttpStatus.BAD_REQUEST);
@@ -67,7 +65,7 @@ public class SingleCandidateController {
 
         HttpHeaders headers = new HttpHeaders();
 
-        headers.setContentType(TEXT_PLAIN_UTF8);
+        headers.setContentType(MediaTypes.TEXT_PLAIN_UTF8);
 
         return new ResponseEntity<>(messageSource.getMessage(TECHNICAL_ERROR_MESSAGE_KEY,
                 null, locale), headers, HttpStatus.BAD_REQUEST);

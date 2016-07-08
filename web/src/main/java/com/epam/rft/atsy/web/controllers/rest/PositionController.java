@@ -3,6 +3,7 @@ package com.epam.rft.atsy.web.controllers.rest;
 import com.epam.rft.atsy.service.PositionService;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
+import com.epam.rft.atsy.web.MediaTypes;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +27,6 @@ public class PositionController {
     private static final String EMPTY_POSITION_NAME_MESSAGE_KEY = "settings.positions.error.empty";
     private static final String TECHNICAL_ERROR_MESSAGE_KEY = "technical.error.message";
     private static final Logger LOGGER = LoggerFactory.getLogger(PositionController.class);
-
-    private static final MediaType TEXT_PLAIN_UTF8 =
-            new MediaType("text", "plain", Charset.forName("UTF-8"));
 
     @Resource
     private PositionService positionService;
@@ -57,7 +55,7 @@ public class PositionController {
     public ResponseEntity handleDuplicateException(Locale locale, DuplicateRecordException ex) {
         HttpHeaders headers = new HttpHeaders();
 
-        headers.setContentType(TEXT_PLAIN_UTF8);
+        headers.setContentType(MediaTypes.TEXT_PLAIN_UTF8);
 
         return new ResponseEntity<>(messageSource.getMessage(DUPLICATE_POSITION_MESSAGE_KEY,
                 new Object[]{ex.getName()}, locale), headers, HttpStatus.BAD_REQUEST);
@@ -69,7 +67,7 @@ public class PositionController {
 
         HttpHeaders headers = new HttpHeaders();
 
-        headers.setContentType(TEXT_PLAIN_UTF8);
+        headers.setContentType(MediaTypes.TEXT_PLAIN_UTF8);
 
         return new ResponseEntity<>(messageSource.getMessage(TECHNICAL_ERROR_MESSAGE_KEY,
                 null, locale), headers, HttpStatus.BAD_REQUEST);
