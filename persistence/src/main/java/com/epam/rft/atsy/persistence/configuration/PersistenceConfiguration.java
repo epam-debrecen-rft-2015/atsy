@@ -33,7 +33,6 @@ public class PersistenceConfiguration {
     @Bean(initMethod = "migrate")
     public Flyway flyway(Environment env) {
 
-        ((AbstractEnvironment) env).getPropertySources().addBefore("servletContextInitParams", ((AbstractEnvironment) env).getPropertySources().get("systemProperties"));
         Flyway flyway = new Flyway();
         flyway.setBaselineOnMigrate(true);
         flyway.setDataSource(dataSource());
@@ -79,9 +78,6 @@ public class PersistenceConfiguration {
 
     @Bean
     public static PropertyPlaceholderConfigurer placeHolderConfigurer() {
-        PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
-        configurer.setSystemPropertiesMode(PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
-        return configurer;
-
+        return new PropertyPlaceholderConfigurer();
     }
 }
