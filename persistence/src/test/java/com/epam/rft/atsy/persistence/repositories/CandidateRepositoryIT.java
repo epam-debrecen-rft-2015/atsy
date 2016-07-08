@@ -75,6 +75,26 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         }
     }
 
+    @Test
+    public void findAllCandidateyByFilterRequestWithValidDataSortedByNameInDescendingOrder() {
+        for (CandidateEntity candidate : POSITIVE_CANDIDATES_TEST) {
+            //Given
+            final String name = candidate.getName();
+            final String email = candidate.getEmail();
+            final String phone = candidate.getPhone();
+
+            //When
+            List<CandidateEntity> result = this.candidateRepository.findAllCandidatesByFilterRequest(
+                    name,
+                    email,
+                    phone,
+                    new Sort(createSortOrder(Sort.Direction.DESC, "name")));
+
+            //Then
+            assertCandidateEntityListWithSorting(result, name, email, phone, createSortOrder(Sort.Direction.DESC, "name"));
+        }
+    }
+
     private void assertCandidateEntityListWithSorting(List<CandidateEntity> candidates,
                                                       String expectedName,
                                                       String expectedEmail,
@@ -109,7 +129,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
             if (sorting.getProperty().equals("name")) {
                 if (sorting.isAscending()) {
                     for (CandidateEntity ent : candidates) {
-                        if (prev.getName().compareTo(ent.getName()) >= 0) {
+                        if (prev.getName().compareTo(ent.getName()) > 0) {
                             invariant = false;
                             break;
                         } else {
@@ -118,7 +138,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
                     }
                 } else {
                     for (CandidateEntity ent : candidates) {
-                        if (prev.getName().compareTo(ent.getName()) <= 0) {
+                        if (prev.getName().compareTo(ent.getName()) < 0) {
                             invariant = false;
                             break;
                         } else {
@@ -129,7 +149,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
             } else if (sorting.getProperty().equals("email")) {
                 if (sorting.isAscending()) {
                     for (CandidateEntity ent : candidates) {
-                        if (prev.getEmail().compareTo(ent.getEmail()) >= 0) {
+                        if (prev.getEmail().compareTo(ent.getEmail()) > 0) {
                             invariant = false;
                             break;
                         } else {
@@ -138,7 +158,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
                     }
                 } else {
                     for (CandidateEntity ent : candidates) {
-                        if (prev.getEmail().compareTo(ent.getEmail()) <= 0) {
+                        if (prev.getEmail().compareTo(ent.getEmail()) < 0) {
                             invariant = false;
                             break;
                         } else {
@@ -149,7 +169,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
             } else if (sorting.getProperty().equals("phone")) {
                 if (sorting.isAscending()) {
                     for (CandidateEntity ent : candidates) {
-                        if (prev.getPhone().compareTo(ent.getPhone()) >= 0) {
+                        if (prev.getPhone().compareTo(ent.getPhone()) > 0) {
                             invariant = false;
                             break;
                         } else {
@@ -158,7 +178,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
                     }
                 } else {
                     for (CandidateEntity ent : candidates) {
-                        if (prev.getEmail().compareTo(ent.getEmail()) <= 0) {
+                        if (prev.getEmail().compareTo(ent.getEmail()) < 0) {
                             invariant = false;
                             break;
                         } else {
