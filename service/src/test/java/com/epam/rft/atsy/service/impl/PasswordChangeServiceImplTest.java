@@ -4,8 +4,6 @@ import com.epam.rft.atsy.persistence.entities.PasswordHistoryEntity;
 import com.epam.rft.atsy.persistence.entities.UserEntity;
 import com.epam.rft.atsy.persistence.repositories.PasswordHistoryRepository;
 import com.epam.rft.atsy.persistence.repositories.UserRepository;
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -20,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,7 +37,7 @@ public class PasswordChangeServiceImplTest {
     private PasswordChangeServiceImpl sut;
 
     @Test(expected = IllegalArgumentException.class)
-    public void getOldPasswordShouldThrowIAEWhenIdIsNull() {
+    public void getOldPasswordShouldThrowIAEWhenUserIdIsNull() {
         // Given
 
         // When
@@ -121,6 +119,59 @@ public class PasswordChangeServiceImplTest {
 
         then(this.userRepository).should().findOne(ID);
         then(this.passwordHistoryRepository).should().findByUserEntity(USER);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deleteOldestPasswordShouldThrowIAEWhenUserIdIsNull() {
+        // Given
+
+        // When
+        this.sut.deleteOldestPassword(null);
+
+        // Then
+    }
+
+    @Test(expected = DataAccessException.class)
+    public void deleteOldestPasswordShouldDelegateDataAccessExceptionWhenQueryingOldestPassword() {
+        // Given
+        final Long ID = 1L;
+        given(this.passwordHistoryRepository.findOldestPassword(ID)).willThrow(DataIntegrityViolationException.class);
+
+        // When
+        this.sut.deleteOldestPassword(ID);
+
+        // Then
+    }
+
+    @Test(expected = DataAccessException.class)
+    public void deleteOldestPasswordShouldDelegateDataAccessExceptionWhenDeletingHistoryEntity() {
+        // Given
+        final Long ID = 1L;
+        final PasswordHistoryEntity HISTORY_ENTRY = new PasswordHistoryEntity();
+        given(this.passwordHistoryRepository.findOldestPassword(ID)).willReturn(HISTORY_ENTRY);
+        willThrow(DataIntegrityViolationException.class).given(this.passwordHistoryRepository).delete(HISTORY_ENTRY);
+
+        // When
+        this.sut.deleteOldestPassword(ID);
+
+        // Then
+    }
+
+    @Test
+    public void deleteOldestPasswordShouldDeleteHistoryEntity() {
+        // Given
+        final Long ID = 1L;
+        final PasswordHistoryEntity HISTORY_ENTRY = new PasswordHistoryEntity();
+        given(this.passwordHistoryRepository.findOldestPassword(ID)).willReturn(HISTORY_ENTRY);
+
+        // When
+        this.sut.deleteOldestPassword(ID);
+
+        // Then
+        then(this.passwordHistoryRepository).should().findOldestPassword(ID);
+        then(this.passwordHistoryRepository).should().delete(HISTORY_ENTRY);
+        verifyNoMoreInteractions(this.passwordHistoryRepository);
+        verifyZeroInteractions(this.userRepository);
     }
 
 }

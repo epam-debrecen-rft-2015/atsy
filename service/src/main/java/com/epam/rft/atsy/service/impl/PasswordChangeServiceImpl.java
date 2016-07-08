@@ -57,9 +57,9 @@ public class PasswordChangeServiceImpl implements PasswordChangeService {
     }
 
     @Override
-    public List<String> getOldPasswords(Long id) {
-        Assert.notNull(id);
-        List<PasswordHistoryEntity> oldPasswords = passwordHistoryRepository.findByUserEntity(userRepository.findOne(id));
+    public List<String> getOldPasswords(Long userId) {
+        Assert.notNull(userId);
+        List<PasswordHistoryEntity> oldPasswords = passwordHistoryRepository.findByUserEntity(userRepository.findOne(userId));
         List<String> passwords = new ArrayList<>();
         for(PasswordHistoryEntity pass:oldPasswords){
             passwords.add(pass.getPassword());
@@ -69,6 +69,7 @@ public class PasswordChangeServiceImpl implements PasswordChangeService {
 
     @Override
     public void deleteOldestPassword(Long userId) {
+        Assert.notNull(userId);
         PasswordHistoryEntity entity = passwordHistoryRepository.findOldestPassword(userId);
         passwordHistoryRepository.delete(entity);
     }
