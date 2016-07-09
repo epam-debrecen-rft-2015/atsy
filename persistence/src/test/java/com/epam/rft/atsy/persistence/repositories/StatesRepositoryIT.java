@@ -14,14 +14,12 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
-
 /**
  * Created by Gabor_Ivanyi-Nagy on 7/7/2016.
  */
 
 @Sql("classpath:sql/states/states.sql")
 public class StatesRepositoryIT extends AbstractRepositoryIT {
-
 
     public static final String CANDIDATE_NAME_A = "Candidate A";
     public static final String CANDIDATE_NAME_B = "Candidate B";
@@ -31,28 +29,23 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
     public static final String CHANNEL_NAME_FACEBOOK = "facebook";
     public static final String POSITION_NAME_DEVELOPER = "Fejlesztő";
 
-
     public static final int ZEROTH_ELEMENT = 0;
     public static final int VALUE_ONE = 1;
     public static final int VALUE_THREE = 3;
 
+    public static final int BIGGEST_STATE_INDEX_NUMBER = 5;
+    public static final int MIDDLE_STATE_INDEX_NUMBER = 3;
+    public static final int SMALLEST_STATE_INDEX_NUMBER = 1;
+
     public static final long FIRST_ID = 1L;
     public static final long FOURTH_ID = 4L;
 
-    public static final int biggestStateIndexNumber = 5;
-    public static final int middleStateIndexNumber = 3;
-    public static final int smallestStateIndexNumber = 1;
-
-
     @Autowired
     private ApplicationsRepository applicationsRepository;
-
     @Autowired
     private StatesRepository statesRepository;
-
     @Autowired
     private CandidateRepository candidateRepository;
-
 
     @Test
     public void findTopByApplicationEntityOrderByStateIndexDescShouldNotFindStateForApplicationWithoutStates() {
@@ -79,7 +72,6 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
         assertThat(stateEntityList, empty());
     }
 
-
     @Test
     public void findTopByApplicationEntityOrderByStateIndexDescShouldFindSingleStateForApplicationWithSingleState() {
         // Given
@@ -100,12 +92,14 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
         StateEntity expectedStateEntity = getExpectedStateEntityForSingleState();
 
         // When
-        StateEntity stateEntity = this.statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationEntity).get(ZEROTH_ELEMENT);
+        List<StateEntity> stateEntityList = this.statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationEntity);
+        assertThat(stateEntityList, notNullValue());
+        assertThat(stateEntityList.size(), is(VALUE_ONE));
+        StateEntity stateEntity = stateEntityList.get(ZEROTH_ELEMENT);
 
         // Then
         assertStateEntity(stateEntity, expectedStateEntity);
     }
-
 
     @Test
     public void findTopByApplicationEntityOrderByStateIndexDescShouldFindThreeStateForApplicationWithThreeState() {
@@ -134,7 +128,6 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
         checkSortingValidationWithThreeElements(stateEntityList);
     }
 
-
     private void checkSortingValidationWithThreeElements(List<StateEntity> stateEntityList) {
         List<StateEntity> expectedStateEntityList = getExpectedSortingStateEntityListWithThreeElements();
 
@@ -154,27 +147,24 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
                 .build();
     }
 
-
     private List<StateEntity> getExpectedSortingStateEntityListWithThreeElements() {
-
         List<StateEntity> stateEntityList = Arrays.asList(StateEntity.builder()
                         .applicationEntity(getExpectedApplicationEntity(CANDIDATE_NAME_C, FOURTH_ID, CHANNEL_NAME_FACEBOOK, FIRST_ID, POSITION_NAME_DEVELOPER))
-                        .stateIndex(biggestStateIndexNumber)
+                        .stateIndex(BIGGEST_STATE_INDEX_NUMBER)
                         .build(),
 
                 StateEntity.builder()
                         .applicationEntity(getExpectedApplicationEntity(CANDIDATE_NAME_C, FOURTH_ID, CHANNEL_NAME_FACEBOOK, FIRST_ID, POSITION_NAME_DEVELOPER))
-                        .stateIndex(middleStateIndexNumber)
+                        .stateIndex(MIDDLE_STATE_INDEX_NUMBER)
                         .build(),
                 StateEntity.builder()
                         .applicationEntity(getExpectedApplicationEntity(CANDIDATE_NAME_C, FOURTH_ID, CHANNEL_NAME_FACEBOOK, FIRST_ID, POSITION_NAME_DEVELOPER))
-                        .stateIndex(smallestStateIndexNumber)
+                        .stateIndex(SMALLEST_STATE_INDEX_NUMBER)
                         .build()
         );
 
         return stateEntityList;
     }
-
 
     private ApplicationEntity getApplicationByCandidateName(String candidateName) {
         // Given
@@ -182,9 +172,7 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
         return this.applicationsRepository.findByCandidateEntity(candidateEntity).get(ZEROTH_ELEMENT);
     }
 
-
     private ApplicationEntity getExpectedApplicationEntity(String candidateName, Long channelId, String channelName, Long positionId, String positionName) {
-
         CandidateEntity candidateEntity = this.candidateRepository.findByName(candidateName);
 
         ChannelEntity expectedChannelEntity = ChannelEntity.builder()
@@ -211,7 +199,6 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
         return expectedApplicationEntity;
     }
 
-
     private void assertStateEntity(StateEntity stateEntity, StateEntity expectedStateEntity) {
         assertThat(stateEntity, notNullValue());
         assertThat(expectedStateEntity, notNullValue());
@@ -222,7 +209,6 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
 
         assertThat(stateEntity.getApplicationEntity(), notNullValue());
         assertThat(expectedStateEntity.getApplicationEntity(), notNullValue());
-
         assertApplicationEntity(stateEntity.getApplicationEntity(), expectedStateEntity.getApplicationEntity());
     }
 
@@ -255,5 +241,4 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
         assertThat(expectedApplicationEntity.getCreationDate(), notNullValue());
         assertThat(application.getCreationDate(), lessThanOrEqualTo(expectedApplicationEntity.getCreationDate()));
     }
-
 }
