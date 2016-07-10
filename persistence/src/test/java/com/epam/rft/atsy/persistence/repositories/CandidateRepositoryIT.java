@@ -180,7 +180,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     }
 
     @Test
-    public void findAllCandidateByFilterRequestWithInvalidDataSortedByNameInAscendingOrder() {
+    public void findAllCandidateByFilterRequestWithInvalidData() {
         for (CandidateEntity candidate : NEGATIVE_CANDIDATES_TEST) {
             //Given
             final String name = candidate.getName();
