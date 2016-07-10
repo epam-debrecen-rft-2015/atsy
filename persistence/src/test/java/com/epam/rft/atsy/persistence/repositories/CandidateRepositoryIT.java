@@ -1,7 +1,6 @@
 package com.epam.rft.atsy.persistence.repositories;
 
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -9,9 +8,7 @@ import org.springframework.data.domain.Sort;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertThat;
@@ -195,8 +192,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
                     name,
                     email,
                     phone,
-                    //sorting is redundant on an empty set, but needed to call the method
-                    new Sort(createSortOrder(Sort.Direction.DESC, "name")));
+                    null);
 
             //Then
             assertCandidateEntityListWithInvalidData(result);
