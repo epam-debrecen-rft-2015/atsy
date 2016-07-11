@@ -18,12 +18,21 @@ public class PasswordContainsRuleTest {
         return Arrays.asList(new Object[][]{
                 { "", false },
                 { "abc", false },
+                { "aBc", false },
+                { "ABC", false },
                 { "!%@", false },
                 { "123", false },
                 { "a!b%", false },
+                { "A!b%", false },
+                { "A!B%", false },
                 { "a1b2", false },
+                { "A1b2C3", false },
+                { "A1B2C3", false },
                 { "1%2@", false },
-                { "a1b@", true }
+                { "a1b@", true },
+                { "aAbB%1", true},
+                { "1A@$2b3C!", true },
+                { "-A1B2C812$3$", true }
         });
     }
 

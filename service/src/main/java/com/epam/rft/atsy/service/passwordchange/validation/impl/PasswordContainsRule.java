@@ -8,14 +8,11 @@ import java.util.regex.Pattern;
 public class PasswordContainsRule implements PasswordValidationRule {
     private static final String MESSAGE_KEY = "passwordchange.validation.contains";
 
-    private static final Pattern LETTER_PATTERN =
-            Pattern.compile(".*[a-zA-Z]+.*");
+    private static final Pattern LETTER_PATTERN = Pattern.compile(".*[a-zA-Z]+.*");
 
-    private static final Pattern NUMBER_PATTERN =
-            Pattern.compile(".*[0-9]+.*");
+    private static final Pattern NUMBER_PATTERN = Pattern.compile(".*[0-9]+.*");
 
-    private static final Pattern SPECIAL_CHARACTER_PATTERN =
-            Pattern.compile(".*[!@#$%^&_.,;:-]+.*");
+    private static final Pattern SPECIAL_CHARACTER_PATTERN = Pattern.compile(".*[!@#$%^&_.,;:-]+.*");
 
     @Override
     public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
