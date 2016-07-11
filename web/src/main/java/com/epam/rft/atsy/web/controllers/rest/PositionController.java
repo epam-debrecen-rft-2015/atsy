@@ -34,7 +34,7 @@ public class PositionController {
         return positionService.getAllPositions();
     }
 
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<String> saveOrUpdate(@RequestBody PositionDTO positionDTO, BindingResult result, Locale locale) {
         ResponseEntity<String> entity = new ResponseEntity<>(StringUtils.EMPTY, HttpStatus.OK);
 
