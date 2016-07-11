@@ -7,6 +7,7 @@ import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.hibernate.exception.ConstraintViolationException;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -43,35 +44,27 @@ public class PositionServiceImplTest {
     @InjectMocks
     private PositionServiceImpl positionService;
 
-    private static final Type POSITIONDTO_LIST_TYPE;
+    private static Type POSITIONDTO_LIST_TYPE;
 
     private static final Long DEVELOPER_ID = 1L;
     private static final String DEVELOPER_NAME = "Developer";
 
-    private static final PositionEntity DEVELOPER_ENTITY;
-    private static final PositionDTO DEVELOPER_DTO;
-
+    private static PositionEntity DEVELOPER_ENTITY;
+    private static PositionDTO DEVELOPER_DTO;
 
     private static final List<PositionEntity> EMPTY_POSITION_ENTITY_LIST = Collections.emptyList();
     private static final Collection<PositionDTO> EMPTY_POSITION_DTO_LIST = Collections.emptyList();
 
-    private static final List<PositionEntity> EXPECTED_POSITION_ENTITY_LIST;
-    private static final Collection<PositionDTO> EXPECTED_POSITION_DTO_LIST;
+    private static List<PositionEntity> EXPECTED_POSITION_ENTITY_LIST;
+    private static Collection<PositionDTO> EXPECTED_POSITION_DTO_LIST;
 
-    static {
+    @BeforeClass
+    public static void setUp() {
         POSITIONDTO_LIST_TYPE = new TypeToken<List<PositionDTO>>() {}.getType();
 
-        DEVELOPER_ENTITY =
-                PositionEntity.builder()
-                        .id(DEVELOPER_ID)
-                        .name(DEVELOPER_NAME)
-                        .build();
+        DEVELOPER_ENTITY = PositionEntity.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).build();
 
-        DEVELOPER_DTO =
-                PositionDTO.builder()
-                        .id(DEVELOPER_ID)
-                        .name(DEVELOPER_NAME)
-                        .build();
+        DEVELOPER_DTO = PositionDTO.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).build();
 
         EXPECTED_POSITION_ENTITY_LIST =
                 Arrays.asList(
@@ -100,6 +93,8 @@ public class PositionServiceImplTest {
         // Then
         assertThat(positions, notNullValue());
         assertThat(positions.isEmpty(), is(true));
+
+        then(positionRepository).should(times(1)).findAll();
     }
 
     @Test
@@ -117,6 +112,8 @@ public class PositionServiceImplTest {
 
         // Then
         assertEquals(result, expected);
+
+        then(positionRepository).should(times(1)).findAll();
     }
 
     @Test
@@ -131,10 +128,13 @@ public class PositionServiceImplTest {
 
         // Then
         assertEquals(result, EXPECTED_POSITION_DTO_LIST);
+
+        then(positionRepository).should(times(1)).findAll();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void saveOrUpdateShouldThrowIAEWhenNullPassed() {
+        // When
         positionService.saveOrUpdate(null);
     }
 
