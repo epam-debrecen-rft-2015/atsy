@@ -26,7 +26,7 @@ public class CandidateApplicationController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Collection<CandidateApplicationDTO> loadApplications(@PathVariable(value = "candidateId") Long candidateId, Locale locale) {
-        Collection<CandidateApplicationDTO> applicationStates = statesService.getStatesByCandidateId(candidateId);
+        Collection<CandidateApplicationDTO> applicationStates = statesService.getCandidateApplicationsByCandidateId(candidateId);
 
         for(CandidateApplicationDTO candidateApplicationDTO : applicationStates){
             String stateType = candidateApplicationDTO.getStateType();

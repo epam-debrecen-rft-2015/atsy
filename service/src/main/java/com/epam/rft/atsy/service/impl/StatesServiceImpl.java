@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Type;
@@ -39,15 +40,16 @@ public class StatesServiceImpl implements StatesService {
     @Autowired
     private CandidateRepository candidateRepository;
 
-    private final static Type STATEVIEWDTO_LIST_TYPE = new TypeToken<List<StateViewDTO>>() {}.getType();
+    private final static Type STATEVIEWDTO_LIST_TYPE = new TypeToken<List<StateViewDTO>>() {
+    }.getType();
 
     @Override
-    public Collection<CandidateApplicationDTO> getStatesByCandidateId(Long id) {
-        List<CandidateApplicationDTO> candidateApplicationDTOList=new LinkedList<>();
+    public Collection<CandidateApplicationDTO> getCandidateApplicationsByCandidateId(Long id) {
+        List<CandidateApplicationDTO> candidateApplicationDTOList = new LinkedList<>();
         List<ApplicationEntity> applicationList = applicationsRepository.findByCandidateEntity(candidateRepository.findOne(id));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
-        for (ApplicationEntity applicationEntity: applicationList){
+        for (ApplicationEntity applicationEntity : applicationList) {
             StateEntity stateEntity = statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(applicationEntity);
 
 
@@ -62,7 +64,7 @@ public class StatesServiceImpl implements StatesService {
             candidateApplicationDTOList.add(candidateApplicationDTO);
 
         }
-        return  candidateApplicationDTOList;
+        return candidateApplicationDTOList;
     }
 
     @Override
@@ -78,12 +80,16 @@ public class StatesServiceImpl implements StatesService {
 
     @Override
     public List<StateViewDTO> getStatesByApplicationId(Long applicationId) {
-        List<StateEntity> stateEntities = statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationsRepository.findOne(applicationId));
-        List<StateViewDTO> stateDTOs=modelMapper.map(stateEntities, STATEVIEWDTO_LIST_TYPE);
+        Assert.notNull(applicationId);
+        ApplicationEntity applicationEntity = applicationsRepository.findOne(applicationId);
+
+        Assert.notNull(applicationEntity);
+        List<StateEntity> stateEntities = statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationEntity);
+        List<StateViewDTO> stateDTOs = modelMapper.map(stateEntities, STATEVIEWDTO_LIST_TYPE);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
-        for(int i=0;i<stateDTOs.size();i++){
+        for (int i = 0; i < stateDTOs.size(); i++) {
             stateDTOs.get(i).setCreationDate(simpleDateFormat.format(stateEntities.get(i).getCreationDate()));
         }
         return stateDTOs;
