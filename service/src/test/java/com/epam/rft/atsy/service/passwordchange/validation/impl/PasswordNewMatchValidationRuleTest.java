@@ -28,6 +28,24 @@ public class PasswordNewMatchValidationRuleTest {
         passwordValidationRule = new PasswordNewMatchValidationRule();
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void isValidNewPasswordShouldThrowIEAWhenParameterIsNull() {
+        PasswordChangeDTO passwordChangeDTO = null;
+        passwordValidationRule.isValid(passwordChangeDTO);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void isValidNewPasswordShouldThrowIEAWhenParameterNewPasswordFieldIsNull() {
+        PasswordChangeDTO passwordChangeDTO = getPasswordChangeDTO(null, NEW_PASSWORD_CONFIRM_RIGHT);
+        passwordValidationRule.isValid(passwordChangeDTO);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void isValidNewPasswordShouldThrowIEAWhenParameterNewPasswordConfirmFieldIsNull() {
+        PasswordChangeDTO passwordChangeDTO = getPasswordChangeDTO(NEW_PASSWORD, null);
+        passwordValidationRule.isValid(passwordChangeDTO);
+    }
+
     @Test
     public void isValidNewPasswordShouldBeRight() {
         PasswordChangeDTO passwordChangeDTO = getPasswordChangeDTO(NEW_PASSWORD, NEW_PASSWORD_CONFIRM_RIGHT);
