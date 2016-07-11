@@ -31,7 +31,9 @@ import static org.mockito.BDDMockito.*;
 public class StatesServiceImplTest {
 
     private static final Long FIRST_ID = 1L;
+    private static final Integer ONCE_RAN = 1;
     private static final Type STATE_VIEW_DTO_LIST_TYPE = new TypeToken<List<StateViewDTO>>() {}.getType();
+
     private static final Date NOW = new Date();
     private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
@@ -42,7 +44,7 @@ public class StatesServiceImplTest {
 
     private static final ApplicationEntity APPLICATION_ENTITY = ApplicationEntity.builder().id(FIRST_ID).build();
     private static final StateEntity STATE_ENTITY = StateEntity.builder().id(FIRST_ID).creationDate(NOW).build();
-    private static final StateViewDTO STATE_VIEW_DTO = StateViewDTO.builder().id(FIRST_ID).creationDate(SIMPLE_DATE_FORMAT.format(NOW)).build();
+    private static final StateViewDTO STATE_VIEW_DTO = StateViewDTO.builder().id(FIRST_ID).build();
 
     private static final List<StateEntity> STATE_ENTITY_LIST_WITH_SINGLE_ELEMENT = Arrays.asList(STATE_ENTITY);
     private static final List<StateEntity> STATE_ENTITY_LIST_WITH_THREE_ELEMENTS = Arrays.asList(STATE_ENTITY, STATE_ENTITY, STATE_ENTITY);
@@ -116,9 +118,10 @@ public class StatesServiceImplTest {
 
         // Then
         assertThat(stateViewDTOList, equalTo(STATE_VIEW_DTO_LIST_WITH_SINGLE_ELEMENT));
+        checkStateViewDtoListByCreationDate(STATE_VIEW_DTO_LIST_WITH_SINGLE_ELEMENT);
 
-        then(applicationsRepository).should(times(1)).findOne(FIRST_ID);
-        then(statesRepository).should(times(1)).findByApplicationEntityOrderByStateIndexDesc(APPLICATION_ENTITY);
+        then(applicationsRepository).should(times(ONCE_RAN)).findOne(FIRST_ID);
+        then(statesRepository).should(times(ONCE_RAN)).findByApplicationEntityOrderByStateIndexDesc(APPLICATION_ENTITY);
     }
 
     @Test
@@ -133,8 +136,16 @@ public class StatesServiceImplTest {
 
         // Then
         assertThat(stateViewDTOList, equalTo(STATE_VIEW_DTO_LIST_WITH_THREE_ELEMENTS));
+        checkStateViewDtoListByCreationDate(STATE_VIEW_DTO_LIST_WITH_THREE_ELEMENTS);
 
-        then(applicationsRepository).should(times(1)).findOne(FIRST_ID);
-        then(statesRepository).should(times(1)).findByApplicationEntityOrderByStateIndexDesc(APPLICATION_ENTITY);
+        then(applicationsRepository).should(times(ONCE_RAN)).findOne(FIRST_ID);
+        then(statesRepository).should(times(ONCE_RAN)).findByApplicationEntityOrderByStateIndexDesc(APPLICATION_ENTITY);
     }
+
+    private void checkStateViewDtoListByCreationDate(List<StateViewDTO> stateViewDTOList) {
+        for (StateViewDTO stateViewDTO : stateViewDTOList) {
+            assertThat(stateViewDTO.getCreationDate(), is(SIMPLE_DATE_FORMAT.format(NOW)));
+        }
+    }
+
 }
