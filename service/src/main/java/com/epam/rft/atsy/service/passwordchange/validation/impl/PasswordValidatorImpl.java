@@ -14,8 +14,13 @@ import java.util.List;
 @Component
 public class PasswordValidatorImpl implements PasswordValidator {
 
-    @Autowired
     private Collection<PasswordValidationRule> passwordValidationRules;
+
+    @Autowired
+    public PasswordValidatorImpl(Collection<PasswordValidationRule> passwordValidationRules) {
+        this.passwordValidationRules = passwordValidationRules;
+    }
+
 
     @Override
     public boolean validate(PasswordChangeDTO passwordChangeDTO) throws PasswordValidationException {
