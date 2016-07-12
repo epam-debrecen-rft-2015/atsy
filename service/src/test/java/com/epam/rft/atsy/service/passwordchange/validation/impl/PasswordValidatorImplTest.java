@@ -14,6 +14,7 @@ import java.util.*;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -81,7 +82,8 @@ public class PasswordValidatorImplTest {
             // Then
             then(successfulRule).should(times(1)).isValid(DUMMY_PASSWORD_CHANGE_DTO);
             then(failingRule).should(times(1)).isValid(DUMMY_PASSWORD_CHANGE_DTO);
-            then(unreachedRule).should(times(0)).isValid(DUMMY_PASSWORD_CHANGE_DTO);
+
+            verifyZeroInteractions(unreachedRule);
         }
     }
 
