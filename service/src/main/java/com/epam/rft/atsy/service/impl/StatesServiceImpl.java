@@ -1,6 +1,7 @@
 package com.epam.rft.atsy.service.impl;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
+import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.entities.StateEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
@@ -45,10 +46,14 @@ public class StatesServiceImpl implements StatesService {
 
     @Override
     public Collection<CandidateApplicationDTO> getCandidateApplicationsByCandidateId(Long id) {
-        List<CandidateApplicationDTO> candidateApplicationDTOList = new LinkedList<>();
-        List<ApplicationEntity> applicationList = applicationsRepository.findByCandidateEntity(candidateRepository.findOne(id));
+        Assert.notNull(id);
+        CandidateEntity candidateEntity = candidateRepository.findOne(id);
+
+        Assert.notNull(candidateEntity);
+        List<ApplicationEntity> applicationList = applicationsRepository.findByCandidateEntity(candidateEntity);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
+        List<CandidateApplicationDTO> candidateApplicationDTOList = new LinkedList<>();
         for (ApplicationEntity applicationEntity : applicationList) {
             StateEntity stateEntity = statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(applicationEntity);
 
