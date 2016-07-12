@@ -5,7 +5,9 @@ import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRul
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PasswordOldPasswordMatchesRule implements PasswordValidationRule {
 
     private static final String MESSAGE_KEY = "passwordchange.validation.oldpasswordmatch";
