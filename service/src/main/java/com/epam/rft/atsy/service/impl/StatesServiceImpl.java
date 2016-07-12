@@ -69,6 +69,9 @@ public class StatesServiceImpl implements StatesService {
 
     @Override
     public Long saveState(StateDTO state, Long applicationId) {
+        Assert.notNull(state);
+        Assert.notNull(applicationId);
+
         StateEntity stateEntity = modelMapper.map(state, StateEntity.class);
 
         stateEntity.setCreationDate(new Date());
