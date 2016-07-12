@@ -21,16 +21,16 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(Parameterized.class)
-public class PasswordAllFieldFilledRuleTestForInvalidInputs {
+public class TestPasswordAllFieldFilledRuleForInvalidInputs {
 
     private PasswordAllFieldFilledRule rule;
 
     private static final String EMPTY_STRING = StringUtils.EMPTY;
     private static final String BLANK_SPACES = "    ";
-    private static final String LINE_FEED = "\u005Cn";
-    private static final String CARRIAGE_RETURN = "\u005Cr";
+    private static final String LINE_FEED = "\n";
+    private static final String CARRIAGE_RETURN = "\r";
     private static final String CARRIAGE_RETURN_WITH_LINE_FEED = CARRIAGE_RETURN + LINE_FEED;
-    private static final String HORIZONTAL_TABULATOR = "\u005Ct";
+    private static final String HORIZONTAL_TABULATOR = "\t";
 
     private static final String CONTROL_POSITIVE = "foo";
 
