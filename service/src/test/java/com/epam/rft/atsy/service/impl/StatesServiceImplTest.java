@@ -39,11 +39,10 @@ public class StatesServiceImplTest {
     private static final Integer THREE_TIMES = 3;
     private static final Type STATE_VIEW_DTO_LIST_TYPE = new TypeToken<List<StateViewDTO>>() {}.getType();
 
-    private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
-    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
-
     private static final String POSITION_ENTITY_NAME = "Position";
     private static final String STATE_TYPE_NAME = "State type";
+    private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
+    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
     private static final ApplicationEntity APPLICATION_ENTITY_WITHOUT_STATES = ApplicationEntity.builder().id(FIRST_ID).build();
     private static final CandidateEntity CANDIDATE_ENTITY_WITHOUT_APPLICATIONS = CandidateEntity.builder().id(FIRST_ID).build();
@@ -231,6 +230,7 @@ public class StatesServiceImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void getCandidateApplicationsByCandidateIdShouldThrowIllegalArgumentExceptionWhenCandidateIdIsNull() {
         // Given
+        given(candidateRepository.findOne(null)).willThrow(IllegalArgumentException.class);
 
         // When
         statesService.getCandidateApplicationsByCandidateId(null);
@@ -242,6 +242,7 @@ public class StatesServiceImplTest {
     public void getCandidateApplicationsByCandidateIdShouldThrowIllegalArgumentExceptionWhenCandidateEntityIsNull() {
         // Given
         given(candidateRepository.findOne(FIRST_ID)).willReturn(null);
+        given(applicationsRepository.findByCandidateEntity(null)).willThrow(IllegalArgumentException.class);
 
         // When
         statesService.getCandidateApplicationsByCandidateId(FIRST_ID);
@@ -277,9 +278,7 @@ public class StatesServiceImplTest {
         Collection<CandidateApplicationDTO> candidateApplicationDTOCollection = statesService.getCandidateApplicationsByCandidateId(FIRST_ID);
 
         // Then
-        assertThat(candidateApplicationDTOCollection, notNullValue());
-        assertThat(candidateApplicationDTOCollection.isEmpty(), is(false));
-        assertThat(candidateApplicationDTOCollection, equalTo(getExpectedCandidateApplicationDTOListFromApplicationEntityListAndStateEntity(applicationEntityListWithSingleElement, stateEntity)));
+        assertCandidateApplicationDTOCollection(candidateApplicationDTOCollection, getExpectedCandidateApplicationDTOListFromApplicationEntityListAndStateEntity(applicationEntityListWithSingleElement, stateEntity));
 
         then(candidateRepository).should(times(AT_ONE_TIME)).findOne(FIRST_ID);
         then(applicationsRepository).should(times(AT_ONE_TIME)).findByCandidateEntity(candidateEntity);
@@ -297,9 +296,8 @@ public class StatesServiceImplTest {
         Collection<CandidateApplicationDTO> candidateApplicationDTOCollection = statesService.getCandidateApplicationsByCandidateId(FIRST_ID);
 
         // Then
-        assertThat(candidateApplicationDTOCollection, notNullValue());
-        assertThat(candidateApplicationDTOCollection.isEmpty(), is(false));
-        assertThat(candidateApplicationDTOCollection, equalTo(getExpectedCandidateApplicationDTOListFromApplicationEntityListAndStateEntity(applicationEntityListWithThreeElements, stateEntity)));
+        assertCandidateApplicationDTOCollection(candidateApplicationDTOCollection, getExpectedCandidateApplicationDTOListFromApplicationEntityListAndStateEntity(applicationEntityListWithThreeElements, stateEntity));
+
 
         then(candidateRepository).should(times(AT_ONE_TIME)).findOne(FIRST_ID);
         then(applicationsRepository).should(times(AT_ONE_TIME)).findByCandidateEntity(candidateEntity);
@@ -310,6 +308,12 @@ public class StatesServiceImplTest {
         for (StateViewDTO stateViewDTO : stateViewDTOList) {
             assertThat(stateViewDTO.getCreationDate(), equalTo(SIMPLE_DATE_FORMAT.format(now)));
         }
+    }
+
+    private void assertCandidateApplicationDTOCollection(Collection<CandidateApplicationDTO> candidateApplicationDTOCollection, Collection<CandidateApplicationDTO> expectedCollection) {
+        assertThat(candidateApplicationDTOCollection, notNullValue());
+        assertThat(candidateApplicationDTOCollection.isEmpty(), is(false));
+        assertThat(candidateApplicationDTOCollection, equalTo(expectedCollection));
     }
 
     private List<CandidateApplicationDTO> getExpectedCandidateApplicationDTOListFromApplicationEntityListAndStateEntity(List<ApplicationEntity> applicationEntityList, StateEntity stateEntity) {
@@ -324,10 +328,8 @@ public class StatesServiceImplTest {
                     .creationDate(SIMPLE_DATE_FORMAT.format(applicationEntity.getCreationDate()))
                     .modificationDate(SIMPLE_DATE_FORMAT.format(stateEntity.getCreationDate()))
                     .build();
-
             candidateApplicationDTOList.add(candidateApplicationDTO);
         }
-
         return candidateApplicationDTOList;
     }
 }
