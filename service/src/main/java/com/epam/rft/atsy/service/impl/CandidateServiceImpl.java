@@ -42,10 +42,15 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public Collection<CandidateDTO> getAllCandidate(FilterRequest sortingRequest) {
-        SearchOptions searchOptions =sortingRequest.getSearchOptions();
+        SearchOptions searchOptions = sortingRequest.getSearchOptions();
+
+        Sort.Direction sortDirection = Sort.Direction.fromString(sortingRequest.getOrder().name());
+
+        Sort sort = new Sort(sortDirection, sortingRequest.getFieldName());
+
         Collection<CandidateEntity> candidateEntities = candidateRepository.findAllCandidatesByFilterRequest(
-                searchOptions.getName(),searchOptions.getEmail(), searchOptions.getPhone()
-                ,new Sort(Sort.Direction.fromString(sortingRequest.getOrder().name()),sortingRequest.getFieldName()));
+                searchOptions.getName(), searchOptions.getEmail(), searchOptions.getPhone(), sort);
+
         return modelMapper.map(candidateEntities, CANDIDATEDTO_LIST_TYPE);
     }
 
@@ -61,7 +66,7 @@ public class CandidateServiceImpl implements CandidateService {
             String candidateName = candidate.getName();
 
             throw new DuplicateRecordException(candidateName,
-                                               "Duplication occurred when saving candidate: " + candidateName, ex);
+                    "Duplication occurred when saving candidate: " + candidateName, ex);
         }
     }
 }
