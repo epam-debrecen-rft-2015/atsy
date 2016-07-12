@@ -13,8 +13,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,9 +26,6 @@ import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PasswordUniqueRuleTest {
-
-    @Mock
-    private PasswordChangeService passwordChangeService;
 
     public static final long USER_ID = 1L;
     public static final String USER_NAME = "test";
@@ -42,18 +41,25 @@ public class PasswordUniqueRuleTest {
     private List<String> singleElementPasswordHistory;
     private List<String> threeElementPasswordHistory;
 
+    @Mock
+    private PasswordChangeService passwordChangeService;
+
     @InjectMocks
     private PasswordUniqueRule passwordUniqueRule;
 
     @Before
     public void setUp() {
-        singleElementPasswordHistory = new ArrayList<>();
-        singleElementPasswordHistory.add(PASSWORD_HISTORY_1);
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-        threeElementPasswordHistory = new ArrayList<>();
-        threeElementPasswordHistory.add(PASSWORD_HISTORY_1);
-        threeElementPasswordHistory.add(PASSWORD_HISTORY_2);
-        threeElementPasswordHistory.add(PASSWORD_HISTORY_3);
+        singleElementPasswordHistory = Arrays.asList(
+                bCryptPasswordEncoder.encode(PASSWORD_HISTORY_1)
+        );
+
+        threeElementPasswordHistory = Arrays.asList(
+                bCryptPasswordEncoder.encode(PASSWORD_HISTORY_1),
+                bCryptPasswordEncoder.encode(PASSWORD_HISTORY_2),
+                bCryptPasswordEncoder.encode(PASSWORD_HISTORY_3)
+        );
 
         UserDetailsAdapter userDetailsAdapter = new UserDetailsAdapter(USER_ID, USER_NAME, USER_PASSWORD);
         Authentication auth = new UsernamePasswordAuthenticationToken(userDetailsAdapter, null);
