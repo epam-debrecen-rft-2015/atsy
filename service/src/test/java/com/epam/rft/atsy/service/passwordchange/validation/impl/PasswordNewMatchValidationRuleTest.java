@@ -2,6 +2,7 @@ package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -21,27 +22,27 @@ public class PasswordNewMatchValidationRuleTest {
     private static final String NEW_PASSWORD_CONFIRM_UPPER_CASE_NOT_RIGHT = "NEW PASSWORD";
     private static final String ERROR_MESSAGE_KEY = "passwordchange.validation.newpasswordmatch";
 
-    private static PasswordValidationRule passwordValidationRule;
+    private PasswordValidationRule passwordValidationRule;
 
-    @BeforeClass
-    public static void setUp() {
+    @Before
+    public void setUp() {
         passwordValidationRule = new PasswordNewMatchValidationRule();
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void isValidNewPasswordShouldThrowIEAWhenParameterIsNull() {
+    public void isValidNewPasswordShouldThrowIllegalArgumentExceptionWhenParameterIsNull() {
         PasswordChangeDTO passwordChangeDTO = null;
         passwordValidationRule.isValid(passwordChangeDTO);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void isValidNewPasswordShouldThrowIEAWhenParameterNewPasswordFieldIsNull() {
+    public void isValidNewPasswordShouldThrowIllegalArgumentExceptionWhenParameterNewPasswordFieldIsNull() {
         PasswordChangeDTO passwordChangeDTO = getPasswordChangeDTO(null, NEW_PASSWORD_CONFIRM_RIGHT);
         passwordValidationRule.isValid(passwordChangeDTO);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void isValidNewPasswordShouldThrowIEAWhenParameterNewPasswordConfirmFieldIsNull() {
+    public void isValidNewPasswordShouldThrowIllegalArgumentExceptionWhenParameterNewPasswordConfirmFieldIsNull() {
         PasswordChangeDTO passwordChangeDTO = getPasswordChangeDTO(NEW_PASSWORD, null);
         passwordValidationRule.isValid(passwordChangeDTO);
     }
