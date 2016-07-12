@@ -6,6 +6,7 @@ import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.persistence.repositories.StatesRepository;
 import com.epam.rft.atsy.service.domain.states.StateViewDTO;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -34,7 +35,7 @@ public class StatesServiceImplTest {
     private static final Integer ONCE_RAN = 1;
     private static final Type STATE_VIEW_DTO_LIST_TYPE = new TypeToken<List<StateViewDTO>>() {}.getType();
 
-    private static final Date NOW = new Date();
+    private Date now;
     private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
@@ -42,14 +43,14 @@ public class StatesServiceImplTest {
     private static final List<StateEntity> EMPTY_STATE_ENTITY_LIST = Collections.emptyList();
     private static final List<StateViewDTO> EMPTY_STATE_VIEW_DTO_LIST = Collections.emptyList();
 
-    private static final ApplicationEntity APPLICATION_ENTITY = ApplicationEntity.builder().id(FIRST_ID).build();
-    private static final StateEntity STATE_ENTITY = StateEntity.builder().id(FIRST_ID).creationDate(NOW).build();
-    private static final StateViewDTO STATE_VIEW_DTO = StateViewDTO.builder().id(FIRST_ID).build();
+    private ApplicationEntity applicationEntity;
+    private StateEntity stateEntity;
+    private StateViewDTO stateViewDTO;
 
-    private static final List<StateEntity> STATE_ENTITY_LIST_WITH_SINGLE_ELEMENT = Arrays.asList(STATE_ENTITY);
-    private static final List<StateEntity> STATE_ENTITY_LIST_WITH_THREE_ELEMENTS = Arrays.asList(STATE_ENTITY, STATE_ENTITY, STATE_ENTITY);
-    private static final List<StateViewDTO> STATE_VIEW_DTO_LIST_WITH_SINGLE_ELEMENT = Arrays.asList(STATE_VIEW_DTO);
-    private static final List<StateViewDTO> STATE_VIEW_DTO_LIST_WITH_THREE_ELEMENTS = Arrays.asList(STATE_VIEW_DTO, STATE_VIEW_DTO, STATE_VIEW_DTO);
+    private List<StateEntity> stateEntityListWithSingleElement;
+    private List<StateEntity> stateEntityListWithThreeElements;
+    private List<StateViewDTO> stateViewDTOListWithSingleElement;
+    private List<StateViewDTO> stateViewDTOListWithThreeElements;
 
 
     @Mock
@@ -65,6 +66,19 @@ public class StatesServiceImplTest {
     @InjectMocks
     private StatesServiceImpl statesService;
 
+
+    @Before
+    public void setUp() {
+        now = new Date();
+        applicationEntity = ApplicationEntity.builder().id(FIRST_ID).build();
+        stateEntity = StateEntity.builder().id(FIRST_ID).creationDate(now).build();
+        stateViewDTO = StateViewDTO.builder().id(FIRST_ID).build();
+
+        stateEntityListWithSingleElement = Arrays.asList(stateEntity);
+        stateEntityListWithThreeElements = Arrays.asList(stateEntity, stateEntity, stateEntity);
+        stateViewDTOListWithSingleElement = Arrays.asList(stateViewDTO);
+        stateViewDTOListWithThreeElements = Arrays.asList(stateViewDTO, stateViewDTO, stateViewDTO);
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void getStatesByApplicationIdShouldThrowIEAWhenApplicationIdIsNull() {
@@ -102,49 +116,49 @@ public class StatesServiceImplTest {
         assertThat(stateViewDTOList, notNullValue());
         assertThat(stateViewDTOList.isEmpty(), is(true));
 
-        then(applicationsRepository).should(times(1)).findOne(FIRST_ID);
-        then(statesRepository).should(times(1)).findByApplicationEntityOrderByStateIndexDesc(EMPTY_APPLICATION_ENTITY);
+        then(applicationsRepository).should(times(ONCE_RAN)).findOne(FIRST_ID);
+        then(statesRepository).should(times(ONCE_RAN)).findByApplicationEntityOrderByStateIndexDesc(EMPTY_APPLICATION_ENTITY);
     }
 
     @Test
     public void getStatesByApplicationIdShouldReturnAListWithSingleElement() {
         // Given
-        given(applicationsRepository.findOne(FIRST_ID)).willReturn(APPLICATION_ENTITY);
-        given(statesRepository.findByApplicationEntityOrderByStateIndexDesc(APPLICATION_ENTITY)).willReturn(STATE_ENTITY_LIST_WITH_SINGLE_ELEMENT);
-        given(modelMapper.map(STATE_ENTITY_LIST_WITH_SINGLE_ELEMENT, STATE_VIEW_DTO_LIST_TYPE)).willReturn(STATE_VIEW_DTO_LIST_WITH_SINGLE_ELEMENT);
+        given(applicationsRepository.findOne(FIRST_ID)).willReturn(applicationEntity);
+        given(statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationEntity)).willReturn(stateEntityListWithSingleElement);
+        given(modelMapper.map(stateEntityListWithSingleElement, STATE_VIEW_DTO_LIST_TYPE)).willReturn(stateViewDTOListWithSingleElement);
 
         // When
         List<StateViewDTO> stateViewDTOList = statesService.getStatesByApplicationId(FIRST_ID);
 
         // Then
-        assertThat(stateViewDTOList, equalTo(STATE_VIEW_DTO_LIST_WITH_SINGLE_ELEMENT));
-        checkStateViewDtoListByCreationDate(STATE_VIEW_DTO_LIST_WITH_SINGLE_ELEMENT);
+        assertThat(stateViewDTOList, equalTo(stateViewDTOListWithSingleElement));
+        checkStateViewDtoListByCreationDate(stateViewDTOList);
 
         then(applicationsRepository).should(times(ONCE_RAN)).findOne(FIRST_ID);
-        then(statesRepository).should(times(ONCE_RAN)).findByApplicationEntityOrderByStateIndexDesc(APPLICATION_ENTITY);
+        then(statesRepository).should(times(ONCE_RAN)).findByApplicationEntityOrderByStateIndexDesc(applicationEntity);
     }
 
     @Test
     public void getStatesByApplicationIdShouldReturnAListWithThreeElement() {
         // Given
-        given(applicationsRepository.findOne(FIRST_ID)).willReturn(APPLICATION_ENTITY);
-        given(statesRepository.findByApplicationEntityOrderByStateIndexDesc(APPLICATION_ENTITY)).willReturn(STATE_ENTITY_LIST_WITH_THREE_ELEMENTS);
-        given(modelMapper.map(STATE_ENTITY_LIST_WITH_THREE_ELEMENTS, STATE_VIEW_DTO_LIST_TYPE)).willReturn(STATE_VIEW_DTO_LIST_WITH_THREE_ELEMENTS);
+        given(applicationsRepository.findOne(FIRST_ID)).willReturn(applicationEntity);
+        given(statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationEntity)).willReturn(stateEntityListWithThreeElements);
+        given(modelMapper.map(stateEntityListWithThreeElements, STATE_VIEW_DTO_LIST_TYPE)).willReturn(stateViewDTOListWithThreeElements);
 
         // When
         List<StateViewDTO> stateViewDTOList = statesService.getStatesByApplicationId(FIRST_ID);
 
         // Then
-        assertThat(stateViewDTOList, equalTo(STATE_VIEW_DTO_LIST_WITH_THREE_ELEMENTS));
-        checkStateViewDtoListByCreationDate(STATE_VIEW_DTO_LIST_WITH_THREE_ELEMENTS);
+        assertThat(stateViewDTOList, equalTo(stateViewDTOListWithThreeElements));
+        checkStateViewDtoListByCreationDate(stateViewDTOList);
 
         then(applicationsRepository).should(times(ONCE_RAN)).findOne(FIRST_ID);
-        then(statesRepository).should(times(ONCE_RAN)).findByApplicationEntityOrderByStateIndexDesc(APPLICATION_ENTITY);
+        then(statesRepository).should(times(ONCE_RAN)).findByApplicationEntityOrderByStateIndexDesc(applicationEntity);
     }
 
     private void checkStateViewDtoListByCreationDate(List<StateViewDTO> stateViewDTOList) {
         for (StateViewDTO stateViewDTO : stateViewDTOList) {
-            assertThat(stateViewDTO.getCreationDate(), is(SIMPLE_DATE_FORMAT.format(NOW)));
+            assertThat(stateViewDTO.getCreationDate(), is(SIMPLE_DATE_FORMAT.format(now)));
         }
     }
 
