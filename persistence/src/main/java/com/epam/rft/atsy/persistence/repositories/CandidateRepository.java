@@ -3,7 +3,6 @@ package com.epam.rft.atsy.persistence.repositories;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -21,6 +20,5 @@ public interface CandidateRepository extends JpaRepository<CandidateEntity, Long
      * @param sort the sort, that sorts the list
      * @return the list of CandidateEntities
      */
-    @Query("select c from CandidateEntity c where c.name like %?1% and c.email like %?2% and c.phone like %?3%")
-    List<CandidateEntity> findAllCandidatesByFilterRequest(String name, String email, String phone, Sort sort);
+    List<CandidateEntity> findAllByNameContainingAndEmailContainingAndPhoneContaining(String name, String email, String phone, Sort sort);
 }

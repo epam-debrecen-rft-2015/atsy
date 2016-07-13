@@ -68,7 +68,7 @@ public class PasswordChangeServiceImpl implements PasswordChangeService {
 
     @Override
     public void deleteOldestPassword(Long userId) {
-        PasswordHistoryEntity entity = passwordHistoryRepository.findOldestPassword(userId);
+        PasswordHistoryEntity entity = passwordHistoryRepository.findTop1ByUserEntityIdOrderByChangeDate(userId);
         passwordHistoryRepository.delete(entity);
     }
 }

@@ -43,7 +43,7 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     public Collection<CandidateDTO> getAllCandidate(FilterRequest sortingRequest) {
         SearchOptions searchOptions =sortingRequest.getSearchOptions();
-        Collection<CandidateEntity> candidateEntities = candidateRepository.findAllCandidatesByFilterRequest(
+        Collection<CandidateEntity> candidateEntities = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(
                 searchOptions.getName(),searchOptions.getEmail(), searchOptions.getPhone()
                 ,new Sort(Sort.Direction.fromString(sortingRequest.getOrder().name()),sortingRequest.getFieldName()));
         return modelMapper.map(candidateEntities, CANDIDATEDTO_LIST_TYPE);
