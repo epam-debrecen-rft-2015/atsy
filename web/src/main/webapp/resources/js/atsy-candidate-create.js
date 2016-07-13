@@ -47,7 +47,7 @@ function CandidateCreateModel(){
                 name: self.name(),
                 referer: self.referer(),
                 email: self.email(),
-                languageSkill: self.languageSkill()[0],
+                languageSkill: self.languageSkill(),
                 phone: self.phone(),
                 description: self.description()
             })
