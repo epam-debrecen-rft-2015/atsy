@@ -3,7 +3,6 @@ package com.epam.rft.atsy.service.impl;
 import com.epam.rft.atsy.persistence.entities.UserEntity;
 import com.epam.rft.atsy.persistence.repositories.UserRepository;
 import com.epam.rft.atsy.service.domain.UserDTO;
-import com.epam.rft.atsy.service.exception.BackendException;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import com.epam.rft.atsy.service.exception.UserNotFoundException;
 import org.hibernate.exception.ConstraintViolationException;
@@ -21,10 +20,10 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceImplTest {
@@ -89,10 +88,28 @@ public class UserServiceImplTest {
         userService.login(userDTO);
     }
 
-    @Test(expected = BackendException.class)
-    public void loginShouldThrowBackendExceptionBecauseOfNullPointerException() throws UserNotFoundException {
+    @Test(expected = IllegalArgumentException.class)
+    public void loginShouldThrowIllegalArgumentExceptionBecauseOfNullParameter() throws UserNotFoundException {
         //When
         userService.login(NULL_USER_DTO);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void loginShouldThrowIllegalArgumentExceptionBecauseUserDtoHasNullName() throws UserNotFoundException {
+        //Given
+        UserDTO userDtoWithNullName = UserDTO.builder().name(null).password(USER_PASSWORD).build();
+
+        //When
+        userService.login(userDtoWithNullName);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void loginShouldThrowIllegalArgumentExceptionBecauseUserDtoHasNullPassword() throws UserNotFoundException {
+        //Given
+        UserDTO userDtoWithNullPassword = UserDTO.builder().name(USER_NAME).password(null).build();
+
+        //When
+        userService.login(userDtoWithNullPassword);
     }
 
     @Test
@@ -104,24 +121,22 @@ public class UserServiceImplTest {
         UserDTO result = userService.login(userDTO);
 
         //Then
-        assertThat(result, notNullValue());
+        then(modelMapper).should().map(userEntity, UserDTO.class);
+        then(userRepository).should().findByUserNameAndUserPassword(USER_NAME, USER_PASSWORD);
         assertThat(result, is(detailedUserDTO));
     }
 
-    @Test
+    @Test(expected = UserNotFoundException.class)
     public void loginShouldNotReturnDetailedUserDto() throws UserNotFoundException {
         //Given
         given(userRepository.findByUserNameAndUserPassword(USER_NAME, USER_PASSWORD)).willReturn(NULL_USER_ENTITY);
 
         //When
         UserDTO result = userService.login(userDTO);
-
-        //Then
-        assertNull(result);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void saveOrUpdateShouldThrow() {
+    public void saveOrUpdateShouldThrowIllegalArgumentExceptionBecauseNullParameter() {
         //When
         userService.saveOrUpdate(NULL_USER_DTO);
     }
@@ -153,6 +168,8 @@ public class UserServiceImplTest {
         Long result = userService.saveOrUpdate(detailedUserDTO);
 
         //Then
+        then(modelMapper).should().map(detailedUserDTO, UserEntity.class);
+        then(userRepository).should().save(userEntity);
         assertThat(result, is(USER_ID));
     }
 
@@ -165,6 +182,7 @@ public class UserServiceImplTest {
         UserDTO result = userService.findUserByName(NOT_REAL_USER_NAME);
 
         // Then
+        then(userRepository).should().findByUserName(NOT_REAL_USER_NAME);
         assertNull(result);
     }
 
@@ -183,6 +201,8 @@ public class UserServiceImplTest {
         UserDTO result = userService.findUserByName(USER_NAME);
 
         //Then
+        then(modelMapper).should().map(userEntity, UserDTO.class);
+        then(userRepository).should().findByUserName(USER_NAME);
         assertThat(result, is(detailedUserDTO));
     }
 }
