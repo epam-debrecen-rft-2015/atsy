@@ -1,14 +1,18 @@
 package com.epam.rft.atsy.service.impl;
 
-import com.epam.rft.atsy.persistence.entities.*;
+import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
+import com.epam.rft.atsy.persistence.entities.CandidateEntity;
+import com.epam.rft.atsy.persistence.entities.ChannelEntity;
+import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
 import com.epam.rft.atsy.service.StatesService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
+import com.epam.rft.atsy.service.domain.ChannelDTO;
+import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
-import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -20,17 +24,16 @@ import org.modelmapper.ModelMapper;
 
 import java.util.Date;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.BDDMockito.given;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.then;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationsServiceImplTest {
 
-    private static final long APPLICATION_ID = 1L;
-    private static final long CANDIDATE_ID = 1L;
+    private static final Long APPLICATION_ID = 1L;
+    private static final Long CANDIDATE_ID = 1L;
     private static final String CANDIDATE_NAME = "Candidate A";
     private static final String CANDIDATE_EMAIL = "candidate.a@atsy.com";
     private static final String CANDIDATE_PHONE = "+36105555555";
@@ -79,175 +82,99 @@ public class ApplicationsServiceImplTest {
     public void saveOrUpdateShouldSaveAProperApplicationDTO() {
 
         // Given
+        final ApplicationEntity applicationEntity = new ApplicationEntity();
+
         given(modelMapper.map(applicationDTO, ApplicationEntity.class)).willReturn(applicationEntity);
         given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
         given(positionRepository.findOne(POSITION_ID)).willReturn(positionEntity);
         given(channelRepository.findOne(CHANNEL_ID)).willReturn(channelEntity);
-        given(applicationsRepository.save(applicationEntity)).willReturn(applicationEntity);
-        applicationEntity.setCandidateEntity(candidateRepository.findOne(CANDIDATE_ID));
-        applicationEntity.setPositionEntity(positionRepository.findOne(POSITION_ID));
-        applicationEntity.setChannelEntity(channelRepository.findOne(CHANNEL_ID));
+        given(applicationsRepository.save(applicationEntity)).willReturn(this.applicationEntity);
 
         // When
-        when(applicationsService.saveOrUpdate(applicationDTO)).thenReturn(SAVE_OR_UPDATE_RETURN_VALUE);
-        when(applicationsRepository.save(applicationEntity)).thenReturn(applicationEntity);
+        Long result = applicationsService.saveOrUpdate(applicationDTO);
 
         // Then
-        assertNotNull(applicationEntity.getCreationDate());
+        assertNotNull(result);
+        assertEquals(APPLICATION_ID, result);
+
         assertNotNull(applicationEntity.getCandidateEntity());
+        assertEquals(candidateEntity, applicationEntity.getCandidateEntity());
+
         assertNotNull(applicationEntity.getPositionEntity());
+        assertEquals(positionEntity, applicationEntity.getPositionEntity());
+
         assertNotNull(applicationEntity.getChannelEntity());
+        assertEquals(channelEntity, applicationEntity.getChannelEntity());
 
+        then(modelMapper).should().map(applicationDTO, ApplicationEntity.class);
+        then(candidateRepository).should().findOne(CANDIDATE_ID);
+        then(positionRepository).should().findOne(POSITION_ID);
+        then(channelRepository).should().findOne(CHANNEL_ID);
+        then(applicationsRepository).should().save(applicationEntity);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void saveOrUpdateWithApplicationDTONullShouldThrowNullPointerException() {
-        final ApplicationDTO applicationDTO= null;
-
-        // Given
-        given(modelMapper.map(applicationDTO, ApplicationEntity.class)).willReturn(applicationEntity);
-        given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
-        given(positionRepository.findOne(POSITION_ID)).willReturn(positionEntity);
-        given(channelRepository.findOne(CHANNEL_ID)).willReturn(channelEntity);
-        given(applicationsRepository.save(applicationEntity)).willReturn(applicationEntity);
-        applicationEntity.setCandidateEntity(candidateRepository.findOne(CANDIDATE_ID));
-        applicationEntity.setPositionEntity(positionRepository.findOne(POSITION_ID));
-        applicationEntity.setChannelEntity(channelRepository.findOne(CHANNEL_ID));
+    @Test(expected = IllegalArgumentException.class)
+    public void saveOrUpdateWithApplicationDTONullShouldThrowIllegalArgumentException() {
 
         // When
-        when(applicationsService.saveOrUpdate(applicationDTO)).thenThrow(NullPointerException.class);
+        Long result = applicationsService.saveOrUpdate(null);
     }
 
-    @Test(expected = ConstraintViolationException.class)
-    public void saveOrUpdateWithCandidateDTONullShouldThrowConstraintViolationException() {
-        final ApplicationEntity applicationEntity = ApplicationEntity.builder().id(APPLICATION_ID).creationDate(new Date()).candidateEntity(null).positionEntity(positionEntity).channelEntity(channelEntity).build();
-
-        // Given
-        given(modelMapper.map(applicationDTO, ApplicationEntity.class)).willReturn(applicationEntity);
-        given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(null);
-        given(positionRepository.findOne(POSITION_ID)).willReturn(positionEntity);
-        given(channelRepository.findOne(CHANNEL_ID)).willReturn(channelEntity);
-        given(applicationsRepository.save(applicationEntity)).willThrow(ConstraintViolationException.class);
-        applicationEntity.setCandidateEntity(candidateRepository.findOne(CANDIDATE_ID));
-        applicationEntity.setPositionEntity(positionRepository.findOne(POSITION_ID));
-        applicationEntity.setChannelEntity(channelRepository.findOne(CHANNEL_ID));
+    @Test(expected = IllegalArgumentException.class)
+    public void saveOrUpdateWithApplicationDTOsCandidateIDNullShouldThrowIllegalArgumentException() {
+        final ApplicationDTO applicationDTO= ApplicationDTO.builder().id(APPLICATION_ID).creationDate(new Date()).candidateId(null).positionId(POSITION_ID).channelId(CHANNEL_ID).build();
 
         // When
-        applicationsRepository.save(applicationEntity);
+        Long result = applicationsService.saveOrUpdate(applicationDTO);
     }
 
-    @Test(expected = ConstraintViolationException.class)
-    public void saveOrUpdateWithPositionEntityNullShouldThrowConstraintViolationException() {
-        final ApplicationEntity applicationEntity = ApplicationEntity.builder().id(APPLICATION_ID).creationDate(new Date()).candidateEntity(candidateEntity).positionEntity(null).channelEntity(channelEntity).build();
-
-        // Given
-        given(modelMapper.map(applicationDTO, ApplicationEntity.class)).willReturn(applicationEntity);
-        given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
-        given(positionRepository.findOne(POSITION_ID)).willReturn(null);
-        given(channelRepository.findOne(CHANNEL_ID)).willReturn(channelEntity);
-        given(applicationsRepository.save(applicationEntity)).willThrow(ConstraintViolationException.class);
-        applicationEntity.setCandidateEntity(candidateRepository.findOne(CANDIDATE_ID));
-        applicationEntity.setPositionEntity(positionRepository.findOne(POSITION_ID));
-        applicationEntity.setChannelEntity(channelRepository.findOne(CHANNEL_ID));
+    @Test(expected = IllegalArgumentException.class)
+    public void saveOrUpdateWithApplicationDTOsPositionIDNullShouldThrowIllegalArgumentException() {
+        final ApplicationDTO applicationDTO= ApplicationDTO.builder().id(APPLICATION_ID).creationDate(new Date()).candidateId(CANDIDATE_ID).positionId(null).channelId(CHANNEL_ID).build();
 
         // When
-        applicationsRepository.save(applicationEntity);
+        Long result = applicationsService.saveOrUpdate(applicationDTO);
     }
 
-    @Test(expected = ConstraintViolationException.class)
-    public void saveOrUpdateWithChannelEntityNullShouldThrowConstraintViolationException() {
-        final ApplicationEntity applicationEntity = ApplicationEntity.builder().id(APPLICATION_ID).creationDate(new Date()).candidateEntity(candidateEntity).positionEntity(positionEntity).channelEntity(null).build();
-
-        // Given
-        given(modelMapper.map(applicationDTO, ApplicationEntity.class)).willReturn(applicationEntity);
-        given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
-        given(positionRepository.findOne(POSITION_ID)).willReturn(positionEntity);
-        given(channelRepository.findOne(CHANNEL_ID)).willReturn(null);
-        given(applicationsRepository.save(applicationEntity)).willThrow(ConstraintViolationException.class);
-        applicationEntity.setCandidateEntity(candidateRepository.findOne(CANDIDATE_ID));
-        applicationEntity.setPositionEntity(positionRepository.findOne(POSITION_ID));
-        applicationEntity.setChannelEntity(channelRepository.findOne(CHANNEL_ID));
+    @Test(expected = IllegalArgumentException.class)
+    public void saveOrUpdateWithApplicationDTOsChannelIDNullShouldThrowIllegalArgumentException() {
+        final ApplicationDTO applicationDTO= ApplicationDTO.builder().id(APPLICATION_ID).creationDate(new Date()).candidateId(CANDIDATE_ID).positionId(POSITION_ID).channelId(null).build();
 
         // When
-        applicationsRepository.save(applicationEntity);
+        Long result = applicationsService.saveOrUpdate(applicationDTO);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void saveOrUpdateWithApplicationEntityNullShouldThrowIllegalArgumentException() {
-        final ApplicationEntity applicationEntity = null;
-
-        // Given
-        given(modelMapper.map(applicationDTO, ApplicationEntity.class)).willReturn(applicationEntity);
-        given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
-        given(positionRepository.findOne(POSITION_ID)).willReturn(positionEntity);
-        given(channelRepository.findOne(CHANNEL_ID)).willReturn(channelEntity);
-        given(applicationsRepository.save(applicationEntity)).willReturn(applicationEntity);
-        applicationEntity.setCandidateEntity(candidateRepository.findOne(CANDIDATE_ID));
-        applicationEntity.setPositionEntity(positionRepository.findOne(POSITION_ID));
-        applicationEntity.setChannelEntity(channelRepository.findOne(CHANNEL_ID));
-
-        // When
-        applicationsRepository.save(applicationEntity);
-    }
-
-
-    @Test
+    @Test///////////////////////////////////////////////////////////////////////////////
     public void saveApplicationShouldSaveAProperApplicationDTOAndStateDTO() {
+        final StateDTO stateDTO = StateDTO.builder().channel(new ChannelDTO(8L,null)).candidateId(1L).position(new PositionDTO(1L,null)).description("sss").stateType("newstate").stateIndex(0).build();
 
         // Given
         given(modelMapper.map(applicationDTO, ApplicationEntity.class)).willReturn(applicationEntity);
         given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
         given(positionRepository.findOne(POSITION_ID)).willReturn(positionEntity);
         given(channelRepository.findOne(CHANNEL_ID)).willReturn(channelEntity);
-        given(applicationsRepository.save(applicationEntity)).willReturn(applicationEntity);
-
+        given(applicationsRepository.save(applicationEntity)).willReturn(this.applicationEntity);
         // When
-        Long applicationId = applicationsService.saveOrUpdate(applicationDTO);
-        applicationsService.saveApplicaton(applicationDTO,stateDTO);
+        Long result = applicationsService.saveApplicaton(applicationDTO,stateDTO);
 
         // Then
-        assertEquals(applicationId,(Long)SAVE_OR_UPDATE_RETURN_VALUE);
-        verify(statesService).saveState(stateDTO,applicationId);
+        assertNotNull(result);
+        assertEquals(APPLICATION_ID, result);
+        
+        then(statesService).should().saveState(stateDTO,APPLICATION_ID);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void saveApplicationWithApplicationDTONullShouldThrowIllegalArgumentException() {
-        final ApplicationDTO applicationDTO = null;
-
-        // Given
-        given(modelMapper.map(applicationDTO, ApplicationEntity.class)).willThrow(IllegalArgumentException.class);
-        given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
-        given(positionRepository.findOne(POSITION_ID)).willReturn(positionEntity);
-        given(channelRepository.findOne(CHANNEL_ID)).willReturn(channelEntity);
-        given(applicationsRepository.save(applicationEntity)).willReturn(applicationEntity);
 
         // When
-        Long applicationId = applicationsService.saveOrUpdate(applicationDTO);
-        applicationsService.saveApplicaton(applicationDTO,stateDTO);
-
-        // Then
-        assertEquals(applicationId,(Long)SAVE_OR_UPDATE_RETURN_VALUE);
-        verify(statesService).saveState(stateDTO,applicationId);
+        Long result = applicationsService.saveApplicaton(applicationDTO,null);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void saveApplicationWithStateDTONullShouldThrowIllegalArgumentException() {
-        final StateDTO stateDTO = null;
-
-        // Given
-        given(modelMapper.map(applicationDTO, ApplicationEntity.class)).willReturn(applicationEntity);
-        given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
-        given(positionRepository.findOne(POSITION_ID)).willReturn(positionEntity);
-        given(channelRepository.findOne(CHANNEL_ID)).willReturn(channelEntity);
-        given(applicationsRepository.save(applicationEntity)).willReturn(applicationEntity);
-        given(modelMapper.map(stateDTO, StateEntity.class)).willThrow(IllegalArgumentException.class);
 
         // When
-        Long applicationId = applicationsService.saveOrUpdate(applicationDTO);
-        applicationsService.saveApplicaton(applicationDTO,stateDTO);
-
-        // Then
-        assertEquals(applicationId,(Long)SAVE_OR_UPDATE_RETURN_VALUE);
-        verify(statesService).saveState(stateDTO,applicationId);
+        Long result = applicationsService.saveApplicaton(applicationDTO,null);
     }
 }

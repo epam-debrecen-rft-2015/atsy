@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 
@@ -40,6 +41,11 @@ public class ApplicationsServiceImpl implements ApplicationsService {
 
     @Override
     public Long saveOrUpdate(ApplicationDTO applicationDTO) {
+        Assert.notNull(applicationDTO);
+        Assert.notNull(applicationDTO.getCandidateId());
+        Assert.notNull(applicationDTO.getPositionId());
+        Assert.notNull(applicationDTO.getChannelId());
+
         ApplicationEntity applicationEntity = modelMapper.map(applicationDTO, ApplicationEntity.class);
         applicationEntity.setCandidateEntity(candidateRepository.findOne(applicationDTO.getCandidateId()));
         applicationEntity.setPositionEntity(positionRepository.findOne(applicationDTO.getPositionId()));
@@ -50,6 +56,8 @@ public class ApplicationsServiceImpl implements ApplicationsService {
     @Transactional
     @Override
     public Long saveApplicaton(ApplicationDTO applicationDTO, StateDTO stateDTO) {
+        Assert.notNull(stateDTO);
+
         Long applicationId = saveOrUpdate(applicationDTO);
         statesService.saveState(stateDTO, applicationId);
         return applicationId;
