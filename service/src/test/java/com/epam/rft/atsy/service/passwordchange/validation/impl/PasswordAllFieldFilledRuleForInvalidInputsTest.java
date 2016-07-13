@@ -21,7 +21,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(Parameterized.class)
-public class TestPasswordAllFieldFilledRuleForInvalidInputs {
+public class PasswordAllFieldFilledRuleForInvalidInputsTest {
 
     private PasswordAllFieldFilledRule rule;
 

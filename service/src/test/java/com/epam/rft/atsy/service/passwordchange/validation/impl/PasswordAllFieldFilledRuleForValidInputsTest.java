@@ -9,7 +9,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TestPasswordAllFieldFilledRuleForValidInputs {
+public class PasswordAllFieldFilledRuleForValidInputsTest {
 
     public static final String NOT_BLANK_PASSWORD = "baz";
 
