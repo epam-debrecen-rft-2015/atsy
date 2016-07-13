@@ -35,12 +35,19 @@ import static org.mockito.BDDMockito.*;
 public class StatesServiceImplTest {
 
     private static final Long FIRST_ID = 1L;
-    private static final Integer AT_ONE_TIME = 1;
-    private static final Integer THREE_TIMES = 3;
+    private static final Long SECOND_ID = 2L;
+    private static final Long THIRD_ID = 3L;
+    private static final Integer TWO_TIMES = 2;
     private static final Type STATE_VIEW_DTO_LIST_TYPE = new TypeToken<List<StateViewDTO>>() {}.getType();
 
-    private static final String POSITION_ENTITY_NAME = "Position";
-    private static final String STATE_TYPE_NAME = "State type";
+    private static final String FIRST_POSITION_ENTITY_NAME = "First position";
+    private static final String SECOND_POSITION_ENTITY_NAME = "Second position";
+    private static final String THIRD_POSITION_ENTITY_NAME = "Third position";
+
+    private static final String FIRST_STATE_TYPE_NAME = "First state";
+    private static final String SECOND_STATE_TYPE_NAME = "Second state";
+    private static final String THIRD_STATE_TYPE_NAME = "Third state";
+
     private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
@@ -50,13 +57,19 @@ public class StatesServiceImplTest {
     private static final List<StateEntity> EMPTY_STATE_ENTITY_LIST = Collections.emptyList();
     private static final List<StateViewDTO> EMPTY_STATE_VIEW_DTO_LIST = Collections.emptyList();
 
+    private Date presentDate;
+    private CandidateEntity firstCandidateEntity;
+    private PositionEntity firstPositionEntity;
+    private PositionEntity secondPositionEntity;
+    private PositionEntity thirdPositionEntity;
 
-    private Date now;
-    private ApplicationEntity applicationEntity;
-    private CandidateEntity candidateEntity;
-    private PositionEntity positionEntity;
+    private ApplicationEntity firstApplicationEntity;
+    private ApplicationEntity secondApplicationEntity;
+    private ApplicationEntity thirdApplicationEntity;
 
-    private StateEntity stateEntity;
+    private StateEntity firstStateEntity;
+    private StateEntity secondStateEntity;
+    private StateEntity thirdStateEntity;
     private StateViewDTO stateViewDTO;
     private StateDTO stateDTO;
 
@@ -84,20 +97,29 @@ public class StatesServiceImplTest {
 
     @Before
     public void setUp() {
-        now = new Date();
-        candidateEntity = CandidateEntity.builder().id(FIRST_ID).build();
-        positionEntity = PositionEntity.builder().id(FIRST_ID).name(POSITION_ENTITY_NAME).build();
-        applicationEntity = ApplicationEntity.builder().id(FIRST_ID).candidateEntity(candidateEntity).positionEntity(positionEntity).creationDate(now).build();
+        presentDate = new Date();
+        firstCandidateEntity = CandidateEntity.builder().id(FIRST_ID).build();
 
-        stateEntity = StateEntity.builder().id(FIRST_ID).applicationEntity(applicationEntity).stateType(STATE_TYPE_NAME).creationDate(now).build();
+        firstPositionEntity = PositionEntity.builder().id(FIRST_ID).name(FIRST_POSITION_ENTITY_NAME).build();
+        secondPositionEntity = PositionEntity.builder().id(SECOND_ID).name(SECOND_POSITION_ENTITY_NAME).build();
+        thirdPositionEntity = PositionEntity.builder().id(THIRD_ID).name(THIRD_POSITION_ENTITY_NAME).build();
+
+        firstApplicationEntity = ApplicationEntity.builder().id(FIRST_ID).candidateEntity(firstCandidateEntity).positionEntity(firstPositionEntity).creationDate(presentDate).build();
+        secondApplicationEntity = ApplicationEntity.builder().id(SECOND_ID).candidateEntity(firstCandidateEntity).positionEntity(secondPositionEntity).creationDate(presentDate).build();
+        thirdApplicationEntity = ApplicationEntity.builder().id(THIRD_ID).candidateEntity(firstCandidateEntity).positionEntity(thirdPositionEntity).creationDate(presentDate).build();
+
+        firstStateEntity = StateEntity.builder().id(FIRST_ID).applicationEntity(firstApplicationEntity).stateType(FIRST_STATE_TYPE_NAME).creationDate(presentDate).build();
+        secondStateEntity = StateEntity.builder().id(SECOND_ID).applicationEntity(secondApplicationEntity).stateType(SECOND_STATE_TYPE_NAME).creationDate(presentDate).build();
+        thirdStateEntity = StateEntity.builder().id(THIRD_ID).applicationEntity(thirdApplicationEntity).stateType(THIRD_STATE_TYPE_NAME).creationDate(presentDate).build();
+
         stateViewDTO = StateViewDTO.builder().id(FIRST_ID).build();
         stateDTO = StateDTO.builder().id(FIRST_ID).build();
 
-        applicationEntityListWithSingleElement = Arrays.asList(applicationEntity);
-        applicationEntityListWithThreeElements = Arrays.asList(applicationEntity, applicationEntity, applicationEntity);
+        applicationEntityListWithSingleElement = Arrays.asList(firstApplicationEntity);
+        applicationEntityListWithThreeElements = Arrays.asList(firstApplicationEntity, secondApplicationEntity, thirdApplicationEntity);
 
-        stateEntityListWithSingleElement = Arrays.asList(stateEntity);
-        stateEntityListWithThreeElements = Arrays.asList(stateEntity, stateEntity, stateEntity);
+        stateEntityListWithSingleElement = Arrays.asList(firstStateEntity);
+        stateEntityListWithThreeElements = Arrays.asList(firstStateEntity, secondStateEntity, thirdStateEntity);
 
         stateViewDTOListWithSingleElement = Arrays.asList(stateViewDTO);
         stateViewDTOListWithThreeElements = Arrays.asList(stateViewDTO, stateViewDTO, stateViewDTO);
@@ -106,7 +128,6 @@ public class StatesServiceImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void getStatesByApplicationIdShouldThrowIllegalArgumentExceptionWhenApplicationIdIsNull() {
         // Given
-        given(applicationsRepository.findOne(null)).willThrow(IllegalArgumentException.class);
 
         // When
         statesService.getStatesByApplicationId(null);
@@ -119,7 +140,6 @@ public class StatesServiceImplTest {
     public void getStatesByApplicationIdShouldThrowIllegalArgumentExceptionWhenApplicationIsNull() {
         // Given
         given(applicationsRepository.findOne(FIRST_ID)).willReturn(null);
-        given(statesRepository.findByApplicationEntityOrderByStateIndexDesc(null)).willThrow(IllegalArgumentException.class);
 
         // When
         statesService.getStatesByApplicationId(FIRST_ID);
@@ -141,15 +161,15 @@ public class StatesServiceImplTest {
         assertThat(stateViewDTOList, notNullValue());
         assertThat(stateViewDTOList.isEmpty(), is(true));
 
-        then(applicationsRepository).should(times(AT_ONE_TIME)).findOne(FIRST_ID);
-        then(statesRepository).should(times(AT_ONE_TIME)).findByApplicationEntityOrderByStateIndexDesc(APPLICATION_ENTITY_WITHOUT_STATES);
+        then(applicationsRepository).should().findOne(FIRST_ID);
+        then(statesRepository).should().findByApplicationEntityOrderByStateIndexDesc(APPLICATION_ENTITY_WITHOUT_STATES);
     }
 
     @Test
     public void getStatesByApplicationIdShouldReturnAListWithSingleElement() {
         // Given
-        given(applicationsRepository.findOne(FIRST_ID)).willReturn(applicationEntity);
-        given(statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationEntity)).willReturn(stateEntityListWithSingleElement);
+        given(applicationsRepository.findOne(FIRST_ID)).willReturn(firstApplicationEntity);
+        given(statesRepository.findByApplicationEntityOrderByStateIndexDesc(firstApplicationEntity)).willReturn(stateEntityListWithSingleElement);
         given(modelMapper.map(stateEntityListWithSingleElement, STATE_VIEW_DTO_LIST_TYPE)).willReturn(stateViewDTOListWithSingleElement);
 
         // When
@@ -161,15 +181,15 @@ public class StatesServiceImplTest {
         assertThat(stateViewDTOList, equalTo(stateViewDTOListWithSingleElement));
         assertStateViewDtoListByCreationDateAsString(stateViewDTOList);
 
-        then(applicationsRepository).should(times(AT_ONE_TIME)).findOne(FIRST_ID);
-        then(statesRepository).should(times(AT_ONE_TIME)).findByApplicationEntityOrderByStateIndexDesc(applicationEntity);
+        then(applicationsRepository).should().findOne(FIRST_ID);
+        then(statesRepository).should().findByApplicationEntityOrderByStateIndexDesc(firstApplicationEntity);
     }
 
     @Test
     public void getStatesByApplicationIdShouldReturnAListWithThreeElement() {
         // Given
-        given(applicationsRepository.findOne(FIRST_ID)).willReturn(applicationEntity);
-        given(statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationEntity)).willReturn(stateEntityListWithThreeElements);
+        given(applicationsRepository.findOne(FIRST_ID)).willReturn(firstApplicationEntity);
+        given(statesRepository.findByApplicationEntityOrderByStateIndexDesc(firstApplicationEntity)).willReturn(stateEntityListWithThreeElements);
         given(modelMapper.map(stateEntityListWithThreeElements, STATE_VIEW_DTO_LIST_TYPE)).willReturn(stateViewDTOListWithThreeElements);
 
         // When
@@ -181,14 +201,13 @@ public class StatesServiceImplTest {
         assertThat(stateViewDTOList, equalTo(stateViewDTOListWithThreeElements));
         assertStateViewDtoListByCreationDateAsString(stateViewDTOList);
 
-        then(applicationsRepository).should(times(AT_ONE_TIME)).findOne(FIRST_ID);
-        then(statesRepository).should(times(AT_ONE_TIME)).findByApplicationEntityOrderByStateIndexDesc(applicationEntity);
+        then(applicationsRepository).should().findOne(FIRST_ID);
+        then(statesRepository).should().findByApplicationEntityOrderByStateIndexDesc(firstApplicationEntity);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void saveStateShouldThrowIllegalArgumentExceptionWhenApplicationIdIsNull() {
         // Given
-        given(applicationsRepository.findOne(null)).willThrow(IllegalArgumentException.class);
 
         // When
         statesService.saveState(stateDTO, null);
@@ -199,7 +218,6 @@ public class StatesServiceImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void saveStateShouldThrowIllegalArgumentExceptionWhenStateIsNull() {
         // Given
-        given(statesRepository.save(stateEntity)).willThrow(IllegalArgumentException.class);
 
         // When
         statesService.saveState(null, FIRST_ID);
@@ -210,27 +228,28 @@ public class StatesServiceImplTest {
     @Test
     public void saveStateShouldBeSuccessSaving() {
         // Given
-        given(modelMapper.map(stateDTO, StateEntity.class)).willReturn(stateEntity);
-        given(applicationsRepository.findOne(FIRST_ID)).willReturn(applicationEntity);
-        given(statesRepository.save(stateEntity)).willReturn(stateEntity);
+        StateEntity expectedSavedStateEntity = StateEntity.builder().id(FIRST_ID).applicationEntity(secondApplicationEntity).stateType(FIRST_STATE_TYPE_NAME).creationDate(presentDate).build();
+
+        given(modelMapper.map(stateDTO, StateEntity.class)).willReturn(firstStateEntity);
+        given(applicationsRepository.findOne(SECOND_ID)).willReturn(secondApplicationEntity);
+        given(statesRepository.save(firstStateEntity)).willReturn(firstStateEntity);
 
         // When
-        Long expectedId = statesService.saveState(stateDTO, FIRST_ID);
+        Long resultId = statesService.saveState(stateDTO, SECOND_ID);
 
         // Then
-        assertThat(stateEntity, notNullValue());
-        assertThat(stateEntity.getCreationDate(), greaterThanOrEqualTo(now));
-        assertThat(stateEntity.getApplicationEntity(), equalTo(applicationEntity));
-        assertThat(stateEntity.getId(), equalTo(expectedId));
+        assertThat(firstStateEntity, notNullValue());
+        assertThat(firstStateEntity, equalTo(expectedSavedStateEntity));
+        assertThat(resultId, notNullValue());
+        assertThat(resultId, equalTo(FIRST_ID));
 
-        then(applicationsRepository).should((times(AT_ONE_TIME))).findOne(FIRST_ID);
-        then(statesRepository).should(times(AT_ONE_TIME)).save(stateEntity);
+        then(applicationsRepository).should().findOne(SECOND_ID);
+        then(statesRepository).should().save(firstStateEntity);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void getCandidateApplicationsByCandidateIdShouldThrowIllegalArgumentExceptionWhenCandidateIdIsNull() {
         // Given
-        given(candidateRepository.findOne(null)).willThrow(IllegalArgumentException.class);
 
         // When
         statesService.getCandidateApplicationsByCandidateId(null);
@@ -242,7 +261,6 @@ public class StatesServiceImplTest {
     public void getCandidateApplicationsByCandidateIdShouldThrowIllegalArgumentExceptionWhenCandidateEntityIsNull() {
         // Given
         given(candidateRepository.findOne(FIRST_ID)).willReturn(null);
-        given(applicationsRepository.findByCandidateEntity(null)).willThrow(IllegalArgumentException.class);
 
         // When
         statesService.getCandidateApplicationsByCandidateId(FIRST_ID);
@@ -263,50 +281,53 @@ public class StatesServiceImplTest {
         assertThat(candidateApplicationDTOCollection, notNullValue());
         assertThat(candidateApplicationDTOCollection.isEmpty(), is(true));
 
-        then(candidateRepository).should(times(AT_ONE_TIME)).findOne(FIRST_ID);
-        then(applicationsRepository).should(times(AT_ONE_TIME)).findByCandidateEntity(CANDIDATE_ENTITY_WITHOUT_APPLICATIONS);
+        then(candidateRepository).should().findOne(FIRST_ID);
+        then(applicationsRepository).should().findByCandidateEntity(CANDIDATE_ENTITY_WITHOUT_APPLICATIONS);
     }
 
     @Test
     public void getCandidateApplicationsByCandidateIdShouldReturnAListWithSingleElement() {
         // Given
-        given(candidateRepository.findOne(FIRST_ID)).willReturn(candidateEntity);
-        given(applicationsRepository.findByCandidateEntity(candidateEntity)).willReturn(applicationEntityListWithSingleElement);
-        given(statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(applicationEntity)).willReturn(stateEntity);
+        given(candidateRepository.findOne(FIRST_ID)).willReturn(firstCandidateEntity);
+        given(applicationsRepository.findByCandidateEntity(firstCandidateEntity)).willReturn(applicationEntityListWithSingleElement);
+        given(statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(firstApplicationEntity)).willReturn(firstStateEntity);
 
         // When
         Collection<CandidateApplicationDTO> candidateApplicationDTOCollection = statesService.getCandidateApplicationsByCandidateId(FIRST_ID);
 
         // Then
-        assertCandidateApplicationDTOCollection(candidateApplicationDTOCollection, getExpectedCandidateApplicationDTOListFromApplicationEntityListAndStateEntity(applicationEntityListWithSingleElement, stateEntity));
+        assertCandidateApplicationDTOCollection(candidateApplicationDTOCollection, getExpectedCandidateApplicationDTOListFromApplicationEntityList(applicationEntityListWithSingleElement));
 
-        then(candidateRepository).should(times(AT_ONE_TIME)).findOne(FIRST_ID);
-        then(applicationsRepository).should(times(AT_ONE_TIME)).findByCandidateEntity(candidateEntity);
-        then(statesRepository).should(times(AT_ONE_TIME)).findTopByApplicationEntityOrderByStateIndexDesc(applicationEntity);
+        then(candidateRepository).should().findOne(FIRST_ID);
+        then(applicationsRepository).should().findByCandidateEntity(firstCandidateEntity);
+        then(statesRepository).should(times(TWO_TIMES)).findTopByApplicationEntityOrderByStateIndexDesc(firstApplicationEntity);
     }
 
     @Test
     public void getCandidateApplicationsByCandidateShouldReturnAListWithThreeElements() {
         // Given
-        given(candidateRepository.findOne(FIRST_ID)).willReturn(candidateEntity);
-        given(applicationsRepository.findByCandidateEntity(candidateEntity)).willReturn(applicationEntityListWithThreeElements);
-        given(statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(applicationEntity)).willReturn(stateEntity);
+        given(candidateRepository.findOne(FIRST_ID)).willReturn(firstCandidateEntity);
+        given(applicationsRepository.findByCandidateEntity(firstCandidateEntity)).willReturn(applicationEntityListWithThreeElements);
+        given(statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(firstApplicationEntity)).willReturn(firstStateEntity);
+        given(statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(secondApplicationEntity)).willReturn(secondStateEntity);
+        given(statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(thirdApplicationEntity)).willReturn(thirdStateEntity);
 
         // When
         Collection<CandidateApplicationDTO> candidateApplicationDTOCollection = statesService.getCandidateApplicationsByCandidateId(FIRST_ID);
 
         // Then
-        assertCandidateApplicationDTOCollection(candidateApplicationDTOCollection, getExpectedCandidateApplicationDTOListFromApplicationEntityListAndStateEntity(applicationEntityListWithThreeElements, stateEntity));
+        assertCandidateApplicationDTOCollection(candidateApplicationDTOCollection, getExpectedCandidateApplicationDTOListFromApplicationEntityList(applicationEntityListWithThreeElements));
 
-
-        then(candidateRepository).should(times(AT_ONE_TIME)).findOne(FIRST_ID);
-        then(applicationsRepository).should(times(AT_ONE_TIME)).findByCandidateEntity(candidateEntity);
-        then(statesRepository).should(times(THREE_TIMES)).findTopByApplicationEntityOrderByStateIndexDesc(applicationEntity);
+        then(candidateRepository).should().findOne(FIRST_ID);
+        then(applicationsRepository).should().findByCandidateEntity(firstCandidateEntity);
+        then(statesRepository).should(times(TWO_TIMES)).findTopByApplicationEntityOrderByStateIndexDesc(firstApplicationEntity);
+        then(statesRepository).should(times(TWO_TIMES)).findTopByApplicationEntityOrderByStateIndexDesc(secondApplicationEntity);
+        then(statesRepository).should(times(TWO_TIMES)).findTopByApplicationEntityOrderByStateIndexDesc(thirdApplicationEntity);
     }
 
     private void assertStateViewDtoListByCreationDateAsString(List<StateViewDTO> stateViewDTOList) {
         for (StateViewDTO stateViewDTO : stateViewDTOList) {
-            assertThat(stateViewDTO.getCreationDate(), equalTo(SIMPLE_DATE_FORMAT.format(now)));
+            assertThat(stateViewDTO.getCreationDate(), equalTo(SIMPLE_DATE_FORMAT.format(presentDate)));
         }
     }
 
@@ -316,10 +337,12 @@ public class StatesServiceImplTest {
         assertThat(candidateApplicationDTOCollection, equalTo(expectedCollection));
     }
 
-    private List<CandidateApplicationDTO> getExpectedCandidateApplicationDTOListFromApplicationEntityListAndStateEntity(List<ApplicationEntity> applicationEntityList, StateEntity stateEntity) {
+    private List<CandidateApplicationDTO> getExpectedCandidateApplicationDTOListFromApplicationEntityList(List<ApplicationEntity> applicationEntityList) {
         List<CandidateApplicationDTO> candidateApplicationDTOList = new LinkedList<>();
 
         for (ApplicationEntity applicationEntity : applicationEntityList) {
+            StateEntity stateEntity = statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(applicationEntity);
+
             CandidateApplicationDTO candidateApplicationDTO = CandidateApplicationDTO.builder()
                     .applicationId(applicationEntity.getId())
                     .stateType(stateEntity.getStateType())
