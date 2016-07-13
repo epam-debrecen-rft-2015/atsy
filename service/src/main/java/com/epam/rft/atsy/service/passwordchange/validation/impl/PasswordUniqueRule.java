@@ -6,12 +6,10 @@ import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRul
 import com.epam.rft.atsy.service.security.UserDetailsAdapter;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
 
-@Component
 public class PasswordUniqueRule implements PasswordValidationRule {
     private static final String MESSAGE_KEY = "passwordchange.validation.unique";
 
