@@ -36,12 +36,16 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public CandidateDTO getCandidate(Long id) {
+        Assert.notNull(id);
+
         CandidateEntity candidateEntity = candidateRepository.findOne(id);
         return modelMapper.map(candidateEntity, CandidateDTO.class);
     }
 
     @Override
     public Collection<CandidateDTO> getAllCandidate(FilterRequest sortingRequest) {
+        validateFilterRequest(sortingRequest);
+
         SearchOptions searchOptions = sortingRequest.getSearchOptions();
 
         Sort.Direction sortDirection = Sort.Direction.fromString(sortingRequest.getOrder().name());
@@ -68,5 +72,24 @@ public class CandidateServiceImpl implements CandidateService {
             throw new DuplicateRecordException(candidateName,
                     "Duplication occurred when saving candidate: " + candidateName, ex);
         }
+    }
+
+    /**
+     * Validates the fields of the passed filter request. Performs
+     * nullness-checks.
+     *
+     * @param filterRequest the object to validate
+     *
+     * @throws IllegalArgumentException if any member of the parameter
+     *                                  (or the parameter itself) is {@code null}.
+     */
+    private void validateFilterRequest(FilterRequest filterRequest) {
+        Assert.notNull(filterRequest);
+        Assert.notNull(filterRequest.getFieldName());
+        Assert.notNull(filterRequest.getOrder());
+
+        SearchOptions searchOptions = filterRequest.getSearchOptions();
+
+        Assert.notNull(searchOptions);
     }
 }

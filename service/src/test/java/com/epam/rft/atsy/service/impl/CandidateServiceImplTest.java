@@ -7,6 +7,7 @@ import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import com.epam.rft.atsy.service.request.FilterRequest;
 import com.epam.rft.atsy.service.request.SearchOptions;
 import com.epam.rft.atsy.service.request.SortingRequest;
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.hibernate.exception.ConstraintViolationException;
@@ -15,7 +16,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -64,6 +64,8 @@ public class CandidateServiceImplTest {
 
     private FilterRequest descendingFilterRequest;
 
+    private Sort ascendingSort;
+
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
@@ -82,6 +84,14 @@ public class CandidateServiceImplTest {
 
         descendingFilterRequest = FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.DESC)
                                               .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
+
+        ascendingSort = new Sort(Sort.Direction.ASC, SORT_FIELD);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getCandidateShouldThrowIAEWhenIdIsNull() {
+        // When
+        candidateService.getCandidate(null);
     }
 
     @Test
@@ -110,28 +120,94 @@ public class CandidateServiceImplTest {
         assertThat(candidate, equalTo(dummyCandidateDto));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void getAllCandidatesShouldThrowIAEWhenFilterRequestIsNull() {
+        // When
+        candidateService.getAllCandidate(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getAllCandidatesShouldThrowIAEWhenSearchOptionsIsNull() {
+        // Given
+        FilterRequest defectedRequest =
+                FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
+                             .searchOptions(null).build();
+
+        // When
+        candidateService.getAllCandidate(defectedRequest);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getAllCandidatesShouldThrowIAEWhenFieldNameIsNull() {
+        // Given
+        FilterRequest defectedRequest =
+                FilterRequest.builder().fieldName(null).order(SortingRequest.Order.ASC)
+                             .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
+
+        // When
+        candidateService.getAllCandidate(defectedRequest);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getAllCandidatesShouldThrowIAEWhenOrderIsNull() {
+        // Given
+        FilterRequest defectedRequest =
+                FilterRequest.builder().fieldName(SORT_FIELD).order(null)
+                        .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
+
+        // When
+        candidateService.getAllCandidate(defectedRequest);
+    }
+
+    @Test
+    public void getAllCandidatesShouldCallRepositoryWithEmptyStringAsNameWhenSearchOptionsNameIsNull() {
+        // Given
+        FilterRequest defectedRequest =
+                FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
+                        .searchOptions(new SearchOptions(null, EMAIL, PHONE)).build();
+
+        // When
+        candidateService.getAllCandidate(defectedRequest);
+
+        // Then
+        verify(candidateRepository).findAllCandidatesByFilterRequest(StringUtils.EMPTY, EMAIL, PHONE, ascendingSort);
+    }
+
+    @Test
+    public void getAllCandidatesShouldCallRepositoryWithEmptyStringAsEmailWhenSearchOptionsEmailIsNull() {
+        // Given
+        FilterRequest defectedRequest =
+                FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
+                        .searchOptions(new SearchOptions(NAME, null, PHONE)).build();
+
+        // When
+        candidateService.getAllCandidate(defectedRequest);
+
+        // Then
+        verify(candidateRepository).findAllCandidatesByFilterRequest(NAME, StringUtils.EMPTY, PHONE, ascendingSort);
+    }
+
+    @Test
+    public void getAllCandidatesShouldCallRepositoryWithEmptyStringAsPhoneWhenSearchOptionsPhoneIsNull() {
+        // Given
+        FilterRequest defectedRequest =
+                FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
+                        .searchOptions(new SearchOptions(NAME, EMAIL, null)).build();
+
+        // When
+        candidateService.getAllCandidate(defectedRequest);
+
+        // Then
+        verify(candidateRepository).findAllCandidatesByFilterRequest(NAME, EMAIL, StringUtils.EMPTY, ascendingSort);
+    }
+
     @Test
     public void getAllCandidateShouldCallRepositoryWithAscendingSortWhenPassingAscendingFilterRequest() {
-        // Given
-        Sort ascendingSort = new Sort(Sort.Direction.ASC, SORT_FIELD);
-
         // When
         Collection<CandidateDTO> result = candidateService.getAllCandidate(ascendingFilterRequest);
 
         // Then
-        ArgumentCaptor<String> nameArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<String> emailArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<String> phoneArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<Sort> sortArgumentCaptor = ArgumentCaptor.forClass(Sort.class);
-
-        verify(candidateRepository).findAllCandidatesByFilterRequest(
-                nameArgumentCaptor.capture(), emailArgumentCaptor.capture(),
-                phoneArgumentCaptor.capture(), sortArgumentCaptor.capture());
-
-        assertThat(nameArgumentCaptor.getValue(), equalTo(NAME));
-        assertThat(emailArgumentCaptor.getValue(), equalTo(EMAIL));
-        assertThat(phoneArgumentCaptor.getValue(), equalTo(PHONE));
-        assertThat(sortArgumentCaptor.getValue(), equalTo(ascendingSort));
+        verify(candidateRepository).findAllCandidatesByFilterRequest(NAME, EMAIL, PHONE, ascendingSort);
     }
 
     @Test
@@ -143,19 +219,7 @@ public class CandidateServiceImplTest {
         Collection<CandidateDTO> result = candidateService.getAllCandidate(descendingFilterRequest);
 
         // Then
-        ArgumentCaptor<String> nameArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<String> emailArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<String> phoneArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<Sort> sortArgumentCaptor = ArgumentCaptor.forClass(Sort.class);
-
-        verify(candidateRepository).findAllCandidatesByFilterRequest(
-                nameArgumentCaptor.capture(), emailArgumentCaptor.capture(),
-                phoneArgumentCaptor.capture(), sortArgumentCaptor.capture());
-
-        assertThat(nameArgumentCaptor.getValue(), equalTo(NAME));
-        assertThat(emailArgumentCaptor.getValue(), equalTo(EMAIL));
-        assertThat(phoneArgumentCaptor.getValue(), equalTo(PHONE));
-        assertThat(sortArgumentCaptor.getValue(), equalTo(descendingSort));
+        verify(candidateRepository).findAllCandidatesByFilterRequest(NAME, EMAIL, PHONE, descendingSort);
     }
 
     @Test(expected = IllegalArgumentException.class)
