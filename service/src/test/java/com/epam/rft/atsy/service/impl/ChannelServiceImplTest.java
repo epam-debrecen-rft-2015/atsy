@@ -29,7 +29,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ChannelServiceImplTest {
@@ -97,8 +97,10 @@ public class ChannelServiceImplTest {
         assertThat(channels, notNullValue());
         assertTrue(channels.isEmpty());
 
-        then(channelRepository).should(times(1)).findAll();
+        then(channelRepository).should().findAll();
+        verify(modelMapper).map(EMPTY_CHANNEL_ENTITY_LIST, CHANNEL_DTO_LIST_TYPE);
     }
+
 
     @Test
     public void getAllChannelsShouldReturnSingleElementListWhenThereIsOneChannel() {
@@ -116,7 +118,8 @@ public class ChannelServiceImplTest {
         // Then
         assertEquals(result, expected);
 
-        then(channelRepository).should(times(1)).findAll();
+        then(channelRepository).should().findAll();
+        verify(modelMapper).map(channels, CHANNEL_DTO_LIST_TYPE);
     }
 
     @Test
@@ -132,7 +135,8 @@ public class ChannelServiceImplTest {
         // Then
         assertEquals(result, expectedChannelDTOList);
 
-        then(channelRepository).should(times(1)).findAll();
+        then(channelRepository).should().findAll();
+        verify(modelMapper).map(expectedChannelEntityList, CHANNEL_DTO_LIST_TYPE);
     }
 
     @Test
@@ -178,7 +182,14 @@ public class ChannelServiceImplTest {
         channelService.saveOrUpdate(facebookDto);
 
         // Then
-        then(channelRepository).should(times(1)).save(facebookEntity);
+        then(channelRepository).should().save(facebookEntity);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void saveOrUpdateShouldThrowIllegalArgumentExceptionWhenNullPassed() {
+        // When
+        channelService.saveOrUpdate(null);
+    }
+
 
 }
