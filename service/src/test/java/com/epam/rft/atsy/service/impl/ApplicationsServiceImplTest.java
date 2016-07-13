@@ -144,7 +144,7 @@ public class ApplicationsServiceImplTest {
         Long result = applicationsService.saveOrUpdate(applicationDTO);
     }
 
-    @Test///////////////////////////////////////////////////////////////////////////////
+    @Test
     public void saveApplicationShouldSaveAProperApplicationDTOAndStateDTO() {
         final StateDTO stateDTO = StateDTO.builder().channel(new ChannelDTO(8L,null)).candidateId(1L).position(new PositionDTO(1L,null)).description("sss").stateType("newstate").stateIndex(0).build();
 
@@ -160,7 +160,7 @@ public class ApplicationsServiceImplTest {
         // Then
         assertNotNull(result);
         assertEquals(APPLICATION_ID, result);
-        
+
         then(statesService).should().saveState(stateDTO,APPLICATION_ID);
     }
 
