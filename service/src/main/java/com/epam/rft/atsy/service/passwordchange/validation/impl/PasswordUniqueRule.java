@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
-@Component
 public class PasswordUniqueRule implements PasswordValidationRule {
     private static final String MESSAGE_KEY = "passwordchange.validation.unique";
 

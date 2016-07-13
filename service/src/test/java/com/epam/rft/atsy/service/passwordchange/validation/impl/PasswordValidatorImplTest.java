@@ -56,7 +56,7 @@ public class PasswordValidatorImplTest {
         // Then
         assertTrue(result);
 
-        then(successfulRule).should(times(1)).isValid(DUMMY_PASSWORD_CHANGE_DTO);
+        then(successfulRule).should().isValid(DUMMY_PASSWORD_CHANGE_DTO);
     }
 
     @Test(expected = PasswordValidationException.class)
@@ -80,8 +80,8 @@ public class PasswordValidatorImplTest {
             passwordValidator.validate(DUMMY_PASSWORD_CHANGE_DTO);
         } catch (PasswordValidationException e) {
             // Then
-            then(successfulRule).should(times(1)).isValid(DUMMY_PASSWORD_CHANGE_DTO);
-            then(failingRule).should(times(1)).isValid(DUMMY_PASSWORD_CHANGE_DTO);
+            then(successfulRule).should().isValid(DUMMY_PASSWORD_CHANGE_DTO);
+            then(failingRule).should().isValid(DUMMY_PASSWORD_CHANGE_DTO);
 
             verifyZeroInteractions(unreachedRule);
         }

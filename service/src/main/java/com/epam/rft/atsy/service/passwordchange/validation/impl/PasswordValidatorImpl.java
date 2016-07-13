@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.List;
 
-@Component
 public class PasswordValidatorImpl implements PasswordValidator {
 
     private Collection<PasswordValidationRule> passwordValidationRules;
