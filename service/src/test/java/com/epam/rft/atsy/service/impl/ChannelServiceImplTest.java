@@ -29,7 +29,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ChannelServiceImplTest {
@@ -98,7 +97,7 @@ public class ChannelServiceImplTest {
         assertTrue(channels.isEmpty());
 
         then(channelRepository).should().findAll();
-        verify(modelMapper).map(EMPTY_CHANNEL_ENTITY_LIST, CHANNEL_DTO_LIST_TYPE);
+        then(modelMapper).should().map(EMPTY_CHANNEL_ENTITY_LIST, CHANNEL_DTO_LIST_TYPE);
     }
 
 
@@ -119,7 +118,7 @@ public class ChannelServiceImplTest {
         assertEquals(result, expected);
 
         then(channelRepository).should().findAll();
-        verify(modelMapper).map(channels, CHANNEL_DTO_LIST_TYPE);
+        then(modelMapper).should().map(channels, CHANNEL_DTO_LIST_TYPE);
     }
 
     @Test
@@ -136,7 +135,7 @@ public class ChannelServiceImplTest {
         assertEquals(result, expectedChannelDTOList);
 
         then(channelRepository).should().findAll();
-        verify(modelMapper).map(expectedChannelEntityList, CHANNEL_DTO_LIST_TYPE);
+        then(modelMapper).should().map(expectedChannelEntityList, CHANNEL_DTO_LIST_TYPE);
     }
 
     @Test
