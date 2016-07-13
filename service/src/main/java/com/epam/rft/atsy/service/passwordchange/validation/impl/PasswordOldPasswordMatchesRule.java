@@ -5,7 +5,6 @@ import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRul
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
 
 public class PasswordOldPasswordMatchesRule implements PasswordValidationRule {
 

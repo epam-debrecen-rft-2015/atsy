@@ -2,7 +2,6 @@ package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
-import org.springframework.stereotype.Component;
 
 public class PasswordLengthValidationRule implements PasswordValidationRule {
     private static final int PASSWORD_MIN_LENGTH = 6;
