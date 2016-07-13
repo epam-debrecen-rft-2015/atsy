@@ -23,8 +23,6 @@ public class PasswordHistoryRepositoryIT extends AbstractRepositoryIT {
     private static final String TEST_PASSWORD_1_FOR_USER_WITH_THREE_PASSWORD_HISTORY = "password_history1";
     private static final String TEST_PASSWORD_2_FOR_USER_WITH_THREE_PASSWORD_HISTORY = "password_history2";
 
-    private static final long TEST_USER_ID_WITHOUT_PASSWORD_HISTORY = 3L;
-    private static final long TEST_USER_ID_WITH_THREE_PASSWORD_HISTORY = 2L;
     private static final String ACTUAL_PASSWORD_FOR_USER_WITH_THREE_PASSWORD_HISTORY = "$2a$04$QSJkUouEDGfbWAtuxnlf/.Ajen6lviIhrNwKFPPZ.juRn6nLgvBi6";
 
     @Autowired
@@ -93,8 +91,11 @@ public class PasswordHistoryRepositoryIT extends AbstractRepositoryIT {
 
     @Test
     public void findOldestPasswordShouldNotFindPasswordHistoryForUserWithoutPasswordHistory() {
+        //Given
+        Long testUserIdWithoutPasswordHistory = this.userRepository.findByUserName(TEST_USERNAME_WITHOUT_PASSWORD_HISTORY).getId();
+
         //When
-        PasswordHistoryEntity pwHistory = this.repository.findOldestPassword(TEST_USER_ID_WITHOUT_PASSWORD_HISTORY);
+        PasswordHistoryEntity pwHistory = this.repository.findOldestPassword(testUserIdWithoutPasswordHistory);
 
         //Then
         assertThat(pwHistory, nullValue());
@@ -104,10 +105,11 @@ public class PasswordHistoryRepositoryIT extends AbstractRepositoryIT {
     public void findOldestPasswordShouldFindOldestPasswordHistoryForUserWithThreePasswordHistory() {
         //Given
         UserEntity user = this.userRepository.findByUserName(TEST_USERNAME_WITH_THREE_PASSWORD_HISTORY);
+        Long testUserIdWithThreePasswordHistory = user.getId();
         Date nearNow = currentDateMinus(5);
 
         //When
-        PasswordHistoryEntity pwHistory = this.repository.findOldestPassword(TEST_USER_ID_WITH_THREE_PASSWORD_HISTORY);
+        PasswordHistoryEntity pwHistory = this.repository.findOldestPassword(testUserIdWithThreePasswordHistory);
 
         //Then
         assertThat(pwHistory, notNullValue());
