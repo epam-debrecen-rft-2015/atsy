@@ -92,4 +92,11 @@ public class CandidateServiceImpl implements CandidateService {
 
         Assert.notNull(searchOptions);
     }
+
+    @Override
+    public CandidateDTO getCandidateByName(String name) {
+        CandidateEntity candidateEntity = candidateRepository.findByName(name);
+        return modelMapper.map(candidateEntity, CandidateDTO.class);
+    }
+
 }

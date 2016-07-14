@@ -33,7 +33,7 @@ function CandidateCreateModel(){
 
 
     var self = this;
-    self.errorMessage = ko.observable();
+    self.errorResponse = ko.observable({});
     self.showError = ko.observable(false);
 
     self.ajaxCall = function() {
@@ -47,17 +47,24 @@ function CandidateCreateModel(){
                 name: self.name(),
                 referer: self.referer(),
                 email: self.email(),
-                languageSkill: self.languageSkill()[0],
+                languageSkill: self.languageSkill(),
                 phone: self.phone(),
                 description: self.description()
             })
         }).done(function (xhr) {
             window.location = form.attr('action')+ '/' + xhr;
         }).error(function (xhr) {
-            self.errorMessage(xhr.responseText);
+            self.errorResponse(JSON.parse(xhr.responseText));
+
             self.showError(true);
         });
     }
+
+    self.errorMessages = ko.pureComputed(function() {
+        return Object.keys(self.errorResponse()).map(function(key) {
+            return self.errorResponse()[key];
+        });
+    });
 
     self.modify = ko.observable(false);
     modify_display_true = function() {
