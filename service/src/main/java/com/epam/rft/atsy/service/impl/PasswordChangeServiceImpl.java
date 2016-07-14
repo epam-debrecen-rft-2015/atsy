@@ -1,6 +1,7 @@
 package com.epam.rft.atsy.service.impl;
 
 import com.epam.rft.atsy.persistence.entities.PasswordHistoryEntity;
+import com.epam.rft.atsy.persistence.entities.UserEntity;
 import com.epam.rft.atsy.persistence.repositories.PasswordHistoryRepository;
 import com.epam.rft.atsy.persistence.repositories.UserRepository;
 import com.epam.rft.atsy.service.PasswordChangeService;
@@ -36,12 +37,16 @@ public class PasswordChangeServiceImpl implements PasswordChangeService {
     @Override
     public Long saveOrUpdate(PasswordHistoryDTO passwordHistoryDTO) {
         Assert.notNull(passwordHistoryDTO);
+        Assert.notNull(passwordHistoryDTO.getUserId());
         PasswordHistoryEntity entity = modelMapper.map(passwordHistoryDTO, PasswordHistoryEntity.class);
 
-        entity.setUserEntity(userRepository.findOne(passwordHistoryDTO.getUserId()));
+        UserEntity userEntity = userRepository.findOne(passwordHistoryDTO.getUserId());
+        Assert.notNull(userEntity);
+
+        entity.setUserEntity(userEntity);
         try {
             Long retId = passwordHistoryRepository.save(entity).getId();
-            if(passwordHistoryRepository.findByUserEntity(entity.getUserEntity()).size() >= PASSWORD_HISTORY_LIMIT){
+            if(passwordHistoryRepository.findByUserEntity(entity.getUserEntity()).size() > PASSWORD_HISTORY_LIMIT){
                 deleteOldestPassword(passwordHistoryDTO.getUserId());
             }
             return retId;
@@ -57,8 +62,9 @@ public class PasswordChangeServiceImpl implements PasswordChangeService {
     }
 
     @Override
-    public List<String> getOldPasswords(Long id) {
-        List<PasswordHistoryEntity> oldPasswords = passwordHistoryRepository.findByUserEntity(userRepository.findOne(id));
+    public List<String> getOldPasswords(Long userId) {
+        Assert.notNull(userId);
+        List<PasswordHistoryEntity> oldPasswords = passwordHistoryRepository.findByUserEntity(userRepository.findOne(userId));
         List<String> passwords = new ArrayList<>();
         for(PasswordHistoryEntity pass:oldPasswords){
             passwords.add(pass.getPassword());
@@ -68,6 +74,7 @@ public class PasswordChangeServiceImpl implements PasswordChangeService {
 
     @Override
     public void deleteOldestPassword(Long userId) {
+        Assert.notNull(userId);
         PasswordHistoryEntity entity = passwordHistoryRepository.findTop1ByUserEntityIdOrderByChangeDate(userId);
         passwordHistoryRepository.delete(entity);
     }

@@ -18,7 +18,7 @@ public interface StatesService {
      * @param id the candidate's id
      * @return the collection of applications
      */
-    Collection<CandidateApplicationDTO> getStatesByCandidateId(Long id);
+    Collection<CandidateApplicationDTO> getCandidateApplicationsByCandidateId(Long id);
 
     /**
      * Saves a state of the given application and returns it's id.
