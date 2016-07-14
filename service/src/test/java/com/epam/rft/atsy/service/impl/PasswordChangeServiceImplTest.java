@@ -4,6 +4,10 @@ import com.epam.rft.atsy.persistence.entities.PasswordHistoryEntity;
 import com.epam.rft.atsy.persistence.entities.UserEntity;
 import com.epam.rft.atsy.persistence.repositories.PasswordHistoryRepository;
 import com.epam.rft.atsy.persistence.repositories.UserRepository;
+import com.epam.rft.atsy.service.domain.PasswordHistoryDTO;
+import com.epam.rft.atsy.service.exception.DuplicateRecordException;
+import org.hibernate.exception.ConstraintViolationException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -13,6 +17,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +29,12 @@ import static org.mockito.BDDMockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class PasswordChangeServiceImplTest {
 
+    private static final int PASSWORD_HISTORY_LIMIT = 5;
+    private static final Long USER_ID = 1L;
+    private static final UserEntity NULL_USER_ENTITY = null;
+    private static final List<PasswordHistoryEntity> EMPTY_PASSWORD_HISTORY_ENTITY_LIST = Collections.emptyList();
+    private static final PasswordHistoryEntity EMPTY_PASSWORD_HISTORY_ENTITY = new PasswordHistoryEntity();
+
     @Mock
     private ModelMapper modelMapper;
 
@@ -34,14 +45,156 @@ public class PasswordChangeServiceImplTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private PasswordChangeServiceImpl sut;
+    private PasswordChangeServiceImpl passwordChangeService;
+
+    private PasswordHistoryDTO passwordHistoryDtoWithUserId;
+    private PasswordHistoryEntity passwordHistoryEntityWithUserEntity;
+    private UserEntity userEntityWithId;
+    public static final String PASSWORD_PREFIX = "password";
+
+    @Before
+    public void setUp() {
+        passwordHistoryDtoWithUserId = PasswordHistoryDTO.builder()
+                .userId(USER_ID)
+                .build();
+
+        passwordHistoryEntityWithUserEntity = PasswordHistoryEntity.builder()
+                .userEntity(userEntityWithId)
+                .build();
+
+        userEntityWithId = UserEntity.builder()
+                .id(USER_ID)
+                .build();
+
+        given(this.modelMapper.map(passwordHistoryDtoWithUserId, PasswordHistoryEntity.class)).willReturn(passwordHistoryEntityWithUserEntity);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void saveOrUpdateShouldThrowIAEWhenPasswordHistoryDtoIsNull() {
+        //Given
+
+        //When
+        this.passwordChangeService.saveOrUpdate(null);
+
+        //Then
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void saveOrUpdateShouldThrowIAEWhenPasswordHistoryUserIdIsNull() {
+        //Given
+        PasswordHistoryDTO passwordHistoryDTO = PasswordHistoryDTO.builder()
+                .userId(null)
+                .build();
+
+        //When
+        this.passwordChangeService.saveOrUpdate(passwordHistoryDTO);
+
+        //Then
+    }
+
+    @Test(expected = DataAccessException.class)
+    public void saveOrUpdateDelegateDataAccessExceptionFromUserRepository() {
+        //Given
+        given(this.userRepository.findOne(USER_ID)).willThrow(DataIntegrityViolationException.class);
+
+        //When
+        this.passwordChangeService.saveOrUpdate(passwordHistoryDtoWithUserId);
+
+        //Then
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void saveOrUpdateShouldThrowIAEWhenUserCannotBeFoundById() {
+        // Given
+        given(this.userRepository.findOne(USER_ID)).willReturn(NULL_USER_ENTITY);
+        given(this.passwordHistoryRepository.findByUserEntity(NULL_USER_ENTITY)).willThrow(IllegalArgumentException.class);
+
+        //When
+        this.passwordChangeService.saveOrUpdate(passwordHistoryDtoWithUserId);
+    }
+
+    @Test(expected = DuplicateRecordException.class)
+    public void saveOrUpdateShouldThrowDuplicateRecordExceptionBecauseOfConstraintViolationException() {
+        //Given
+        given(this.userRepository.findOne(USER_ID)).willReturn(userEntityWithId);
+        given(this.passwordHistoryRepository.save(passwordHistoryEntityWithUserEntity)).willThrow(ConstraintViolationException.class);
+
+        //When
+        this.passwordChangeService.saveOrUpdate(passwordHistoryDtoWithUserId);
+
+        //Then
+    }
+
+    @Test(expected = DuplicateRecordException.class)
+    public void saveOrUpdateShouldThrowDuplicateRecordExceptionBecauseOfDataIntegrityViolationException() {
+        //Given
+        given(this.userRepository.findOne(USER_ID)).willReturn(userEntityWithId);
+        given(this.passwordHistoryRepository.save(passwordHistoryEntityWithUserEntity)).willThrow(DataIntegrityViolationException.class);
+
+        //When
+        this.passwordChangeService.saveOrUpdate(passwordHistoryDtoWithUserId);
+
+        //Then
+    }
+
+    @Test
+    public void saveOrUpdateShouldDeleteOldestPasswordWhenPasswordHistoryLongerThanLimit() {
+        //Given
+
+        List<PasswordHistoryEntity> passwordHistoryEntityList = getPasswordHistoryEntitylistWithElements(PASSWORD_HISTORY_LIMIT + 1);
+
+        given(this.userRepository.findOne(USER_ID)).willReturn(userEntityWithId);
+        given(this.passwordHistoryRepository.save(passwordHistoryEntityWithUserEntity)).willReturn(passwordHistoryEntityWithUserEntity);
+        given(this.passwordHistoryRepository.findByUserEntity(userEntityWithId)).willReturn(passwordHistoryEntityList);
+        given(this.passwordHistoryRepository.findOldestPassword(USER_ID)).willReturn(passwordHistoryEntityList.get(0));
+
+        //When
+        this.passwordChangeService.saveOrUpdate(passwordHistoryDtoWithUserId);
+
+        //Then
+        then(this.passwordHistoryRepository).should().delete(passwordHistoryEntityList.get(0));
+    }
+
+    @Test
+    public void saveOrUpdateShouldNotDeleteOldestPasswordWhenPasswordHistoryShorterThanLimit() {
+        //Given
+        List<PasswordHistoryEntity> passwordHistoryEntityList = getPasswordHistoryEntitylistWithElements(PASSWORD_HISTORY_LIMIT - 1);
+
+        given(this.userRepository.findOne(USER_ID)).willReturn(userEntityWithId);
+        given(this.passwordHistoryRepository.save(passwordHistoryEntityWithUserEntity)).willReturn(passwordHistoryEntityWithUserEntity);
+        given(this.passwordHistoryRepository.findByUserEntity(userEntityWithId)).willReturn(passwordHistoryEntityList);
+        given(this.passwordHistoryRepository.findOldestPassword(USER_ID)).willReturn(passwordHistoryEntityList.get(0));
+
+        //When
+        this.passwordChangeService.saveOrUpdate(passwordHistoryDtoWithUserId);
+
+        //Then
+        then(this.passwordHistoryRepository).should(never()).delete(passwordHistoryEntityList.get(0));
+    }
+
+    @Test
+    public void saveOrUpdateShouldNotDeleteOldestPasswordWhenPasswordHistoryEqualToLimit() {
+        //Given
+        List<PasswordHistoryEntity> passwordHistoryEntityList = getPasswordHistoryEntitylistWithElements(PASSWORD_HISTORY_LIMIT);
+
+        given(this.userRepository.findOne(USER_ID)).willReturn(userEntityWithId);
+        given(this.passwordHistoryRepository.save(passwordHistoryEntityWithUserEntity)).willReturn(passwordHistoryEntityWithUserEntity);
+        given(this.passwordHistoryRepository.findByUserEntity(userEntityWithId)).willReturn(passwordHistoryEntityList);
+        given(this.passwordHistoryRepository.findOldestPassword(USER_ID)).willReturn(passwordHistoryEntityList.get(0));
+
+        //When
+        this.passwordChangeService.saveOrUpdate(passwordHistoryDtoWithUserId);
+
+        //Then
+        then(this.passwordHistoryRepository).should(never()).delete(passwordHistoryEntityList.get(0));
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void getOldPasswordShouldThrowIAEWhenUserIdIsNull() {
         // Given
 
         // When
-        this.sut.getOldPasswords(null);
+        this.passwordChangeService.getOldPasswords(null);
 
         // Then
     }
@@ -49,11 +202,10 @@ public class PasswordChangeServiceImplTest {
     @Test(expected = DataAccessException.class)
     public void getOldPasswordShouldDelegateDataAccessExceptionFromUserRepository() {
         // Given
-        final Long ID = 1L;
-        given(this.userRepository.findOne(ID)).willThrow(DataIntegrityViolationException.class);
+        given(this.userRepository.findOne(USER_ID)).willThrow(DataIntegrityViolationException.class);
 
         // When
-        this.sut.getOldPasswords(ID);
+        this.passwordChangeService.getOldPasswords(USER_ID);
 
         // Then
     }
@@ -61,13 +213,11 @@ public class PasswordChangeServiceImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void getOldPasswordShouldThrowIAEWhenUserCannotBeFoundById() {
         // Given
-        final Long ID = 1L;
-        final UserEntity USER = null;
-        given(this.userRepository.findOne(ID)).willReturn(USER);
-        given(this.passwordHistoryRepository.findByUserEntity(USER)).willThrow(IllegalArgumentException.class);
+        given(this.userRepository.findOne(USER_ID)).willReturn(NULL_USER_ENTITY);
+        given(this.passwordHistoryRepository.findByUserEntity(NULL_USER_ENTITY)).willThrow(IllegalArgumentException.class);
 
         // When
-        this.sut.getOldPasswords(ID);
+        this.passwordChangeService.getOldPasswords(USER_ID);
 
         // Then
     }
@@ -75,50 +225,42 @@ public class PasswordChangeServiceImplTest {
     @Test
     public void getOldPasswordShouldReturnEmptyListWhenNoPasswordHistoryHasBeenFound() {
         // Given
-        final Long ID = 1L;
-        final UserEntity USER = UserEntity.builder().id(ID).build();
-        final List<PasswordHistoryEntity> HISTORY = Collections.emptyList();
-        given(this.userRepository.findOne(ID)).willReturn(USER);
-        given(this.passwordHistoryRepository.findByUserEntity(USER)).willReturn(HISTORY);
+        given(this.userRepository.findOne(USER_ID)).willReturn(userEntityWithId);
+        given(this.passwordHistoryRepository.findByUserEntity(userEntityWithId)).willReturn(EMPTY_PASSWORD_HISTORY_ENTITY_LIST);
 
         // When
-        List<String> result = this.sut.getOldPasswords(ID);
+        List<String> result = this.passwordChangeService.getOldPasswords(USER_ID);
 
         // Then
         assertThat(result, notNullValue());
         assertThat(result.isEmpty(), is(true));
 
-        then(this.userRepository).should().findOne(ID);
-        then(this.passwordHistoryRepository).should().findByUserEntity(USER);
+        then(this.userRepository).should().findOne(USER_ID);
+        then(this.passwordHistoryRepository).should().findByUserEntity(userEntityWithId);
     }
 
     @Test
     public void getOldPasswordShouldExtractPasswordFromHistoryWhenThereIsPasswordHistory() {
         // Given
-        final Long ID = 1L;
-        final UserEntity USER = UserEntity.builder().id(ID).build();
-
-        final String PASSWORD1 = "pass1";
-        final String PASSWORD2 = "password2";
-        final List<PasswordHistoryEntity> HISTORY = Arrays.asList(
-                PasswordHistoryEntity.builder().password(PASSWORD1).build(),
-                PasswordHistoryEntity.builder().password(PASSWORD2).build()
+        final List<PasswordHistoryEntity> passwordHistoryEntityList = getPasswordHistoryEntitylistWithElements(2);
+        final List<String> expectedPasswords = Arrays.asList(
+                passwordHistoryEntityList.get(0).getPassword(),
+                passwordHistoryEntityList.get(1).getPassword()
         );
-        final List<String> EXPECTED = Arrays.asList(PASSWORD1, PASSWORD2);
 
-        given(this.userRepository.findOne(ID)).willReturn(USER);
-        given(this.passwordHistoryRepository.findByUserEntity(USER)).willReturn(HISTORY);
+        given(this.userRepository.findOne(USER_ID)).willReturn(userEntityWithId);
+        given(this.passwordHistoryRepository.findByUserEntity(userEntityWithId)).willReturn(passwordHistoryEntityList);
 
         // When
-        List<String> result = this.sut.getOldPasswords(ID);
+        List<String> result = this.passwordChangeService.getOldPasswords(USER_ID);
 
         // Then
         assertThat(result, notNullValue());
         assertThat(result.isEmpty(), is(false));
-        assertThat(result, equalTo(EXPECTED));
+        assertThat(result, equalTo(expectedPasswords));
 
-        then(this.userRepository).should().findOne(ID);
-        then(this.passwordHistoryRepository).should().findByUserEntity(USER);
+        then(this.userRepository).should().findOne(USER_ID);
+        then(this.passwordHistoryRepository).should().findByUserEntity(userEntityWithId);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -126,7 +268,7 @@ public class PasswordChangeServiceImplTest {
         // Given
 
         // When
-        this.sut.deleteOldestPassword(null);
+        this.passwordChangeService.deleteOldestPassword(null);
 
         // Then
     }
@@ -134,11 +276,10 @@ public class PasswordChangeServiceImplTest {
     @Test(expected = DataAccessException.class)
     public void deleteOldestPasswordShouldDelegateDataAccessExceptionWhenQueryingOldestPassword() {
         // Given
-        final Long ID = 1L;
-        given(this.passwordHistoryRepository.findOldestPassword(ID)).willThrow(DataIntegrityViolationException.class);
+        given(this.passwordHistoryRepository.findOldestPassword(USER_ID)).willThrow(DataIntegrityViolationException.class);
 
         // When
-        this.sut.deleteOldestPassword(ID);
+        this.passwordChangeService.deleteOldestPassword(USER_ID);
 
         // Then
     }
@@ -146,13 +287,11 @@ public class PasswordChangeServiceImplTest {
     @Test(expected = DataAccessException.class)
     public void deleteOldestPasswordShouldDelegateDataAccessExceptionWhenDeletingHistoryEntity() {
         // Given
-        final Long ID = 1L;
-        final PasswordHistoryEntity HISTORY_ENTRY = new PasswordHistoryEntity();
-        given(this.passwordHistoryRepository.findOldestPassword(ID)).willReturn(HISTORY_ENTRY);
-        willThrow(DataIntegrityViolationException.class).given(this.passwordHistoryRepository).delete(HISTORY_ENTRY);
+        given(this.passwordHistoryRepository.findOldestPassword(USER_ID)).willReturn(EMPTY_PASSWORD_HISTORY_ENTITY);
+        willThrow(DataIntegrityViolationException.class).given(this.passwordHistoryRepository).delete(EMPTY_PASSWORD_HISTORY_ENTITY);
 
         // When
-        this.sut.deleteOldestPassword(ID);
+        this.passwordChangeService.deleteOldestPassword(USER_ID);
 
         // Then
     }
@@ -160,18 +299,26 @@ public class PasswordChangeServiceImplTest {
     @Test
     public void deleteOldestPasswordShouldDeleteHistoryEntity() {
         // Given
-        final Long ID = 1L;
-        final PasswordHistoryEntity HISTORY_ENTRY = new PasswordHistoryEntity();
-        given(this.passwordHistoryRepository.findOldestPassword(ID)).willReturn(HISTORY_ENTRY);
+        given(this.passwordHistoryRepository.findOldestPassword(USER_ID)).willReturn(EMPTY_PASSWORD_HISTORY_ENTITY);
 
         // When
-        this.sut.deleteOldestPassword(ID);
+        this.passwordChangeService.deleteOldestPassword(USER_ID);
 
         // Then
-        then(this.passwordHistoryRepository).should().findOldestPassword(ID);
-        then(this.passwordHistoryRepository).should().delete(HISTORY_ENTRY);
+        then(this.passwordHistoryRepository).should().findOldestPassword(USER_ID);
+        then(this.passwordHistoryRepository).should().delete(EMPTY_PASSWORD_HISTORY_ENTITY);
         verifyNoMoreInteractions(this.passwordHistoryRepository);
         verifyZeroInteractions(this.userRepository);
+    }
+
+    private List<PasswordHistoryEntity> getPasswordHistoryEntitylistWithElements(int numberOfElements) {
+        List<PasswordHistoryEntity> r = new ArrayList<>();
+        for (int i = 0; i < numberOfElements; ++i) {
+            r.add(PasswordHistoryEntity.builder()
+                    .password(PASSWORD_PREFIX + i)
+                    .build());
+        }
+        return r;
     }
 
 }
