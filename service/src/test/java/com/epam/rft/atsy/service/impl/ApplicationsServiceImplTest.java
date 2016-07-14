@@ -168,7 +168,7 @@ public class ApplicationsServiceImplTest {
     public void saveApplicationWithApplicationDTONullShouldThrowIllegalArgumentException() {
 
         // When
-        Long result = applicationsService.saveApplicaton(applicationDTO,null);
+        Long result = applicationsService.saveApplicaton(null,stateDTO);
     }
 
     @Test(expected = IllegalArgumentException.class)
