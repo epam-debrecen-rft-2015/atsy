@@ -7,16 +7,14 @@ import com.epam.rft.atsy.service.domain.UserDTO;
 import com.epam.rft.atsy.service.exception.BackendException;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import com.epam.rft.atsy.service.exception.UserNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
 import javax.persistence.NoResultException;
@@ -31,20 +29,29 @@ public class UserServiceImpl implements UserService {
     private ModelMapper modelMapper;
 
     public UserDTO login(UserDTO user) throws UserNotFoundException {
+        Assert.notNull(user);
+        Assert.notNull(user.getName());
+        Assert.notNull(user.getPassword());
 
-        UserDTO userDTO;
+        UserEntity userEntity;
         try {
-            UserEntity userEntity = userRepository.findByUserNameAndUserPassword(user.getName(), user.getPassword());
-            userDTO=modelMapper.map(userEntity,UserDTO.class);
+            userEntity = userRepository.findByUserNameAndUserPassword(user.getName(), user.getPassword());
+            if (userEntity == null) {
+                throw new UserNotFoundException();
+            }
+
         } catch (NoResultException | EmptyResultDataAccessException | NonUniqueResultException e) {
             throw new UserNotFoundException(e);
+        } catch (UserNotFoundException e) {
+            throw e;
         }catch (Exception e){
             log.error("User failed to login",e);
             throw new BackendException(e);
         }
 
-        return userDTO;
+        UserDTO userDTO = modelMapper.map(userEntity,UserDTO.class);
 
+        return userDTO;
     }
 
     @Override
@@ -65,6 +72,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO findUserByName(String username) {
+        Assert.notNull(username);
         UserEntity user = userRepository.findByUserName(username);
         return (user != null) ? modelMapper.map(user, UserDTO.class) : null;
     }
