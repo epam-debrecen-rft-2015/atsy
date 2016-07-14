@@ -59,29 +59,46 @@ public class StatesServiceImplTest {
     private static final List<StateEntity> EMPTY_STATE_ENTITY_LIST = Collections.emptyList();
     private static final List<StateViewDTO> EMPTY_STATE_VIEW_DTO_LIST = Collections.emptyList();
 
-    private Date presentDate;
-    private CandidateEntity firstCandidateEntity;
-    private PositionEntity firstPositionEntity;
-    private PositionEntity secondPositionEntity;
-    private PositionEntity thirdPositionEntity;
+    private final Date presentDate = currentDateMinusSeconds(FIVE_SECONDS);
+    private final CandidateEntity firstCandidateEntity = CandidateEntity.builder().id(FIRST_ID).build();
+    private final PositionEntity firstPositionEntity = PositionEntity.builder().id(FIRST_ID).name(FIRST_POSITION_ENTITY_NAME).build();
+    private final PositionEntity secondPositionEntity = PositionEntity.builder().id(SECOND_ID).name(SECOND_POSITION_ENTITY_NAME).build();
+    private final PositionEntity thirdPositionEntity = PositionEntity.builder().id(THIRD_ID).name(THIRD_POSITION_ENTITY_NAME).build();
 
-    private ApplicationEntity firstApplicationEntity;
-    private ApplicationEntity secondApplicationEntity;
-    private ApplicationEntity thirdApplicationEntity;
+    private final ApplicationEntity firstApplicationEntity = ApplicationEntity.builder().id(FIRST_ID).candidateEntity(firstCandidateEntity).positionEntity(firstPositionEntity).creationDate(presentDate).build();;
+    private final ApplicationEntity secondApplicationEntity =  ApplicationEntity.builder().id(SECOND_ID).candidateEntity(firstCandidateEntity).positionEntity(secondPositionEntity).creationDate(presentDate).build();
+    private final ApplicationEntity thirdApplicationEntity = ApplicationEntity.builder().id(THIRD_ID).candidateEntity(firstCandidateEntity).positionEntity(thirdPositionEntity).creationDate(presentDate).build();
 
-    private StateEntity firstStateEntity;
-    private StateEntity secondStateEntity;
-    private StateEntity thirdStateEntity;
-    private StateViewDTO stateViewDTO;
-    private StateDTO stateDTO;
+    private final StateEntity firstStateEntity = StateEntity.builder().id(FIRST_ID).applicationEntity(firstApplicationEntity).stateType(FIRST_STATE_TYPE_NAME).creationDate(presentDate).build();;
+    private final StateEntity secondStateEntity = StateEntity.builder().id(SECOND_ID).applicationEntity(secondApplicationEntity).stateType(SECOND_STATE_TYPE_NAME).creationDate(presentDate).build();
+    private final StateEntity thirdStateEntity = StateEntity.builder().id(THIRD_ID).applicationEntity(thirdApplicationEntity).stateType(THIRD_STATE_TYPE_NAME).creationDate(presentDate).build();
+    private final StateEntity savedStateEntity = StateEntity.builder().id(FIRST_ID).applicationEntity(secondApplicationEntity).stateType(FIRST_STATE_TYPE_NAME).creationDate(presentDate).build();
+    private final StateViewDTO stateViewDTO = StateViewDTO.builder().id(FIRST_ID).build();
+    private final StateDTO stateDTO = StateDTO.builder().id(FIRST_ID).build();
 
-    private List<ApplicationEntity> applicationEntityListWithSingleElement;
-    private List<ApplicationEntity> applicationEntityListWithThreeElements;
-    private List<StateEntity> stateEntityListWithSingleElement;
-    private List<StateEntity> stateEntityListWithThreeElements;
-    private List<StateViewDTO> stateViewDTOListWithSingleElement;
-    private List<StateViewDTO> stateViewDTOListWithThreeElements;
+    private final List<ApplicationEntity> applicationEntityListWithSingleElement = Arrays.asList(firstApplicationEntity);;
+    private final List<ApplicationEntity> applicationEntityListWithThreeElements = Arrays.asList(firstApplicationEntity, secondApplicationEntity, thirdApplicationEntity);
+    private final List<StateEntity> stateEntityListWithSingleElement = Arrays.asList(firstStateEntity);
+    private final List<StateEntity> stateEntityListWithThreeElements = Arrays.asList(firstStateEntity, secondStateEntity, thirdStateEntity);
+    private final List<StateViewDTO> stateViewDTOListWithSingleElement = Arrays.asList(stateViewDTO);
+    private final List<StateViewDTO> stateViewDTOListWithThreeElements = Arrays.asList(stateViewDTO, stateViewDTO, stateViewDTO);
 
+
+    private List<CandidateApplicationDTO> candidateApplicationDTOListWithSingleElement =  Arrays.asList(
+            CandidateApplicationDTO.builder().applicationId(FIRST_ID).stateType(FIRST_STATE_TYPE_NAME).positionName(FIRST_POSITION_ENTITY_NAME).lastStateId(FIRST_ID)
+            .creationDate(SIMPLE_DATE_FORMAT.format(presentDate)).modificationDate(SIMPLE_DATE_FORMAT.format(presentDate)).build()
+    );
+
+    private List<CandidateApplicationDTO> candidateApplicationDTOListWithThreeElements = Arrays.asList(
+            CandidateApplicationDTO.builder().applicationId(FIRST_ID).stateType(FIRST_STATE_TYPE_NAME).positionName(FIRST_POSITION_ENTITY_NAME).lastStateId(FIRST_ID)
+                    .creationDate(SIMPLE_DATE_FORMAT.format(presentDate)).modificationDate(SIMPLE_DATE_FORMAT.format(presentDate)).build(),
+
+            CandidateApplicationDTO.builder().applicationId(SECOND_ID).stateType(SECOND_STATE_TYPE_NAME).positionName(SECOND_POSITION_ENTITY_NAME).lastStateId(SECOND_ID)
+                    .creationDate(SIMPLE_DATE_FORMAT.format(presentDate)).modificationDate(SIMPLE_DATE_FORMAT.format(presentDate)).build(),
+
+            CandidateApplicationDTO.builder().applicationId(THIRD_ID).stateType(THIRD_STATE_TYPE_NAME).positionName(THIRD_POSITION_ENTITY_NAME).lastStateId(THIRD_ID)
+                    .creationDate(SIMPLE_DATE_FORMAT.format(presentDate)).modificationDate(SIMPLE_DATE_FORMAT.format(presentDate)).build()
+    );
 
     @Mock
     private ModelMapper modelMapper;
@@ -96,36 +113,6 @@ public class StatesServiceImplTest {
     @InjectMocks
     private StatesServiceImpl statesService;
 
-
-    @Before
-    public void setUp() {
-        presentDate = currentDateMinusSeconds(FIVE_SECONDS);
-        firstCandidateEntity = CandidateEntity.builder().id(FIRST_ID).build();
-
-        firstPositionEntity = PositionEntity.builder().id(FIRST_ID).name(FIRST_POSITION_ENTITY_NAME).build();
-        secondPositionEntity = PositionEntity.builder().id(SECOND_ID).name(SECOND_POSITION_ENTITY_NAME).build();
-        thirdPositionEntity = PositionEntity.builder().id(THIRD_ID).name(THIRD_POSITION_ENTITY_NAME).build();
-
-        firstApplicationEntity = ApplicationEntity.builder().id(FIRST_ID).candidateEntity(firstCandidateEntity).positionEntity(firstPositionEntity).creationDate(presentDate).build();
-        secondApplicationEntity = ApplicationEntity.builder().id(SECOND_ID).candidateEntity(firstCandidateEntity).positionEntity(secondPositionEntity).creationDate(presentDate).build();
-        thirdApplicationEntity = ApplicationEntity.builder().id(THIRD_ID).candidateEntity(firstCandidateEntity).positionEntity(thirdPositionEntity).creationDate(presentDate).build();
-
-        firstStateEntity = StateEntity.builder().id(FIRST_ID).applicationEntity(firstApplicationEntity).stateType(FIRST_STATE_TYPE_NAME).creationDate(presentDate).build();
-        secondStateEntity = StateEntity.builder().id(SECOND_ID).applicationEntity(secondApplicationEntity).stateType(SECOND_STATE_TYPE_NAME).creationDate(presentDate).build();
-        thirdStateEntity = StateEntity.builder().id(THIRD_ID).applicationEntity(thirdApplicationEntity).stateType(THIRD_STATE_TYPE_NAME).creationDate(presentDate).build();
-
-        stateViewDTO = StateViewDTO.builder().id(FIRST_ID).build();
-        stateDTO = StateDTO.builder().id(FIRST_ID).build();
-
-        applicationEntityListWithSingleElement = Arrays.asList(firstApplicationEntity);
-        applicationEntityListWithThreeElements = Arrays.asList(firstApplicationEntity, secondApplicationEntity, thirdApplicationEntity);
-
-        stateEntityListWithSingleElement = Arrays.asList(firstStateEntity);
-        stateEntityListWithThreeElements = Arrays.asList(firstStateEntity, secondStateEntity, thirdStateEntity);
-
-        stateViewDTOListWithSingleElement = Arrays.asList(stateViewDTO);
-        stateViewDTOListWithThreeElements = Arrays.asList(stateViewDTO, stateViewDTO, stateViewDTO);
-    }
 
     @Test(expected = IllegalArgumentException.class)
     public void getStatesByApplicationIdShouldThrowIllegalArgumentExceptionWhenApplicationIdIsNull() {
@@ -238,7 +225,7 @@ public class StatesServiceImplTest {
         Long resultId = statesService.saveState(stateDTO, SECOND_ID);
 
         // Then
-        assertStateEntityWhenSavingStateEntity(firstStateEntity, getExpectedSavedStateEntity());
+        assertStateEntityWhenSavingStateEntity(firstStateEntity, savedStateEntity);
         assertThat(resultId, notNullValue());
         assertThat(resultId, equalTo(FIRST_ID));
 
@@ -295,7 +282,7 @@ public class StatesServiceImplTest {
         Collection<CandidateApplicationDTO> candidateApplicationDTOCollection = statesService.getCandidateApplicationsByCandidateId(FIRST_ID);
 
         // Then
-        assertCandidateApplicationDTOCollection(candidateApplicationDTOCollection, getExpectedCandidateApplicationDTOCollectionWithSingleElement());
+        assertCandidateApplicationDTOCollection(candidateApplicationDTOCollection, candidateApplicationDTOListWithSingleElement);
 
         then(candidateRepository).should().findOne(FIRST_ID);
         then(applicationsRepository).should().findByCandidateEntity(firstCandidateEntity);
@@ -315,7 +302,7 @@ public class StatesServiceImplTest {
         Collection<CandidateApplicationDTO> candidateApplicationDTOCollection = statesService.getCandidateApplicationsByCandidateId(FIRST_ID);
 
         // Then
-        assertCandidateApplicationDTOCollection(candidateApplicationDTOCollection, getExpectedCandidateApplicationDTOCollectionWithThreeElements());
+        assertCandidateApplicationDTOCollection(candidateApplicationDTOCollection, candidateApplicationDTOListWithThreeElements);
 
         then(candidateRepository).should().findOne(FIRST_ID);
         then(applicationsRepository).should().findByCandidateEntity(firstCandidateEntity);
@@ -340,34 +327,6 @@ public class StatesServiceImplTest {
         assertThat(stateEntity, notNullValue());
         assertThat(stateEntity.getApplicationEntity(), equalTo(expectedSavedStateEntity.getApplicationEntity()));
         assertThat(stateEntity.getCreationDate(), greaterThanOrEqualTo(expectedSavedStateEntity.getCreationDate()));
-    }
-
-    private StateEntity getExpectedSavedStateEntity() {
-        return StateEntity.builder().id(FIRST_ID).applicationEntity(secondApplicationEntity).stateType(FIRST_STATE_TYPE_NAME).creationDate(presentDate).build();
-    }
-
-    private Collection<CandidateApplicationDTO> getExpectedCandidateApplicationDTOCollectionWithSingleElement() {
-        return Arrays.asList(
-                CandidateApplicationDTO.builder().applicationId(firstApplicationEntity.getId())
-                        .stateType(firstStateEntity.getStateType()).positionName(firstApplicationEntity.getPositionEntity().getName()).lastStateId(firstStateEntity.getId())
-                        .creationDate(SIMPLE_DATE_FORMAT.format(firstApplicationEntity.getCreationDate())).modificationDate(SIMPLE_DATE_FORMAT.format(firstStateEntity.getCreationDate())).build()
-        );
-    }
-
-    private Collection<CandidateApplicationDTO> getExpectedCandidateApplicationDTOCollectionWithThreeElements() {
-        return Arrays.asList(
-                CandidateApplicationDTO.builder().applicationId(firstApplicationEntity.getId())
-                        .stateType(firstStateEntity.getStateType()).positionName(firstApplicationEntity.getPositionEntity().getName()).lastStateId(firstStateEntity.getId())
-                        .creationDate(SIMPLE_DATE_FORMAT.format(firstApplicationEntity.getCreationDate())).modificationDate(SIMPLE_DATE_FORMAT.format(firstStateEntity.getCreationDate())).build(),
-
-                CandidateApplicationDTO.builder().applicationId(secondApplicationEntity.getId())
-                        .stateType(secondStateEntity.getStateType()).positionName(secondApplicationEntity.getPositionEntity().getName()).lastStateId(secondStateEntity.getId())
-                        .creationDate(SIMPLE_DATE_FORMAT.format(secondApplicationEntity.getCreationDate())).modificationDate(SIMPLE_DATE_FORMAT.format(secondStateEntity.getCreationDate())).build(),
-
-                CandidateApplicationDTO.builder().applicationId(thirdApplicationEntity.getId())
-                        .stateType(thirdStateEntity.getStateType()).positionName(thirdApplicationEntity.getPositionEntity().getName()).lastStateId(thirdStateEntity.getId())
-                        .creationDate(SIMPLE_DATE_FORMAT.format(thirdApplicationEntity.getCreationDate())).modificationDate(SIMPLE_DATE_FORMAT.format(thirdStateEntity.getCreationDate())).build()
-        );
     }
 
     private Date currentDateMinusSeconds(Long seconds) {
