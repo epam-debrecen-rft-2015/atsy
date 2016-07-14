@@ -90,26 +90,26 @@ public class PasswordHistoryRepositoryIT extends AbstractRepositoryIT {
     }
 
     @Test
-    public void findOldestPasswordShouldNotFindPasswordHistoryForUserWithoutPasswordHistory() {
+    public void findTop1ByUserEntityIdOrderByChangeDateShouldNotFindPasswordHistoryForUserWithoutPasswordHistory() {
         //Given
         Long testUserIdWithoutPasswordHistory = this.userRepository.findByUserName(TEST_USERNAME_WITHOUT_PASSWORD_HISTORY).getId();
 
         //When
-        PasswordHistoryEntity pwHistory = this.repository.findOldestPassword(testUserIdWithoutPasswordHistory);
+        PasswordHistoryEntity pwHistory = this.repository.findTop1ByUserEntityIdOrderByChangeDate(testUserIdWithoutPasswordHistory);
 
         //Then
         assertThat(pwHistory, nullValue());
     }
 
     @Test
-    public void findOldestPasswordShouldFindOldestPasswordHistoryForUserWithThreePasswordHistory() {
+    public void findTop1ByUserEntityIdOrderByChangeDateShouldfindTop1ByUserEntityIdOrderByChangeDateHistoryForUserWithThreePasswordHistory() {
         //Given
         UserEntity user = this.userRepository.findByUserName(TEST_USERNAME_WITH_THREE_PASSWORD_HISTORY);
         Long testUserIdWithThreePasswordHistory = user.getId();
         Date nearNow = currentDateMinus(5);
 
         //When
-        PasswordHistoryEntity pwHistory = this.repository.findOldestPassword(testUserIdWithThreePasswordHistory);
+        PasswordHistoryEntity pwHistory = this.repository.findTop1ByUserEntityIdOrderByChangeDate(testUserIdWithThreePasswordHistory);
 
         //Then
         assertThat(pwHistory, notNullValue());
