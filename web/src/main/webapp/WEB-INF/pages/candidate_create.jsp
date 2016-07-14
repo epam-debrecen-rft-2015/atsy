@@ -44,7 +44,13 @@
                         <div class="globalMessage alert alert-danger" role="alert"
                              data-bind="visible: showError">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                            <span class="error-message" data-bind="text: errorMessage"></span>
+                            <span class="error-message">
+                                <ul>
+                                <!-- ko foreach: errorMessages -->
+                                    <li data-bind="text: $data"></li>
+                                <!-- /ko -->
+                                </ul>
+                            </span>
                         </div>
                         <div class="form-group"
                              id="nameDiv">

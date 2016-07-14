@@ -21,4 +21,6 @@ public interface CandidateRepository extends JpaRepository<CandidateEntity, Long
      * @return the list of CandidateEntities
      */
     List<CandidateEntity> findAllByNameContainingAndEmailContainingAndPhoneContaining(String name, String email, String phone, Sort sort);
+
+    CandidateEntity findByName(String name);
 }
