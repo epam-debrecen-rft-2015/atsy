@@ -107,7 +107,6 @@ public class PasswordChangeServiceImplTest {
     public void saveOrUpdateShouldThrowIAEWhenUserCannotBeFoundById() {
         // Given
         given(this.userRepository.findOne(USER_ID)).willReturn(NULL_USER_ENTITY);
-        given(this.passwordHistoryRepository.findByUserEntity(NULL_USER_ENTITY)).willThrow(IllegalArgumentException.class);
 
         //When
         this.passwordChangeService.saveOrUpdate(passwordHistoryDtoWithUserId);
@@ -153,6 +152,10 @@ public class PasswordChangeServiceImplTest {
 
         //Then
         then(this.passwordHistoryRepository).should().delete(passwordHistoryEntityList.get(0));
+        then(this.userRepository).should().findOne(USER_ID);
+        then(this.passwordHistoryRepository).should().save(passwordHistoryEntityWithUserEntity);
+        then(this.passwordHistoryRepository).should().findByUserEntity(userEntityWithId);
+        then(this.passwordHistoryRepository).should().findOldestPassword(USER_ID);
     }
 
     @Test
@@ -163,13 +166,15 @@ public class PasswordChangeServiceImplTest {
         given(this.userRepository.findOne(USER_ID)).willReturn(userEntityWithId);
         given(this.passwordHistoryRepository.save(passwordHistoryEntityWithUserEntity)).willReturn(passwordHistoryEntityWithUserEntity);
         given(this.passwordHistoryRepository.findByUserEntity(userEntityWithId)).willReturn(passwordHistoryEntityList);
-        given(this.passwordHistoryRepository.findOldestPassword(USER_ID)).willReturn(passwordHistoryEntityList.get(0));
 
         //When
         this.passwordChangeService.saveOrUpdate(passwordHistoryDtoWithUserId);
 
         //Then
         then(this.passwordHistoryRepository).should(never()).delete(passwordHistoryEntityList.get(0));
+        then(this.userRepository).should().findOne(USER_ID);
+        then(this.passwordHistoryRepository).should().save(passwordHistoryEntityWithUserEntity);
+        then(this.passwordHistoryRepository).should().findByUserEntity(userEntityWithId);
     }
 
     @Test
@@ -180,13 +185,15 @@ public class PasswordChangeServiceImplTest {
         given(this.userRepository.findOne(USER_ID)).willReturn(userEntityWithId);
         given(this.passwordHistoryRepository.save(passwordHistoryEntityWithUserEntity)).willReturn(passwordHistoryEntityWithUserEntity);
         given(this.passwordHistoryRepository.findByUserEntity(userEntityWithId)).willReturn(passwordHistoryEntityList);
-        given(this.passwordHistoryRepository.findOldestPassword(USER_ID)).willReturn(passwordHistoryEntityList.get(0));
 
         //When
         this.passwordChangeService.saveOrUpdate(passwordHistoryDtoWithUserId);
 
         //Then
         then(this.passwordHistoryRepository).should(never()).delete(passwordHistoryEntityList.get(0));
+        then(this.userRepository).should().findOne(USER_ID);
+        then(this.passwordHistoryRepository).should().save(passwordHistoryEntityWithUserEntity);
+        then(this.passwordHistoryRepository).should().findByUserEntity(userEntityWithId);
     }
 
     @Test(expected = IllegalArgumentException.class)
