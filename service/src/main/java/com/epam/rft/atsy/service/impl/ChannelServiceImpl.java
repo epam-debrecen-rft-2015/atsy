@@ -40,6 +40,8 @@ public class ChannelServiceImpl implements ChannelService {
     @Override
     public void saveOrUpdate(ChannelDTO channel) {
         Assert.notNull(channel);
+        Assert.notNull(channel.getName());
+
         ChannelEntity entity = modelMapper.map(channel, ChannelEntity.class);
         try {
             channelRepository.save(entity);
