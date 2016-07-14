@@ -3,7 +3,6 @@ package com.epam.rft.atsy.persistence.repositories;
 import com.epam.rft.atsy.persistence.entities.PasswordHistoryEntity;
 import com.epam.rft.atsy.persistence.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -23,9 +22,9 @@ public interface PasswordHistoryRepository extends JpaRepository<PasswordHistory
     /**
      * Returns the oldest password of the user.
      *
-     * @param id the user's id
+     * @param userId the user's id
      * @return the oldest password
      */
-    @Query(value = "SELECT * FROM atsy.password_history WHERE users_id=? ORDER BY change_date LIMIT 1", nativeQuery = true)
-    PasswordHistoryEntity findOldestPassword(Long id);
+    PasswordHistoryEntity findTop1ByUserEntityIdOrderByChangeDate(Long userId);
+
 }

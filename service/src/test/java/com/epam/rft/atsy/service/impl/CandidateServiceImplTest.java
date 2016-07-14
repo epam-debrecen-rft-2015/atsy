@@ -170,7 +170,7 @@ public class CandidateServiceImplTest {
         candidateService.getAllCandidate(defectedRequest);
 
         // Then
-        verify(candidateRepository).findAllCandidatesByFilterRequest(StringUtils.EMPTY, EMAIL, PHONE, ascendingSort);
+        verify(candidateRepository).findAllByNameContainingAndEmailContainingAndPhoneContaining(StringUtils.EMPTY, EMAIL, PHONE, ascendingSort);
     }
 
     @Test
@@ -184,7 +184,7 @@ public class CandidateServiceImplTest {
         candidateService.getAllCandidate(defectedRequest);
 
         // Then
-        verify(candidateRepository).findAllCandidatesByFilterRequest(NAME, StringUtils.EMPTY, PHONE, ascendingSort);
+        verify(candidateRepository).findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, StringUtils.EMPTY, PHONE, ascendingSort);
     }
 
     @Test
@@ -198,7 +198,7 @@ public class CandidateServiceImplTest {
         candidateService.getAllCandidate(defectedRequest);
 
         // Then
-        verify(candidateRepository).findAllCandidatesByFilterRequest(NAME, EMAIL, StringUtils.EMPTY, ascendingSort);
+        verify(candidateRepository).findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL, StringUtils.EMPTY, ascendingSort);
     }
 
     @Test
@@ -207,7 +207,7 @@ public class CandidateServiceImplTest {
         Collection<CandidateDTO> result = candidateService.getAllCandidate(ascendingFilterRequest);
 
         // Then
-        verify(candidateRepository).findAllCandidatesByFilterRequest(NAME, EMAIL, PHONE, ascendingSort);
+        verify(candidateRepository).findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL, PHONE, ascendingSort);
     }
 
     @Test
@@ -219,7 +219,7 @@ public class CandidateServiceImplTest {
         Collection<CandidateDTO> result = candidateService.getAllCandidate(descendingFilterRequest);
 
         // Then
-        verify(candidateRepository).findAllCandidatesByFilterRequest(NAME, EMAIL, PHONE, descendingSort);
+        verify(candidateRepository).findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL, PHONE, descendingSort);
     }
 
     @Test(expected = IllegalArgumentException.class)

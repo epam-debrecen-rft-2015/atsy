@@ -52,7 +52,7 @@ public class CandidateServiceImpl implements CandidateService {
 
         Sort sort = new Sort(sortDirection, sortingRequest.getFieldName());
 
-        Collection<CandidateEntity> candidateEntities = candidateRepository.findAllCandidatesByFilterRequest(
+        Collection<CandidateEntity> candidateEntities = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(
                 searchOptions.getName(), searchOptions.getEmail(), searchOptions.getPhone(), sort);
 
         return modelMapper.map(candidateEntities, CANDIDATEDTO_LIST_TYPE);

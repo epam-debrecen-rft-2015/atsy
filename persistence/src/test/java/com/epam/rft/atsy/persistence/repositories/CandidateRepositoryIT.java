@@ -118,7 +118,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     }
 
     @Test
-    public void findAllCandidatesByFilterRequestShouldFindCandidateAOnlyByPhoneFilter() {
+    public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldFindCandidateAOnlyByPhoneFilter() {
         //Given
         String name = "";
         String email = "";
@@ -126,7 +126,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA);
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllCandidatesByFilterRequest(name, email, phone, null);
+        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, null);
 
         //Then
         assertCandidateValue(actualCandidates, name, email, phone);
@@ -134,7 +134,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     }
 
     @Test
-    public void findAllCandidatesByFilterRequestShouldFindCandidateBOnlyByNameFilter() {
+    public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldFindCandidateBOnlyByNameFilter() {
         //Given
         String name = CANDIDATE_B_NAME;
         String email = "";
@@ -142,7 +142,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         List<CandidateEntity> expectedCandidates = Arrays.asList(candidateB);
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllCandidatesByFilterRequest(name, email, phone, null);
+        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, null);
 
         //Then
         assertCandidateValue(actualCandidates, name, email, phone);
@@ -150,7 +150,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     }
 
     @Test
-    public void findAllCandidatesByFilterRequestShouldFindCandidateCOnlyByEmailFilter() {
+    public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldFindCandidateCOnlyByEmailFilter() {
         //Given
         String name = "";
         String email = CANDIDATE_C_EMAIL;
@@ -158,7 +158,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC);
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllCandidatesByFilterRequest(name, email, phone, null);
+        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, null);
 
         //Then
         assertCandidateValue(actualCandidates, name, email, phone);
@@ -166,7 +166,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     }
 
     @Test
-    public void findAllCandidatesByFilterRequestShouldFindThreeCandidatesInDescendingOrderByEmail() {
+    public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldFindThreeCandidatesInDescendingOrderByEmail() {
         //Given
         String name = "";
         String email = "atsy.com";
@@ -174,7 +174,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC, candidateB, candidateA);
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllCandidatesByFilterRequest(name, email, phone, createSort(Sort.Direction.DESC, "email"));
+        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, createSort(Sort.Direction.DESC, "email"));
 
         //Then
         assertCandidateValue(actualCandidates, name, email, phone);
@@ -182,7 +182,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     }
 
     @Test
-    public void findAllCandidatesByFilterRequestShouldFindThreeCandidatesInAscendingOrderByEmail() {
+    public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldFindThreeCandidatesInAscendingOrderByEmail() {
         //Given
         String name = "";
         String email = "atsy.com";
@@ -190,7 +190,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA, candidateB, candidateC);
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllCandidatesByFilterRequest(name, email, phone, createSort(Sort.Direction.ASC, "email"));
+        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, createSort(Sort.Direction.ASC, "email"));
 
         //Then
         assertCandidateValue(actualCandidates, name, email, phone);
@@ -198,7 +198,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     }
 
     @Test
-    public void findAllCandidatesByFilterRequestShouldFindThreeCandidatesInAscendingOrderByName() {
+    public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldFindThreeCandidatesInAscendingOrderByName() {
         //Given
         String name = "";
         String email = "";
@@ -206,7 +206,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA, candidateB, candidateC);
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllCandidatesByFilterRequest(name, email, phone, createSort(Sort.Direction.ASC, "name"));
+        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, createSort(Sort.Direction.ASC, "name"));
 
         //Then
         assertCandidateValue(actualCandidates, name, email, phone);
@@ -214,7 +214,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     }
 
     @Test
-    public void findAllCandidatesByFilterRequestShouldFindThreeCandidatesInDescendingOrderByName() {
+    public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldFindThreeCandidatesInDescendingOrderByName() {
         //Given
         String name = "";
         String email = "";
@@ -222,7 +222,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC, candidateB, candidateA);
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllCandidatesByFilterRequest(name, email, phone, createSort(Sort.Direction.DESC, "name"));
+        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, createSort(Sort.Direction.DESC, "name"));
 
         //Then
         assertCandidateValue(actualCandidates, name, email, phone);
@@ -230,7 +230,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     }
 
     @Test
-    public void findAllCandidatesByFilterRequestShouldFindThreeCandidatesInDescendingOrderByPhoneFilteredByName() {
+    public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldFindThreeCandidatesInDescendingOrderByPhoneFilteredByName() {
         //Given
         String name = "Candidate";
         String email = "";
@@ -238,7 +238,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC, candidateB, candidateA);
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllCandidatesByFilterRequest(name, email, phone, createSort(Sort.Direction.DESC, "phone"));
+        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, createSort(Sort.Direction.DESC, "phone"));
 
         //Then
         assertCandidateValue(actualCandidates, name, email, phone);
@@ -246,7 +246,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     }
 
     @Test
-    public void findAllCandidatesByFilterRequestShouldFindThreeCandidatesInAscendingOrderByPhoneFilteredByName() {
+    public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldFindThreeCandidatesInAscendingOrderByPhoneFilteredByName() {
         //Given
         String name = "Candidate";
         String email = "";
@@ -254,7 +254,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA, candidateB, candidateC);
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllCandidatesByFilterRequest(name, email, phone, createSort(Sort.Direction.ASC, "phone"));
+        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, createSort(Sort.Direction.ASC, "phone"));
 
         //Then
         assertCandidateValue(actualCandidates, name, email, phone);
@@ -262,7 +262,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     }
 
     @Test
-    public void findAllCandidatesByFilterRequestShouldGiveEmptyList() {
+    public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldGiveEmptyList() {
         //Given
         String name = NON_EXISTENT_CANDIDATE_NAME;
         String email = "";
@@ -270,7 +270,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         List<CandidateEntity> expectedCandidates = Collections.emptyList();
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllCandidatesByFilterRequest(name, email, phone, null);
+        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, null);
 
         //Then
         assertCandidateList(expectedCandidates, actualCandidates);

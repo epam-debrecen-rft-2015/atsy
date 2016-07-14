@@ -145,7 +145,7 @@ public class PasswordChangeServiceImplTest {
         given(this.userRepository.findOne(USER_ID)).willReturn(userEntityWithId);
         given(this.passwordHistoryRepository.save(passwordHistoryEntityWithUserEntity)).willReturn(passwordHistoryEntityWithUserEntity);
         given(this.passwordHistoryRepository.findByUserEntity(userEntityWithId)).willReturn(passwordHistoryEntityList);
-        given(this.passwordHistoryRepository.findOldestPassword(USER_ID)).willReturn(passwordHistoryEntityList.get(0));
+        given(this.passwordHistoryRepository.findTop1ByUserEntityIdOrderByChangeDate(USER_ID)).willReturn(passwordHistoryEntityList.get(0));
 
         //When
         this.passwordChangeService.saveOrUpdate(passwordHistoryDtoWithUserId);
@@ -155,7 +155,7 @@ public class PasswordChangeServiceImplTest {
         then(this.userRepository).should().findOne(USER_ID);
         then(this.passwordHistoryRepository).should().save(passwordHistoryEntityWithUserEntity);
         then(this.passwordHistoryRepository).should().findByUserEntity(userEntityWithId);
-        then(this.passwordHistoryRepository).should().findOldestPassword(USER_ID);
+        then(this.passwordHistoryRepository).should().findTop1ByUserEntityIdOrderByChangeDate(USER_ID);
     }
 
     @Test
@@ -283,7 +283,7 @@ public class PasswordChangeServiceImplTest {
     @Test(expected = DataAccessException.class)
     public void deleteOldestPasswordShouldDelegateDataAccessExceptionWhenQueryingOldestPassword() {
         // Given
-        given(this.passwordHistoryRepository.findOldestPassword(USER_ID)).willThrow(DataIntegrityViolationException.class);
+        given(this.passwordHistoryRepository.findTop1ByUserEntityIdOrderByChangeDate(USER_ID)).willThrow(DataIntegrityViolationException.class);
 
         // When
         this.passwordChangeService.deleteOldestPassword(USER_ID);
@@ -294,7 +294,7 @@ public class PasswordChangeServiceImplTest {
     @Test(expected = DataAccessException.class)
     public void deleteOldestPasswordShouldDelegateDataAccessExceptionWhenDeletingHistoryEntity() {
         // Given
-        given(this.passwordHistoryRepository.findOldestPassword(USER_ID)).willReturn(EMPTY_PASSWORD_HISTORY_ENTITY);
+        given(this.passwordHistoryRepository.findTop1ByUserEntityIdOrderByChangeDate(USER_ID)).willReturn(EMPTY_PASSWORD_HISTORY_ENTITY);
         willThrow(DataIntegrityViolationException.class).given(this.passwordHistoryRepository).delete(EMPTY_PASSWORD_HISTORY_ENTITY);
 
         // When
@@ -306,13 +306,13 @@ public class PasswordChangeServiceImplTest {
     @Test
     public void deleteOldestPasswordShouldDeleteHistoryEntity() {
         // Given
-        given(this.passwordHistoryRepository.findOldestPassword(USER_ID)).willReturn(EMPTY_PASSWORD_HISTORY_ENTITY);
+        given(this.passwordHistoryRepository.findTop1ByUserEntityIdOrderByChangeDate(USER_ID)).willReturn(EMPTY_PASSWORD_HISTORY_ENTITY);
 
         // When
         this.passwordChangeService.deleteOldestPassword(USER_ID);
 
         // Then
-        then(this.passwordHistoryRepository).should().findOldestPassword(USER_ID);
+        then(this.passwordHistoryRepository).should().findTop1ByUserEntityIdOrderByChangeDate(USER_ID);
         then(this.passwordHistoryRepository).should().delete(EMPTY_PASSWORD_HISTORY_ENTITY);
         verifyNoMoreInteractions(this.passwordHistoryRepository);
         verifyZeroInteractions(this.userRepository);
