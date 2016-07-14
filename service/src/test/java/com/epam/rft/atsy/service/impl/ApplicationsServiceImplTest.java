@@ -162,6 +162,11 @@ public class ApplicationsServiceImplTest {
         assertEquals(APPLICATION_ID, result);
 
         then(statesService).should().saveState(stateDTO,APPLICATION_ID);
+        then(modelMapper).should().map(applicationDTO, ApplicationEntity.class);
+        then(candidateRepository).should().findOne(CANDIDATE_ID);
+        then(positionRepository).should().findOne(POSITION_ID);
+        then(channelRepository).should().findOne(CHANNEL_ID);
+        then(applicationsRepository).should().save(applicationEntity);
     }
 
     @Test(expected = IllegalArgumentException.class)
