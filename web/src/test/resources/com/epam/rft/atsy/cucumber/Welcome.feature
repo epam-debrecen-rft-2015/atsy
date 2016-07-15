@@ -30,7 +30,7 @@ Feature: Welcome
       | Candidate C | candidate.c@atsy.com | +36107777777 | -         |
     When the user clicks on the Főoldal button
     Then the Candidates page appears
-    And the user changes the order field to <field>, <order>
+    When the user changes the order field to <field>, <order>
     And the list of candidates shown ordered by <field> as <order>
   Examples:
       | field     | order |
