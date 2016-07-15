@@ -62,10 +62,12 @@ public class WelcomeStepDefs {
         }
     }
 
-    @And("the user changes the order field to (.*), (.*)")
+    @When("the user changes the order field to (.*), (.*)")
     public void the_user_changes_the_order_field_to(String field, String order) {
         WebElement sortElement = getDriver().findElement(By.cssSelector("#candidates_table div.fixed-table-header th[data-field=" + field + "] div.sortable"));
+
         String currentOrderCss = sortElement.getAttribute("class");
+
         if (!(currentOrderCss).contains(order)) {
             sortElement.click();
             waitForAjax();

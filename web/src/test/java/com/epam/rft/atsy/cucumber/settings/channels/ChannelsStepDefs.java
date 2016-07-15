@@ -12,6 +12,7 @@ import java.util.List;
 
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForAjax;
+import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForPageLoadAfter;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -42,11 +43,12 @@ public class ChannelsStepDefs {
 
     @And("^the channels link is clicked$")
     public void the_positions_link_is_clicked() throws Throwable {
-        getDriver().findElement(By.id("channels_link")).click();
+        waitForPageLoadAfter(driver -> driver.findElement(By.id("channels_link")).click());
     }
 
     @And("^the channels screen appears$")
     public void the_positions_screen_appears() throws Throwable {
+        waitForAjax();
         WebDriverWait wait = new WebDriverWait(getDriver(), 5);
         wait.until(presenceOfElementLocated(By.id("channels")));
         assertThat(getDriver().findElement(By.id("settings")).isDisplayed(), is(true));
