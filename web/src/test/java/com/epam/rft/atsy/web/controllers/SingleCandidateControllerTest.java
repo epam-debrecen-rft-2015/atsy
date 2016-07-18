@@ -4,6 +4,7 @@ package com.epam.rft.atsy.web.controllers;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.controllers.rest.SingleCandidateController;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -21,51 +22,50 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 
 public class SingleCandidateControllerTest {
-    @InjectMocks
-    private SingleCandidateController underTest;
+  @Mock
+  CandidateDTO candidateDTO;
+  @Mock
+  BindingResult bindingResult;
+  @Mock
+  BindingResult bindingResultTrue;
+  @Mock
+  ResponseEntity responseEntity;
+  @Mock
+  ResponseEntity responseEntityTrue;
+  @Mock
+  CandidateService candidateService;
+  @Mock
+  MessageSource messageSource;
+  @InjectMocks
+  private SingleCandidateController underTest;
 
-    @Mock
-    CandidateDTO candidateDTO;
-    @Mock
-    BindingResult bindingResult;
-    @Mock
-    BindingResult bindingResultTrue;
-    @Mock
-    ResponseEntity responseEntity;
-    @Mock
-    ResponseEntity responseEntityTrue;
-    @Mock
-    CandidateService candidateService;
-    @Mock
-    MessageSource messageSource;
+  @BeforeMethod
+  public void setUp() {
+    MockitoAnnotations.initMocks(this);
+  }
 
-    @BeforeMethod
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
+  @Test
+  public void saveOrUpdate() {
+    Locale locale = new Locale("hu");
+    given(bindingResult.hasErrors()).willReturn(false);
+    given(bindingResultTrue.hasErrors()).willReturn(true);
+    given(candidateDTO.getId()).willReturn(new Long(1));
+    given(candidateDTO.getName()).willReturn("Candidate A");
+    given(candidateDTO.getEmail()).willReturn("candidate.a@atsy.com");
+    given(candidateDTO.getPhone()).willReturn("+36105555555");
+    given(candidateDTO.getReferer()).willReturn("google");
+    given(candidateDTO.getDescription()).willReturn("Elegáns, kicsit furi");
+    given(candidateDTO.getLanguageSkill()).willReturn((short) 5);
+    given(candidateService.saveOrUpdate(candidateDTO)).willReturn(new Long(1));
+    given(responseEntity.getStatusCode()).willReturn(HttpStatus.OK);
+    given(responseEntity.getBody()).willReturn(new Long(1));
+    given(responseEntityTrue.getStatusCode()).willReturn(HttpStatus.BAD_REQUEST);
+    given(responseEntityTrue.getBody()).willReturn(new Long(1));
+    Long candidateId = candidateService.saveOrUpdate(candidateDTO);
+    ResponseEntity entity = underTest.saveOrUpdate(candidateDTO, bindingResult, locale);
+    ResponseEntity entityTrue = underTest.saveOrUpdate(candidateDTO, bindingResultTrue, locale);
 
-    @Test
-    public void saveOrUpdate(){
-        Locale locale=new Locale("hu");
-        given(bindingResult.hasErrors()).willReturn(false);
-        given(bindingResultTrue.hasErrors()).willReturn(true);
-        given(candidateDTO.getId()).willReturn(new Long(1));
-        given(candidateDTO.getName()).willReturn("Candidate A");
-        given(candidateDTO.getEmail()).willReturn("candidate.a@atsy.com");
-        given(candidateDTO.getPhone()).willReturn("+36105555555");
-        given(candidateDTO.getReferer()).willReturn("google");
-        given(candidateDTO.getDescription()).willReturn("Elegáns, kicsit furi");
-        given(candidateDTO.getLanguageSkill()).willReturn((short)5);
-        given(candidateService.saveOrUpdate(candidateDTO)).willReturn(new Long(1));
-        given(responseEntity.getStatusCode()).willReturn(HttpStatus.OK);
-        given(responseEntity.getBody()).willReturn(new Long(1));
-        given(responseEntityTrue.getStatusCode()).willReturn(HttpStatus.BAD_REQUEST);
-        given(responseEntityTrue.getBody()).willReturn(new Long(1));
-        Long candidateId=candidateService.saveOrUpdate(candidateDTO);
-        ResponseEntity entity = underTest.saveOrUpdate(candidateDTO,bindingResult,locale);
-        ResponseEntity entityTrue = underTest.saveOrUpdate(candidateDTO,bindingResultTrue,locale);
-
-        assertThat(entity.getStatusCode(),is(HttpStatus.OK));
-        assertThat(entityTrue.getStatusCode(),is(HttpStatus.BAD_REQUEST));
-    }
+    assertThat(entity.getStatusCode(), is(HttpStatus.OK));
+    assertThat(entityTrue.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+  }
 }

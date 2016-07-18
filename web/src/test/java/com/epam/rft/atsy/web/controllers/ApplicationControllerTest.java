@@ -8,20 +8,21 @@ import org.testng.annotations.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+
 public class ApplicationControllerTest {
-    @InjectMocks
-    private ApplicationController underTest;
+  @InjectMocks
+  private ApplicationController underTest;
 
-    @BeforeMethod
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
+  @BeforeMethod
+  public void setUp() {
+    MockitoAnnotations.initMocks(this);
+  }
 
-    @Test
-    public void shouldReturnViewModel() {
-        //when
-        ModelAndView model = underTest.loadPage(1l);
-        //then
-        assertThat(model.getViewName(), is("application"));
-    }
+  @Test
+  public void shouldReturnViewModel() {
+    //when
+    ModelAndView model = underTest.loadPage(1l);
+    //then
+    assertThat(model.getViewName(), is("application"));
+  }
 }

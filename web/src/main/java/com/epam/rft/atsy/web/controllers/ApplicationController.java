@@ -10,12 +10,12 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value = "/secure/application")
 public class ApplicationController {
 
-    private static final String VIEW_NAME = "application";
+  private static final String VIEW_NAME = "application";
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView loadPage(@RequestParam Long candidateId) {
-        ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
-        modelAndView.addObject("candidateId",candidateId);
-        return modelAndView;
-    }
+  @RequestMapping(method = RequestMethod.GET)
+  public ModelAndView loadPage(@RequestParam Long candidateId) {
+    ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
+    modelAndView.addObject("candidateId", candidateId);
+    return modelAndView;
+  }
 }

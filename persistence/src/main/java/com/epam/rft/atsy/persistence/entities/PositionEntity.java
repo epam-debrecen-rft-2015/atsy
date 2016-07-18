@@ -1,11 +1,16 @@
 package com.epam.rft.atsy.persistence.entities;
 
-import lombok.*;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
 @Data
@@ -18,13 +23,13 @@ import javax.persistence.UniqueConstraint;
 public class PositionEntity extends SuperEntity implements java.io.Serializable {
 
 
-    @Column(name = "name", nullable = false, length = 255, unique = true)
-    private String name;
+  @Column(name = "name", nullable = false, length = 255, unique = true)
+  private String name;
 
-    @Builder
-    public PositionEntity(Long id, String name) {
-        super(id);
-        this.name = name;
-    }
+  @Builder
+  public PositionEntity(Long id, String name) {
+    super(id);
+    this.name = name;
+  }
 
 }

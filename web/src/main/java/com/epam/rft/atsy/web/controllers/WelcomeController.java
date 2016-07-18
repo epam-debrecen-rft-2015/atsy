@@ -8,10 +8,10 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping(value = "/secure/welcome")
 public class WelcomeController {
-    private static final String VIEW_NAME = "candidates";
+  private static final String VIEW_NAME = "candidates";
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView loadPage() {
-        return new ModelAndView(VIEW_NAME);
-    }
+  @RequestMapping(method = RequestMethod.GET)
+  public ModelAndView loadPage() {
+    return new ModelAndView(VIEW_NAME);
+  }
 }

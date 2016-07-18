@@ -10,19 +10,19 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class WelcomeControllerTest {
-    @InjectMocks
-    private WelcomeController underTest;
+  @InjectMocks
+  private WelcomeController underTest;
 
-    @BeforeMethod
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
+  @BeforeMethod
+  public void setUp() {
+    MockitoAnnotations.initMocks(this);
+  }
 
-    @Test
-    public void shouldReturnViewModel() {
-        //when
-        ModelAndView model = underTest.loadPage();
-        //then
-        assertThat(model.getViewName(), is("candidates"));
-    }
+  @Test
+  public void shouldReturnViewModel() {
+    //when
+    ModelAndView model = underTest.loadPage();
+    //then
+    assertThat(model.getViewName(), is("candidates"));
+  }
 }

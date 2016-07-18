@@ -1,10 +1,14 @@
 package com.epam.rft.atsy.service.domain;
 
-import lombok.*;
+import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Builder
@@ -13,10 +17,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class PositionDTO implements Serializable {
 
-    private Long id;
+  private Long id;
 
-    @NotNull
-    @Size(min = 1)
-    private String name;
+  @NotNull
+  @Size(min = 1)
+  private String name;
 
 }

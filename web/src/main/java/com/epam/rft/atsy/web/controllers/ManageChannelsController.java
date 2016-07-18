@@ -9,10 +9,10 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(path = "/secure/channels/manage")
 public class ManageChannelsController {
 
-    private static final String VIEW_NAME = "manage_channels";
+  private static final String VIEW_NAME = "manage_channels";
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView loadPage() {
-        return new ModelAndView(VIEW_NAME);
-    }
+  @RequestMapping(method = RequestMethod.GET)
+  public ModelAndView loadPage() {
+    return new ModelAndView(VIEW_NAME);
+  }
 }

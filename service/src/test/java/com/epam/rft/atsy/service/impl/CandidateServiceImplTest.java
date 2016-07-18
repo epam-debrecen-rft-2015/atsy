@@ -7,6 +7,7 @@ import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import com.epam.rft.atsy.service.request.FilterRequest;
 import com.epam.rft.atsy.service.request.SearchOptions;
 import com.epam.rft.atsy.service.request.SortingRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
@@ -22,6 +23,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
+
 import java.util.Collection;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -34,243 +36,250 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CandidateServiceImplTest {
-    @Mock
-    private ModelMapper modelMapper;
+  private static final Long ID = 1L;
+  private static final String NAME = "John Doe";
+  private static final String EMAIL = "john@doe.com";
+  private static final String PHONE = "123456";
+  private static final String REFERER = "Jane Doe";
+  private static final Short LANGUAGE_SKILL = 5;
+  private static final String DESCRIPTION = "Simply John Doe.";
+  private static final String SORT_FIELD = "name";
+  private static final CandidateEntity NOT_FOUND_CANDIDATE_ENTITY = null;
+  private static final CandidateDTO NOT_FOUND_CANDIDATE_DTO = null;
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
+  @Mock
+  private ModelMapper modelMapper;
+  @Mock
+  private CandidateRepository candidateRepository;
+  @InjectMocks
+  private CandidateServiceImpl candidateService;
+  private CandidateEntity dummyCandidateEntity;
+  private CandidateDTO dummyCandidateDto;
+  private FilterRequest ascendingFilterRequest;
+  private FilterRequest descendingFilterRequest;
+  private Sort ascendingSort;
 
-    @Mock
-    private CandidateRepository candidateRepository;
+  @Before
+  public void setUp() {
+    dummyCandidateEntity = CandidateEntity.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
+        .referer(REFERER).languageSkill(LANGUAGE_SKILL)
+        .description(DESCRIPTION).build();
 
-    @InjectMocks
-    private CandidateServiceImpl candidateService;
+    dummyCandidateDto = CandidateDTO.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
+        .referer(REFERER).languageSkill(LANGUAGE_SKILL)
+        .description(DESCRIPTION).build();
 
-    private static final Long ID = 1L;
-    private static final String NAME = "John Doe";
-    private static final String EMAIL = "john@doe.com";
-    private static final String PHONE = "123456";
-    private static final String REFERER = "Jane Doe";
-    private static final Short LANGUAGE_SKILL = 5;
-    private static final String DESCRIPTION = "Simply John Doe.";
+    ascendingFilterRequest =
+        FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
+            .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
 
-    private static final String SORT_FIELD = "name";
+    descendingFilterRequest =
+        FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.DESC)
+            .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
 
-    private static final CandidateEntity NOT_FOUND_CANDIDATE_ENTITY = null;
-    private static final CandidateDTO NOT_FOUND_CANDIDATE_DTO = null;
+    ascendingSort = new Sort(Sort.Direction.ASC, SORT_FIELD);
+  }
 
-    private CandidateEntity dummyCandidateEntity;
+  @Test(expected = IllegalArgumentException.class)
+  public void getCandidateShouldThrowIAEWhenIdIsNull() {
+    // When
+    candidateService.getCandidate(null);
+  }
 
-    private CandidateDTO dummyCandidateDto;
+  @Test
+  public void getCandidateShouldReturnNullWhenIdNotFound() {
+    // Given
+    given(candidateRepository.findOne(ID)).willReturn(NOT_FOUND_CANDIDATE_ENTITY);
+    given(modelMapper.map(NOT_FOUND_CANDIDATE_ENTITY, CandidateDTO.class))
+        .willReturn(NOT_FOUND_CANDIDATE_DTO);
 
-    private FilterRequest ascendingFilterRequest;
+    // When
+    CandidateDTO candidate = candidateService.getCandidate(ID);
 
-    private FilterRequest descendingFilterRequest;
+    // Then
+    assertThat(candidate, nullValue());
+  }
 
-    private Sort ascendingSort;
+  @Test
+  public void getCandidateShouldReturnProperDtoWhenIdExists() {
+    // Given
+    given(candidateRepository.findOne(ID)).willReturn(dummyCandidateEntity);
+    given(modelMapper.map(dummyCandidateEntity, CandidateDTO.class)).willReturn(dummyCandidateDto);
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    // When
+    CandidateDTO candidate = candidateService.getCandidate(ID);
 
-    @Before
-    public void setUp() {
-        dummyCandidateEntity = CandidateEntity.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
-                                              .referer(REFERER).languageSkill(LANGUAGE_SKILL)
-                                              .description(DESCRIPTION).build();
+    // Then
+    assertThat(candidate, equalTo(dummyCandidateDto));
+  }
 
-        dummyCandidateDto = CandidateDTO.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
-                                        .referer(REFERER).languageSkill(LANGUAGE_SKILL)
-                                        .description(DESCRIPTION).build();
+  @Test(expected = IllegalArgumentException.class)
+  public void getAllCandidatesShouldThrowIAEWhenFilterRequestIsNull() {
+    // When
+    candidateService.getAllCandidate(null);
+  }
 
-        ascendingFilterRequest = FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
-                                              .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
+  @Test(expected = IllegalArgumentException.class)
+  public void getAllCandidatesShouldThrowIAEWhenSearchOptionsIsNull() {
+    // Given
+    FilterRequest defectedRequest =
+        FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
+            .searchOptions(null).build();
 
-        descendingFilterRequest = FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.DESC)
-                                              .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
+    // When
+    candidateService.getAllCandidate(defectedRequest);
+  }
 
-        ascendingSort = new Sort(Sort.Direction.ASC, SORT_FIELD);
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void getAllCandidatesShouldThrowIAEWhenFieldNameIsNull() {
+    // Given
+    FilterRequest defectedRequest =
+        FilterRequest.builder().fieldName(null).order(SortingRequest.Order.ASC)
+            .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
 
-    @Test(expected = IllegalArgumentException.class)
-    public void getCandidateShouldThrowIAEWhenIdIsNull() {
-        // When
-        candidateService.getCandidate(null);
-    }
+    // When
+    candidateService.getAllCandidate(defectedRequest);
+  }
 
-    @Test
-    public void getCandidateShouldReturnNullWhenIdNotFound() {
-        // Given
-        given(candidateRepository.findOne(ID)).willReturn(NOT_FOUND_CANDIDATE_ENTITY);
-        given(modelMapper.map(NOT_FOUND_CANDIDATE_ENTITY, CandidateDTO.class)).willReturn(NOT_FOUND_CANDIDATE_DTO);
+  @Test(expected = IllegalArgumentException.class)
+  public void getAllCandidatesShouldThrowIAEWhenOrderIsNull() {
+    // Given
+    FilterRequest defectedRequest =
+        FilterRequest.builder().fieldName(SORT_FIELD).order(null)
+            .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
 
-        // When
-        CandidateDTO candidate = candidateService.getCandidate(ID);
+    // When
+    candidateService.getAllCandidate(defectedRequest);
+  }
 
-        // Then
-        assertThat(candidate, nullValue());
-    }
+  @Test
+  public void getAllCandidatesShouldCallRepositoryWithEmptyStringAsNameWhenSearchOptionsNameIsNull() {
+    // Given
+    FilterRequest defectedRequest =
+        FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
+            .searchOptions(new SearchOptions(null, EMAIL, PHONE)).build();
 
-    @Test
-    public void getCandidateShouldReturnProperDtoWhenIdExists() {
-        // Given
-        given(candidateRepository.findOne(ID)).willReturn(dummyCandidateEntity);
-        given(modelMapper.map(dummyCandidateEntity, CandidateDTO.class)).willReturn(dummyCandidateDto);
+    // When
+    candidateService.getAllCandidate(defectedRequest);
 
-        // When
-        CandidateDTO candidate = candidateService.getCandidate(ID);
+    // Then
+    verify(candidateRepository)
+        .findAllByNameContainingAndEmailContainingAndPhoneContaining(StringUtils.EMPTY, EMAIL,
+            PHONE, ascendingSort);
+  }
 
-        // Then
-        assertThat(candidate, equalTo(dummyCandidateDto));
-    }
+  @Test
+  public void getAllCandidatesShouldCallRepositoryWithEmptyStringAsEmailWhenSearchOptionsEmailIsNull() {
+    // Given
+    FilterRequest defectedRequest =
+        FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
+            .searchOptions(new SearchOptions(NAME, null, PHONE)).build();
 
-    @Test(expected = IllegalArgumentException.class)
-    public void getAllCandidatesShouldThrowIAEWhenFilterRequestIsNull() {
-        // When
-        candidateService.getAllCandidate(null);
-    }
+    // When
+    candidateService.getAllCandidate(defectedRequest);
 
-    @Test(expected = IllegalArgumentException.class)
-    public void getAllCandidatesShouldThrowIAEWhenSearchOptionsIsNull() {
-        // Given
-        FilterRequest defectedRequest =
-                FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
-                             .searchOptions(null).build();
+    // Then
+    verify(candidateRepository)
+        .findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, StringUtils.EMPTY, PHONE,
+            ascendingSort);
+  }
 
-        // When
-        candidateService.getAllCandidate(defectedRequest);
-    }
+  @Test
+  public void getAllCandidatesShouldCallRepositoryWithEmptyStringAsPhoneWhenSearchOptionsPhoneIsNull() {
+    // Given
+    FilterRequest defectedRequest =
+        FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
+            .searchOptions(new SearchOptions(NAME, EMAIL, null)).build();
 
-    @Test(expected = IllegalArgumentException.class)
-    public void getAllCandidatesShouldThrowIAEWhenFieldNameIsNull() {
-        // Given
-        FilterRequest defectedRequest =
-                FilterRequest.builder().fieldName(null).order(SortingRequest.Order.ASC)
-                             .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
+    // When
+    candidateService.getAllCandidate(defectedRequest);
 
-        // When
-        candidateService.getAllCandidate(defectedRequest);
-    }
+    // Then
+    verify(candidateRepository)
+        .findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL, StringUtils.EMPTY,
+            ascendingSort);
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void getAllCandidatesShouldThrowIAEWhenOrderIsNull() {
-        // Given
-        FilterRequest defectedRequest =
-                FilterRequest.builder().fieldName(SORT_FIELD).order(null)
-                        .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
+  @Test
+  public void getAllCandidateShouldCallRepositoryWithAscendingSortWhenPassingAscendingFilterRequest() {
+    // When
+    Collection<CandidateDTO> result = candidateService.getAllCandidate(ascendingFilterRequest);
 
-        // When
-        candidateService.getAllCandidate(defectedRequest);
-    }
+    // Then
+    verify(candidateRepository)
+        .findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL, PHONE,
+            ascendingSort);
+  }
 
-    @Test
-    public void getAllCandidatesShouldCallRepositoryWithEmptyStringAsNameWhenSearchOptionsNameIsNull() {
-        // Given
-        FilterRequest defectedRequest =
-                FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
-                        .searchOptions(new SearchOptions(null, EMAIL, PHONE)).build();
+  @Test
+  public void getAllCandidateShouldCallRepositoryWithDescendingSortWhenPassingDescendingFilterRequest() {
+    // Given
+    Sort descendingSort = new Sort(Sort.Direction.DESC, SORT_FIELD);
 
-        // When
-        candidateService.getAllCandidate(defectedRequest);
+    // When
+    Collection<CandidateDTO> result = candidateService.getAllCandidate(descendingFilterRequest);
 
-        // Then
-        verify(candidateRepository).findAllByNameContainingAndEmailContainingAndPhoneContaining(StringUtils.EMPTY, EMAIL, PHONE, ascendingSort);
-    }
+    // Then
+    verify(candidateRepository)
+        .findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL, PHONE,
+            descendingSort);
+  }
 
-    @Test
-    public void getAllCandidatesShouldCallRepositoryWithEmptyStringAsEmailWhenSearchOptionsEmailIsNull() {
-        // Given
-        FilterRequest defectedRequest =
-                FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
-                        .searchOptions(new SearchOptions(NAME, null, PHONE)).build();
+  @Test(expected = IllegalArgumentException.class)
+  public void saveOrUpdateShouldThrowIAEWhenNullPassed() {
+    // When
+    candidateService.saveOrUpdate(null);
+  }
 
-        // When
-        candidateService.getAllCandidate(defectedRequest);
+  @Test
+  public void saveOrUpdateShouldThrowDREAfterCatchingConstraintViolationException()
+      throws DuplicateRecordException {
+    // Given
+    given(modelMapper.map(dummyCandidateDto, CandidateEntity.class))
+        .willReturn(dummyCandidateEntity);
 
-        // Then
-        verify(candidateRepository).findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, StringUtils.EMPTY, PHONE, ascendingSort);
-    }
+    given(candidateRepository.save(dummyCandidateEntity))
+        .willThrow(ConstraintViolationException.class);
 
-    @Test
-    public void getAllCandidatesShouldCallRepositoryWithEmptyStringAsPhoneWhenSearchOptionsPhoneIsNull() {
-        // Given
-        FilterRequest defectedRequest =
-                FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
-                        .searchOptions(new SearchOptions(NAME, EMAIL, null)).build();
+    expectedException.expect(DuplicateRecordException.class);
+    expectedException.expectMessage(CoreMatchers.endsWith(NAME));
+    expectedException.expectCause(Matchers.isA(ConstraintViolationException.class));
 
-        // When
-        candidateService.getAllCandidate(defectedRequest);
+    // When
+    candidateService.saveOrUpdate(dummyCandidateDto);
+  }
 
-        // Then
-        verify(candidateRepository).findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL, StringUtils.EMPTY, ascendingSort);
-    }
+  @Test
+  public void saveOrUpdateShouldThrowDREAfterCatchingDataIntegrityViolationException()
+      throws DuplicateRecordException {
+    // Given
+    given(modelMapper.map(dummyCandidateDto, CandidateEntity.class))
+        .willReturn(dummyCandidateEntity);
 
-    @Test
-    public void getAllCandidateShouldCallRepositoryWithAscendingSortWhenPassingAscendingFilterRequest() {
-        // When
-        Collection<CandidateDTO> result = candidateService.getAllCandidate(ascendingFilterRequest);
+    given(candidateRepository.save(dummyCandidateEntity))
+        .willThrow(DataIntegrityViolationException.class);
 
-        // Then
-        verify(candidateRepository).findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL, PHONE, ascendingSort);
-    }
+    expectedException.expect(DuplicateRecordException.class);
+    expectedException.expectMessage(CoreMatchers.endsWith(NAME));
+    expectedException.expectCause(Matchers.isA(DataIntegrityViolationException.class));
 
-    @Test
-    public void getAllCandidateShouldCallRepositoryWithDescendingSortWhenPassingDescendingFilterRequest() {
-        // Given
-        Sort descendingSort = new Sort(Sort.Direction.DESC, SORT_FIELD);
+    // When
+    candidateService.saveOrUpdate(dummyCandidateDto);
+  }
 
-        // When
-        Collection<CandidateDTO> result = candidateService.getAllCandidate(descendingFilterRequest);
+  @Test
+  public void saveOrUpdateShouldSaveAProperCandidateDTO() {
+    // Given
+    given(modelMapper.map(dummyCandidateDto, CandidateEntity.class))
+        .willReturn(dummyCandidateEntity);
 
-        // Then
-        verify(candidateRepository).findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL, PHONE, descendingSort);
-    }
+    given(candidateRepository.save(dummyCandidateEntity)).willReturn(dummyCandidateEntity);
 
-    @Test(expected = IllegalArgumentException.class)
-    public void saveOrUpdateShouldThrowIAEWhenNullPassed() {
-        // When
-        candidateService.saveOrUpdate(null);
-    }
+    // When
+    candidateService.saveOrUpdate(dummyCandidateDto);
 
-    @Test
-    public void saveOrUpdateShouldThrowDREAfterCatchingConstraintViolationException()
-            throws DuplicateRecordException {
-        // Given
-        given(modelMapper.map(dummyCandidateDto, CandidateEntity.class)).willReturn(dummyCandidateEntity);
-
-        given(candidateRepository.save(dummyCandidateEntity)).willThrow(ConstraintViolationException.class);
-
-        expectedException.expect(DuplicateRecordException.class);
-        expectedException.expectMessage(CoreMatchers.endsWith(NAME));
-        expectedException.expectCause(Matchers.isA(ConstraintViolationException.class));
-
-        // When
-        candidateService.saveOrUpdate(dummyCandidateDto);
-    }
-
-    @Test
-    public void saveOrUpdateShouldThrowDREAfterCatchingDataIntegrityViolationException()
-            throws DuplicateRecordException {
-        // Given
-        given(modelMapper.map(dummyCandidateDto, CandidateEntity.class)).willReturn(dummyCandidateEntity);
-
-        given(candidateRepository.save(dummyCandidateEntity)).willThrow(DataIntegrityViolationException.class);
-
-        expectedException.expect(DuplicateRecordException.class);
-        expectedException.expectMessage(CoreMatchers.endsWith(NAME));
-        expectedException.expectCause(Matchers.isA(DataIntegrityViolationException.class));
-
-        // When
-        candidateService.saveOrUpdate(dummyCandidateDto);
-    }
-
-    @Test
-    public void saveOrUpdateShouldSaveAProperCandidateDTO() {
-        // Given
-        given(modelMapper.map(dummyCandidateDto, CandidateEntity.class)).willReturn(dummyCandidateEntity);
-
-        given(candidateRepository.save(dummyCandidateEntity)).willReturn(dummyCandidateEntity);
-
-        // When
-        candidateService.saveOrUpdate(dummyCandidateDto);
-
-        // Then
-        then(candidateRepository).should(times(1)).save(dummyCandidateEntity);
-    }
+    // Then
+    then(candidateRepository).should(times(1)).save(dummyCandidateEntity);
+  }
 }

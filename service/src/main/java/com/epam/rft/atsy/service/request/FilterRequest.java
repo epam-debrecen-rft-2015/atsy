@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 public class FilterRequest extends SortingRequest {
 
 
-    private SearchOptions searchOptions;
+  private SearchOptions searchOptions;
 
 
-    @Builder
-    public FilterRequest(String fieldName, Order order, SearchOptions searchOptions) {
-        super(fieldName, order);
-        this.searchOptions = searchOptions;
-    }
+  @Builder
+  public FilterRequest(String fieldName, Order order, SearchOptions searchOptions) {
+    super(fieldName, order);
+    this.searchOptions = searchOptions;
+  }
 
 }

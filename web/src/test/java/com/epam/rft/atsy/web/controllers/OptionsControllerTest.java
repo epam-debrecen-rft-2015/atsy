@@ -7,13 +7,13 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class OptionsControllerTest {
-    private OptionsController underTest = new OptionsController();
+  private OptionsController underTest = new OptionsController();
 
-    @Test
-    public void shouldReturnViewModel() {
-        //when
-        ModelAndView model = underTest.loadPage();
-        //then
-        assertThat(model.getViewName(), is("settings"));
-    }
+  @Test
+  public void shouldReturnViewModel() {
+    //when
+    ModelAndView model = underTest.loadPage();
+    //then
+    assertThat(model.getViewName(), is("settings"));
+  }
 }

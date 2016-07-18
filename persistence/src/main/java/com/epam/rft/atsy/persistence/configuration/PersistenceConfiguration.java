@@ -18,9 +18,10 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import java.util.Properties;
+
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
@@ -28,60 +29,62 @@ import java.util.Properties;
 @ComponentScan("com.epam.rft.atsy.persistence")
 public class PersistenceConfiguration {
 
-    private static final String JNDI_DATA_SOURCE = "jdbc/database";
+  private static final String JNDI_DATA_SOURCE = "jdbc/database";
 
-    @Bean(initMethod = "migrate")
-    public Flyway flyway(Environment env) {
+  @Bean
+  public static PropertyPlaceholderConfigurer placeHolderConfigurer() {
+    PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
+    configurer
+        .setSystemPropertiesMode(PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
+    return configurer;
 
-        ((AbstractEnvironment) env).getPropertySources().addBefore("servletContextInitParams", ((AbstractEnvironment) env).getPropertySources().get("systemProperties"));
-        Flyway flyway = new Flyway();
-        flyway.setBaselineOnMigrate(true);
-        flyway.setDataSource(dataSource());
-        flyway.setLocations("classpath:db/migration/schema",
-                "classpath:db/migration/data/" + env.getActiveProfiles()[0]);
-        return flyway;
-    }
+  }
 
-    @Bean
-    @DependsOn("flyway")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
-        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(dataSource);
-        em.setPackagesToScan(new String[]{"com.epam.rft.atsy.persistence"});
-        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        em.setJpaVendorAdapter(vendorAdapter);
-        em.setJpaProperties(additionalProperties());
-        return em;
-    }
+  @Bean(initMethod = "migrate")
+  public Flyway flyway(Environment env) {
 
-    @Bean
-    public DataSource dataSource() {
-        final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
-        dsLookup.setResourceRef(true);
-        return dsLookup.getDataSource(JNDI_DATA_SOURCE);
-    }
+    ((AbstractEnvironment) env).getPropertySources().addBefore("servletContextInitParams",
+        ((AbstractEnvironment) env).getPropertySources().get("systemProperties"));
+    Flyway flyway = new Flyway();
+    flyway.setBaselineOnMigrate(true);
+    flyway.setDataSource(dataSource());
+    flyway.setLocations("classpath:db/migration/schema",
+        "classpath:db/migration/data/" + env.getActiveProfiles()[0]);
+    return flyway;
+  }
 
-    @Bean(name = "transactionManager")
-    public PlatformTransactionManager txManager(EntityManagerFactory entityManagerFactory) {
-        return new JpaTransactionManager(entityManagerFactory);
-    }
+  @Bean
+  @DependsOn("flyway")
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
+    LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+    em.setDataSource(dataSource);
+    em.setPackagesToScan(new String[]{"com.epam.rft.atsy.persistence"});
+    JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+    em.setJpaVendorAdapter(vendorAdapter);
+    em.setJpaProperties(additionalProperties());
+    return em;
+  }
 
-    @Bean
-    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
-        return new PersistenceExceptionTranslationPostProcessor();
-    }
+  @Bean
+  public DataSource dataSource() {
+    final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
+    dsLookup.setResourceRef(true);
+    return dsLookup.getDataSource(JNDI_DATA_SOURCE);
+  }
 
-    private Properties additionalProperties() {
-        Properties properties = new Properties();
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-        return properties;
-    }
+  @Bean(name = "transactionManager")
+  public PlatformTransactionManager txManager(EntityManagerFactory entityManagerFactory) {
+    return new JpaTransactionManager(entityManagerFactory);
+  }
 
-    @Bean
-    public static PropertyPlaceholderConfigurer placeHolderConfigurer() {
-        PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
-        configurer.setSystemPropertiesMode(PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
-        return configurer;
+  @Bean
+  public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+    return new PersistenceExceptionTranslationPostProcessor();
+  }
 
-    }
+  private Properties additionalProperties() {
+    Properties properties = new Properties();
+    properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+    return properties;
+  }
 }

@@ -4,11 +4,11 @@ import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
+
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -36,144 +36,138 @@ import static org.mockito.Mockito.times;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PositionServiceImplTest {
-    @Mock
-    private ModelMapper modelMapper;
+  private static final Type POSITIONDTO_LIST_TYPE = new TypeToken<List<PositionDTO>>() {
+  }.getType();
+  private static final Long DEVELOPER_ID = 1L;
+  private static final String DEVELOPER_NAME = "Developer";
+  private static final List<PositionEntity> EMPTY_POSITION_ENTITY_LIST = Collections.emptyList();
+  private static final Collection<PositionDTO> EMPTY_POSITION_DTO_LIST = Collections.emptyList();
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
+  @Mock
+  private ModelMapper modelMapper;
+  @Mock
+  private PositionRepository positionRepository;
+  @InjectMocks
+  private PositionServiceImpl positionService;
+  private PositionEntity developerEntity;
+  private PositionDTO developerDto;
+  private List<PositionEntity> expectedPositionEntityList;
+  private Collection<PositionDTO> expectedPositionDtoList;
 
-    @Mock
-    private PositionRepository positionRepository;
+  @Before
+  public void setUp() {
+    developerEntity = PositionEntity.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).build();
 
-    @InjectMocks
-    private PositionServiceImpl positionService;
+    developerDto = PositionDTO.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).build();
 
-    private static final Type POSITIONDTO_LIST_TYPE = new TypeToken<List<PositionDTO>>() {}.getType();
+    expectedPositionEntityList = Arrays.asList(developerEntity, developerEntity, developerEntity);
 
-    private static final Long DEVELOPER_ID = 1L;
-    private static final String DEVELOPER_NAME = "Developer";
+    expectedPositionDtoList = Arrays.asList(developerDto, developerDto, developerDto);
+  }
 
-    private static final List<PositionEntity> EMPTY_POSITION_ENTITY_LIST = Collections.emptyList();
-    private static final Collection<PositionDTO> EMPTY_POSITION_DTO_LIST = Collections.emptyList();
+  @Test
+  public void getAllPositionsShouldReturnEmptyListWhenThereAreNoPositions() {
+    // Given
+    given(positionRepository.findAll()).willReturn(EMPTY_POSITION_ENTITY_LIST);
+    given(modelMapper.map(EMPTY_POSITION_ENTITY_LIST, POSITIONDTO_LIST_TYPE))
+        .willReturn(EMPTY_POSITION_DTO_LIST);
 
-    private PositionEntity developerEntity;
-    private PositionDTO developerDto;
+    // When
+    Collection<PositionDTO> positions = positionService.getAllPositions();
 
-    private List<PositionEntity> expectedPositionEntityList;
-    private Collection<PositionDTO> expectedPositionDtoList;
+    // Then
+    assertThat(positions, notNullValue());
+    assertThat(positions.isEmpty(), is(true));
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    then(positionRepository).should(times(1)).findAll();
+  }
 
-    @Before
-    public void setUp() {
-        developerEntity = PositionEntity.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).build();
+  @Test
+  public void getAllPositionsShouldReturnSingleElementListWhenThereIsOnePosition() {
+    // Given
+    List<PositionEntity> positions = Arrays.asList(developerEntity);
 
-        developerDto = PositionDTO.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).build();
+    Collection<PositionDTO> expected = Arrays.asList(developerDto);
 
-        expectedPositionEntityList = Arrays.asList(developerEntity, developerEntity, developerEntity);
+    given(positionRepository.findAll()).willReturn(positions);
+    given(modelMapper.map(positions, POSITIONDTO_LIST_TYPE)).willReturn(expected);
 
-        expectedPositionDtoList = Arrays.asList(developerDto, developerDto, developerDto);
-    }
+    // When
+    Collection<PositionDTO> result = positionService.getAllPositions();
 
-    @Test
-    public void getAllPositionsShouldReturnEmptyListWhenThereAreNoPositions() {
-        // Given
-        given(positionRepository.findAll()).willReturn(EMPTY_POSITION_ENTITY_LIST);
-        given(modelMapper.map(EMPTY_POSITION_ENTITY_LIST, POSITIONDTO_LIST_TYPE))
-                .willReturn(EMPTY_POSITION_DTO_LIST);
+    // Then
+    assertEquals(result, expected);
 
-        // When
-        Collection<PositionDTO> positions = positionService.getAllPositions();
+    then(positionRepository).should(times(1)).findAll();
+  }
 
-        // Then
-        assertThat(positions, notNullValue());
-        assertThat(positions.isEmpty(), is(true));
+  @Test
+  public void getAllPositionsShouldReturnThreeElementListWhenThereAreThreePositions() {
+    // Given
+    given(positionRepository.findAll()).willReturn(expectedPositionEntityList);
+    given(modelMapper.map(expectedPositionEntityList, POSITIONDTO_LIST_TYPE))
+        .willReturn(expectedPositionDtoList);
 
-        then(positionRepository).should(times(1)).findAll();
-    }
+    // When
+    Collection<PositionDTO> result = positionService.getAllPositions();
 
-    @Test
-    public void getAllPositionsShouldReturnSingleElementListWhenThereIsOnePosition() {
-        // Given
-        List<PositionEntity> positions = Arrays.asList(developerEntity);
+    // Then
+    assertEquals(result, expectedPositionDtoList);
 
-        Collection<PositionDTO> expected = Arrays.asList(developerDto);
+    then(positionRepository).should(times(1)).findAll();
+  }
 
-        given(positionRepository.findAll()).willReturn(positions);
-        given(modelMapper.map(positions, POSITIONDTO_LIST_TYPE)).willReturn(expected);
+  @Test(expected = IllegalArgumentException.class)
+  public void saveOrUpdateShouldThrowIAEWhenNullPassed() {
+    // When
+    positionService.saveOrUpdate(null);
+  }
 
-        // When
-        Collection<PositionDTO> result = positionService.getAllPositions();
+  @Test
+  public void saveOrUpdateShouldThrowDREAfterCatchingConstraintViolationException()
+      throws DuplicateRecordException {
+    // Given
+    given(modelMapper.map(developerDto, PositionEntity.class)).willReturn(developerEntity);
 
-        // Then
-        assertEquals(result, expected);
+    given(positionRepository.save(developerEntity)).willThrow(ConstraintViolationException.class);
 
-        then(positionRepository).should(times(1)).findAll();
-    }
+    expectedException.expect(DuplicateRecordException.class);
+    expectedException.expectMessage(CoreMatchers.endsWith(DEVELOPER_NAME));
+    expectedException.expectCause(Matchers.isA(ConstraintViolationException.class));
 
-    @Test
-    public void getAllPositionsShouldReturnThreeElementListWhenThereAreThreePositions() {
-        // Given
-        given(positionRepository.findAll()).willReturn(expectedPositionEntityList);
-        given(modelMapper.map(expectedPositionEntityList, POSITIONDTO_LIST_TYPE))
-                .willReturn(expectedPositionDtoList);
+    // When
+    positionService.saveOrUpdate(developerDto);
+  }
 
-        // When
-        Collection<PositionDTO> result = positionService.getAllPositions();
+  @Test
+  public void saveOrUpdateShouldThrowDREAfterCatchingDataIntegrityViolationException()
+      throws DuplicateRecordException {
+    // Given
+    given(modelMapper.map(developerDto, PositionEntity.class)).willReturn(developerEntity);
 
-        // Then
-        assertEquals(result, expectedPositionDtoList);
+    given(positionRepository.save(developerEntity))
+        .willThrow(DataIntegrityViolationException.class);
 
-        then(positionRepository).should(times(1)).findAll();
-    }
+    expectedException.expect(DuplicateRecordException.class);
+    expectedException.expectMessage(CoreMatchers.endsWith(DEVELOPER_NAME));
+    expectedException.expectCause(Matchers.isA(DataIntegrityViolationException.class));
 
-    @Test(expected = IllegalArgumentException.class)
-    public void saveOrUpdateShouldThrowIAEWhenNullPassed() {
-        // When
-        positionService.saveOrUpdate(null);
-    }
+    // When
+    positionService.saveOrUpdate(developerDto);
+  }
 
-    @Test
-    public void saveOrUpdateShouldThrowDREAfterCatchingConstraintViolationException()
-            throws DuplicateRecordException {
-        // Given
-        given(modelMapper.map(developerDto, PositionEntity.class)).willReturn(developerEntity);
+  @Test
+  public void saveOrUpdateShouldSaveAProperPositionDTO() {
+    // Given
+    given(modelMapper.map(developerDto, PositionEntity.class)).willReturn(developerEntity);
 
-        given(positionRepository.save(developerEntity)).willThrow(ConstraintViolationException.class);
+    given(positionRepository.save(developerEntity)).willReturn(developerEntity);
 
-        expectedException.expect(DuplicateRecordException.class);
-        expectedException.expectMessage(CoreMatchers.endsWith(DEVELOPER_NAME));
-        expectedException.expectCause(Matchers.isA(ConstraintViolationException.class));
+    // When
+    positionService.saveOrUpdate(developerDto);
 
-        // When
-        positionService.saveOrUpdate(developerDto);
-    }
-
-    @Test
-    public void saveOrUpdateShouldThrowDREAfterCatchingDataIntegrityViolationException()
-            throws DuplicateRecordException {
-        // Given
-        given(modelMapper.map(developerDto, PositionEntity.class)).willReturn(developerEntity);
-
-        given(positionRepository.save(developerEntity)).willThrow(DataIntegrityViolationException.class);
-
-        expectedException.expect(DuplicateRecordException.class);
-        expectedException.expectMessage(CoreMatchers.endsWith(DEVELOPER_NAME));
-        expectedException.expectCause(Matchers.isA(DataIntegrityViolationException.class));
-
-        // When
-        positionService.saveOrUpdate(developerDto);
-    }
-
-    @Test
-    public void saveOrUpdateShouldSaveAProperPositionDTO() {
-        // Given
-        given(modelMapper.map(developerDto, PositionEntity.class)).willReturn(developerEntity);
-
-        given(positionRepository.save(developerEntity)).willReturn(developerEntity);
-
-        // When
-        positionService.saveOrUpdate(developerDto);
-
-        // Then
-        then(positionRepository).should(times(1)).save(developerEntity);
-    }
+    // Then
+    then(positionRepository).should(times(1)).save(developerEntity);
+  }
 }
