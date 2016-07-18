@@ -2,7 +2,6 @@ package com.epam.rft.atsy.persistence.repositories;
 
 import com.epam.rft.atsy.persistence.entities.PasswordHistoryEntity;
 import com.epam.rft.atsy.persistence.entities.UserEntity;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,7 +13,6 @@ public interface PasswordHistoryRepository extends JpaRepository<PasswordHistory
 
   /**
    * Returns the list of PasswordHistoryEntities of the user.
-   *
    * @param userEntity the user
    * @return the list of PasswordHistories of the user
    */
@@ -22,7 +20,6 @@ public interface PasswordHistoryRepository extends JpaRepository<PasswordHistory
 
   /**
    * Returns the oldest password of the user.
-   *
    * @param userId the user's id
    * @return the oldest password
    */

@@ -11,14 +11,12 @@ public interface ChannelService {
 
   /**
    * Returns a collection of channels.
-   *
    * @return the collection of channels
    */
   Collection<ChannelDTO> getAllChannels();
 
   /**
    * Saves a channel to the database.
-   *
    * @param channel the channel
    */
   void saveOrUpdate(ChannelDTO channel);

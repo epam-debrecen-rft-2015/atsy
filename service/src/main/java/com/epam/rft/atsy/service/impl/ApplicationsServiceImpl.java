@@ -9,7 +9,6 @@ import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.StatesService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

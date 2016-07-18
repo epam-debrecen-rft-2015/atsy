@@ -14,7 +14,6 @@ public interface StatesService {
 
   /**
    * returns the collection of applications of the candidate.
-   *
    * @param id the candidate's id
    * @return the collection of applications
    */
@@ -22,8 +21,7 @@ public interface StatesService {
 
   /**
    * Saves a state of the given application and returns it's id.
-   *
-   * @param state         the state
+   * @param state the state
    * @param applicationId the application's id
    * @return the state's id
    */
@@ -31,7 +29,6 @@ public interface StatesService {
 
   /**
    * Returns the list of states of the given application.
-   *
    * @param applicationId the application's id
    * @return the list of states of the application
    */

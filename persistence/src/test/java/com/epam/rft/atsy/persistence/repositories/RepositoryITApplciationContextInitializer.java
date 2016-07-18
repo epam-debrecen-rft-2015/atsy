@@ -1,7 +1,6 @@
 package com.epam.rft.atsy.persistence.repositories;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
-
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;

@@ -2,7 +2,6 @@ package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
-
 import org.springframework.util.Assert;
 
 public class PasswordNewMatchValidationRule implements PasswordValidationRule {

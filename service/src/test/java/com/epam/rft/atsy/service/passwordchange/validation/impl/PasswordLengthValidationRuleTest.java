@@ -1,14 +1,13 @@
 package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
-import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PasswordLengthValidationRuleTest {

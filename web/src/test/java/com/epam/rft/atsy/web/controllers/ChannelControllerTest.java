@@ -1,10 +1,13 @@
 package com.epam.rft.atsy.web.controllers;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.BDDMockito.given;
+
 import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import com.epam.rft.atsy.web.controllers.rest.ChannelController;
-
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -17,10 +20,6 @@ import org.testng.annotations.Test;
 
 import java.util.Collection;
 import java.util.Locale;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.BDDMockito.given;
 
 public class ChannelControllerTest {
   private static final String EMPTY_POSITION_NAME_MESSAGE_KEY = "settings.channels.error.empty";

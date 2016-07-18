@@ -7,7 +7,6 @@ import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import com.epam.rft.atsy.service.request.FilterRequest;
 import com.epam.rft.atsy.service.request.SearchOptions;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -20,9 +19,7 @@ import org.springframework.util.Assert;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
-
 import javax.annotation.Resource;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -79,12 +76,10 @@ public class CandidateServiceImpl implements CandidateService {
   }
 
   /**
-   * Validates the fields of the passed filter request. Performs
-   * nullness-checks.
-   *
+   * Validates the fields of the passed filter request. Performs nullness-checks.
    * @param filterRequest the object to validate
-   * @throws IllegalArgumentException if any member of the parameter
-   *                                  (or the parameter itself) is {@code null}.
+   * @throws IllegalArgumentException if any member of the parameter (or the parameter itself) is
+   * {@code null}.
    */
   private void validateFilterRequest(FilterRequest filterRequest) {
     Assert.notNull(filterRequest);

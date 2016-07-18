@@ -1,16 +1,15 @@
 package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
-import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
+import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.Collection;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(Parameterized.class)
 public class PasswordContainsRuleTest {

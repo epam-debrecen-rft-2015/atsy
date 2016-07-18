@@ -1,14 +1,13 @@
 package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
-import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
-import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+
+import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
+import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
+import org.junit.Before;
+import org.junit.Test;
 
 
 /**

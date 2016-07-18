@@ -1,7 +1,12 @@
 package com.epam.rft.atsy.persistence.repositories;
 
-import com.epam.rft.atsy.persistence.entities.CandidateEntity;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
 
+import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +16,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
 
 public class CandidateRepositoryIT extends AbstractRepositoryIT {
 

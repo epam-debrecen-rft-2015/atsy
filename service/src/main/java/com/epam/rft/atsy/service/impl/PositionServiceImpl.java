@@ -5,7 +5,6 @@ import com.epam.rft.atsy.persistence.repositories.PositionRepository;
 import com.epam.rft.atsy.service.PositionService;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -17,9 +16,7 @@ import org.springframework.util.Assert;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
-
 import javax.annotation.Resource;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Service

@@ -7,7 +7,6 @@ import com.epam.rft.atsy.persistence.repositories.UserRepository;
 import com.epam.rft.atsy.service.PasswordChangeService;
 import com.epam.rft.atsy.service.domain.PasswordHistoryDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +16,7 @@ import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Resource;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Service

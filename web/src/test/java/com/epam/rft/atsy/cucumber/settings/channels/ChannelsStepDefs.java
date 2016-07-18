@@ -1,16 +1,5 @@
 package com.epam.rft.atsy.cucumber.settings.channels;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.List;
-
-import cucumber.api.java.en.And;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
-
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForAjax;
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForPageLoadAfter;
@@ -22,6 +11,16 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 
 public class ChannelsStepDefs {
   private String channelsListContents;

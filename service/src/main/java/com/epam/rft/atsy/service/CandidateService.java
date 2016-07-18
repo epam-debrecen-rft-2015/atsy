@@ -12,7 +12,6 @@ public interface CandidateService {
 
   /**
    * Returns the candidate object with the given id.
-   *
    * @param candidateID the id of candidate
    * @return the candidate object
    */
@@ -20,7 +19,6 @@ public interface CandidateService {
 
   /**
    * Returns a collection of candidates, whome fits the filter.
-   *
    * @param sortingRequest the filter
    * @return the collection of candidates
    */
@@ -28,7 +26,6 @@ public interface CandidateService {
 
   /**
    * Saves a candidate to the database and returns it's id.
-   *
    * @param candidate the candidate
    * @return the id of candidate
    */

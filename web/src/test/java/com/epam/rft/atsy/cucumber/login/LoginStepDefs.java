@@ -1,16 +1,15 @@
 package com.epam.rft.atsy.cucumber.login;
 
-import com.epam.rft.atsy.cucumber.util.DriverProvider;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
+import com.epam.rft.atsy.cucumber.util.DriverProvider;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 
 public class LoginStepDefs {
 

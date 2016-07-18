@@ -1,7 +1,6 @@
 package com.epam.rft.atsy.web.configuration;
 
 import com.epam.rft.atsy.service.security.CustomUserDetailsService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

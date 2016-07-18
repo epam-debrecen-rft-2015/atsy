@@ -5,7 +5,6 @@ import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.AbstractStateDTO;
 
 import java.util.Date;
-
 import lombok.AllArgsConstructor;
 
 /**

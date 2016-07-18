@@ -1,14 +1,13 @@
 package com.epam.rft.atsy.persistence.repositories;
 
-import com.epam.rft.atsy.persistence.entities.UserEntity;
-
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+
+import com.epam.rft.atsy.persistence.entities.UserEntity;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserRepositoryIT extends AbstractRepositoryIT {
 

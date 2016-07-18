@@ -2,7 +2,6 @@ package com.epam.rft.atsy.service.security;
 
 import com.epam.rft.atsy.service.UserService;
 import com.epam.rft.atsy.service.domain.UserDTO;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

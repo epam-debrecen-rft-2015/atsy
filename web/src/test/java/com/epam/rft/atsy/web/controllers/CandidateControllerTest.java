@@ -1,11 +1,12 @@
 package com.epam.rft.atsy.web.controllers;
 
+import static org.mockito.BDDMockito.given;
+
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.request.FilterRequest;
 import com.epam.rft.atsy.web.controllers.rest.CandidateController;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -14,8 +15,6 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
-
-import static org.mockito.BDDMockito.given;
 
 public class CandidateControllerTest {
 

@@ -1,10 +1,10 @@
 package com.epam.rft.atsy.cucumber.util;
 
+import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
+
 import org.openqa.selenium.By;
 
 import cucumber.api.java.en.Given;
-
-import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
 
 public class CommonStepDefs {
 

@@ -10,7 +10,6 @@ public interface UserService {
 
   /**
    * Returns the user by his/her username.
-   *
    * @param username the user's username
    * @return the user
    */
@@ -18,7 +17,6 @@ public interface UserService {
 
   /**
    * Returns the user, if he/her exists in database.
-   *
    * @param user the given user
    * @return the existing user
    * @throws UserNotFoundException the user not found.
@@ -27,7 +25,6 @@ public interface UserService {
 
   /**
    * Saves the user to the database and returns his/her id.
-   *
    * @param userDTO the user
    * @return the id of user
    */

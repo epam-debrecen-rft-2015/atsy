@@ -1,8 +1,14 @@
 package com.epam.rft.atsy.persistence.repositories;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
+
 import com.epam.rft.atsy.persistence.entities.PasswordHistoryEntity;
 import com.epam.rft.atsy.persistence.entities.UserEntity;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
@@ -10,13 +16,6 @@ import org.springframework.test.context.jdbc.Sql;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
-
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
 
 @Sql("classpath:sql/passwordhistory/passwordhistory.sql")
 public class PasswordHistoryRepositoryIT extends AbstractRepositoryIT {

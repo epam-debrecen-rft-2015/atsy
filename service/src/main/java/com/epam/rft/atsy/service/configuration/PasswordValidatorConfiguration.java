@@ -9,7 +9,6 @@ import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordNewMatch
 import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordOldPasswordMatchesRule;
 import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordUniqueRule;
 import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordValidatorImpl;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

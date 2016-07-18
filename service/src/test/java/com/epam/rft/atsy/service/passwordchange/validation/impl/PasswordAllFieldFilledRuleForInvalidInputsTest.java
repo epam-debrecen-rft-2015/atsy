@@ -1,10 +1,12 @@
 package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
-
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,9 +20,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 @RunWith(Parameterized.class)
 public class PasswordAllFieldFilledRuleForInvalidInputsTest {

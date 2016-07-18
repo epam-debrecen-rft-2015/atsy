@@ -11,14 +11,12 @@ public interface PositionService {
 
   /**
    * Returns a collection of positions.
-   *
    * @return the collection of positions
    */
   Collection<PositionDTO> getAllPositions();
 
   /**
    * Saves a position to the database.
-   *
    * @param position the position
    */
   void saveOrUpdate(PositionDTO position);

@@ -4,12 +4,10 @@ import com.epam.rft.atsy.service.PasswordChangeService;
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
 import com.epam.rft.atsy.service.security.UserDetailsAdapter;
-
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
-
 import javax.annotation.Resource;
 
 public class PasswordUniqueRule implements PasswordValidationRule {

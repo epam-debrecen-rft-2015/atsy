@@ -1,11 +1,16 @@
 package com.epam.rft.atsy.service.impl;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+
 import com.epam.rft.atsy.persistence.entities.UserEntity;
 import com.epam.rft.atsy.persistence.repositories.UserRepository;
 import com.epam.rft.atsy.service.domain.UserDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import com.epam.rft.atsy.service.exception.UserNotFoundException;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,12 +24,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceImplTest {

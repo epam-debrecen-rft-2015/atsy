@@ -7,7 +7,6 @@ import com.epam.rft.atsy.service.domain.UserDTO;
 import com.epam.rft.atsy.service.exception.BackendException;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import com.epam.rft.atsy.service.exception.UserNotFoundException;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import org.springframework.util.Assert;
 import javax.annotation.Resource;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Service

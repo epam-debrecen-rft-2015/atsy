@@ -1,11 +1,16 @@
 package com.epam.rft.atsy.persistence.repositories;
 
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.entities.ChannelEntity;
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
@@ -13,12 +18,6 @@ import org.springframework.test.context.jdbc.Sql;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
-
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 @Sql("classpath:sql/application/application.sql")
 public class ApplicationsRepositoryIT extends AbstractRepositoryIT {

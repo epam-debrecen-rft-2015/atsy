@@ -13,6 +13,7 @@ public class SortingRequest {
 
   private String fieldName;
   private Order order;
+
   public enum Order {
     ASC,
     DESC

@@ -2,7 +2,6 @@ package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.service.StatesService;
 import com.epam.rft.atsy.service.domain.states.StateViewDTO;
-
 import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
 import java.util.Locale;
-
 import javax.annotation.Resource;
 
 @RestController

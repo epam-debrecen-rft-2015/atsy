@@ -1,12 +1,22 @@
 package com.epam.rft.atsy.service.impl;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.never;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.verifyNoMoreInteractions;
+import static org.mockito.BDDMockito.verifyZeroInteractions;
+import static org.mockito.BDDMockito.willThrow;
+
 import com.epam.rft.atsy.persistence.entities.PasswordHistoryEntity;
 import com.epam.rft.atsy.persistence.entities.UserEntity;
 import com.epam.rft.atsy.persistence.repositories.PasswordHistoryRepository;
 import com.epam.rft.atsy.persistence.repositories.UserRepository;
 import com.epam.rft.atsy.service.domain.PasswordHistoryDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,17 +32,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.never;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.verifyNoMoreInteractions;
-import static org.mockito.BDDMockito.verifyZeroInteractions;
-import static org.mockito.BDDMockito.willThrow;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PasswordChangeServiceImplTest {
