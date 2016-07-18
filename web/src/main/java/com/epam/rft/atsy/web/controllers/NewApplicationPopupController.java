@@ -15,14 +15,11 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.Date;
 
-@Controller
-public class NewApplicationPopupController {
+@Controller public class NewApplicationPopupController {
 
-    @Resource
-    private StatesService statesService;
+    @Resource private StatesService statesService;
 
-    @Resource
-    private ApplicationsService applicationsService;
+    @Resource private ApplicationsService applicationsService;
 
     private static final String VIEW_NAME = "new_application_popup";
 
@@ -39,16 +36,13 @@ public class NewApplicationPopupController {
 
 
 
-            ApplicationDTO applicationDTO = ApplicationDTO.builder()
-                    .creationDate(new Date())
-                    .candidateId(stateDTO.getCandidateId())
-                    .positionId(stateDTO.getPosition().getId())
-                    .channelId(stateDTO.getChannel().getId())
-                    .build();
+            ApplicationDTO applicationDTO = ApplicationDTO.builder().creationDate(new Date())
+                .candidateId(stateDTO.getCandidateId()).positionId(stateDTO.getPosition().getId())
+                .channelId(stateDTO.getChannel().getId()).build();
 
 
-            applicationsService.saveApplicaton(applicationDTO,stateDTO);
+            applicationsService.saveApplicaton(applicationDTO, stateDTO);
         }
-        return "redirect:/secure/candidate/"+stateDTO.getCandidateId();
+        return "redirect:/secure/candidate/" + stateDTO.getCandidateId();
     }
 }

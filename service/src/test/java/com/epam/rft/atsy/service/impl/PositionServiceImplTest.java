@@ -8,7 +8,6 @@ import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -34,18 +33,15 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PositionServiceImplTest {
-    @Mock
-    private ModelMapper modelMapper;
+@RunWith(MockitoJUnitRunner.class) public class PositionServiceImplTest {
+    @Mock private ModelMapper modelMapper;
 
-    @Mock
-    private PositionRepository positionRepository;
+    @Mock private PositionRepository positionRepository;
 
-    @InjectMocks
-    private PositionServiceImpl positionService;
+    @InjectMocks private PositionServiceImpl positionService;
 
-    private static final Type POSITIONDTO_LIST_TYPE = new TypeToken<List<PositionDTO>>() {}.getType();
+    private static final Type POSITIONDTO_LIST_TYPE = new TypeToken<List<PositionDTO>>() {
+    }.getType();
 
     private static final Long DEVELOPER_ID = 1L;
     private static final String DEVELOPER_NAME = "Developer";
@@ -59,26 +55,24 @@ public class PositionServiceImplTest {
     private List<PositionEntity> expectedPositionEntityList;
     private Collection<PositionDTO> expectedPositionDtoList;
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    @Rule public ExpectedException expectedException = ExpectedException.none();
 
-    @Before
-    public void setUp() {
+    @Before public void setUp() {
         developerEntity = PositionEntity.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).build();
 
         developerDto = PositionDTO.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).build();
 
-        expectedPositionEntityList = Arrays.asList(developerEntity, developerEntity, developerEntity);
+        expectedPositionEntityList =
+            Arrays.asList(developerEntity, developerEntity, developerEntity);
 
         expectedPositionDtoList = Arrays.asList(developerDto, developerDto, developerDto);
     }
 
-    @Test
-    public void getAllPositionsShouldReturnEmptyListWhenThereAreNoPositions() {
+    @Test public void getAllPositionsShouldReturnEmptyListWhenThereAreNoPositions() {
         // Given
         given(positionRepository.findAll()).willReturn(EMPTY_POSITION_ENTITY_LIST);
         given(modelMapper.map(EMPTY_POSITION_ENTITY_LIST, POSITIONDTO_LIST_TYPE))
-                .willReturn(EMPTY_POSITION_DTO_LIST);
+            .willReturn(EMPTY_POSITION_DTO_LIST);
 
         // When
         Collection<PositionDTO> positions = positionService.getAllPositions();
@@ -90,8 +84,7 @@ public class PositionServiceImplTest {
         then(positionRepository).should(times(1)).findAll();
     }
 
-    @Test
-    public void getAllPositionsShouldReturnSingleElementListWhenThereIsOnePosition() {
+    @Test public void getAllPositionsShouldReturnSingleElementListWhenThereIsOnePosition() {
         // Given
         List<PositionEntity> positions = Arrays.asList(developerEntity);
 
@@ -109,12 +102,11 @@ public class PositionServiceImplTest {
         then(positionRepository).should(times(1)).findAll();
     }
 
-    @Test
-    public void getAllPositionsShouldReturnThreeElementListWhenThereAreThreePositions() {
+    @Test public void getAllPositionsShouldReturnThreeElementListWhenThereAreThreePositions() {
         // Given
         given(positionRepository.findAll()).willReturn(expectedPositionEntityList);
         given(modelMapper.map(expectedPositionEntityList, POSITIONDTO_LIST_TYPE))
-                .willReturn(expectedPositionDtoList);
+            .willReturn(expectedPositionDtoList);
 
         // When
         Collection<PositionDTO> result = positionService.getAllPositions();
@@ -131,13 +123,13 @@ public class PositionServiceImplTest {
         positionService.saveOrUpdate(null);
     }
 
-    @Test
-    public void saveOrUpdateShouldThrowDREAfterCatchingConstraintViolationException()
-            throws DuplicateRecordException {
+    @Test public void saveOrUpdateShouldThrowDREAfterCatchingConstraintViolationException()
+        throws DuplicateRecordException {
         // Given
         given(modelMapper.map(developerDto, PositionEntity.class)).willReturn(developerEntity);
 
-        given(positionRepository.save(developerEntity)).willThrow(ConstraintViolationException.class);
+        given(positionRepository.save(developerEntity))
+            .willThrow(ConstraintViolationException.class);
 
         expectedException.expect(DuplicateRecordException.class);
         expectedException.expectMessage(CoreMatchers.endsWith(DEVELOPER_NAME));
@@ -147,13 +139,13 @@ public class PositionServiceImplTest {
         positionService.saveOrUpdate(developerDto);
     }
 
-    @Test
-    public void saveOrUpdateShouldThrowDREAfterCatchingDataIntegrityViolationException()
-            throws DuplicateRecordException {
+    @Test public void saveOrUpdateShouldThrowDREAfterCatchingDataIntegrityViolationException()
+        throws DuplicateRecordException {
         // Given
         given(modelMapper.map(developerDto, PositionEntity.class)).willReturn(developerEntity);
 
-        given(positionRepository.save(developerEntity)).willThrow(DataIntegrityViolationException.class);
+        given(positionRepository.save(developerEntity))
+            .willThrow(DataIntegrityViolationException.class);
 
         expectedException.expect(DuplicateRecordException.class);
         expectedException.expectMessage(CoreMatchers.endsWith(DEVELOPER_NAME));
@@ -163,8 +155,7 @@ public class PositionServiceImplTest {
         positionService.saveOrUpdate(developerDto);
     }
 
-    @Test
-    public void saveOrUpdateShouldSaveAProperPositionDTO() {
+    @Test public void saveOrUpdateShouldSaveAProperPositionDTO() {
         // Given
         given(modelMapper.map(developerDto, PositionEntity.class)).willReturn(developerEntity);
 

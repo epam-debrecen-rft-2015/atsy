@@ -10,43 +10,39 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Locale;
 
-@RestController
-@RequestMapping(value = "/secure/channels")
-public class ChannelController {
-    private static final String DUPLICATE_POSITION_MESSAGE_KEY = "settings.channels.error.duplicate";
+@RestController @RequestMapping(value = "/secure/channels") public class ChannelController {
+    private static final String DUPLICATE_POSITION_MESSAGE_KEY =
+        "settings.channels.error.duplicate";
     private static final String EMPTY_POSITION_NAME_MESSAGE_KEY = "settings.channels.error.empty";
     private static final String TECHNICAL_ERROR_MESSAGE_KEY = "technical.error.message";
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelController.class);
 
-    @Resource
-    private ChannelService channelService;
-    @Resource
-    private MessageSource messageSource;
+    @Resource private ChannelService channelService;
+    @Resource private MessageSource messageSource;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public Collection<ChannelDTO> getChannels() {
+    @RequestMapping(method = RequestMethod.GET) public Collection<ChannelDTO> getChannels() {
         return channelService.getAllChannels();
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<String> saveOrUpdate(@RequestBody ChannelDTO channelDTO, BindingResult result, Locale locale) {
+    public ResponseEntity<String> saveOrUpdate(@RequestBody ChannelDTO channelDTO,
+        BindingResult result, Locale locale) {
         ResponseEntity<String> entity = new ResponseEntity<>(StringUtils.EMPTY, HttpStatus.OK);
 
         if (!result.hasErrors()) {
             channelService.saveOrUpdate(channelDTO);
         } else {
-            entity = new ResponseEntity<>(messageSource.getMessage(EMPTY_POSITION_NAME_MESSAGE_KEY,
-                    null, locale), HttpStatus.BAD_REQUEST);
+            entity = new ResponseEntity<>(
+                messageSource.getMessage(EMPTY_POSITION_NAME_MESSAGE_KEY, null, locale),
+                HttpStatus.BAD_REQUEST);
         }
         return entity;
     }
@@ -57,8 +53,9 @@ public class ChannelController {
 
         headers.setContentType(MediaTypes.TEXT_PLAIN_UTF8);
 
-        return new ResponseEntity<>(messageSource.getMessage(DUPLICATE_POSITION_MESSAGE_KEY,
-                new Object[]{ex.getName()}, locale), headers, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(messageSource
+            .getMessage(DUPLICATE_POSITION_MESSAGE_KEY, new Object[] {ex.getName()}, locale),
+            headers, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
@@ -69,8 +66,9 @@ public class ChannelController {
 
         headers.setContentType(MediaTypes.TEXT_PLAIN_UTF8);
 
-        return new ResponseEntity<>(messageSource.getMessage(TECHNICAL_ERROR_MESSAGE_KEY,
-                null, locale), headers, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+            messageSource.getMessage(TECHNICAL_ERROR_MESSAGE_KEY, null, locale), headers,
+            HttpStatus.BAD_REQUEST);
     }
 
 

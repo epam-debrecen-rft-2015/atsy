@@ -10,11 +10,7 @@ import java.util.Date;
 
 
 
-@Builder
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class ApplicationDTO {
+@Builder @Data @NoArgsConstructor @AllArgsConstructor public class ApplicationDTO {
 
     private Long id;
     private Date creationDate;

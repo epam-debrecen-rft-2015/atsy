@@ -17,25 +17,20 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PasswordValidatorImplTest {
+@RunWith(MockitoJUnitRunner.class) public class PasswordValidatorImplTest {
     private static final PasswordChangeDTO DUMMY_PASSWORD_CHANGE_DTO = null;
 
-    @Mock
-    private PasswordValidationRule successfulRule;
+    @Mock private PasswordValidationRule successfulRule;
 
-    @Mock
-    private PasswordValidationRule failingRule;
+    @Mock private PasswordValidationRule failingRule;
 
-    @Mock
-    private PasswordValidationRule unreachedRule;
+    @Mock private PasswordValidationRule unreachedRule;
 
     private Collection<PasswordValidationRule> passwordValidationRules;
 
     private PasswordValidatorImpl passwordValidator;
 
-    @Before
-    public void setUp() {
+    @Before public void setUp() {
         passwordValidationRules = new ArrayList<>();
 
         passwordValidator = new PasswordValidatorImpl(passwordValidationRules);
@@ -45,8 +40,8 @@ public class PasswordValidatorImplTest {
         given(failingRule.isValid(DUMMY_PASSWORD_CHANGE_DTO)).willReturn(false);
     }
 
-    @Test
-    public void validateShouldReturnTrueWhenAllRulesAreSatisfied() throws PasswordValidationException {
+    @Test public void validateShouldReturnTrueWhenAllRulesAreSatisfied()
+        throws PasswordValidationException {
         // Given
         passwordValidationRules.add(successfulRule);
 
@@ -68,8 +63,7 @@ public class PasswordValidatorImplTest {
         passwordValidator.validate(DUMMY_PASSWORD_CHANGE_DTO);
     }
 
-    @Test
-    public void validateShouldCallEachRulesIsValidMethodUntilTheFirstFailingRule() {
+    @Test public void validateShouldCallEachRulesIsValidMethodUntilTheFirstFailingRule() {
         // Given
         passwordValidationRules.add(successfulRule);
         passwordValidationRules.add(failingRule);

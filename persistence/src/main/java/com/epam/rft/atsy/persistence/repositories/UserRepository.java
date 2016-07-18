@@ -11,7 +11,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     /**
      * Returns the user by username and password.
      *
-     * @param userName the user's name
+     * @param userName     the user's name
      * @param userPassword the user's password
      * @return the user
      */

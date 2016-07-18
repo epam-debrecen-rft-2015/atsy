@@ -10,14 +10,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 
-@Controller
-@RequestMapping(path = "/secure")
-public class CandidateCreationController {
+@Controller @RequestMapping(path = "/secure") public class CandidateCreationController {
 
     private static final String VIEW_NAME = "candidate_create";
     public static final String CANDIDATE_OBJECT_KEY = "candidate";
-    @Resource
-    private CandidateService candidateService;
+    @Resource private CandidateService candidateService;
 
     @RequestMapping(method = RequestMethod.GET, path = "/candidate/{candidateId}")
     public ModelAndView loadCandidate(@PathVariable(value = "candidateId") Long candidateId) {

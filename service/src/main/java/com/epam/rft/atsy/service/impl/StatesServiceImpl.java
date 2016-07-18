@@ -24,22 +24,17 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-@Service
-public class StatesServiceImpl implements StatesService {
+@Service public class StatesServiceImpl implements StatesService {
 
     public static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
 
-    @Resource
-    private ModelMapper modelMapper;
+    @Resource private ModelMapper modelMapper;
 
-    @Autowired
-    private StatesRepository statesRepository;
+    @Autowired private StatesRepository statesRepository;
 
-    @Autowired
-    private ApplicationsRepository applicationsRepository;
+    @Autowired private ApplicationsRepository applicationsRepository;
 
-    @Autowired
-    private CandidateRepository candidateRepository;
+    @Autowired private CandidateRepository candidateRepository;
 
     private final static Type STATEVIEWDTO_LIST_TYPE = new TypeToken<List<StateViewDTO>>() {
     }.getType();
@@ -50,21 +45,24 @@ public class StatesServiceImpl implements StatesService {
         CandidateEntity candidateEntity = candidateRepository.findOne(id);
 
         Assert.notNull(candidateEntity);
-        List<ApplicationEntity> applicationList = applicationsRepository.findByCandidateEntity(candidateEntity);
+        List<ApplicationEntity> applicationList =
+            applicationsRepository.findByCandidateEntity(candidateEntity);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
         List<CandidateApplicationDTO> candidateApplicationDTOList = new LinkedList<>();
         for (ApplicationEntity applicationEntity : applicationList) {
-            StateEntity stateEntity = statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(applicationEntity);
+            StateEntity stateEntity =
+                statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(applicationEntity);
 
 
-            CandidateApplicationDTO candidateApplicationDTO = CandidateApplicationDTO.builder()
-                    .applicationId(applicationEntity.getId())
+            CandidateApplicationDTO candidateApplicationDTO =
+                CandidateApplicationDTO.builder().applicationId(applicationEntity.getId())
                     .creationDate(simpleDateFormat.format(applicationEntity.getCreationDate()))
                     .stateType(stateEntity.getStateType())
                     .positionName(applicationEntity.getPositionEntity().getName())
                     .lastStateId(stateEntity.getId())
-                    .modificationDate(simpleDateFormat.format(stateEntity.getCreationDate())).build();
+                    .modificationDate(simpleDateFormat.format(stateEntity.getCreationDate()))
+                    .build();
 
             candidateApplicationDTOList.add(candidateApplicationDTO);
 
@@ -72,8 +70,7 @@ public class StatesServiceImpl implements StatesService {
         return candidateApplicationDTOList;
     }
 
-    @Override
-    public Long saveState(StateDTO state, Long applicationId) {
+    @Override public Long saveState(StateDTO state, Long applicationId) {
         Assert.notNull(state);
         Assert.notNull(applicationId);
 
@@ -86,19 +83,20 @@ public class StatesServiceImpl implements StatesService {
     }
 
 
-    @Override
-    public List<StateViewDTO> getStatesByApplicationId(Long applicationId) {
+    @Override public List<StateViewDTO> getStatesByApplicationId(Long applicationId) {
         Assert.notNull(applicationId);
         ApplicationEntity applicationEntity = applicationsRepository.findOne(applicationId);
 
         Assert.notNull(applicationEntity);
-        List<StateEntity> stateEntities = statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationEntity);
+        List<StateEntity> stateEntities =
+            statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationEntity);
         List<StateViewDTO> stateDTOs = modelMapper.map(stateEntities, STATEVIEWDTO_LIST_TYPE);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
         for (int i = 0; i < stateDTOs.size(); i++) {
-            stateDTOs.get(i).setCreationDate(simpleDateFormat.format(stateEntities.get(i).getCreationDate()));
+            stateDTOs.get(i)
+                .setCreationDate(simpleDateFormat.format(stateEntities.get(i).getCreationDate()));
         }
         return stateDTOs;
     }

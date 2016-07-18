@@ -8,10 +8,7 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles("integration")
+@RunWith(SpringJUnit4ClassRunner.class) @ActiveProfiles("integration")
 @ContextConfiguration(classes = PersistenceConfiguration.class, initializers = RepositoryITApplciationContextInitializer.class)
-@Transactional
-@SqlConfig(encoding = "UTF-8")
-public abstract class AbstractRepositoryIT {
+@Transactional @SqlConfig(encoding = "UTF-8") public abstract class AbstractRepositoryIT {
 }

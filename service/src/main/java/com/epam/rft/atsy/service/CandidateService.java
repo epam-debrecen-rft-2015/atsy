@@ -1,8 +1,7 @@
 package com.epam.rft.atsy.service;
 
-import com.epam.rft.atsy.persistence.entities.CandidateEntity;
-import com.epam.rft.atsy.service.request.FilterRequest;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
+import com.epam.rft.atsy.service.request.FilterRequest;
 
 import java.util.Collection;
 

@@ -9,8 +9,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
@@ -19,18 +17,16 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
-@Sql("classpath:sql/application/application.sql")
-public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
+@Sql("classpath:sql/application/application.sql") public class ApplicationsRepositoryIT
+    extends AbstractRepositoryIT {
 
     public static final long CANDIDATE_A_ID = 1L;
     public static final long CANDIDATE_B_ID = 2L;
     public static final long CANDIDATE_C_ID = 3L;
 
-    @Autowired
-    private ApplicationsRepository repository;
+    @Autowired private ApplicationsRepository repository;
 
-    @Autowired
-    private CandidateRepository candidateRepository;
+    @Autowired private CandidateRepository candidateRepository;
 
     @Test
     public void findByCandidateEntityShouldNotFindApplicationForCandidateWithoutApplications() {
@@ -49,14 +45,9 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
     public void findByCandidateEntityShouldFindSingleApplicationForCandidateWithSingleApplication() {
         // Given
         CandidateEntity candidateEntityA = this.candidateRepository.findOne(CANDIDATE_A_ID);
-        ChannelEntity expectedChannelEntity = ChannelEntity.builder()
-                .id(1L)
-                .name("direkt")
-                .build();
-        PositionEntity expectedPositionEntity = PositionEntity.builder()
-                .id(1L)
-                .name("Fejlesztő")
-                .build();
+        ChannelEntity expectedChannelEntity = ChannelEntity.builder().id(1L).name("direkt").build();
+        PositionEntity expectedPositionEntity =
+            PositionEntity.builder().id(1L).name("Fejlesztő").build();
         Date nearNow = currentDateMinus(5);
 
         // When
@@ -66,29 +57,22 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
         assertThat(result, notNullValue());
         assertThat(result.size(), is(1));
 
-        assertApplicationEntity(result.get(0), candidateEntityA, expectedChannelEntity, expectedPositionEntity, nearNow);
+        assertApplicationEntity(result.get(0), candidateEntityA, expectedChannelEntity,
+            expectedPositionEntity, nearNow);
     }
 
     @Test
     public void findByCandidateEntityShouldFindThreeApplicationForCandidateWithThreeApplication() {
         // Given
         CandidateEntity candidateEntityC = this.candidateRepository.findOne(CANDIDATE_C_ID);
-        ChannelEntity expectedChannelEntity = ChannelEntity.builder()
-                .id(2L)
-                .name("profession hírdetés")
-                .build();
-        ChannelEntity expectedSecondChannelEntity = ChannelEntity.builder()
-                .id(3L)
-                .name("profession adatbázis")
-                .build();
-        ChannelEntity expectedThirdChannelEntity = ChannelEntity.builder()
-                .id(4L)
-                .name("facebook")
-                .build();
-        PositionEntity expectedPositionEntity = PositionEntity.builder()
-                .id(1L)
-                .name("Fejlesztő")
-                .build();
+        ChannelEntity expectedChannelEntity =
+            ChannelEntity.builder().id(2L).name("profession hírdetés").build();
+        ChannelEntity expectedSecondChannelEntity =
+            ChannelEntity.builder().id(3L).name("profession adatbázis").build();
+        ChannelEntity expectedThirdChannelEntity =
+            ChannelEntity.builder().id(4L).name("facebook").build();
+        PositionEntity expectedPositionEntity =
+            PositionEntity.builder().id(1L).name("Fejlesztő").build();
         Date nearNow = currentDateMinus(5);
 
         // When
@@ -98,12 +82,17 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
         assertThat(result, notNullValue());
         assertThat(result.size(), is(3));
 
-        assertApplicationEntity(result.get(0), candidateEntityC, expectedChannelEntity, expectedPositionEntity, nearNow);
-        assertApplicationEntity(result.get(1), candidateEntityC, expectedSecondChannelEntity, expectedPositionEntity, nearNow);
-        assertApplicationEntity(result.get(2), candidateEntityC, expectedThirdChannelEntity, expectedPositionEntity, nearNow);
+        assertApplicationEntity(result.get(0), candidateEntityC, expectedChannelEntity,
+            expectedPositionEntity, nearNow);
+        assertApplicationEntity(result.get(1), candidateEntityC, expectedSecondChannelEntity,
+            expectedPositionEntity, nearNow);
+        assertApplicationEntity(result.get(2), candidateEntityC, expectedThirdChannelEntity,
+            expectedPositionEntity, nearNow);
     }
 
-    private void assertApplicationEntity(ApplicationEntity application, CandidateEntity expectedCandidateEntity, ChannelEntity expectedChannelEntity, PositionEntity expectedPositionEntity, Date threshold) {
+    private void assertApplicationEntity(ApplicationEntity application,
+        CandidateEntity expectedCandidateEntity, ChannelEntity expectedChannelEntity,
+        PositionEntity expectedPositionEntity, Date threshold) {
         assertThat(application, notNullValue());
 
         assertThat(application.getCandidateEntity(), notNullValue());

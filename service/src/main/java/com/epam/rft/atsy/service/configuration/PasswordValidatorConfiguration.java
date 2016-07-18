@@ -9,15 +9,12 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Arrays;
 import java.util.Collection;
 
-@Configuration
-public class PasswordValidatorConfiguration {
-    @Bean
-    public PasswordValidator passwordValidator() {
-        Collection<PasswordValidationRule> rules = Arrays.asList(
-                new PasswordAllFieldFilledRule(), new PasswordContainsRule(),
+@Configuration public class PasswordValidatorConfiguration {
+    @Bean public PasswordValidator passwordValidator() {
+        Collection<PasswordValidationRule> rules = Arrays
+            .asList(new PasswordAllFieldFilledRule(), new PasswordContainsRule(),
                 new PasswordLengthValidationRule(), new PasswordNewMatchValidationRule(),
-                new PasswordOldPasswordMatchesRule(), new PasswordUniqueRule()
-        );
+                new PasswordOldPasswordMatchesRule(), new PasswordUniqueRule());
 
         return new PasswordValidatorImpl(rules);
     }

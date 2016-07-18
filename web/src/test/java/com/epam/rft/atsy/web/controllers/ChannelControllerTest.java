@@ -25,55 +25,42 @@ public class ChannelControllerTest {
     private static final String EMPTY_POSITION_NAME_MESSAGE_KEY = "settings.channels.error.empty";
 
 
-    @InjectMocks
-    ChannelController channelController;
+    @InjectMocks ChannelController channelController;
 
-    @Mock
-    ChannelDTO channelDTO;
+    @Mock ChannelDTO channelDTO;
 
-    @Mock
-    BindingResult bindingResult;
+    @Mock BindingResult bindingResult;
 
-    @Mock
-    BindingResult bindingResultTrue;
+    @Mock BindingResult bindingResultTrue;
 
-    @Mock
-    ChannelService channelService;
+    @Mock ChannelService channelService;
 
-    @Mock
-    Collection<ChannelDTO> channelDTOs;
+    @Mock Collection<ChannelDTO> channelDTOs;
 
-    @Mock
-    ResponseEntity responseEntity;
+    @Mock ResponseEntity responseEntity;
 
-    @Mock
-    ResponseEntity responseEntityTrue;
+    @Mock ResponseEntity responseEntityTrue;
 
-    @Mock
-    MessageSource messageSource;
+    @Mock MessageSource messageSource;
 
-    @Mock
-    DuplicateRecordException ex;
+    @Mock DuplicateRecordException ex;
 
 
-    @BeforeMethod
-    public void setUp() {
+    @BeforeMethod public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test
-    public void getChannelsTest(){
+    @Test public void getChannelsTest() {
         given(channelDTOs.isEmpty()).willReturn(false);
         given(channelService.getAllChannels()).willReturn(channelDTOs);
         //when
         Collection<ChannelDTO> dtos = channelController.getChannels();
         //then
-        assertThat(channelDTOs.isEmpty(),is(dtos.isEmpty()));
+        assertThat(channelDTOs.isEmpty(), is(dtos.isEmpty()));
     }
 
-    @Test
-    public void saveOrUpdate(){
-        Locale locale=new Locale("hu");
+    @Test public void saveOrUpdate() {
+        Locale locale = new Locale("hu");
         given(bindingResult.hasErrors()).willReturn(false);
         given(bindingResultTrue.hasErrors()).willReturn(true);
         given(channelDTO.getId()).willReturn(new Long(1));
@@ -83,32 +70,31 @@ public class ChannelControllerTest {
         given(responseEntity.getBody()).willReturn("");
         given(responseEntityTrue.getStatusCode()).willReturn(HttpStatus.BAD_REQUEST);
         //Long candidateId=candidateService.saveOrUpdate(candidateDTO);
-        ResponseEntity entity = channelController.saveOrUpdate(channelDTO,bindingResult,locale);
-        ResponseEntity entityTrue = channelController.saveOrUpdate(channelDTO,bindingResultTrue,locale);
+        ResponseEntity entity = channelController.saveOrUpdate(channelDTO, bindingResult, locale);
+        ResponseEntity entityTrue =
+            channelController.saveOrUpdate(channelDTO, bindingResultTrue, locale);
 
-        assertThat(entity.getStatusCode(),is(HttpStatus.OK));
-        assertThat(entityTrue.getStatusCode(),is(HttpStatus.BAD_REQUEST));
+        assertThat(entity.getStatusCode(), is(HttpStatus.OK));
+        assertThat(entityTrue.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 
-    @Test
-    public void handleDuplicateException(){
-        Locale locale=new Locale("hu");
+    @Test public void handleDuplicateException() {
+        Locale locale = new Locale("hu");
         given(ex.getName()).willReturn("anything");
         given(responseEntity.getStatusCode()).willReturn(HttpStatus.BAD_REQUEST);
 
-        ResponseEntity entity = channelController.handleDuplicateException(locale,ex);
+        ResponseEntity entity = channelController.handleDuplicateException(locale, ex);
 
-        assertThat(entity.getStatusCode(),is(HttpStatus.BAD_REQUEST));
+        assertThat(entity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 
-    @Test
-    public void handleException(){
-        Locale locale=new Locale("hu");
+    @Test public void handleException() {
+        Locale locale = new Locale("hu");
         given(ex.getName()).willReturn("anything");
         given(responseEntity.getStatusCode()).willReturn(HttpStatus.BAD_REQUEST);
 
-        ResponseEntity entity = channelController.handleException(locale,ex);
+        ResponseEntity entity = channelController.handleException(locale, ex);
 
-        assertThat(entity.getStatusCode(),is(HttpStatus.BAD_REQUEST));
+        assertThat(entity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 }

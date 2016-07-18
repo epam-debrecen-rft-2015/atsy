@@ -40,8 +40,7 @@ public class CandidateTableRow {
             this.order = order;
         }
 
-        @Override
-        public int compare(CandidateTableRow o1, CandidateTableRow o2) {
+        @Override public int compare(CandidateTableRow o1, CandidateTableRow o2) {
             int compareValue = getFieldValue(o1).compareTo(getFieldValue(o2));
             if ("desc".equals(order)) {
                 compareValue = compareValue * -1;

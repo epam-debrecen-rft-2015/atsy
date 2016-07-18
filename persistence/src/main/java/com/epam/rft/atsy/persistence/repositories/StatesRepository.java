@@ -17,7 +17,8 @@ public interface StatesRepository extends CrudRepository<StateEntity, Long> {
      * @param applicationEntity the application
      * @return the list of states of the application
      */
-    List<StateEntity> findByApplicationEntityOrderByStateIndexDesc(ApplicationEntity applicationEntity);
+    List<StateEntity> findByApplicationEntityOrderByStateIndexDesc(
+        ApplicationEntity applicationEntity);
 
     /**
      * Returns the newest state of the application.
@@ -25,5 +26,6 @@ public interface StatesRepository extends CrudRepository<StateEntity, Long> {
      * @param applicationEntity the application
      * @return the newest state of the application
      */
-    StateEntity findTopByApplicationEntityOrderByStateIndexDesc(ApplicationEntity applicationEntity);
+    StateEntity findTopByApplicationEntityOrderByStateIndexDesc(
+        ApplicationEntity applicationEntity);
 }

@@ -8,26 +8,21 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertTrue;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PasswordAllFieldFilledRuleForValidInputsTest {
+@RunWith(MockitoJUnitRunner.class) public class PasswordAllFieldFilledRuleForValidInputsTest {
 
     public static final String NOT_BLANK_PASSWORD = "baz";
 
     private PasswordAllFieldFilledRule rule;
 
-    @Before
-    public void setUp() {
+    @Before public void setUp() {
         rule = new PasswordAllFieldFilledRule();
     }
 
-    @Test
-    public void isValidShouldReturnTrueWhenAllFieldsFilled() {
+    @Test public void isValidShouldReturnTrueWhenAllFieldsFilled() {
         //Given
-        PasswordChangeDTO passwordChangeDTO = PasswordChangeDTO.builder()
-                .newPassword(NOT_BLANK_PASSWORD)
-                .newPasswordConfirm(NOT_BLANK_PASSWORD)
-                .oldPassword(NOT_BLANK_PASSWORD)
-                .build();
+        PasswordChangeDTO passwordChangeDTO =
+            PasswordChangeDTO.builder().newPassword(NOT_BLANK_PASSWORD)
+                .newPasswordConfirm(NOT_BLANK_PASSWORD).oldPassword(NOT_BLANK_PASSWORD).build();
 
         //When
         boolean valid = rule.isValid(passwordChangeDTO);

@@ -30,16 +30,12 @@ import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ChannelServiceImplTest {
-    @InjectMocks
-    private ChannelServiceImpl channelService;
+@RunWith(MockitoJUnitRunner.class) public class ChannelServiceImplTest {
+    @InjectMocks private ChannelServiceImpl channelService;
 
-    @Mock
-    private ModelMapper modelMapper;
+    @Mock private ModelMapper modelMapper;
 
-    @Mock
-    private ChannelRepository channelRepository;
+    @Mock private ChannelRepository channelRepository;
 
     private static final Long CHANNEL_ID_FACEBOOK = 1L;
     private static final String CHANNEL_NAME_FACEBOOK = "facebook";
@@ -65,29 +61,31 @@ public class ChannelServiceImplTest {
     private static final List<ChannelEntity> EMPTY_CHANNEL_ENTITY_LIST = Collections.emptyList();
     private static final Collection<ChannelDTO> EMPTY_CHANNEL_DTO_LIST = Collections.emptyList();
 
-    private static final Type CHANNEL_DTO_LIST_TYPE = new TypeToken<List<ChannelDTO>>() {}.getType();
+    private static final Type CHANNEL_DTO_LIST_TYPE = new TypeToken<List<ChannelDTO>>() {
+    }.getType();
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    @Rule public ExpectedException expectedException = ExpectedException.none();
 
-    @Before
-    public void init() {
-        facebookDto = ChannelDTO.builder().id(CHANNEL_ID_FACEBOOK).name(CHANNEL_NAME_FACEBOOK).build();
-        facebookEntity = ChannelEntity.builder().id(CHANNEL_ID_FACEBOOK).name(CHANNEL_NAME_FACEBOOK).build();
+    @Before public void init() {
+        facebookDto =
+            ChannelDTO.builder().id(CHANNEL_ID_FACEBOOK).name(CHANNEL_NAME_FACEBOOK).build();
+        facebookEntity =
+            ChannelEntity.builder().id(CHANNEL_ID_FACEBOOK).name(CHANNEL_NAME_FACEBOOK).build();
         dtkDto = ChannelDTO.builder().id(CHANNEL_ID_DTK).name(CHANNEL_NAME_DTK).build();
         dtkEntity = ChannelEntity.builder().id(CHANNEL_ID_DTK).name(CHANNEL_NAME_DTK).build();
-        linkedinDto = ChannelDTO.builder().id(CHANNEL_ID_LINKEDIN).name(CHANNEL_NAME_LINKEDIN).build();
-        linkedinEntity = ChannelEntity.builder().id(CHANNEL_ID_LINKEDIN).name(CHANNEL_NAME_LINKEDIN).build();
+        linkedinDto =
+            ChannelDTO.builder().id(CHANNEL_ID_LINKEDIN).name(CHANNEL_NAME_LINKEDIN).build();
+        linkedinEntity =
+            ChannelEntity.builder().id(CHANNEL_ID_LINKEDIN).name(CHANNEL_NAME_LINKEDIN).build();
         expectedChannelDTOList = Arrays.asList(facebookDto, dtkDto, linkedinDto);
         expectedChannelEntityList = Arrays.asList(facebookEntity, dtkEntity, linkedinEntity);
     }
 
-    @Test
-    public void getAllChannelsShouldReturnEmptyListWhenThereAreNoChannels() {
+    @Test public void getAllChannelsShouldReturnEmptyListWhenThereAreNoChannels() {
         // Given
         given(channelRepository.findAll()).willReturn(EMPTY_CHANNEL_ENTITY_LIST);
         given(modelMapper.map(EMPTY_CHANNEL_ENTITY_LIST, CHANNEL_DTO_LIST_TYPE))
-                .willReturn(EMPTY_CHANNEL_DTO_LIST);
+            .willReturn(EMPTY_CHANNEL_DTO_LIST);
 
         // When
         Collection<ChannelDTO> channels = channelService.getAllChannels();
@@ -101,8 +99,7 @@ public class ChannelServiceImplTest {
     }
 
 
-    @Test
-    public void getAllChannelsShouldReturnSingleElementListWhenThereIsOneChannel() {
+    @Test public void getAllChannelsShouldReturnSingleElementListWhenThereIsOneChannel() {
         // Given
         List<ChannelEntity> channels = Arrays.asList(facebookEntity);
 
@@ -121,12 +118,11 @@ public class ChannelServiceImplTest {
         then(modelMapper).should().map(channels, CHANNEL_DTO_LIST_TYPE);
     }
 
-    @Test
-    public void getAllChannelsShouldReturnThreeElementListWhenThereAreThreeChannels() {
+    @Test public void getAllChannelsShouldReturnThreeElementListWhenThereAreThreeChannels() {
         // Given
         given(channelRepository.findAll()).willReturn(expectedChannelEntityList);
         given(modelMapper.map(expectedChannelEntityList, CHANNEL_DTO_LIST_TYPE))
-                .willReturn(expectedChannelDTOList);
+            .willReturn(expectedChannelDTOList);
 
         // When
         Collection<ChannelDTO> result = channelService.getAllChannels();
@@ -138,9 +134,8 @@ public class ChannelServiceImplTest {
         then(modelMapper).should().map(expectedChannelEntityList, CHANNEL_DTO_LIST_TYPE);
     }
 
-    @Test
-    public void saveOrUpdateShouldThrowDREAfterCatchingConstraintViolationException()
-            throws DuplicateRecordException {
+    @Test public void saveOrUpdateShouldThrowDREAfterCatchingConstraintViolationException()
+        throws DuplicateRecordException {
         // Given
         given(modelMapper.map(facebookDto, ChannelEntity.class)).willReturn(facebookEntity);
 
@@ -154,13 +149,13 @@ public class ChannelServiceImplTest {
         channelService.saveOrUpdate(facebookDto);
     }
 
-    @Test
-    public void saveOrUpdateShouldThrowDREAfterCatchingDataIntegrityViolationException()
-            throws DuplicateRecordException {
+    @Test public void saveOrUpdateShouldThrowDREAfterCatchingDataIntegrityViolationException()
+        throws DuplicateRecordException {
         // Given
         given(modelMapper.map(facebookDto, ChannelEntity.class)).willReturn(facebookEntity);
 
-        given(channelRepository.save(facebookEntity)).willThrow(DataIntegrityViolationException.class);
+        given(channelRepository.save(facebookEntity))
+            .willThrow(DataIntegrityViolationException.class);
 
         expectedException.expect(DuplicateRecordException.class);
         expectedException.expectMessage(CoreMatchers.endsWith(CHANNEL_NAME_FACEBOOK));
@@ -170,8 +165,7 @@ public class ChannelServiceImplTest {
         channelService.saveOrUpdate(facebookDto);
     }
 
-    @Test
-    public void saveOrUpdateShouldSaveValidChannelDTO() {
+    @Test public void saveOrUpdateShouldSaveValidChannelDTO() {
         // Given
         given(modelMapper.map(facebookDto, ChannelEntity.class)).willReturn(facebookEntity);
 

@@ -4,25 +4,23 @@ import com.epam.rft.atsy.persistence.entities.UserEntity;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.CoreMatchers.nullValue;
 
 public class UserRepositoryIT extends AbstractRepositoryIT {
 
     private final String UNREGISTERED_USER_NAME = "unregistered";
     private final String UNREGISTERED_USER_PASSWORD = "not_a_pass";
     private final String REGISTERED_USER_NAME = "Test";
-    private final String REGISTERED_USER_PASSWORD = "$2a$04$6r2eBlucnE3/m0fDYgE3e.eI5akUx55qPMID3O/SlptCIqOFFcCPK";
+    private final String REGISTERED_USER_PASSWORD =
+        "$2a$04$6r2eBlucnE3/m0fDYgE3e.eI5akUx55qPMID3O/SlptCIqOFFcCPK";
 
-    @Autowired
-    private UserRepository repository;
+    @Autowired private UserRepository repository;
 
-    @Test
-    public void findByUserNameAndUserPasswordShouldFindUserForMatchingCredentials() {
+    @Test public void findByUserNameAndUserPasswordShouldFindUserForMatchingCredentials() {
         // When
-        UserEntity test = repository.findByUserNameAndUserPassword(REGISTERED_USER_NAME, REGISTERED_USER_PASSWORD);
+        UserEntity test = repository
+            .findByUserNameAndUserPassword(REGISTERED_USER_NAME, REGISTERED_USER_PASSWORD);
 
         // Then
         assertThat(test, notNullValue());
@@ -34,7 +32,8 @@ public class UserRepositoryIT extends AbstractRepositoryIT {
     @Test
     public void findByUserNameAndUserPasswordShouldNotFindUserForRegisteredUserNameButWrongPassword() {
         // When
-        UserEntity test = repository.findByUserNameAndUserPassword(REGISTERED_USER_NAME, UNREGISTERED_USER_PASSWORD);
+        UserEntity test = repository
+            .findByUserNameAndUserPassword(REGISTERED_USER_NAME, UNREGISTERED_USER_PASSWORD);
 
         // Then
         assertThat(test, nullValue());
@@ -43,25 +42,23 @@ public class UserRepositoryIT extends AbstractRepositoryIT {
     @Test
     public void findByUserNameAndUserPasswordShouldNotFindUserForUnregisteredUserNameButKnownPassword() {
         // When
-        UserEntity unregisteredUser = repository.findByUserNameAndUserPassword(UNREGISTERED_USER_NAME,
-                REGISTERED_USER_PASSWORD);
+        UserEntity unregisteredUser = repository
+            .findByUserNameAndUserPassword(UNREGISTERED_USER_NAME, REGISTERED_USER_PASSWORD);
 
         // Then
         assertThat(unregisteredUser, nullValue());
     }
 
-    @Test
-    public void findByUserNameAndUserPasswordShouldNotFindUserForWrongUserNameAndPassword() {
+    @Test public void findByUserNameAndUserPasswordShouldNotFindUserForWrongUserNameAndPassword() {
         // When
-        UserEntity unregisteredUser = repository.findByUserNameAndUserPassword(UNREGISTERED_USER_NAME,
-                UNREGISTERED_USER_PASSWORD);
+        UserEntity unregisteredUser = repository
+            .findByUserNameAndUserPassword(UNREGISTERED_USER_NAME, UNREGISTERED_USER_PASSWORD);
 
         // Then
         assertThat(unregisteredUser, nullValue());
     }
 
-    @Test
-    public void findByUserNameShouldNotFindUserForUnregisteredUserName() {
+    @Test public void findByUserNameShouldNotFindUserForUnregisteredUserName() {
         // When
         UserEntity unregisteredUser = repository.findByUserName(UNREGISTERED_USER_NAME);
 
@@ -69,14 +66,13 @@ public class UserRepositoryIT extends AbstractRepositoryIT {
         assertThat(unregisteredUser, nullValue());
     }
 
-    @Test
-    public void findByUserNameShouldFindUserForRegisteredUserName() {
+    @Test public void findByUserNameShouldFindUserForRegisteredUserName() {
         // When
         UserEntity registeredUser = repository.findByUserName(REGISTERED_USER_NAME);
 
         // Then
         assertThat(registeredUser, notNullValue());
-        assertThat(registeredUser.getUserName(),is(REGISTERED_USER_NAME));
+        assertThat(registeredUser.getUserName(), is(REGISTERED_USER_NAME));
         assertThat(registeredUser.getId(), is(1L));
         assertThat(registeredUser.getUserPassword(), is(REGISTERED_USER_PASSWORD));
     }

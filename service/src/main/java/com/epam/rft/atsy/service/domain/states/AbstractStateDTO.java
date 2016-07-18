@@ -9,10 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public abstract class AbstractStateDTO {
+@Data @NoArgsConstructor @AllArgsConstructor public abstract class AbstractStateDTO {
 
     private Long id;
     private Long candidateId;

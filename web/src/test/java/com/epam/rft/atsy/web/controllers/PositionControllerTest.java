@@ -25,54 +25,41 @@ public class PositionControllerTest {
     private static final String EMPTY_POSITION_NAME_MESSAGE_KEY = "settings.positions.error.empty";
 
 
-    @InjectMocks
-    PositionController positionController;
+    @InjectMocks PositionController positionController;
 
-    @Mock
-    PositionDTO positionDTO;
+    @Mock PositionDTO positionDTO;
 
-    @Mock
-    Collection<PositionDTO> positionDTOs;
+    @Mock Collection<PositionDTO> positionDTOs;
 
-    @Mock
-    PositionService positionService;
+    @Mock PositionService positionService;
 
-    @Mock
-    BindingResult bindingResult;
+    @Mock BindingResult bindingResult;
 
-    @Mock
-    BindingResult bindingResultTrue;
+    @Mock BindingResult bindingResultTrue;
 
-    @Mock
-    ResponseEntity responseEntity;
+    @Mock ResponseEntity responseEntity;
 
-    @Mock
-    ResponseEntity responseEntityTrue;
+    @Mock ResponseEntity responseEntityTrue;
 
-    @Mock
-    MessageSource messageSource;
+    @Mock MessageSource messageSource;
 
-    @Mock
-    DuplicateRecordException ex;
+    @Mock DuplicateRecordException ex;
 
-    @BeforeMethod
-    public void setUp() {
+    @BeforeMethod public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test
-    public void getPositionsTest(){
+    @Test public void getPositionsTest() {
         given(positionDTOs.isEmpty()).willReturn(false);
         given(positionService.getAllPositions()).willReturn(positionDTOs);
         //when
         Collection<PositionDTO> dtos = positionController.getPositions();
         //then
-        assertThat(positionDTOs.isEmpty(),is(dtos.isEmpty()));
+        assertThat(positionDTOs.isEmpty(), is(dtos.isEmpty()));
     }
 
-    @Test
-    public void saveOrUpdate(){
-        Locale locale=new Locale("hu");
+    @Test public void saveOrUpdate() {
+        Locale locale = new Locale("hu");
         given(bindingResult.hasErrors()).willReturn(false);
         given(bindingResultTrue.hasErrors()).willReturn(true);
         given(positionDTO.getId()).willReturn(new Long(1));
@@ -81,33 +68,32 @@ public class PositionControllerTest {
         given(responseEntity.getBody()).willReturn("");
         given(responseEntityTrue.getStatusCode()).willReturn(HttpStatus.BAD_REQUEST);
         //given(positionService.saveOrUpdate(positionDTO));
-        ResponseEntity entity = positionController.saveOrUpdate(positionDTO,bindingResult,locale);
-        ResponseEntity entityTrue = positionController.saveOrUpdate(positionDTO,bindingResultTrue,locale);
+        ResponseEntity entity = positionController.saveOrUpdate(positionDTO, bindingResult, locale);
+        ResponseEntity entityTrue =
+            positionController.saveOrUpdate(positionDTO, bindingResultTrue, locale);
 
-        assertThat(entity.getStatusCode(),is(HttpStatus.OK));
-        assertThat(entityTrue.getStatusCode(),is(HttpStatus.BAD_REQUEST));
+        assertThat(entity.getStatusCode(), is(HttpStatus.OK));
+        assertThat(entityTrue.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 
-    @Test
-    public void handleDuplicateException(){
-        Locale locale=new Locale("hu");
+    @Test public void handleDuplicateException() {
+        Locale locale = new Locale("hu");
         given(ex.getName()).willReturn("anything");
         given(responseEntity.getStatusCode()).willReturn(HttpStatus.BAD_REQUEST);
 
-        ResponseEntity entity = positionController.handleDuplicateException(locale,ex);
+        ResponseEntity entity = positionController.handleDuplicateException(locale, ex);
 
-        assertThat(entity.getStatusCode(),is(HttpStatus.BAD_REQUEST));
+        assertThat(entity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 
-    @Test
-    public void handleException(){
-        Locale locale=new Locale("hu");
+    @Test public void handleException() {
+        Locale locale = new Locale("hu");
         given(ex.getName()).willReturn("anything");
         given(responseEntity.getStatusCode()).willReturn(HttpStatus.BAD_REQUEST);
 
-        ResponseEntity entity = positionController.handleException(locale,ex);
+        ResponseEntity entity = positionController.handleException(locale, ex);
 
-        assertThat(entity.getStatusCode(),is(HttpStatus.BAD_REQUEST));
+        assertThat(entity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 
 }

@@ -6,15 +6,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-@Controller
-@RequestMapping("/")
-public class RootRedirectionController {
+@Controller @RequestMapping("/") public class RootRedirectionController {
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView pageLoad() {
+    @RequestMapping(method = RequestMethod.GET) public ModelAndView pageLoad() {
 
-        if (SecurityContextHolder.getContext().getAuthentication() != null &&
-                SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
+        if (SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder
+            .getContext().getAuthentication().isAuthenticated()) {
 
             return new ModelAndView("redirect:/secure/welcome");
 

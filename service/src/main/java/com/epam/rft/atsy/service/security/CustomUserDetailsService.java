@@ -8,18 +8,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Service
-public class CustomUserDetailsService implements UserDetailsService {
+@Service public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserService userService;
+    @Autowired private UserService userService;
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    @Override public UserDetails loadUserByUsername(String username)
+        throws UsernameNotFoundException {
 
         UserDTO user = userService.findUserByName(username);
 
-        if(user == null) {
+        if (user == null) {
             throw new UsernameNotFoundException("No such user: " + username);
         }
 

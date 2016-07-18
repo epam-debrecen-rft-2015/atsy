@@ -16,8 +16,7 @@ public class DriverProvider {
             try {
                 driver = initiateDriver();
             } finally {
-                Runtime.getRuntime().addShutdownHook(
-                    new Thread(new BrowserCleanup()));
+                Runtime.getRuntime().addShutdownHook(new Thread(new BrowserCleanup()));
             }
         }
         return driver;
@@ -34,7 +33,9 @@ public class DriverProvider {
     }
 
     public static void waitForAjax() {
-        wait(getDriver()).until((Predicate<WebDriver>) driver -> (Boolean) ((JavascriptExecutor) driver).executeScript("return jQuery.active == 0"));
+        wait(getDriver()).until(
+            (Predicate<WebDriver>) driver -> (Boolean) ((JavascriptExecutor) driver)
+                .executeScript("return jQuery.active == 0"));
     }
 
     public static void waitForPageLoadAfter(Consumer<WebDriver> event) {
@@ -49,7 +50,7 @@ public class DriverProvider {
             try {
                 html.findElement(By.tagName("body"));
                 return false;
-            } catch(StaleElementReferenceException e) {
+            } catch (StaleElementReferenceException e) {
                 return true;
             }
         };

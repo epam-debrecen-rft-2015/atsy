@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 
-@Builder
-@Data
-@NoArgsConstructor
-public class SearchOptions {
+@Builder @Data @NoArgsConstructor public class SearchOptions {
 
 
     private String name;
@@ -19,8 +16,8 @@ public class SearchOptions {
 
 
     public SearchOptions(String name, String email, String phone) {
-        this.name = MoreObjects.firstNonNull(name,StringUtils.EMPTY);
-        this.email = MoreObjects.firstNonNull(email,StringUtils.EMPTY);
-        this.phone = MoreObjects.firstNonNull(phone,StringUtils.EMPTY);
+        this.name = MoreObjects.firstNonNull(name, StringUtils.EMPTY);
+        this.email = MoreObjects.firstNonNull(email, StringUtils.EMPTY);
+        this.phone = MoreObjects.firstNonNull(phone, StringUtils.EMPTY);
     }
 }

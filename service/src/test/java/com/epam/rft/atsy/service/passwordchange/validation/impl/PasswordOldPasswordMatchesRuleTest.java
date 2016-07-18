@@ -1,8 +1,6 @@
 package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
-import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
-import com.epam.rft.atsy.service.security.UserDetailsAdapter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,48 +13,43 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PasswordOldPasswordMatchesRuleTest {
+@RunWith(MockitoJUnitRunner.class) public class PasswordOldPasswordMatchesRuleTest {
 
     private static final String NEW_PASSWORD = "new password";
     private static final String NEW_PASSWORD_CONFIRM = NEW_PASSWORD;
-    private static final String OLD_PASSWORD="password as hash";
-    private static final String PASSWORD_CHANGE_DTO_OLD_PASSWORD="password";
-    private static final String PASSWORD_CHANGE_DTO_DIFFERENT_OLD_PASSWORD="differentpassword";
+    private static final String OLD_PASSWORD = "password as hash";
+    private static final String PASSWORD_CHANGE_DTO_OLD_PASSWORD = "password";
+    private static final String PASSWORD_CHANGE_DTO_DIFFERENT_OLD_PASSWORD = "differentpassword";
     private static final String MESSAGE_KEY = "passwordchange.validation.oldpasswordmatch";
 
-    @Mock
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Mock private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Mock
-    private UserDetails userDetails;
+    @Mock private UserDetails userDetails;
 
-    @InjectMocks
-    private PasswordOldPasswordMatchesRule passwordOldPasswordMatchesRule;
+    @InjectMocks private PasswordOldPasswordMatchesRule passwordOldPasswordMatchesRule;
 
-    @Before
-    public void setUp(){
+    @Before public void setUp() {
 
         Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null);
         SecurityContextHolder.getContext().setAuthentication(auth);
 
     }
 
-    @Test
-    public void isValidShouldBeValidWhenOldPasswordMatches(){
-        PasswordChangeDTO passwordChangeDTO = PasswordChangeDTO.builder().newPassword(NEW_PASSWORD).newPasswordConfirm(NEW_PASSWORD_CONFIRM).oldPassword(PASSWORD_CHANGE_DTO_OLD_PASSWORD).build();
+    @Test public void isValidShouldBeValidWhenOldPasswordMatches() {
+        PasswordChangeDTO passwordChangeDTO = PasswordChangeDTO.builder().newPassword(NEW_PASSWORD)
+            .newPasswordConfirm(NEW_PASSWORD_CONFIRM).oldPassword(PASSWORD_CHANGE_DTO_OLD_PASSWORD)
+            .build();
 
         // Given
         given(userDetails.getPassword()).willReturn(OLD_PASSWORD);
-        given(bCryptPasswordEncoder.matches(passwordChangeDTO.getOldPassword(), OLD_PASSWORD)).willReturn(true);
+        given(bCryptPasswordEncoder.matches(passwordChangeDTO.getOldPassword(), OLD_PASSWORD))
+            .willReturn(true);
 
         // When
         boolean result = passwordOldPasswordMatchesRule.isValid(passwordChangeDTO);
@@ -65,17 +58,20 @@ public class PasswordOldPasswordMatchesRuleTest {
         assertTrue(result);
 
         then(userDetails).should().getPassword();
-        then(bCryptPasswordEncoder).should().matches(PASSWORD_CHANGE_DTO_OLD_PASSWORD, OLD_PASSWORD);
+        then(bCryptPasswordEncoder).should()
+            .matches(PASSWORD_CHANGE_DTO_OLD_PASSWORD, OLD_PASSWORD);
         verifyNoMoreInteractions(userDetails, bCryptPasswordEncoder);
     }
 
-    @Test
-    public void isValidShouldNotBeValidWhenOldPasswordsAreDifferent(){
-        PasswordChangeDTO passwordChangeDTO = PasswordChangeDTO.builder().newPassword(NEW_PASSWORD).newPasswordConfirm(NEW_PASSWORD_CONFIRM).oldPassword(PASSWORD_CHANGE_DTO_DIFFERENT_OLD_PASSWORD).build();
+    @Test public void isValidShouldNotBeValidWhenOldPasswordsAreDifferent() {
+        PasswordChangeDTO passwordChangeDTO = PasswordChangeDTO.builder().newPassword(NEW_PASSWORD)
+            .newPasswordConfirm(NEW_PASSWORD_CONFIRM)
+            .oldPassword(PASSWORD_CHANGE_DTO_DIFFERENT_OLD_PASSWORD).build();
 
         // Given
         given(userDetails.getPassword()).willReturn(OLD_PASSWORD);
-        given(bCryptPasswordEncoder.matches(passwordChangeDTO.getOldPassword(), OLD_PASSWORD)).willReturn(false);
+        given(bCryptPasswordEncoder.matches(passwordChangeDTO.getOldPassword(), OLD_PASSWORD))
+            .willReturn(false);
 
         // When
         boolean result = passwordOldPasswordMatchesRule.isValid(passwordChangeDTO);
@@ -84,21 +80,24 @@ public class PasswordOldPasswordMatchesRuleTest {
         assertFalse(result);
 
         then(userDetails).should().getPassword();
-        then(bCryptPasswordEncoder).should().matches(PASSWORD_CHANGE_DTO_DIFFERENT_OLD_PASSWORD, OLD_PASSWORD);
+        then(bCryptPasswordEncoder).should()
+            .matches(PASSWORD_CHANGE_DTO_DIFFERENT_OLD_PASSWORD, OLD_PASSWORD);
         verifyNoMoreInteractions(userDetails, bCryptPasswordEncoder);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void isValidShouldNotBeValidWhenPasswordChangeDTOIsNull(){
+    public void isValidShouldNotBeValidWhenPasswordChangeDTOIsNull() {
         // When
         boolean result = passwordOldPasswordMatchesRule.isValid(null);
     }
 
-    @Test
-    public void isValidShouldNotBeValidWhenUserDetailsIsNull(){
+    @Test public void isValidShouldNotBeValidWhenUserDetailsIsNull() {
         // Given
-        PasswordChangeDTO passwordChangeDTO = PasswordChangeDTO.builder().newPassword(NEW_PASSWORD).newPasswordConfirm(NEW_PASSWORD_CONFIRM).oldPassword(PASSWORD_CHANGE_DTO_OLD_PASSWORD).build();
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(null, null));
+        PasswordChangeDTO passwordChangeDTO = PasswordChangeDTO.builder().newPassword(NEW_PASSWORD)
+            .newPasswordConfirm(NEW_PASSWORD_CONFIRM).oldPassword(PASSWORD_CHANGE_DTO_OLD_PASSWORD)
+            .build();
+        SecurityContextHolder.getContext()
+            .setAuthentication(new UsernamePasswordAuthenticationToken(null, null));
 
         // When
         boolean result = passwordOldPasswordMatchesRule.isValid(passwordChangeDTO);
@@ -110,21 +109,24 @@ public class PasswordOldPasswordMatchesRuleTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void isValidShouldNotBeValidWhenPasswordChangeDTOsPasswordFieldIsNull(){
+    public void isValidShouldNotBeValidWhenPasswordChangeDTOsPasswordFieldIsNull() {
         // Given
-        PasswordChangeDTO passwordChangeDTO = PasswordChangeDTO.builder().newPassword(NEW_PASSWORD).newPasswordConfirm(NEW_PASSWORD_CONFIRM).oldPassword(null).build();
+        PasswordChangeDTO passwordChangeDTO = PasswordChangeDTO.builder().newPassword(NEW_PASSWORD)
+            .newPasswordConfirm(NEW_PASSWORD_CONFIRM).oldPassword(null).build();
 
         // When
         boolean result = passwordOldPasswordMatchesRule.isValid(passwordChangeDTO);
     }
 
-    @Test
-    public void isValidShouldNotBeValidWhenUserDetailsPasswordFieldIsNull(){
-        PasswordChangeDTO passwordChangeDTO = PasswordChangeDTO.builder().newPassword(NEW_PASSWORD).newPasswordConfirm(NEW_PASSWORD_CONFIRM).oldPassword(PASSWORD_CHANGE_DTO_OLD_PASSWORD).build();
+    @Test public void isValidShouldNotBeValidWhenUserDetailsPasswordFieldIsNull() {
+        PasswordChangeDTO passwordChangeDTO = PasswordChangeDTO.builder().newPassword(NEW_PASSWORD)
+            .newPasswordConfirm(NEW_PASSWORD_CONFIRM).oldPassword(PASSWORD_CHANGE_DTO_OLD_PASSWORD)
+            .build();
 
         // Given
         given(userDetails.getPassword()).willReturn(null);
-        given(bCryptPasswordEncoder.matches(passwordChangeDTO.getOldPassword(), null)).willReturn(false);
+        given(bCryptPasswordEncoder.matches(passwordChangeDTO.getOldPassword(), null))
+            .willReturn(false);
 
         // When
         boolean result = passwordOldPasswordMatchesRule.isValid(passwordChangeDTO);
@@ -137,8 +139,7 @@ public class PasswordOldPasswordMatchesRuleTest {
         verifyNoMoreInteractions(userDetails, bCryptPasswordEncoder);
     }
 
-    @Test
-    public void getErrorMessageKeyTest() {
+    @Test public void getErrorMessageKeyTest() {
 
         // When
         String msg = passwordOldPasswordMatchesRule.getErrorMessageKey();

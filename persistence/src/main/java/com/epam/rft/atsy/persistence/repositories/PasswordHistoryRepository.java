@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Repository that allows operations with the password history in database.
  */
-public interface PasswordHistoryRepository extends JpaRepository<PasswordHistoryEntity,Long> {
+public interface PasswordHistoryRepository extends JpaRepository<PasswordHistoryEntity, Long> {
 
     /**
      * Returns the list of PasswordHistoryEntities of the user.

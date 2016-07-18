@@ -10,16 +10,13 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class WelcomeControllerTest {
-    @InjectMocks
-    private WelcomeController underTest;
+    @InjectMocks private WelcomeController underTest;
 
-    @BeforeMethod
-    public void setUp() {
+    @BeforeMethod public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test
-    public void shouldReturnViewModel() {
+    @Test public void shouldReturnViewModel() {
         //when
         ModelAndView model = underTest.loadPage();
         //then

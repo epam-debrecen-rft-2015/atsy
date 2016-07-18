@@ -12,9 +12,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
-import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForAjax;
-import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForPageLoadAfter;
+import static com.epam.rft.atsy.cucumber.util.DriverProvider.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
@@ -22,20 +20,21 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElemen
 public class WelcomeStepDefs {
     private List<CandidateTableRow> expectedCandidates;
 
-    @When("the user clicks on the Főoldal button")
-    public void homeClicked() {
-        waitForPageLoadAfter(driver -> driver.findElement(By.cssSelector(".navbar .navbar-nav :first-child > a")).click());
+    @When("the user clicks on the Főoldal button") public void homeClicked() {
+        waitForPageLoadAfter(
+            driver -> driver.findElement(By.cssSelector(".navbar .navbar-nav :first-child > a"))
+                .click());
     }
 
-    @Then("the Candidates page appears")
-    public void candidatesPageAppears() {
+    @Then("the Candidates page appears") public void candidatesPageAppears() {
         WebDriverWait wait = new WebDriverWait(getDriver(), 5);
         wait.until(presenceOfElementLocated(By.id("candidates_table")));
     }
 
     @And("the list of candidates appears with the columns: Név, E-Mail, Telefonszám, Pályázott pozíciók")
     public void tableAppears() {
-        List<WebElement> webElements = getDriver().findElements(By.cssSelector("table > thead > tr > th"));
+        List<WebElement> webElements =
+            getDriver().findElements(By.cssSelector("table > thead > tr > th"));
         assertThat(webElements.get(0).getText(), is("Név"));
         assertThat(webElements.get(1).getText(), is("E-Mail cím"));
         assertThat(webElements.get(2).getText(), is("Telefonszám"));
@@ -50,7 +49,8 @@ public class WelcomeStepDefs {
 
     @And("the list of candidates shown in order")
     public void list_of_candidates_shown(List<CandidateTableRow> table) {
-        List<WebElement> webElements = getDriver().findElement(By.id("candidates_table")).findElements(By.cssSelector("tbody > tr[data-index]"));
+        List<WebElement> webElements = getDriver().findElement(By.id("candidates_table"))
+            .findElements(By.cssSelector("tbody > tr[data-index]"));
         assertThat(webElements.size(), is(table.size()));
         for (int index = 0; index < table.size(); index++) {
             CandidateTableRow expectedCandidate = table.get(index);
@@ -64,7 +64,8 @@ public class WelcomeStepDefs {
 
     @When("the user changes the order field to (.*), (.*)")
     public void the_user_changes_the_order_field_to(String field, String order) {
-        WebElement sortElement = getDriver().findElement(By.cssSelector("#candidates_table div.fixed-table-header th[data-field=" + field + "] div.sortable"));
+        WebElement sortElement = getDriver().findElement(By.cssSelector(
+            "#candidates_table div.fixed-table-header th[data-field=" + field + "] div.sortable"));
 
         String currentOrderCss = sortElement.getAttribute("class");
 
@@ -77,21 +78,20 @@ public class WelcomeStepDefs {
 
     @And("the list of candidates shown ordered by (.*) as (.*)")
     public void the_list_of_candidates_shown_ordered_by(final String orderField, String order) {
-        Comparator<CandidateTableRow> fieldComparator = new CandidateTableRow.Comparator(orderField, order);
+        Comparator<CandidateTableRow> fieldComparator =
+            new CandidateTableRow.Comparator(orderField, order);
         List<CandidateTableRow> rows = new ArrayList<>(expectedCandidates);
         rows.sort(fieldComparator);
         list_of_candidates_shown(rows);
     }
 
-    @Given("the user fills the search fields")
-    public void fillSearchFields() {
+    @Given("the user fills the search fields") public void fillSearchFields() {
         getDriver().findElement(By.id("filter_name")).sendKeys("Candidate");
         getDriver().findElement(By.id("filter_email")).sendKeys("candidate.a");
         getDriver().findElement(By.id("filter_phone")).sendKeys("+3610");
     }
 
-    @When("the user clicks on the Keresés button")
-    public void searchClicked() {
+    @When("the user clicks on the Keresés button") public void searchClicked() {
         getDriver().findElement(By.cssSelector("#searchButton")).click();
         WebDriverWait wait = new WebDriverWait(getDriver(), 5);
         wait.until(presenceOfElementLocated(By.id("candidates_table")));
@@ -101,7 +101,8 @@ public class WelcomeStepDefs {
 
     @Then("the list of filtered candidates shown in order")
     public void list_of_filtered_candidates_shown(List<CandidateTableRow> table) {
-        List<WebElement> webElements = getDriver().findElement(By.id("candidates_table")).findElements(By.cssSelector("tbody > tr[data-index]"));
+        List<WebElement> webElements = getDriver().findElement(By.id("candidates_table"))
+            .findElements(By.cssSelector("tbody > tr[data-index]"));
         assertThat(webElements.size(), is(table.size()));
         for (int index = 0; index < table.size(); index++) {
             CandidateTableRow expectedCandidate = table.get(index);

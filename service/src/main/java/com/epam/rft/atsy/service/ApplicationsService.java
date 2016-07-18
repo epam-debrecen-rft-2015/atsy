@@ -20,7 +20,7 @@ public interface ApplicationsService {
      * Saves an application and a state to the database and returns the application's id.
      *
      * @param applicationDTO the application
-     * @param stateDTO the state of application
+     * @param stateDTO       the state of application
      * @return the id of application
      */
     Long saveApplicaton(ApplicationDTO applicationDTO, StateDTO stateDTO);

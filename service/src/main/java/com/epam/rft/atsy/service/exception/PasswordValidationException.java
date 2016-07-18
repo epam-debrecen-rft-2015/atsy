@@ -11,8 +11,7 @@ public class PasswordValidationException extends Exception {
         return messageKey;
     }
 
-    @Override
-    public String getMessage() {
+    @Override public String getMessage() {
         return "Password validation failed. The message key: " + messageKey;
     }
 

@@ -22,40 +22,36 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-@Configuration
-@EnableTransactionManagement
+@Configuration @EnableTransactionManagement
 @EnableJpaRepositories("com.epam.rft.atsy.persistence.repositories")
-@ComponentScan("com.epam.rft.atsy.persistence")
-public class PersistenceConfiguration {
+@ComponentScan("com.epam.rft.atsy.persistence") public class PersistenceConfiguration {
 
     private static final String JNDI_DATA_SOURCE = "jdbc/database";
 
-    @Bean(initMethod = "migrate")
-    public Flyway flyway(Environment env) {
+    @Bean(initMethod = "migrate") public Flyway flyway(Environment env) {
 
-        ((AbstractEnvironment) env).getPropertySources().addBefore("servletContextInitParams", ((AbstractEnvironment) env).getPropertySources().get("systemProperties"));
+        ((AbstractEnvironment) env).getPropertySources().addBefore("servletContextInitParams",
+            ((AbstractEnvironment) env).getPropertySources().get("systemProperties"));
         Flyway flyway = new Flyway();
         flyway.setBaselineOnMigrate(true);
         flyway.setDataSource(dataSource());
         flyway.setLocations("classpath:db/migration/schema",
-                "classpath:db/migration/data/" + env.getActiveProfiles()[0]);
+            "classpath:db/migration/data/" + env.getActiveProfiles()[0]);
         return flyway;
     }
 
-    @Bean
-    @DependsOn("flyway")
+    @Bean @DependsOn("flyway")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
-        em.setPackagesToScan(new String[]{"com.epam.rft.atsy.persistence"});
+        em.setPackagesToScan(new String[] {"com.epam.rft.atsy.persistence"});
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
         em.setJpaProperties(additionalProperties());
         return em;
     }
 
-    @Bean
-    public DataSource dataSource() {
+    @Bean public DataSource dataSource() {
         final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
         dsLookup.setResourceRef(true);
         return dsLookup.getDataSource(JNDI_DATA_SOURCE);
@@ -66,8 +62,7 @@ public class PersistenceConfiguration {
         return new JpaTransactionManager(entityManagerFactory);
     }
 
-    @Bean
-    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+    @Bean public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
 
@@ -77,10 +72,10 @@ public class PersistenceConfiguration {
         return properties;
     }
 
-    @Bean
-    public static PropertyPlaceholderConfigurer placeHolderConfigurer() {
+    @Bean public static PropertyPlaceholderConfigurer placeHolderConfigurer() {
         PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
-        configurer.setSystemPropertiesMode(PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
+        configurer
+            .setSystemPropertiesMode(PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
         return configurer;
 
     }

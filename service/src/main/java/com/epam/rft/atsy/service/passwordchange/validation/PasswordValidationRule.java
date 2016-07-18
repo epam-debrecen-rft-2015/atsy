@@ -7,9 +7,9 @@ public interface PasswordValidationRule {
     boolean isValid(PasswordChangeDTO passwordChangeDTO);
 
     /**
-     *  Gets the message key that corresponds to the rule violation.
+     * Gets the message key that corresponds to the rule violation.
      *
-     *  @return the corresponding message key
+     * @return the corresponding message key
      */
     String getErrorMessageKey();
 }
