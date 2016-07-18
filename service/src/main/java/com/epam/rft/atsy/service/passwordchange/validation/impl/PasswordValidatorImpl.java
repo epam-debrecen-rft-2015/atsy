@@ -18,8 +18,8 @@ public class PasswordValidatorImpl implements PasswordValidator {
     }
 
 
-    @Override
-    public boolean validate(PasswordChangeDTO passwordChangeDTO) throws PasswordValidationException {
+    @Override public boolean validate(PasswordChangeDTO passwordChangeDTO)
+        throws PasswordValidationException {
         for (PasswordValidationRule passwordValidationRule : passwordValidationRules) {
             if (!passwordValidationRule.isValid(passwordChangeDTO)) {
                 throw new PasswordValidationException(passwordValidationRule.getErrorMessageKey());

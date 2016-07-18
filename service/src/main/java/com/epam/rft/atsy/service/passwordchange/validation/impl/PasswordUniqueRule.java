@@ -13,8 +13,7 @@ import java.util.List;
 public class PasswordUniqueRule implements PasswordValidationRule {
     private static final String MESSAGE_KEY = "passwordchange.validation.unique";
 
-    @Resource
-    private PasswordChangeService passwordChangeService;
+    @Resource private PasswordChangeService passwordChangeService;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -22,15 +21,15 @@ public class PasswordUniqueRule implements PasswordValidationRule {
         bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
-    @Override
-    public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
+    @Override public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
         UserDetailsAdapter userDetails =
-                (UserDetailsAdapter)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            (UserDetailsAdapter) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
 
         List<String> oldPasswords = passwordChangeService.getOldPasswords(userDetails.getUserId());
 
         for (String password : oldPasswords) {
-            if (bCryptPasswordEncoder.matches(passwordChangeDTO.getNewPassword(), password)){
+            if (bCryptPasswordEncoder.matches(passwordChangeDTO.getNewPassword(), password)) {
                 return false;
             }
         }
@@ -38,8 +37,7 @@ public class PasswordUniqueRule implements PasswordValidationRule {
         return true;
     }
 
-    @Override
-    public String getErrorMessageKey() {
+    @Override public String getErrorMessageKey() {
         return MESSAGE_KEY;
     }
 }

@@ -7,12 +7,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-@Configuration
-@Import({PersistenceConfiguration.class})
-@ComponentScan("com.epam.rft.atsy.service")
+@Configuration @Import({PersistenceConfiguration.class}) @ComponentScan("com.epam.rft.atsy.service")
 public class ServiceConfiguration {
-    @Bean
-    public ModelMapper modelMapper(){
+    @Bean public ModelMapper modelMapper() {
         return new ModelMapper();
     }
 }

@@ -5,16 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class SortingRequest {
+@Data @NoArgsConstructor @AllArgsConstructor public class SortingRequest {
 
 
     public enum Order {
-        ASC,
-        DESC
+        ASC, DESC
     }
+
 
     private String fieldName;
     private Order order;

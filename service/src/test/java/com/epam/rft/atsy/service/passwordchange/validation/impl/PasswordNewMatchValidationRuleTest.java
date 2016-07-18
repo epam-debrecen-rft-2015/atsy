@@ -3,7 +3,6 @@ package com.epam.rft.atsy.service.passwordchange.validation.impl;
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -24,8 +23,7 @@ public class PasswordNewMatchValidationRuleTest {
 
     private PasswordValidationRule passwordValidationRule;
 
-    @Before
-    public void setUp() {
+    @Before public void setUp() {
         passwordValidationRule = new PasswordNewMatchValidationRule();
     }
 
@@ -37,7 +35,8 @@ public class PasswordNewMatchValidationRuleTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void isValidNewPasswordShouldThrowIllegalArgumentExceptionWhenParameterNewPasswordFieldIsNull() {
-        PasswordChangeDTO passwordChangeDTO = getPasswordChangeDTO(null, NEW_PASSWORD_CONFIRM_RIGHT);
+        PasswordChangeDTO passwordChangeDTO =
+            getPasswordChangeDTO(null, NEW_PASSWORD_CONFIRM_RIGHT);
         passwordValidationRule.isValid(passwordChangeDTO);
     }
 
@@ -47,30 +46,30 @@ public class PasswordNewMatchValidationRuleTest {
         passwordValidationRule.isValid(passwordChangeDTO);
     }
 
-    @Test
-    public void isValidNewPasswordShouldBeRight() {
-        PasswordChangeDTO passwordChangeDTO = getPasswordChangeDTO(NEW_PASSWORD, NEW_PASSWORD_CONFIRM_RIGHT);
+    @Test public void isValidNewPasswordShouldBeRight() {
+        PasswordChangeDTO passwordChangeDTO =
+            getPasswordChangeDTO(NEW_PASSWORD, NEW_PASSWORD_CONFIRM_RIGHT);
         assertThat(passwordValidationRule.isValid(passwordChangeDTO), is(true));
     }
 
-    @Test
-    public void isValidNewPasswordShouldBeNotRight() {
-        PasswordChangeDTO passwordChangeDTO = getPasswordChangeDTO(NEW_PASSWORD, NEW_PASSWORD_CONFIRM_NOT_RIGHT);
+    @Test public void isValidNewPasswordShouldBeNotRight() {
+        PasswordChangeDTO passwordChangeDTO =
+            getPasswordChangeDTO(NEW_PASSWORD, NEW_PASSWORD_CONFIRM_NOT_RIGHT);
         assertThat(passwordValidationRule.isValid(passwordChangeDTO), is(false));
     }
 
-    @Test
-    public void isValidNewPasswordShouldBeNotRightUpperCase() {
-        PasswordChangeDTO passwordChangeDTO = getPasswordChangeDTO(NEW_PASSWORD, NEW_PASSWORD_CONFIRM_UPPER_CASE_NOT_RIGHT);
+    @Test public void isValidNewPasswordShouldBeNotRightUpperCase() {
+        PasswordChangeDTO passwordChangeDTO =
+            getPasswordChangeDTO(NEW_PASSWORD, NEW_PASSWORD_CONFIRM_UPPER_CASE_NOT_RIGHT);
         assertThat(passwordValidationRule.isValid(passwordChangeDTO), is(false));
     }
 
-    @Test
-    public void getErrorMessageKeyTest() {
+    @Test public void getErrorMessageKeyTest() {
         assertEquals(passwordValidationRule.getErrorMessageKey(), ERROR_MESSAGE_KEY);
     }
 
     private PasswordChangeDTO getPasswordChangeDTO(String newPassword, String newPasswordConfirm) {
-        return PasswordChangeDTO.builder().newPassword(newPassword).newPasswordConfirm(newPasswordConfirm).build();
+        return PasswordChangeDTO.builder().newPassword(newPassword)
+            .newPasswordConfirm(newPasswordConfirm).build();
     }
 }

@@ -20,13 +20,9 @@ import javax.annotation.Resource;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 
-@Service
-@Slf4j
-public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserRepository userRepository;
-    @Resource
-    private ModelMapper modelMapper;
+@Service @Slf4j public class UserServiceImpl implements UserService {
+    @Autowired private UserRepository userRepository;
+    @Resource private ModelMapper modelMapper;
 
     public UserDTO login(UserDTO user) throws UserNotFoundException {
         Assert.notNull(user);
@@ -35,7 +31,8 @@ public class UserServiceImpl implements UserService {
 
         UserEntity userEntity;
         try {
-            userEntity = userRepository.findByUserNameAndUserPassword(user.getName(), user.getPassword());
+            userEntity =
+                userRepository.findByUserNameAndUserPassword(user.getName(), user.getPassword());
             if (userEntity == null) {
                 throw new UserNotFoundException();
             }
@@ -44,18 +41,17 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException(e);
         } catch (UserNotFoundException e) {
             throw e;
-        }catch (Exception e){
-            log.error("User failed to login",e);
+        } catch (Exception e) {
+            log.error("User failed to login", e);
             throw new BackendException(e);
         }
 
-        UserDTO userDTO = modelMapper.map(userEntity,UserDTO.class);
+        UserDTO userDTO = modelMapper.map(userEntity, UserDTO.class);
 
         return userDTO;
     }
 
-    @Override
-    public Long saveOrUpdate(UserDTO userDTO) {
+    @Override public Long saveOrUpdate(UserDTO userDTO) {
         Assert.notNull(userDTO);
         UserEntity entity = modelMapper.map(userDTO, UserEntity.class);
         try {
@@ -66,12 +62,11 @@ public class UserServiceImpl implements UserService {
             String userName = entity.getUserName();
 
             throw new DuplicateRecordException(userName,
-                                               "Duplication occurred when saving user: " + userName, ex);
+                "Duplication occurred when saving user: " + userName, ex);
         }
     }
 
-    @Override
-    public UserDTO findUserByName(String username) {
+    @Override public UserDTO findUserByName(String username) {
         Assert.notNull(username);
         UserEntity user = userRepository.findByUserName(username);
         return (user != null) ? modelMapper.map(user, UserDTO.class) : null;

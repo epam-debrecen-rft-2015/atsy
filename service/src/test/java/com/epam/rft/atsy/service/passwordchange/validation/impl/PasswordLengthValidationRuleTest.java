@@ -9,8 +9,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PasswordLengthValidationRuleTest {
+@RunWith(MockitoJUnitRunner.class) public class PasswordLengthValidationRuleTest {
 
     private static final String PASSWORD_WITH_LENGTH_UNDER_MIN = "foo";
     private static final String PASSWORD_WITH_LENGTH_EQUAL_TO_MIN = "foobar";
@@ -18,17 +17,14 @@ public class PasswordLengthValidationRuleTest {
 
     private PasswordLengthValidationRule rule;
 
-    @Before
-    public void setUp() {
+    @Before public void setUp() {
         rule = new PasswordLengthValidationRule();
     }
 
-    @Test
-    public void isValidShouldNotBeValidUnderMinPasswordLength() {
+    @Test public void isValidShouldNotBeValidUnderMinPasswordLength() {
         //Given
-        PasswordChangeDTO passwordChangeDtoUnderMinLength = PasswordChangeDTO.builder()
-                .newPassword(PASSWORD_WITH_LENGTH_UNDER_MIN)
-                .build();
+        PasswordChangeDTO passwordChangeDtoUnderMinLength =
+            PasswordChangeDTO.builder().newPassword(PASSWORD_WITH_LENGTH_UNDER_MIN).build();
 
         //When
         boolean result = rule.isValid(passwordChangeDtoUnderMinLength);
@@ -37,12 +33,10 @@ public class PasswordLengthValidationRuleTest {
         assertFalse(result);
     }
 
-    @Test
-    public void isValidShouldBeValidWithExactMinPasswordLength() {
+    @Test public void isValidShouldBeValidWithExactMinPasswordLength() {
         //Given
-        PasswordChangeDTO passwordChangeDtoExactMinLength = PasswordChangeDTO.builder()
-                .newPassword(PASSWORD_WITH_LENGTH_EQUAL_TO_MIN)
-                .build();
+        PasswordChangeDTO passwordChangeDtoExactMinLength =
+            PasswordChangeDTO.builder().newPassword(PASSWORD_WITH_LENGTH_EQUAL_TO_MIN).build();
         //When
         boolean result = rule.isValid(passwordChangeDtoExactMinLength);
 
@@ -50,12 +44,10 @@ public class PasswordLengthValidationRuleTest {
         assertTrue(result);
     }
 
-    @Test
-    public void isValidShouldBeValidOverMinPasswordLength() {
+    @Test public void isValidShouldBeValidOverMinPasswordLength() {
         //Given
-        PasswordChangeDTO passwordChangeDtoOverMinLength = PasswordChangeDTO.builder()
-                .newPassword(PASSWORD_WITH_LENGTH_OVER_MIN)
-                .build();
+        PasswordChangeDTO passwordChangeDtoOverMinLength =
+            PasswordChangeDTO.builder().newPassword(PASSWORD_WITH_LENGTH_OVER_MIN).build();
 
         //When
         boolean result = rule.isValid(passwordChangeDtoOverMinLength);

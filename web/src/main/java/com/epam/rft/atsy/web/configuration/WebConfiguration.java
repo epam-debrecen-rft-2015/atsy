@@ -21,57 +21,47 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.Locale;
 
-@Configuration
-@EnableWebMvc
-@ComponentScan("com.epam.rft.atsy.web")
-@Import({ServiceConfiguration.class})
-public class WebConfiguration extends WebMvcConfigurerAdapter {
+@Configuration @EnableWebMvc @ComponentScan("com.epam.rft.atsy.web")
+@Import({ServiceConfiguration.class}) public class WebConfiguration
+    extends WebMvcConfigurerAdapter {
 
-    @Bean
-    public ViewResolver viewResolver() {
+    @Bean public ViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("/WEB-INF/pages/");
         viewResolver.setSuffix(".jsp");
         return viewResolver;
     }
 
-    @Override
-    public void addResourceHandlers(final ResourceHandlerRegistry registry) {
+    @Override public void addResourceHandlers(final ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
     }
 
-    @Bean
-    public ObjectMapper objectMapper() {
+    @Bean public ObjectMapper objectMapper() {
         return new ObjectMapper();
     }
 
-    @Bean
-    public HttpMessageConverter jsonMessageConverter(ObjectMapper objectMapper) {
+    @Bean public HttpMessageConverter jsonMessageConverter(ObjectMapper objectMapper) {
         return new MappingJackson2HttpMessageConverter(objectMapper);
     }
 
-    @Bean
-    public ReloadableResourceBundleMessageSource messageSource() {
+    @Bean public ReloadableResourceBundleMessageSource messageSource() {
         ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
         source.setBasename("classpath:i18n/messages");
         source.setDefaultEncoding("UTF-8");
         return source;
     }
 
-    @Bean
-    public LocaleResolver localeResolver() {
+    @Bean public LocaleResolver localeResolver() {
         CookieLocaleResolver resolver = new CookieLocaleResolver();
         resolver.setDefaultLocale(Locale.forLanguageTag("HU"));
         return resolver;
     }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
+    @Override public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
     }
 
-    @Bean
-    public LocaleChangeInterceptor localeChangeInterceptor() {
+    @Bean public LocaleChangeInterceptor localeChangeInterceptor() {
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
         localeChangeInterceptor.setParamName("locale");
         return localeChangeInterceptor;

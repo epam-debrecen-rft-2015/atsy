@@ -17,23 +17,22 @@ public class PasswordOldPasswordMatchesRule implements PasswordValidationRule {
         bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
-    @Override
-    public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
+    @Override public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
         Assert.notNull(passwordChangeDTO);
         Assert.notNull(passwordChangeDTO.getOldPassword());
 
         UserDetails userDetails =
-                (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (userDetails == null) {
             return false;
         }
 
-        return bCryptPasswordEncoder.matches(passwordChangeDTO.getOldPassword(), userDetails.getPassword());
+        return bCryptPasswordEncoder
+            .matches(passwordChangeDTO.getOldPassword(), userDetails.getPassword());
     }
 
-    @Override
-    public String getErrorMessageKey() {
+    @Override public String getErrorMessageKey() {
         return MESSAGE_KEY;
     }
 }

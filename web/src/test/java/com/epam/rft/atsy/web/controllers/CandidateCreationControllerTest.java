@@ -1,7 +1,6 @@
 package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.CandidateService;
-import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -18,39 +17,36 @@ import static org.mockito.BDDMockito.given;
 
 public class CandidateCreationControllerTest {
 
-    @InjectMocks
-    private CandidateCreationController underTest;
+    @InjectMocks private CandidateCreationController underTest;
 
-    @Mock
-    CandidateService service;
+    @Mock CandidateService service;
 
-    @BeforeMethod
-    public void setUp() {
+    @BeforeMethod public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test
-    public void loadCandidateTest(){
+    @Test public void loadCandidateTest() {
         //when
         ModelAndView model = underTest.loadCandidate();
         Map<String, Object> testMap = model.getModel();
         //then
         assertThat(model.getViewName(), is("candidate_create"));
-        assertThat(testMap.containsKey("candidate"),is(true));
+        assertThat(testMap.containsKey("candidate"), is(true));
     }
 
-    @Test
-    public void loadCandidateTestSpecified(){
+    @Test public void loadCandidateTestSpecified() {
         //given
-        Long candidateId=new Long(1);
-        given(service.getCandidate(candidateId)).willReturn(new CandidateDTO(candidateId,"Candidate A", "candidate.a@atsy.com", "+36105555555", "Elegáns, kicsit furi", (short) 5, "google"));
+        Long candidateId = new Long(1);
+        given(service.getCandidate(candidateId)).willReturn(
+            new CandidateDTO(candidateId, "Candidate A", "candidate.a@atsy.com", "+36105555555",
+                "Elegáns, kicsit furi", (short) 5, "google"));
 
         //when
         ModelAndView model = underTest.loadCandidate(candidateId);
         Map<String, Object> testMap = model.getModel();
         //then
         assertThat(model.getViewName(), is("candidate_create"));
-        assertThat(testMap.containsKey("candidate"),is(true));
+        assertThat(testMap.containsKey("candidate"), is(true));
         assertThat(testMap.get("candidate"), is(service.getCandidate(candidateId)));
     }
 }

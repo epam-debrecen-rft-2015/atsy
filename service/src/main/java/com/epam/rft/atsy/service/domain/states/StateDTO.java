@@ -7,12 +7,8 @@ import lombok.*;
 import java.util.Date;
 
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-public class StateDTO extends AbstractStateDTO {
+@Data @NoArgsConstructor @AllArgsConstructor @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true) public class StateDTO extends AbstractStateDTO {
 
     private Date creationDate;
     private ChannelDTO channel;

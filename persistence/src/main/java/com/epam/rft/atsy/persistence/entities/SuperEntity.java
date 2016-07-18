@@ -7,16 +7,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@MappedSuperclass
-public abstract class SuperEntity {
+@Data @NoArgsConstructor @AllArgsConstructor @MappedSuperclass public abstract class SuperEntity {
 
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Long id;
+    @Id @GeneratedValue(strategy = GenerationType.AUTO) @Column(name = "id") private Long id;
 
 }

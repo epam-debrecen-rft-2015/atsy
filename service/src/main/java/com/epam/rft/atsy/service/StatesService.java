@@ -23,7 +23,7 @@ public interface StatesService {
     /**
      * Saves a state of the given application and returns it's id.
      *
-     * @param state the state
+     * @param state         the state
      * @param applicationId the application's id
      * @return the state's id
      */

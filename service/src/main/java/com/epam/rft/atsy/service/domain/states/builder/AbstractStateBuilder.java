@@ -13,7 +13,8 @@ import java.util.Date;
 
 
 @AllArgsConstructor
-public abstract class AbstractStateBuilder<B extends AbstractStateBuilder<B, T>, T extends AbstractStateDTO> implements Builder<T> {
+public abstract class AbstractStateBuilder<B extends AbstractStateBuilder<B, T>, T extends AbstractStateDTO>
+    implements Builder<T> {
 
     protected String name;
     protected T object;
@@ -80,8 +81,7 @@ public abstract class AbstractStateBuilder<B extends AbstractStateBuilder<B, T>,
     }
 
 
-    @Override
-    public T build() {
+    @Override public T build() {
         return object;
     }
 

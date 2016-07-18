@@ -12,25 +12,25 @@ import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.Locale;
 
-@RestController
-@RequestMapping(value = "/secure/applications/{candidateId}")
+@RestController @RequestMapping(value = "/secure/applications/{candidateId}")
 public class CandidateApplicationController {
 
-    private static final String APPLICATION_STATE= "candidate.table.state.";
+    private static final String APPLICATION_STATE = "candidate.table.state.";
 
-    @Resource
-    private StatesService statesService;
+    @Resource private StatesService statesService;
 
-    @Resource
-    private MessageSource messageSource;
+    @Resource private MessageSource messageSource;
 
     @RequestMapping(method = RequestMethod.GET)
-    public Collection<CandidateApplicationDTO> loadApplications(@PathVariable(value = "candidateId") Long candidateId, Locale locale) {
-        Collection<CandidateApplicationDTO> applicationStates = statesService.getCandidateApplicationsByCandidateId(candidateId);
+    public Collection<CandidateApplicationDTO> loadApplications(
+        @PathVariable(value = "candidateId") Long candidateId, Locale locale) {
+        Collection<CandidateApplicationDTO> applicationStates =
+            statesService.getCandidateApplicationsByCandidateId(candidateId);
 
-        for(CandidateApplicationDTO candidateApplicationDTO : applicationStates){
+        for (CandidateApplicationDTO candidateApplicationDTO : applicationStates) {
             String stateType = candidateApplicationDTO.getStateType();
-            stateType=messageSource.getMessage(APPLICATION_STATE+stateType,new Object[]{stateType},locale);
+            stateType = messageSource
+                .getMessage(APPLICATION_STATE + stateType, new Object[] {stateType}, locale);
             candidateApplicationDTO.setStateType(stateType);
         }
         return applicationStates;

@@ -49,46 +49,32 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
 
     private static final String NON_EXISTENT_CANDIDATE_NAME = "Candidate X";
 
-    private static final CandidateEntity candidateA = CandidateEntity.builder()
-            .id(CANDIDATE_A_ID)
-            .name(CANDIDATE_A_NAME)
-            .email(CANDIDATE_A_EMAIL)
-            .phone(CANDIDATE_A_PHONE)
-            .description(CANDIDATE_A_DESCRIPTION)
-            .referer(CANDIDATE_A_REFERER)
-            .languageSkill(CANDIDATE_A_LANGUAGE_SKILL).build();
+    private static final CandidateEntity candidateA =
+        CandidateEntity.builder().id(CANDIDATE_A_ID).name(CANDIDATE_A_NAME).email(CANDIDATE_A_EMAIL)
+            .phone(CANDIDATE_A_PHONE).description(CANDIDATE_A_DESCRIPTION)
+            .referer(CANDIDATE_A_REFERER).languageSkill(CANDIDATE_A_LANGUAGE_SKILL).build();
 
 
-    private static final CandidateEntity candidateB = CandidateEntity.builder()
-            .id(CANDIDATE_B_ID)
-            .name(CANDIDATE_B_NAME)
-            .email(CANDIDATE_B_EMAIL)
-            .phone(CANDIDATE_B_PHONE)
-            .description(CANDIDATE_B_DESCRIPTION)
-            .referer(CANDIDATE_B_REFERER)
-            .languageSkill(CANDIDATE_B_LANGUAGE_SKILL)
-            .build();
+    private static final CandidateEntity candidateB =
+        CandidateEntity.builder().id(CANDIDATE_B_ID).name(CANDIDATE_B_NAME).email(CANDIDATE_B_EMAIL)
+            .phone(CANDIDATE_B_PHONE).description(CANDIDATE_B_DESCRIPTION)
+            .referer(CANDIDATE_B_REFERER).languageSkill(CANDIDATE_B_LANGUAGE_SKILL).build();
 
-    private static final CandidateEntity candidateC = CandidateEntity.builder()
-            .id(CANDIDATE_C_ID)
-            .name(CANDIDATE_C_NAME)
-            .email(CANDIDATE_C_EMAIL)
-            .phone(CANDIDATE_C_PHONE)
-            .description(CANDIDATE_C_DESCRIPTION)
-            .referer(CANDIDATE_C_REFERER)
-            .languageSkill(CANDIDATE_C_LANGUAGE_SKILL)
-            .build();
+    private static final CandidateEntity candidateC =
+        CandidateEntity.builder().id(CANDIDATE_C_ID).name(CANDIDATE_C_NAME).email(CANDIDATE_C_EMAIL)
+            .phone(CANDIDATE_C_PHONE).description(CANDIDATE_C_DESCRIPTION)
+            .referer(CANDIDATE_C_REFERER).languageSkill(CANDIDATE_C_LANGUAGE_SKILL).build();
 
 
 
-    @Autowired
-    private CandidateRepository candidateRepository;
+    @Autowired private CandidateRepository candidateRepository;
 
     private Sort createSort(Sort.Direction direction, String property) {
         return new Sort(direction, property);
     }
 
-    private void assertCandidateValue(List<CandidateEntity> candidates, String expectedName, String expectedEmail, String expectedPhone) {
+    private void assertCandidateValue(List<CandidateEntity> candidates, String expectedName,
+        String expectedEmail, String expectedPhone) {
         for (CandidateEntity entity : candidates) {
 
             assertThat(entity, notNullValue());
@@ -110,9 +96,11 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         }
     }
 
-    private void assertCandidateList(List<CandidateEntity> expectedCandidates, List<CandidateEntity> actualCandidates) {
+    private void assertCandidateList(List<CandidateEntity> expectedCandidates,
+        List<CandidateEntity> actualCandidates) {
         assertThat(actualCandidates.size(), is(expectedCandidates.size()));
-        for (Iterator expected = expectedCandidates.iterator(), actual = actualCandidates.iterator(); expected.hasNext() && actual.hasNext();) {
+        for (Iterator expected = expectedCandidates.iterator(), actual =
+             actualCandidates.iterator(); expected.hasNext() && actual.hasNext(); ) {
             assertThat(actual.next(), is(expected.next()));
         }
     }
@@ -126,7 +114,8 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA);
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, null);
+        List<CandidateEntity> actualCandidates = candidateRepository
+            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, null);
 
         //Then
         assertCandidateValue(actualCandidates, name, email, phone);
@@ -142,7 +131,8 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         List<CandidateEntity> expectedCandidates = Arrays.asList(candidateB);
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, null);
+        List<CandidateEntity> actualCandidates = candidateRepository
+            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, null);
 
         //Then
         assertCandidateValue(actualCandidates, name, email, phone);
@@ -158,7 +148,8 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC);
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, null);
+        List<CandidateEntity> actualCandidates = candidateRepository
+            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, null);
 
         //Then
         assertCandidateValue(actualCandidates, name, email, phone);
@@ -171,10 +162,13 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         String name = "";
         String email = "atsy.com";
         String phone = "";
-        List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC, candidateB, candidateA);
+        List<CandidateEntity> expectedCandidates =
+            Arrays.asList(candidateC, candidateB, candidateA);
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, createSort(Sort.Direction.DESC, "email"));
+        List<CandidateEntity> actualCandidates = candidateRepository
+            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone,
+                createSort(Sort.Direction.DESC, "email"));
 
         //Then
         assertCandidateValue(actualCandidates, name, email, phone);
@@ -187,10 +181,13 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         String name = "";
         String email = "atsy.com";
         String phone = "";
-        List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA, candidateB, candidateC);
+        List<CandidateEntity> expectedCandidates =
+            Arrays.asList(candidateA, candidateB, candidateC);
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, createSort(Sort.Direction.ASC, "email"));
+        List<CandidateEntity> actualCandidates = candidateRepository
+            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone,
+                createSort(Sort.Direction.ASC, "email"));
 
         //Then
         assertCandidateValue(actualCandidates, name, email, phone);
@@ -203,10 +200,13 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         String name = "";
         String email = "";
         String phone = "+3610";
-        List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA, candidateB, candidateC);
+        List<CandidateEntity> expectedCandidates =
+            Arrays.asList(candidateA, candidateB, candidateC);
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, createSort(Sort.Direction.ASC, "name"));
+        List<CandidateEntity> actualCandidates = candidateRepository
+            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone,
+                createSort(Sort.Direction.ASC, "name"));
 
         //Then
         assertCandidateValue(actualCandidates, name, email, phone);
@@ -219,10 +219,13 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         String name = "";
         String email = "";
         String phone = "+3610";
-        List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC, candidateB, candidateA);
+        List<CandidateEntity> expectedCandidates =
+            Arrays.asList(candidateC, candidateB, candidateA);
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, createSort(Sort.Direction.DESC, "name"));
+        List<CandidateEntity> actualCandidates = candidateRepository
+            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone,
+                createSort(Sort.Direction.DESC, "name"));
 
         //Then
         assertCandidateValue(actualCandidates, name, email, phone);
@@ -235,10 +238,13 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         String name = "Candidate";
         String email = "";
         String phone = "";
-        List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC, candidateB, candidateA);
+        List<CandidateEntity> expectedCandidates =
+            Arrays.asList(candidateC, candidateB, candidateA);
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, createSort(Sort.Direction.DESC, "phone"));
+        List<CandidateEntity> actualCandidates = candidateRepository
+            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone,
+                createSort(Sort.Direction.DESC, "phone"));
 
         //Then
         assertCandidateValue(actualCandidates, name, email, phone);
@@ -251,10 +257,13 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         String name = "Candidate";
         String email = "";
         String phone = "";
-        List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA, candidateB, candidateC);
+        List<CandidateEntity> expectedCandidates =
+            Arrays.asList(candidateA, candidateB, candidateC);
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, createSort(Sort.Direction.ASC, "phone"));
+        List<CandidateEntity> actualCandidates = candidateRepository
+            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone,
+                createSort(Sort.Direction.ASC, "phone"));
 
         //Then
         assertCandidateValue(actualCandidates, name, email, phone);
@@ -270,23 +279,23 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         List<CandidateEntity> expectedCandidates = Collections.emptyList();
 
         //When
-        List<CandidateEntity> actualCandidates = candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, null);
+        List<CandidateEntity> actualCandidates = candidateRepository
+            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, null);
 
         //Then
         assertCandidateList(expectedCandidates, actualCandidates);
     }
 
-    @Test
-    public void findByNameShouldNotFindNonexistentCandidate() {
+    @Test public void findByNameShouldNotFindNonexistentCandidate() {
         //When
-        CandidateEntity candidate = this.candidateRepository.findByName(NON_EXISTENT_CANDIDATE_NAME);
+        CandidateEntity candidate =
+            this.candidateRepository.findByName(NON_EXISTENT_CANDIDATE_NAME);
 
         //Then
         assertThat(candidate, nullValue());
     }
 
-    @Test
-    public void findByNameShouldFindExistingCandidate() {
+    @Test public void findByNameShouldFindExistingCandidate() {
         //When
         CandidateEntity candidate = this.candidateRepository.findByName(EXISTING_CANDIDATE_NAME);
 

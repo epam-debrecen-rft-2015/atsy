@@ -12,18 +12,17 @@ public class PasswordContainsRule implements PasswordValidationRule {
 
     private static final Pattern NUMBER_PATTERN = Pattern.compile(".*[0-9]+.*");
 
-    private static final Pattern SPECIAL_CHARACTER_PATTERN = Pattern.compile(".*[!@#$%^&_.,;:-]+.*");
+    private static final Pattern SPECIAL_CHARACTER_PATTERN =
+        Pattern.compile(".*[!@#$%^&_.,;:-]+.*");
 
-    @Override
-    public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
+    @Override public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
         String newPassword = passwordChangeDTO.getNewPassword();
 
-        return containsLetters(newPassword) &&
-                containsNumbers(newPassword) &&
-                containsSpecial(newPassword);
+        return containsLetters(newPassword) && containsNumbers(newPassword) && containsSpecial(
+            newPassword);
     }
 
-    private boolean containsLetters(String password){
+    private boolean containsLetters(String password) {
         return LETTER_PATTERN.matcher(password).matches();
     }
 
@@ -35,8 +34,7 @@ public class PasswordContainsRule implements PasswordValidationRule {
         return SPECIAL_CHARACTER_PATTERN.matcher(password).matches();
     }
 
-    @Override
-    public String getErrorMessageKey() {
+    @Override public String getErrorMessageKey() {
         return MESSAGE_KEY;
     }
 }

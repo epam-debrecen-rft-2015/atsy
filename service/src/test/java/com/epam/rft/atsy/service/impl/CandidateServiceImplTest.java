@@ -22,6 +22,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
+
 import java.util.Collection;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -32,16 +33,12 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
-public class CandidateServiceImplTest {
-    @Mock
-    private ModelMapper modelMapper;
+@RunWith(MockitoJUnitRunner.class) public class CandidateServiceImplTest {
+    @Mock private ModelMapper modelMapper;
 
-    @Mock
-    private CandidateRepository candidateRepository;
+    @Mock private CandidateRepository candidateRepository;
 
-    @InjectMocks
-    private CandidateServiceImpl candidateService;
+    @InjectMocks private CandidateServiceImpl candidateService;
 
     private static final Long ID = 1L;
     private static final String NAME = "John Doe";
@@ -66,24 +63,24 @@ public class CandidateServiceImplTest {
 
     private Sort ascendingSort;
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    @Rule public ExpectedException expectedException = ExpectedException.none();
 
-    @Before
-    public void setUp() {
-        dummyCandidateEntity = CandidateEntity.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
-                                              .referer(REFERER).languageSkill(LANGUAGE_SKILL)
-                                              .description(DESCRIPTION).build();
+    @Before public void setUp() {
+        dummyCandidateEntity =
+            CandidateEntity.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE).referer(REFERER)
+                .languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).build();
 
-        dummyCandidateDto = CandidateDTO.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
-                                        .referer(REFERER).languageSkill(LANGUAGE_SKILL)
-                                        .description(DESCRIPTION).build();
+        dummyCandidateDto =
+            CandidateDTO.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE).referer(REFERER)
+                .languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).build();
 
-        ascendingFilterRequest = FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
-                                              .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
+        ascendingFilterRequest =
+            FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
+                .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
 
-        descendingFilterRequest = FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.DESC)
-                                              .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
+        descendingFilterRequest =
+            FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.DESC)
+                .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
 
         ascendingSort = new Sort(Sort.Direction.ASC, SORT_FIELD);
     }
@@ -94,11 +91,11 @@ public class CandidateServiceImplTest {
         candidateService.getCandidate(null);
     }
 
-    @Test
-    public void getCandidateShouldReturnNullWhenIdNotFound() {
+    @Test public void getCandidateShouldReturnNullWhenIdNotFound() {
         // Given
         given(candidateRepository.findOne(ID)).willReturn(NOT_FOUND_CANDIDATE_ENTITY);
-        given(modelMapper.map(NOT_FOUND_CANDIDATE_ENTITY, CandidateDTO.class)).willReturn(NOT_FOUND_CANDIDATE_DTO);
+        given(modelMapper.map(NOT_FOUND_CANDIDATE_ENTITY, CandidateDTO.class))
+            .willReturn(NOT_FOUND_CANDIDATE_DTO);
 
         // When
         CandidateDTO candidate = candidateService.getCandidate(ID);
@@ -107,11 +104,11 @@ public class CandidateServiceImplTest {
         assertThat(candidate, nullValue());
     }
 
-    @Test
-    public void getCandidateShouldReturnProperDtoWhenIdExists() {
+    @Test public void getCandidateShouldReturnProperDtoWhenIdExists() {
         // Given
         given(candidateRepository.findOne(ID)).willReturn(dummyCandidateEntity);
-        given(modelMapper.map(dummyCandidateEntity, CandidateDTO.class)).willReturn(dummyCandidateDto);
+        given(modelMapper.map(dummyCandidateEntity, CandidateDTO.class))
+            .willReturn(dummyCandidateDto);
 
         // When
         CandidateDTO candidate = candidateService.getCandidate(ID);
@@ -130,8 +127,8 @@ public class CandidateServiceImplTest {
     public void getAllCandidatesShouldThrowIAEWhenSearchOptionsIsNull() {
         // Given
         FilterRequest defectedRequest =
-                FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
-                             .searchOptions(null).build();
+            FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
+                .searchOptions(null).build();
 
         // When
         candidateService.getAllCandidate(defectedRequest);
@@ -141,8 +138,8 @@ public class CandidateServiceImplTest {
     public void getAllCandidatesShouldThrowIAEWhenFieldNameIsNull() {
         // Given
         FilterRequest defectedRequest =
-                FilterRequest.builder().fieldName(null).order(SortingRequest.Order.ASC)
-                             .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
+            FilterRequest.builder().fieldName(null).order(SortingRequest.Order.ASC)
+                .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
 
         // When
         candidateService.getAllCandidate(defectedRequest);
@@ -151,9 +148,8 @@ public class CandidateServiceImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void getAllCandidatesShouldThrowIAEWhenOrderIsNull() {
         // Given
-        FilterRequest defectedRequest =
-                FilterRequest.builder().fieldName(SORT_FIELD).order(null)
-                        .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
+        FilterRequest defectedRequest = FilterRequest.builder().fieldName(SORT_FIELD).order(null)
+            .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
 
         // When
         candidateService.getAllCandidate(defectedRequest);
@@ -163,42 +159,48 @@ public class CandidateServiceImplTest {
     public void getAllCandidatesShouldCallRepositoryWithEmptyStringAsNameWhenSearchOptionsNameIsNull() {
         // Given
         FilterRequest defectedRequest =
-                FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
-                        .searchOptions(new SearchOptions(null, EMAIL, PHONE)).build();
+            FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
+                .searchOptions(new SearchOptions(null, EMAIL, PHONE)).build();
 
         // When
         candidateService.getAllCandidate(defectedRequest);
 
         // Then
-        verify(candidateRepository).findAllByNameContainingAndEmailContainingAndPhoneContaining(StringUtils.EMPTY, EMAIL, PHONE, ascendingSort);
+        verify(candidateRepository)
+            .findAllByNameContainingAndEmailContainingAndPhoneContaining(StringUtils.EMPTY, EMAIL,
+                PHONE, ascendingSort);
     }
 
     @Test
     public void getAllCandidatesShouldCallRepositoryWithEmptyStringAsEmailWhenSearchOptionsEmailIsNull() {
         // Given
         FilterRequest defectedRequest =
-                FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
-                        .searchOptions(new SearchOptions(NAME, null, PHONE)).build();
+            FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
+                .searchOptions(new SearchOptions(NAME, null, PHONE)).build();
 
         // When
         candidateService.getAllCandidate(defectedRequest);
 
         // Then
-        verify(candidateRepository).findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, StringUtils.EMPTY, PHONE, ascendingSort);
+        verify(candidateRepository)
+            .findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, StringUtils.EMPTY,
+                PHONE, ascendingSort);
     }
 
     @Test
     public void getAllCandidatesShouldCallRepositoryWithEmptyStringAsPhoneWhenSearchOptionsPhoneIsNull() {
         // Given
         FilterRequest defectedRequest =
-                FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
-                        .searchOptions(new SearchOptions(NAME, EMAIL, null)).build();
+            FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
+                .searchOptions(new SearchOptions(NAME, EMAIL, null)).build();
 
         // When
         candidateService.getAllCandidate(defectedRequest);
 
         // Then
-        verify(candidateRepository).findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL, StringUtils.EMPTY, ascendingSort);
+        verify(candidateRepository)
+            .findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL,
+                StringUtils.EMPTY, ascendingSort);
     }
 
     @Test
@@ -207,7 +209,9 @@ public class CandidateServiceImplTest {
         Collection<CandidateDTO> result = candidateService.getAllCandidate(ascendingFilterRequest);
 
         // Then
-        verify(candidateRepository).findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL, PHONE, ascendingSort);
+        verify(candidateRepository)
+            .findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL, PHONE,
+                ascendingSort);
     }
 
     @Test
@@ -219,7 +223,9 @@ public class CandidateServiceImplTest {
         Collection<CandidateDTO> result = candidateService.getAllCandidate(descendingFilterRequest);
 
         // Then
-        verify(candidateRepository).findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL, PHONE, descendingSort);
+        verify(candidateRepository)
+            .findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL, PHONE,
+                descendingSort);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -228,13 +234,14 @@ public class CandidateServiceImplTest {
         candidateService.saveOrUpdate(null);
     }
 
-    @Test
-    public void saveOrUpdateShouldThrowDREAfterCatchingConstraintViolationException()
-            throws DuplicateRecordException {
+    @Test public void saveOrUpdateShouldThrowDREAfterCatchingConstraintViolationException()
+        throws DuplicateRecordException {
         // Given
-        given(modelMapper.map(dummyCandidateDto, CandidateEntity.class)).willReturn(dummyCandidateEntity);
+        given(modelMapper.map(dummyCandidateDto, CandidateEntity.class))
+            .willReturn(dummyCandidateEntity);
 
-        given(candidateRepository.save(dummyCandidateEntity)).willThrow(ConstraintViolationException.class);
+        given(candidateRepository.save(dummyCandidateEntity))
+            .willThrow(ConstraintViolationException.class);
 
         expectedException.expect(DuplicateRecordException.class);
         expectedException.expectMessage(CoreMatchers.endsWith(NAME));
@@ -244,13 +251,14 @@ public class CandidateServiceImplTest {
         candidateService.saveOrUpdate(dummyCandidateDto);
     }
 
-    @Test
-    public void saveOrUpdateShouldThrowDREAfterCatchingDataIntegrityViolationException()
-            throws DuplicateRecordException {
+    @Test public void saveOrUpdateShouldThrowDREAfterCatchingDataIntegrityViolationException()
+        throws DuplicateRecordException {
         // Given
-        given(modelMapper.map(dummyCandidateDto, CandidateEntity.class)).willReturn(dummyCandidateEntity);
+        given(modelMapper.map(dummyCandidateDto, CandidateEntity.class))
+            .willReturn(dummyCandidateEntity);
 
-        given(candidateRepository.save(dummyCandidateEntity)).willThrow(DataIntegrityViolationException.class);
+        given(candidateRepository.save(dummyCandidateEntity))
+            .willThrow(DataIntegrityViolationException.class);
 
         expectedException.expect(DuplicateRecordException.class);
         expectedException.expectMessage(CoreMatchers.endsWith(NAME));
@@ -260,10 +268,10 @@ public class CandidateServiceImplTest {
         candidateService.saveOrUpdate(dummyCandidateDto);
     }
 
-    @Test
-    public void saveOrUpdateShouldSaveAProperCandidateDTO() {
+    @Test public void saveOrUpdateShouldSaveAProperCandidateDTO() {
         // Given
-        given(modelMapper.map(dummyCandidateDto, CandidateEntity.class)).willReturn(dummyCandidateEntity);
+        given(modelMapper.map(dummyCandidateDto, CandidateEntity.class))
+            .willReturn(dummyCandidateEntity);
 
         given(candidateRepository.save(dummyCandidateEntity)).willReturn(dummyCandidateEntity);
 

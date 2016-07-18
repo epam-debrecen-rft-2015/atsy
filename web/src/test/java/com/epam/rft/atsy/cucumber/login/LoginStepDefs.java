@@ -18,14 +18,12 @@ public class LoginStepDefs {
         this.driverProvider = driverProvider;
     }
 
-    @Given("^the user is on the login page")
-    public void onLoginPage() {
+    @Given("^the user is on the login page") public void onLoginPage() {
         driverProvider.getDriver().get("http://localhost:8080/atsy/login?locale=hu");
     }
 
 
-    @Given("the user enters username (.*)")
-    public void userEntersUsernameUser(String userName) {
+    @Given("the user enters username (.*)") public void userEntersUsernameUser(String userName) {
         driverProvider.getDriver().findElement(By.id("name")).sendKeys(userName);
     }
 
@@ -34,18 +32,15 @@ public class LoginStepDefs {
         driverProvider.getDriver().findElement(By.id("password")).sendKeys(password);
     }
 
-    @When("the user clicks on Bejelentkezés button")
-    public void bejelentkezesButtonClicked() {
+    @When("the user clicks on Bejelentkezés button") public void bejelentkezesButtonClicked() {
         driverProvider.getDriver().findElement(By.id("loginButton")).click();
     }
 
-    @Then("the Candidates page appears")
-    public void candidatesPageAppears() {
+    @Then("the Candidates page appears") public void candidatesPageAppears() {
         //assertThat();
     }
 
-    @Then("^(.*) message appears$")
-    public void messageAppearance(String message) {
+    @Then("^(.*) message appears$") public void messageAppearance(String message) {
         WebElement messageElement = driverProvider.getDriver().findElement(By.id("globalMessage"));
         assertThat(messageElement.isDisplayed(), is(true));
         assertThat(messageElement.getText(), is(message));
@@ -53,21 +48,18 @@ public class LoginStepDefs {
 
     @Then("^(.*) message appears above the (.*) field$")
     public void fieldMessageAppearance(String message, String fieldName) {
-        WebElement messageElement = driverProvider.getDriver()
-                .findElement(By.id(fieldName))
-                .findElement(By.xpath("..")) //parent
-                .findElement(By.tagName("span"));
+        WebElement messageElement = driverProvider.getDriver().findElement(By.id(fieldName))
+            .findElement(By.xpath("..")) //parent
+            .findElement(By.tagName("span"));
         assertThat(messageElement.isDisplayed(), is(true));
         assertThat(messageElement.getText(), is(message));
     }
 
-    @Given("the username field is not filled in")
-    public void usernameFieldNotFilled() {
+    @Given("the username field is not filled in") public void usernameFieldNotFilled() {
         driverProvider.getDriver().findElement(By.id("name")).sendKeys("");
     }
 
-    @Given("the password field is not filled in")
-    public void passwordFieldNotFilled() {
+    @Given("the password field is not filled in") public void passwordFieldNotFilled() {
         driverProvider.getDriver().findElement(By.id("name")).sendKeys("");
     }
 

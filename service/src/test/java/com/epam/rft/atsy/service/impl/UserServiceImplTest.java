@@ -25,8 +25,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-@RunWith(MockitoJUnitRunner.class)
-public class UserServiceImplTest {
+@RunWith(MockitoJUnitRunner.class) public class UserServiceImplTest {
 
     private static final long USER_ID = 1L;
     private static final String USER_NAME = "Test";
@@ -42,60 +41,67 @@ public class UserServiceImplTest {
     private UserDTO detailedUserDTO;
     private UserEntity userEntity;
 
-    @Mock
-    private UserRepository userRepository;
+    @Mock private UserRepository userRepository;
 
-    @Mock
-    private ModelMapper modelMapper;
+    @Mock private ModelMapper modelMapper;
 
-    @InjectMocks
-    private UserServiceImpl userService;
+    @InjectMocks private UserServiceImpl userService;
 
-    @Before
-    public void setUp() {
+    @Before public void setUp() {
         userDTO = UserDTO.builder().name(USER_NAME).password(USER_PASSWORD).build();
-        detailedUserDTO = UserDTO.builder().id(USER_ID).name(USER_NAME).password(USER_PASSWORD).build();
-        userEntity = UserEntity.builder().id(USER_ID).userName(USER_NAME).userPassword(USER_PASSWORD).build();
+        detailedUserDTO =
+            UserDTO.builder().id(USER_ID).name(USER_NAME).password(USER_PASSWORD).build();
+        userEntity =
+            UserEntity.builder().id(USER_ID).userName(USER_NAME).userPassword(USER_PASSWORD)
+                .build();
 
         given(modelMapper.map(userEntity, UserDTO.class)).willReturn(detailedUserDTO);
         given(modelMapper.map(detailedUserDTO, UserEntity.class)).willReturn(userEntity);
     }
 
     @Test(expected = UserNotFoundException.class)
-    public void loginShouldThrowUserNotFoundExceptionBecauseOfNoResultException() throws UserNotFoundException {
+    public void loginShouldThrowUserNotFoundExceptionBecauseOfNoResultException()
+        throws UserNotFoundException {
         //Given
-        given(userRepository.findByUserNameAndUserPassword(USER_NAME, USER_PASSWORD)).willThrow(NoResultException.class);
+        given(userRepository.findByUserNameAndUserPassword(USER_NAME, USER_PASSWORD))
+            .willThrow(NoResultException.class);
 
         //When
         userService.login(userDTO);
     }
 
     @Test(expected = UserNotFoundException.class)
-    public void loginShouldThrowUserNotFoundExceptionBecauseOfEmptyResultDataAccessException() throws UserNotFoundException {
+    public void loginShouldThrowUserNotFoundExceptionBecauseOfEmptyResultDataAccessException()
+        throws UserNotFoundException {
         //Given
-        given(userRepository.findByUserNameAndUserPassword(USER_NAME, USER_PASSWORD)).willThrow(EmptyResultDataAccessException.class);
+        given(userRepository.findByUserNameAndUserPassword(USER_NAME, USER_PASSWORD))
+            .willThrow(EmptyResultDataAccessException.class);
 
         //When
         userService.login(userDTO);
     }
 
     @Test(expected = UserNotFoundException.class)
-    public void loginShouldThrowUserNotFoundExceptionBecauseOfNonUniqueResultException() throws UserNotFoundException {
+    public void loginShouldThrowUserNotFoundExceptionBecauseOfNonUniqueResultException()
+        throws UserNotFoundException {
         //Given
-        given(userRepository.findByUserNameAndUserPassword(USER_NAME, USER_PASSWORD)).willThrow(NonUniqueResultException.class);
+        given(userRepository.findByUserNameAndUserPassword(USER_NAME, USER_PASSWORD))
+            .willThrow(NonUniqueResultException.class);
 
         //When
         userService.login(userDTO);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void loginShouldThrowIllegalArgumentExceptionBecauseOfNullParameter() throws UserNotFoundException {
+    public void loginShouldThrowIllegalArgumentExceptionBecauseOfNullParameter()
+        throws UserNotFoundException {
         //When
         userService.login(NULL_USER_DTO);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void loginShouldThrowIllegalArgumentExceptionBecauseUserDtoHasNullName() throws UserNotFoundException {
+    public void loginShouldThrowIllegalArgumentExceptionBecauseUserDtoHasNullName()
+        throws UserNotFoundException {
         //Given
         UserDTO userDtoWithNullName = UserDTO.builder().name(null).password(USER_PASSWORD).build();
 
@@ -104,7 +110,8 @@ public class UserServiceImplTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void loginShouldThrowIllegalArgumentExceptionBecauseUserDtoHasNullPassword() throws UserNotFoundException {
+    public void loginShouldThrowIllegalArgumentExceptionBecauseUserDtoHasNullPassword()
+        throws UserNotFoundException {
         //Given
         UserDTO userDtoWithNullPassword = UserDTO.builder().name(USER_NAME).password(null).build();
 
@@ -112,10 +119,10 @@ public class UserServiceImplTest {
         userService.login(userDtoWithNullPassword);
     }
 
-    @Test
-    public void loginShouldReturnDetailedUserDto() throws UserNotFoundException {
+    @Test public void loginShouldReturnDetailedUserDto() throws UserNotFoundException {
         //Given
-        given(userRepository.findByUserNameAndUserPassword(USER_NAME, USER_PASSWORD)).willReturn(userEntity);
+        given(userRepository.findByUserNameAndUserPassword(USER_NAME, USER_PASSWORD))
+            .willReturn(userEntity);
 
         //When
         UserDTO result = userService.login(userDTO);
@@ -126,10 +133,11 @@ public class UserServiceImplTest {
         assertThat(result, is(detailedUserDTO));
     }
 
-    @Test(expected = UserNotFoundException.class)
-    public void loginShouldNotReturnDetailedUserDto() throws UserNotFoundException {
+    @Test(expected = UserNotFoundException.class) public void loginShouldNotReturnDetailedUserDto()
+        throws UserNotFoundException {
         //Given
-        given(userRepository.findByUserNameAndUserPassword(USER_NAME, USER_PASSWORD)).willReturn(NULL_USER_ENTITY);
+        given(userRepository.findByUserNameAndUserPassword(USER_NAME, USER_PASSWORD))
+            .willReturn(NULL_USER_ENTITY);
 
         //When
         UserDTO result = userService.login(userDTO);
@@ -159,8 +167,7 @@ public class UserServiceImplTest {
         userService.saveOrUpdate(detailedUserDTO);
     }
 
-    @Test
-    public void saveOrUpdateShouldReturnUserId() {
+    @Test public void saveOrUpdateShouldReturnUserId() {
         //Given
         given(userRepository.save(userEntity)).willReturn(userEntity);
 
@@ -173,8 +180,7 @@ public class UserServiceImplTest {
         assertThat(result, is(USER_ID));
     }
 
-    @Test
-    public void findUserByNameShouldReturnNullWhenNoUserWasFound() {
+    @Test public void findUserByNameShouldReturnNullWhenNoUserWasFound() {
         //Given
         given(userRepository.findByUserName(NOT_REAL_USER_NAME)).willReturn(NULL_USER_ENTITY);
 
@@ -192,8 +198,7 @@ public class UserServiceImplTest {
         userService.findUserByName(NULL_USER_NAME);
     }
 
-    @Test
-    public void findUserByNameShouldReturnUserDtoWhenUserWasFound() {
+    @Test public void findUserByNameShouldReturnUserDtoWhenUserWasFound() {
         //Given
         given(userRepository.findByUserName(USER_NAME)).willReturn(userEntity);
 

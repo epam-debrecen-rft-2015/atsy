@@ -4,12 +4,8 @@ import com.epam.rft.atsy.service.domain.states.builder.AbstractStateBuilder;
 import lombok.*;
 
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-public class StateViewDTO extends AbstractStateDTO {
+@Data @NoArgsConstructor @AllArgsConstructor @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true) public class StateViewDTO extends AbstractStateDTO {
 
 
     private String creationDate;
@@ -24,7 +20,8 @@ public class StateViewDTO extends AbstractStateDTO {
     }
 
 
-    public static class StateViewDTOBuilder extends AbstractStateBuilder<StateViewDTOBuilder, StateViewDTO> {
+    public static class StateViewDTOBuilder
+        extends AbstractStateBuilder<StateViewDTOBuilder, StateViewDTO> {
 
         private StateViewDTOBuilder(StateViewDTO stateViewDTO) {
             super("StateViewDTOBuilder", stateViewDTO);

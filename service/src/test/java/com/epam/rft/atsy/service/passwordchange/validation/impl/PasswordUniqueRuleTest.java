@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -24,8 +22,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PasswordUniqueRuleTest {
+@RunWith(MockitoJUnitRunner.class) public class PasswordUniqueRuleTest {
 
     public static final long USER_ID = 1L;
     public static final String USER_NAME = "test";
@@ -41,37 +38,31 @@ public class PasswordUniqueRuleTest {
     private List<String> singleElementPasswordHistory;
     private List<String> threeElementPasswordHistory;
 
-    @Mock
-    private PasswordChangeService passwordChangeService;
+    @Mock private PasswordChangeService passwordChangeService;
 
-    @InjectMocks
-    private PasswordUniqueRule passwordUniqueRule;
+    @InjectMocks private PasswordUniqueRule passwordUniqueRule;
 
-    @Before
-    public void setUp() {
+    @Before public void setUp() {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-        singleElementPasswordHistory = Arrays.asList(
-                bCryptPasswordEncoder.encode(PASSWORD_HISTORY_1)
-        );
+        singleElementPasswordHistory =
+            Arrays.asList(bCryptPasswordEncoder.encode(PASSWORD_HISTORY_1));
 
-        threeElementPasswordHistory = Arrays.asList(
-                bCryptPasswordEncoder.encode(PASSWORD_HISTORY_1),
+        threeElementPasswordHistory = Arrays
+            .asList(bCryptPasswordEncoder.encode(PASSWORD_HISTORY_1),
                 bCryptPasswordEncoder.encode(PASSWORD_HISTORY_2),
-                bCryptPasswordEncoder.encode(PASSWORD_HISTORY_3)
-        );
+                bCryptPasswordEncoder.encode(PASSWORD_HISTORY_3));
 
-        UserDetailsAdapter userDetailsAdapter = new UserDetailsAdapter(USER_ID, USER_NAME, USER_PASSWORD);
+        UserDetailsAdapter userDetailsAdapter =
+            new UserDetailsAdapter(USER_ID, USER_NAME, USER_PASSWORD);
         Authentication auth = new UsernamePasswordAuthenticationToken(userDetailsAdapter, null);
         SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
-    @Test
-    public void isValidShouldBeValidForEmptyPasswordHistory() {
+    @Test public void isValidShouldBeValidForEmptyPasswordHistory() {
         //Given
-        PasswordChangeDTO passwordChangeDto = PasswordChangeDTO.builder()
-                .newPassword(NEW_PASSWORD)
-                .build();
+        PasswordChangeDTO passwordChangeDto =
+            PasswordChangeDTO.builder().newPassword(NEW_PASSWORD).build();
 
         given(passwordChangeService.getOldPasswords(USER_ID)).willReturn(EMPTY_PASSWORD_HISTORY);
 
@@ -82,14 +73,13 @@ public class PasswordUniqueRuleTest {
         assertTrue(result);
     }
 
-    @Test
-    public void isValidShouldNotBeValidWhenNewPasswordIsInSingleElementPasswordHistory() {
+    @Test public void isValidShouldNotBeValidWhenNewPasswordIsInSingleElementPasswordHistory() {
         //Given
-        PasswordChangeDTO passwordChangeDto = PasswordChangeDTO.builder()
-                .newPassword(PASSWORD_HISTORY_1)
-                .build();
+        PasswordChangeDTO passwordChangeDto =
+            PasswordChangeDTO.builder().newPassword(PASSWORD_HISTORY_1).build();
 
-        given(passwordChangeService.getOldPasswords(USER_ID)).willReturn(singleElementPasswordHistory);
+        given(passwordChangeService.getOldPasswords(USER_ID))
+            .willReturn(singleElementPasswordHistory);
 
         //When
         boolean result = passwordUniqueRule.isValid(passwordChangeDto);
@@ -98,14 +88,13 @@ public class PasswordUniqueRuleTest {
         assertFalse(result);
     }
 
-    @Test
-    public void isValidShouldBeValidWhenNewPasswordIsNotInSingleElementPasswordHistory() {
+    @Test public void isValidShouldBeValidWhenNewPasswordIsNotInSingleElementPasswordHistory() {
         //Given
-        PasswordChangeDTO passwordChangeDto = PasswordChangeDTO.builder()
-                .newPassword(NEW_PASSWORD)
-                .build();
+        PasswordChangeDTO passwordChangeDto =
+            PasswordChangeDTO.builder().newPassword(NEW_PASSWORD).build();
 
-        given(passwordChangeService.getOldPasswords(USER_ID)).willReturn(singleElementPasswordHistory);
+        given(passwordChangeService.getOldPasswords(USER_ID))
+            .willReturn(singleElementPasswordHistory);
 
         //When
         boolean result = passwordUniqueRule.isValid(passwordChangeDto);
@@ -114,14 +103,13 @@ public class PasswordUniqueRuleTest {
         assertTrue(result);
     }
 
-    @Test
-    public void isValidShouldNotBeValidWhenNewPasswordIsInThreeElementPasswordHistory() {
+    @Test public void isValidShouldNotBeValidWhenNewPasswordIsInThreeElementPasswordHistory() {
         //Given
-        PasswordChangeDTO passwordChangeDto = PasswordChangeDTO.builder()
-                .newPassword(PASSWORD_HISTORY_1)
-                .build();
+        PasswordChangeDTO passwordChangeDto =
+            PasswordChangeDTO.builder().newPassword(PASSWORD_HISTORY_1).build();
 
-        given(passwordChangeService.getOldPasswords(USER_ID)).willReturn(threeElementPasswordHistory);
+        given(passwordChangeService.getOldPasswords(USER_ID))
+            .willReturn(threeElementPasswordHistory);
 
         //When
         boolean result = passwordUniqueRule.isValid(passwordChangeDto);
@@ -130,14 +118,13 @@ public class PasswordUniqueRuleTest {
         assertFalse(result);
     }
 
-    @Test
-    public void isValidShouldBeValidWhenNewPasswordIsNotInThreeElementPasswordHistory() {
+    @Test public void isValidShouldBeValidWhenNewPasswordIsNotInThreeElementPasswordHistory() {
         //Given
-        PasswordChangeDTO passwordChangeDto = PasswordChangeDTO.builder()
-                .newPassword(NEW_PASSWORD)
-                .build();
+        PasswordChangeDTO passwordChangeDto =
+            PasswordChangeDTO.builder().newPassword(NEW_PASSWORD).build();
 
-        given(passwordChangeService.getOldPasswords(USER_ID)).willReturn(threeElementPasswordHistory);
+        given(passwordChangeService.getOldPasswords(USER_ID))
+            .willReturn(threeElementPasswordHistory);
 
         //When
         boolean result = passwordUniqueRule.isValid(passwordChangeDto);
