@@ -19,7 +19,7 @@
         <jacoco.branchRatio>0.80</jacoco.branchRatio>
         <jacoco.complexityRatio>0.80</jacoco.complexityRatio>
         <jacoco.lineRatio>0.80</jacoco.lineRatio>
-        <environment>production</environment>
+        <environment>integration</environment>
         <com.epam.rft>1.0-SNAPSHOT</com.epam.rft>
         <maven.war.plugin.version>2.6</maven.war.plugin.version>
         <maven.compiler.plugin.version>3.3</maven.compiler.plugin.version>
@@ -62,14 +62,7 @@
         <module>service</module>
         <module>web</module>
     </modules>
-
     <profiles>
-        <profile>
-            <id>production</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-        </profile>
         <profile>
             <id>integration</id>
             <properties>

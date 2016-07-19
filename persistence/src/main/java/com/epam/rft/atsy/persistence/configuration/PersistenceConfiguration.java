@@ -17,7 +17,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.Properties;
-
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
@@ -36,10 +35,10 @@ public class PersistenceConfiguration {
     flyway.setBaselineOnMigrate(true);
     flyway.setDataSource(dataSource());
 
-    String currentProfile =
-        env.getActiveProfiles().length == 0 ? env.getDefaultProfiles()[0] : env.getActiveProfiles()[0];
+    String currentProfileName =
+      env.getActiveProfiles().length == 0 ? env.getDefaultProfiles()[0] : env.getActiveProfiles()[0];
     flyway.setLocations("classpath:db/migration/schema",
-        "classpath:db/migration/data/" + currentProfile);
+        "classpath:db/migration/data/" + currentProfileName);
     return flyway;
   }
 
