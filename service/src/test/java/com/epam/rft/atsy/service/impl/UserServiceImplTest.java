@@ -156,7 +156,7 @@ public class UserServiceImplTest {
   @Test(expected = DuplicateRecordException.class)
   public void saveOrUpdateShouldThrowDuplicateRecordExceptionBecauseOfConstraintViolationException() {
     //Given
-    given(userRepository.save(userEntity)).willThrow(ConstraintViolationException.class);
+    given(userRepository.saveAndFlush(userEntity)).willThrow(ConstraintViolationException.class);
 
     //When
     userService.saveOrUpdate(detailedUserDTO);
@@ -165,7 +165,7 @@ public class UserServiceImplTest {
   @Test(expected = DuplicateRecordException.class)
   public void saveOrUpdateShouldThrowDuplicateRecordExceptionBecauseOfDataIntegrityViolationException() {
     //Given
-    given(userRepository.save(userEntity)).willThrow(DataIntegrityViolationException.class);
+    given(userRepository.saveAndFlush(userEntity)).willThrow(DataIntegrityViolationException.class);
 
     //When
     userService.saveOrUpdate(detailedUserDTO);
@@ -174,14 +174,14 @@ public class UserServiceImplTest {
   @Test
   public void saveOrUpdateShouldReturnUserId() {
     //Given
-    given(userRepository.save(userEntity)).willReturn(userEntity);
+    given(userRepository.saveAndFlush(userEntity)).willReturn(userEntity);
 
     //When
     Long result = userService.saveOrUpdate(detailedUserDTO);
 
     //Then
     then(modelMapper).should().map(detailedUserDTO, UserEntity.class);
-    then(userRepository).should().save(userEntity);
+    then(userRepository).should().saveAndFlush(userEntity);
     assertThat(result, is(USER_ID));
   }
 
