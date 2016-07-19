@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
@@ -28,6 +29,7 @@ public class UserServiceImpl implements UserService {
   @Resource
   private ModelMapper modelMapper;
 
+  @Transactional(readOnly = true)
   public UserDTO login(UserDTO user) throws UserNotFoundException {
     Assert.notNull(user);
     Assert.notNull(user.getName());
@@ -54,12 +56,13 @@ public class UserServiceImpl implements UserService {
     return userDTO;
   }
 
+  @Transactional
   @Override
   public Long saveOrUpdate(UserDTO userDTO) {
     Assert.notNull(userDTO);
     UserEntity entity = modelMapper.map(userDTO, UserEntity.class);
     try {
-      return userRepository.save(entity).getId();
+      return userRepository.saveAndFlush(entity).getId();
     } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
       log.error("Save to repository failed.", ex);
 
@@ -70,6 +73,7 @@ public class UserServiceImpl implements UserService {
     }
   }
 
+  @Transactional(readOnly = true)
   @Override
   public UserDTO findUserByName(String username) {
     Assert.notNull(username);

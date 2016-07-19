@@ -11,6 +11,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Type;
@@ -30,12 +31,14 @@ public class ChannelServiceImpl implements ChannelService {
   @Autowired
   private ChannelRepository channelRepository;
 
+  @Transactional(readOnly = true)
   @Override
   public Collection<ChannelDTO> getAllChannels() {
     Collection<ChannelEntity> ChannelEntities = channelRepository.findAll();
     return modelMapper.map(ChannelEntities, CHANNELDTO_LIST_TYPE);
   }
 
+  @Transactional
   @Override
   public void saveOrUpdate(ChannelDTO channel) {
     Assert.notNull(channel);
@@ -43,7 +46,7 @@ public class ChannelServiceImpl implements ChannelService {
 
     ChannelEntity entity = modelMapper.map(channel, ChannelEntity.class);
     try {
-      channelRepository.save(entity);
+      channelRepository.saveAndFlush(entity);
     } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
       log.error("Save to repository failed.", ex);
 

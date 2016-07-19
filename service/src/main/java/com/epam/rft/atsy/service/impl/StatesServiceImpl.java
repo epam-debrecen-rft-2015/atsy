@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Type;
@@ -39,6 +40,7 @@ public class StatesServiceImpl implements StatesService {
   @Autowired
   private CandidateRepository candidateRepository;
 
+  @Transactional(readOnly = true)
   @Override
   public Collection<CandidateApplicationDTO> getCandidateApplicationsByCandidateId(Long id) {
     Assert.notNull(id);
@@ -70,6 +72,7 @@ public class StatesServiceImpl implements StatesService {
     return candidateApplicationDTOList;
   }
 
+  @Transactional
   @Override
   public Long saveState(StateDTO state, Long applicationId) {
     Assert.notNull(state);
@@ -84,6 +87,7 @@ public class StatesServiceImpl implements StatesService {
   }
 
 
+  @Transactional(readOnly = true)
   @Override
   public List<StateViewDTO> getStatesByApplicationId(Long applicationId) {
     Assert.notNull(applicationId);

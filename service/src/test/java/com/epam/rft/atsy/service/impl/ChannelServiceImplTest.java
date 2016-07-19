@@ -137,7 +137,8 @@ public class ChannelServiceImplTest {
     // Given
     given(modelMapper.map(facebookDto, ChannelEntity.class)).willReturn(facebookEntity);
 
-    given(channelRepository.save(facebookEntity)).willThrow(ConstraintViolationException.class);
+    given(channelRepository.saveAndFlush(facebookEntity))
+        .willThrow(ConstraintViolationException.class);
 
     expectedException.expect(DuplicateRecordException.class);
     expectedException.expectMessage(CoreMatchers.endsWith(CHANNEL_NAME_FACEBOOK));
@@ -153,7 +154,8 @@ public class ChannelServiceImplTest {
     // Given
     given(modelMapper.map(facebookDto, ChannelEntity.class)).willReturn(facebookEntity);
 
-    given(channelRepository.save(facebookEntity)).willThrow(DataIntegrityViolationException.class);
+    given(channelRepository.saveAndFlush(facebookEntity))
+        .willThrow(DataIntegrityViolationException.class);
 
     expectedException.expect(DuplicateRecordException.class);
     expectedException.expectMessage(CoreMatchers.endsWith(CHANNEL_NAME_FACEBOOK));
@@ -168,13 +170,13 @@ public class ChannelServiceImplTest {
     // Given
     given(modelMapper.map(facebookDto, ChannelEntity.class)).willReturn(facebookEntity);
 
-    given(channelRepository.save(facebookEntity)).willReturn(facebookEntity);
+    given(channelRepository.saveAndFlush(facebookEntity)).willReturn(facebookEntity);
 
     // When
     channelService.saveOrUpdate(facebookDto);
 
     // Then
-    then(channelRepository).should().save(facebookEntity);
+    then(channelRepository).should().saveAndFlush(facebookEntity);
   }
 
   @Test(expected = IllegalArgumentException.class)
