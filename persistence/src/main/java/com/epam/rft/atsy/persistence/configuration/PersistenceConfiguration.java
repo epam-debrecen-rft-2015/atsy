@@ -35,8 +35,11 @@ public class PersistenceConfiguration {
     Flyway flyway = new Flyway();
     flyway.setBaselineOnMigrate(true);
     flyway.setDataSource(dataSource());
+
+    String currentProfile =
+        env.getActiveProfiles().length == 0 ? env.getDefaultProfiles()[0] : env.getActiveProfiles()[0];
     flyway.setLocations("classpath:db/migration/schema",
-        "classpath:db/migration/data/" + env.getActiveProfiles()[0]);
+        "classpath:db/migration/data/" + currentProfile);
     return flyway;
   }
 
