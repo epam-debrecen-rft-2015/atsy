@@ -7,7 +7,9 @@ import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.persistence.repositories.StatesRepository;
 import com.epam.rft.atsy.service.StatesService;
+import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
+import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateViewDTO;
 import org.modelmapper.ModelMapper;
@@ -100,6 +102,9 @@ public class StatesServiceImpl implements StatesService {
     for (int i = 0; i < stateDTOs.size(); i++) {
       stateDTOs.get(i)
           .setCreationDate(simpleDateFormat.format(stateEntities.get(i).getCreationDate()));
+      stateDTOs.get(i).setApplicationDTO(modelMapper.map(applicationEntity, ApplicationDTO.class));
+      stateDTOs.get(i).setPosition(modelMapper.map(applicationEntity.getPositionEntity(),
+          PositionDTO.class));
     }
     return stateDTOs;
   }

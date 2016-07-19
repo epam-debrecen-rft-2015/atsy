@@ -6,10 +6,18 @@
 <%@page contentType="text/html;charset=UTF-8" %>
 <spring:url value="/secure/application_state" var="application_state"/>
 <atsy:secure_page>
-    <jsp:body>
-        <div id="settings">
-            <h1 class="page-header"><spring:message code="application.state.title"/></h1>
-            <div id="state_table">
+  <jsp:attribute name="pageJs">
+        <script src="<c:url value="/resources/js/atsy-application-state.js" />"></script>
+  </jsp:attribute>
+  <jsp:body>
+      <div class="page-header">
+          <h1><spring:message code="application.state.title"/>
+              <small id="positionName"></small>
+          </h1>
+      </div>
+      <div id="stateList">
+      </div>
+      <!--      <div id="state_table">
                 <div>
                     <table class="table table-hover" id="states_table"  data-toggle="table" data-url="../secure/applications_states/${applicationId}" data-height="500"
                     data-sort-name="name">
@@ -25,7 +33,6 @@
                         </thead>
                     </table>
                 </div>
-            </div>
-        </div>
-    </jsp:body>
+            </div>-->
+  </jsp:body>
 </atsy:secure_page>
