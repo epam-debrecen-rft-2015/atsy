@@ -9,7 +9,7 @@ cache:
   directories:
   - $HOME/.m2
 before_cache:
-  - mvn build-helper:remove-project-artifact
+  - rm -r -f $HOME/.m2/repository/com/epam/rft
 before_script:
   - "export DISPLAY=:99.0"
   - mysql -e 'create database atsy;'
