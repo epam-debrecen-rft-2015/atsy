@@ -18,6 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import java.util.Locale;
 
@@ -75,5 +76,10 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
     LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
     localeChangeInterceptor.setParamName("locale");
     return localeChangeInterceptor;
+  }
+
+  @Bean
+  public MappingJackson2JsonView mappingJackson2JsonView() {
+    return new MappingJackson2JsonView(objectMapper());
   }
 }
