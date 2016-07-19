@@ -55,7 +55,6 @@ public class ApplicationsServiceImpl implements ApplicationsService {
     return applicationsRepository.save(applicationEntity).getId();
   }
 
-  @Transactional
   @Override
   public Long saveApplicaton(ApplicationDTO applicationDTO, StateDTO stateDTO) {
     Assert.notNull(stateDTO);
