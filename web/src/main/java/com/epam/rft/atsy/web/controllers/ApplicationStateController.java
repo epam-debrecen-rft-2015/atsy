@@ -10,12 +10,12 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value = "/secure/application_state")
 public class ApplicationStateController {
 
-    private static final String VIEW_NAME = "application_state";
+  private static final String VIEW_NAME = "application_state";
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView loadPage(@RequestParam Long applicationId) {
-        ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
-        modelAndView.addObject("applicationId",applicationId);
-        return modelAndView;
-    }
+  @RequestMapping(method = RequestMethod.GET)
+  public ModelAndView loadPage(@RequestParam Long applicationId) {
+    ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
+    modelAndView.addObject("applicationId", applicationId);
+    return modelAndView;
+  }
 }

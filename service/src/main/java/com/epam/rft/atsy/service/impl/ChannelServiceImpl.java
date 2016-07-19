@@ -12,46 +12,45 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
+import javax.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 public class ChannelServiceImpl implements ChannelService {
 
-    @Resource
-    private ModelMapper modelMapper;
+  private final static Type CHANNELDTO_LIST_TYPE = new TypeToken<List<ChannelDTO>>() {
+  }.getType();
+  @Resource
+  private ModelMapper modelMapper;
+  @Autowired
+  private ChannelRepository channelRepository;
 
-    @Autowired
-    private ChannelRepository channelRepository;
+  @Override
+  public Collection<ChannelDTO> getAllChannels() {
+    Collection<ChannelEntity> ChannelEntities = channelRepository.findAll();
+    return modelMapper.map(ChannelEntities, CHANNELDTO_LIST_TYPE);
+  }
 
-    private final static Type CHANNELDTO_LIST_TYPE = new TypeToken<List<ChannelDTO>>() {}.getType();
+  @Override
+  public void saveOrUpdate(ChannelDTO channel) {
+    Assert.notNull(channel);
+    Assert.notNull(channel.getName());
 
-    @Override
-    public Collection<ChannelDTO> getAllChannels() {
-        Collection<ChannelEntity> ChannelEntities = channelRepository.findAll();
-        return modelMapper.map(ChannelEntities, CHANNELDTO_LIST_TYPE);
+    ChannelEntity entity = modelMapper.map(channel, ChannelEntity.class);
+    try {
+      channelRepository.save(entity);
+    } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
+      log.error("Save to repository failed.", ex);
+
+      String channelName = channel.getName();
+
+      throw new DuplicateRecordException(channelName,
+          "Duplication occurred when saving channel: " + channelName, ex);
     }
-
-    @Override
-    public void saveOrUpdate(ChannelDTO channel) {
-        Assert.notNull(channel);
-        Assert.notNull(channel.getName());
-
-        ChannelEntity entity = modelMapper.map(channel, ChannelEntity.class);
-        try {
-            channelRepository.save(entity);
-        } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
-            log.error("Save to repository failed.", ex);
-
-            String channelName = channel.getName();
-
-            throw new DuplicateRecordException(channelName,
-                                               "Duplication occurred when saving channel: " + channelName, ex);
-        }
-    }
+  }
 }

@@ -1,12 +1,16 @@
 package com.epam.rft.atsy.persistence.entities;
 
-import lombok.*;
-
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
 @Data
@@ -19,34 +23,35 @@ import java.io.Serializable;
 public class CandidateEntity extends SuperEntity implements Serializable {
 
 
-    @Column(name = "name", length = 255)
-    private String name;
+  @Column(name = "name", length = 255)
+  private String name;
 
-    @Column(name = "email", length = 255)
-    private String email;
+  @Column(name = "email", length = 255)
+  private String email;
 
-    @Column(name = "phone", length = 12)
-    private String phone;
+  @Column(name = "phone", length = 12)
+  private String phone;
 
-    @Lob
-    @Column(name = "description")
-    private String description;
+  @Lob
+  @Column(name = "description")
+  private String description;
 
-    @Column(name = "referer", length = 255)
-    private String referer;
+  @Column(name = "referer", length = 255)
+  private String referer;
 
-    @Column(name = "language_skill")
-    private Short languageSkill;
+  @Column(name = "language_skill")
+  private Short languageSkill;
 
 
-    @Builder
-    public CandidateEntity(Long id, String name, String email, String phone, String description, String referer, Short languageSkill) {
-        super(id);
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-        this.description = description;
-        this.referer = referer;
-        this.languageSkill = languageSkill;
-    }
+  @Builder
+  public CandidateEntity(Long id, String name, String email, String phone, String description,
+                         String referer, Short languageSkill) {
+    super(id);
+    this.name = name;
+    this.email = email;
+    this.phone = phone;
+    this.description = description;
+    this.referer = referer;
+    this.languageSkill = languageSkill;
+  }
 }

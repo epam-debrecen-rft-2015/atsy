@@ -4,5 +4,5 @@ import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.exception.PasswordValidationException;
 
 public interface PasswordValidator {
-    boolean validate(PasswordChangeDTO passwordChangeDTO) throws PasswordValidationException;
+  boolean validate(PasswordChangeDTO passwordChangeDTO) throws PasswordValidationException;
 }

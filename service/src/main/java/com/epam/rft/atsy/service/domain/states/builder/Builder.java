@@ -7,5 +7,5 @@ import com.epam.rft.atsy.service.domain.states.AbstractStateDTO;
  */
 public interface Builder<T extends AbstractStateDTO> {
 
-    T build();
+  T build();
 }

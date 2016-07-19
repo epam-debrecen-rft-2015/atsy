@@ -7,39 +7,37 @@ import com.epam.rft.atsy.service.security.UserDetailsAdapter;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import javax.annotation.Resource;
 import java.util.List;
+import javax.annotation.Resource;
 
 public class PasswordUniqueRule implements PasswordValidationRule {
-    private static final String MESSAGE_KEY = "passwordchange.validation.unique";
+  private static final String MESSAGE_KEY = "passwordchange.validation.unique";
+  private final BCryptPasswordEncoder bCryptPasswordEncoder;
+  @Resource
+  private PasswordChangeService passwordChangeService;
 
-    @Resource
-    private PasswordChangeService passwordChangeService;
+  public PasswordUniqueRule() {
+    bCryptPasswordEncoder = new BCryptPasswordEncoder();
+  }
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+  @Override
+  public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
+    UserDetailsAdapter userDetails =
+        (UserDetailsAdapter) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-    public PasswordUniqueRule() {
-        bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    List<String> oldPasswords = passwordChangeService.getOldPasswords(userDetails.getUserId());
+
+    for (String password : oldPasswords) {
+      if (bCryptPasswordEncoder.matches(passwordChangeDTO.getNewPassword(), password)) {
+        return false;
+      }
     }
 
-    @Override
-    public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
-        UserDetailsAdapter userDetails =
-                (UserDetailsAdapter)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    return true;
+  }
 
-        List<String> oldPasswords = passwordChangeService.getOldPasswords(userDetails.getUserId());
-
-        for (String password : oldPasswords) {
-            if (bCryptPasswordEncoder.matches(passwordChangeDTO.getNewPassword(), password)){
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    @Override
-    public String getErrorMessageKey() {
-        return MESSAGE_KEY;
-    }
+  @Override
+  public String getErrorMessageKey() {
+    return MESSAGE_KEY;
+  }
 }

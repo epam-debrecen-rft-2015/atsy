@@ -8,12 +8,12 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping(path = "/secure/settings")
 public class OptionsController {
-    private static final String VIEW_NAME = "settings";
+  private static final String VIEW_NAME = "settings";
 
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView loadPage() {
-        return new ModelAndView(VIEW_NAME);
-    }
+  @RequestMapping(method = RequestMethod.GET)
+  public ModelAndView loadPage() {
+    return new ModelAndView(VIEW_NAME);
+  }
 
 }

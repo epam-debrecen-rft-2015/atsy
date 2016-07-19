@@ -10,17 +10,17 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/")
 public class RootRedirectionController {
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView pageLoad() {
+  @RequestMapping(method = RequestMethod.GET)
+  public ModelAndView pageLoad() {
 
-        if (SecurityContextHolder.getContext().getAuthentication() != null &&
-                SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
+    if (SecurityContextHolder.getContext().getAuthentication() != null &&
+        SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
 
-            return new ModelAndView("redirect:/secure/welcome");
+      return new ModelAndView("redirect:/secure/welcome");
 
-        } else {
-            return new ModelAndView("redirect:/login");
-        }
-
+    } else {
+      return new ModelAndView("redirect:/login");
     }
+
+  }
 }

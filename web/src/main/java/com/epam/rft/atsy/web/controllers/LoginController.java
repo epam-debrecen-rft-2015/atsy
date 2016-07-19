@@ -8,11 +8,11 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/login")
 public class LoginController {
-    private static final String VIEW_NAME = "login";
+  private static final String VIEW_NAME = "login";
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView pageLoad() {
-        return new ModelAndView(VIEW_NAME);
-    }
+  @RequestMapping(method = RequestMethod.GET)
+  public ModelAndView pageLoad() {
+    return new ModelAndView(VIEW_NAME);
+  }
 
 }

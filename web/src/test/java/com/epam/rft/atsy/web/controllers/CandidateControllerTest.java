@@ -1,8 +1,10 @@
 package com.epam.rft.atsy.web.controllers;
 
-import com.epam.rft.atsy.service.request.FilterRequest;
+import static org.mockito.BDDMockito.given;
+
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
+import com.epam.rft.atsy.service.request.FilterRequest;
 import com.epam.rft.atsy.web.controllers.rest.CandidateController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mockito.InjectMocks;
@@ -14,24 +16,22 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.mockito.BDDMockito.given;
-
 public class CandidateControllerTest {
 
-    @InjectMocks
-    CandidateController candidateController;
+  @InjectMocks
+  CandidateController candidateController;
 
-    @Mock
-    CandidateService candidateService;
+  @Mock
+  CandidateService candidateService;
 
-    @Mock
-    ObjectMapper objectMapper;
+  @Mock
+  ObjectMapper objectMapper;
 
 
-    @BeforeMethod
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
+  @BeforeMethod
+  public void setUp() {
+    MockitoAnnotations.initMocks(this);
+  }
 
     /*@Test
     public void loadPageTest() throws IOException {
@@ -54,15 +54,16 @@ public class CandidateControllerTest {
         assertThat(result, containsInAnyOrder(new CandidateDTO("test", "email", "phone", "description", "referer", new Short("1"))));
     }*/
 
-    @Test(expectedExceptions = NullPointerException.class)
-    public void shouldThrowNullExceptionWhenNullOrderGiven() {
+  @Test(expectedExceptions = NullPointerException.class)
+  public void shouldThrowNullExceptionWhenNullOrderGiven() {
 
-        //given
-        given(candidateService.getAllCandidate(new FilterRequest())).willReturn(Arrays.asList(new CandidateDTO(null, "name", "email", "phone", "referer", (short) 1, "description")));
+    //given
+    given(candidateService.getAllCandidate(new FilterRequest())).willReturn(Arrays.asList(
+        new CandidateDTO(null, "name", "email", "phone", "referer", (short) 1, "description")));
 
-        //when
-        Collection<CandidateDTO> result = candidateController.loadPage("", null, "name");
-    }
+    //when
+    Collection<CandidateDTO> result = candidateController.loadPage("", null, "name");
+  }
 
     /*@Test
     public void loadPageIOExceptionTest() throws IOException {

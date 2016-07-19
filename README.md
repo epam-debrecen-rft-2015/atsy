@@ -23,6 +23,8 @@ Running integration tests as part of the build:
 Definition of Done
 ==================
 
+1. Code is well-formatted:
+  * Java source files should be formatted with `java-google-style.xml`
 1. Code is well documented:
   * All public service methods have JavaDoc comments. 
   * Where necessary for understanding, non-public methods have JavaDoc as well. 
@@ -78,3 +80,15 @@ User | Password | Stored hash | Environment description
 Dev | pass2 | $2a$04$QSJkUouEDGfbWAtuxnlf/.Ajen6lviIhrNwKFPPZ.juRn6nLgvBi6 | integration  
 Test | pass3 | $2a$04$6r2eBlucnE3/m0fDYgE3e.eI5akUx55qPMID3O/SlptCIqOFFcCPK | integration  
 Brigi | pass1 | $2a$04$BkbZFudrQjtETU83hFiS3uWNsh7us3wOOnLF3yop9BByd9ZQLdIlq | production  
+
+
+
+Code formatting guide
+=====================
+
+In IntelliJ IDEA:
+
+1. Under File > Settings > Code style > Java
+1. Select Manage
+1. Import `java-google-style.xml` file
+1. Select 'Copy to project' to make it the project default

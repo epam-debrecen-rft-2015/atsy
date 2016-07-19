@@ -9,10 +9,10 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(path = "/secure/positions/manage")
 public class ManagePositionsController {
 
-    private static final String VIEW_NAME = "manage_positions";
+  private static final String VIEW_NAME = "manage_positions";
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView loadPage() {
-        return new ModelAndView(VIEW_NAME);
-    }
+  @RequestMapping(method = RequestMethod.GET)
+  public ModelAndView loadPage() {
+    return new ModelAndView(VIEW_NAME);
+  }
 }

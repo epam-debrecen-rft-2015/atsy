@@ -1,8 +1,7 @@
 package com.epam.rft.atsy.service;
 
-import com.epam.rft.atsy.persistence.entities.CandidateEntity;
-import com.epam.rft.atsy.service.request.FilterRequest;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
+import com.epam.rft.atsy.service.request.FilterRequest;
 
 import java.util.Collection;
 
@@ -11,31 +10,28 @@ import java.util.Collection;
  */
 public interface CandidateService {
 
-    /**
-     * Returns the candidate object with the given id.
-     *
-     * @param candidateID the id of candidate
-     * @return the candidate object
-     */
-    CandidateDTO getCandidate(Long candidateID);
+  /**
+   * Returns the candidate object with the given id.
+   * @param candidateID the id of candidate
+   * @return the candidate object
+   */
+  CandidateDTO getCandidate(Long candidateID);
 
-    /**
-     * Returns a collection of candidates, whome fits the filter.
-     *
-     * @param sortingRequest the filter
-     * @return the collection of candidates
-     */
-    Collection<CandidateDTO> getAllCandidate(FilterRequest sortingRequest);
+  /**
+   * Returns a collection of candidates, whome fits the filter.
+   * @param sortingRequest the filter
+   * @return the collection of candidates
+   */
+  Collection<CandidateDTO> getAllCandidate(FilterRequest sortingRequest);
 
-    /**
-     * Saves a candidate to the database and returns it's id.
-     *
-     * @param candidate the candidate
-     * @return the id of candidate
-     */
-    Long saveOrUpdate(CandidateDTO candidate);
+  /**
+   * Saves a candidate to the database and returns it's id.
+   * @param candidate the candidate
+   * @return the id of candidate
+   */
+  Long saveOrUpdate(CandidateDTO candidate);
 
 
-    CandidateDTO getCandidateByName(String name);
+  CandidateDTO getCandidateByName(String name);
 
 }

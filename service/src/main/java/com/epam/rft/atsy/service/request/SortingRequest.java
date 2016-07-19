@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 public class SortingRequest {
 
 
-    public enum Order {
-        ASC,
-        DESC
-    }
+  private String fieldName;
+  private Order order;
 
-    private String fieldName;
-    private Order order;
+  public enum Order {
+    ASC,
+    DESC
+  }
 
 }

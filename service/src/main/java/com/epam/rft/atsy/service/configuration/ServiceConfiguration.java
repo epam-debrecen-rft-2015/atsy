@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Import;
 @Import({PersistenceConfiguration.class})
 @ComponentScan("com.epam.rft.atsy.service")
 public class ServiceConfiguration {
-    @Bean
-    public ModelMapper modelMapper(){
-        return new ModelMapper();
-    }
+  @Bean
+  public ModelMapper modelMapper() {
+    return new ModelMapper();
+  }
 }
