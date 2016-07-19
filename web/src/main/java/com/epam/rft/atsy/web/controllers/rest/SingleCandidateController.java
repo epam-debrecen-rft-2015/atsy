@@ -3,6 +3,7 @@ package com.epam.rft.atsy.web.controllers.rest;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
+import com.epam.rft.atsy.web.ErrorResponse;
 import com.epam.rft.atsy.web.MediaTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
@@ -30,6 +29,7 @@ import javax.validation.Valid;
 public class SingleCandidateController {
   private static final String DUPLICATE_CANDIDATE_ERROR_KEY = "candidate.error.duplicate";
   private static final String TECHNICAL_ERROR_MESSAGE_KEY = "technical.error.message";
+  private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
   private static final Logger LOGGER = LoggerFactory.getLogger(SingleCandidateController.class);
 
   @Resource
@@ -41,15 +41,15 @@ public class SingleCandidateController {
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity saveOrUpdate(@Valid @RequestBody CandidateDTO candidateDTO,
                                      BindingResult result, Locale locale) {
-    ResponseEntity entity;
     if (!result.hasErrors()) {
       Long candidateId = candidateService.saveOrUpdate(candidateDTO);
-      entity = new ResponseEntity<>(candidateId, HttpStatus.OK);
+
+      return new ResponseEntity<>(candidateId, HttpStatus.OK);
     } else {
-      Map<String, String> errorMessages = parseValidationErrors(result.getFieldErrors(), locale);
-      entity = new ResponseEntity<>(errorMessages, HttpStatus.BAD_REQUEST);
+      ErrorResponse errorResponse = parseValidationErrors(result.getFieldErrors(), locale);
+
+      return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
-    return entity;
   }
 
   @ExceptionHandler(DuplicateRecordException.class)
@@ -74,12 +74,16 @@ public class SingleCandidateController {
         null, locale), headers, HttpStatus.BAD_REQUEST);
   }
 
-  private Map<String, String> parseValidationErrors(List<FieldError> fieldErrors, Locale locale) {
-    Map<String, String> fieldNamesWithError = new HashMap<>();
+  private ErrorResponse parseValidationErrors(List<FieldError> fieldErrors, Locale locale) {
+    String errorMessage = messageSource.getMessage(COMMON_INVALID_INPUT_MESSAGE_KEY, null, locale);
+
+    ErrorResponse errorResponse = new ErrorResponse(errorMessage);
+
     for (FieldError fieldError : fieldErrors) {
-      fieldNamesWithError.put(fieldError.getField(),
+      errorResponse.addField(fieldError.getField(),
           messageSource.getMessage(fieldError.getDefaultMessage(), new Object[0], locale));
     }
-    return fieldNamesWithError;
+
+    return errorResponse;
   }
 }

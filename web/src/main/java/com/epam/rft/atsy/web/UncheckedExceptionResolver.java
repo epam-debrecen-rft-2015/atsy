@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * This class handles the unchecked exceptions thrown by the controllers. Registers itself
- * as the first handler among the handlers and renders a generic error page upon receiving an
+ * as the last handler among the handlers and renders a generic error page upon receiving an
  * ordinary HTTP request or sends a JSON response when it detects an AJAX request.
  */
 @Component
@@ -25,7 +25,7 @@ public class UncheckedExceptionResolver implements HandlerExceptionResolver, Ord
 
   @Override
   public int getOrder() {
-    return HIGHEST_PRECEDENCE;
+    return LOWEST_PRECEDENCE - 1;
   }
 
   @Override
@@ -44,7 +44,10 @@ public class UncheckedExceptionResolver implements HandlerExceptionResolver, Ord
     } else {
       ModelAndView modelAndView = new ModelAndView(jsonView);
 
-      modelAndView.addObject("error", e.getMessage());
+      ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+
+      modelAndView.addObject("errorMessage", errorResponse.getErrorMessage());
+      modelAndView.addObject("fields", errorResponse.getFields());
 
       return modelAndView;
     }

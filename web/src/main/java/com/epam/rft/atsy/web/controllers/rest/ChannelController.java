@@ -3,8 +3,8 @@ package com.epam.rft.atsy.web.controllers.rest;
 import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
+import com.epam.rft.atsy.web.ErrorResponse;
 import com.epam.rft.atsy.web.MediaTypes;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -41,17 +41,20 @@ public class ChannelController {
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  public ResponseEntity<String> saveOrUpdate(@RequestBody ChannelDTO channelDTO,
-                                             BindingResult result, Locale locale) {
-    ResponseEntity<String> entity = new ResponseEntity<>(StringUtils.EMPTY, HttpStatus.OK);
-
+  public ResponseEntity<ErrorResponse> saveOrUpdate(@RequestBody ChannelDTO channelDTO,
+                                                    BindingResult result, Locale locale) {
     if (!result.hasErrors()) {
       channelService.saveOrUpdate(channelDTO);
+
+      return new ResponseEntity<>(new ErrorResponse(), HttpStatus.OK);
     } else {
-      entity = new ResponseEntity<>(messageSource.getMessage(EMPTY_POSITION_NAME_MESSAGE_KEY,
-          null, locale), HttpStatus.BAD_REQUEST);
+      String errorMessage = messageSource.getMessage(EMPTY_POSITION_NAME_MESSAGE_KEY,
+          null, locale);
+
+      ErrorResponse errorResponse = new ErrorResponse(errorMessage);
+
+      return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
-    return entity;
   }
 
   @ExceptionHandler(DuplicateRecordException.class)
