@@ -46,7 +46,7 @@ public class ChannelServiceImpl implements ChannelService {
 
     ChannelEntity entity = modelMapper.map(channel, ChannelEntity.class);
     try {
-      channelRepository.save(entity);
+      channelRepository.saveAndFlush(entity);
     } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
       log.error("Save to repository failed.", ex);
 

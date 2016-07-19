@@ -44,7 +44,7 @@ public class PositionServiceImpl implements PositionService {
     Assert.notNull(position);
     PositionEntity entity = modelMapper.map(position, PositionEntity.class);
     try {
-      positionRepository.save(entity);
+      positionRepository.saveAndFlush(entity);
     } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
       log.error("Save to repository failed.", ex);
 

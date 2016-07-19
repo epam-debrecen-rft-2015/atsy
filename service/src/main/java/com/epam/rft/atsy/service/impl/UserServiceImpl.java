@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
     Assert.notNull(userDTO);
     UserEntity entity = modelMapper.map(userDTO, UserEntity.class);
     try {
-      return userRepository.save(entity).getId();
+      return userRepository.saveAndFlush(entity).getId();
     } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
       log.error("Save to repository failed.", ex);
 

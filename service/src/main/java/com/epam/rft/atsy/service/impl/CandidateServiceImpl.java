@@ -68,7 +68,7 @@ public class CandidateServiceImpl implements CandidateService {
     Assert.notNull(candidate);
     CandidateEntity entity = modelMapper.map(candidate, CandidateEntity.class);
     try {
-      return candidateRepository.save(entity).getId();
+      return candidateRepository.saveAndFlush(entity).getId();
     } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
       log.error("Save to repository failed.", ex);
 

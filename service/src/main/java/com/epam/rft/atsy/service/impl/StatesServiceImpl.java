@@ -83,7 +83,7 @@ public class StatesServiceImpl implements StatesService {
     stateEntity.setCreationDate(new Date());
     stateEntity.setApplicationEntity(applicationsRepository.findOne(applicationId));
 
-    return statesRepository.save(stateEntity).getId();
+    return statesRepository.saveAndFlush(stateEntity).getId();
   }
 
 
