@@ -6,33 +6,91 @@
 <%@page contentType="text/html;charset=UTF-8" %>
 <spring:url value="/secure/application_state" var="application_state"/>
 <atsy:secure_page>
-  <jsp:attribute name="pageJs">
-        <script src="<c:url value="/resources/js/atsy-application-state.js" />"></script>
-  </jsp:attribute>
   <jsp:body>
       <div class="page-header">
           <h1><spring:message code="application.state.title"/>
-              <small id="positionName"></small>
+              <small id="positionName">${states[0].position.name}</small>
           </h1>
       </div>
       <div id="stateList">
-      </div>
-      <!--      <div id="state_table">
-                <div>
-                    <table class="table table-hover" id="states_table"  data-toggle="table" data-url="../secure/applications_states/${applicationId}" data-height="500"
-                    data-sort-name="name">
-                        <thead>
-                            <tr>
-                                <th data-field="stateType" data-align="left"><spring:message
-                                                code="application.table.state"/></th>
-                                <th data-field="creationDate" data-align="left"><spring:message
-                                                code="application.table.creationdate"/></th>
-                                <th data-field="description" data-align="left"><spring:message
-                                                code="application.table.description"/></th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-            </div>-->
+      <c:forEach var="data" items="${states}">
+          <div class="page-header">
+              <h4>${data.stateType}</h4>
+          </div>
+          <form class="form-horizontal">
+              <div class="form-group">
+                  <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.date"/></label>
+                  <div class="col-sm-8">
+                      <p class="form-control-static">${data.creationDate}</p>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.description"/></label>
+                  <div class="col-sm-8">
+                      <p class="form-control-static">${data.description}</p>
+                  </div>
+              </div>
+              <spring:message code="candidate.table.state.cv" var="cv" />
+              <spring:message code="candidate.table.state.hr" var="hr" />
+              <spring:message code="candidate.table.state.firstTest" var="firstTest" />
+              <spring:message code="candidate.table.state.wageOffer" var="wageOffer" />
+              <spring:message code="candidate.table.state.candidateReject" var="candidateReject" />
+              <spring:message code="candidate.table.state.agree" var="agree" />
+              <c:choose>
+                  <c:when test="${data.stateType == cv}">
+                      <div class="form-group">
+                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.cv"/></label>
+                          <div class="col-sm-8">
+                              <p class="form-control-static glyphicon glyphicon-paperclip"></p>
+                          </div>
+                      </div>
+                  </c:when>
+                  <c:when test="${data.stateType == hr}">
+                      <div class="form-group">
+                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.languageSkill"/></label>
+                          <div class="col-sm-8">
+                              <p class="form-control-static">${data.languageSkill}</p>
+                          </div>
+                      </div>
+                  </c:when>
+                  <c:when test="${data.stateType == firstTest}">
+                      <div class="form-group">
+                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.result"/></label>
+                          <div class="col-sm-8">
+                              <p class="form-control-static">${data.result}</p>
+                          </div>
+                      </div>
+                  </c:when>
+                  <c:when test="${data.stateType == wageOffer}">
+                      <div class="form-group">
+                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.offeredMoney"/></label>
+                          <div class="col-sm-8">
+                              <p class="form-control-static">${data.offeredMoney}</p>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.claim"/></label>
+                          <div class="col-sm-8">
+                              <p class="form-control-static">${data.claim}</p>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.feedbackDate"/></label>
+                          <div class="col-sm-8">
+                              <p class="form-control-static">${data.feedbackDate}</p>
+                          </div>
+                      </div>
+                  </c:when>
+                  <c:when test="${data.stateType == agree}">
+                      <div class="form-group">
+                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.dayOfStart"/></label>
+                          <div class="col-sm-8">
+                              <p class="form-control-static">${data.feedbackDate}</p>
+                          </div>
+                      </div>
+                  </c:when>
+              </c:choose>
+          </form>
+      </c:forEach>
   </jsp:body>
 </atsy:secure_page>
