@@ -33,7 +33,7 @@ function CandidateCreateModel(){
 
 
     var self = this;
-    self.errorResponse = ko.observable({});
+    self.errorResponse = ko.observable(null);
     self.showError = ko.observable(false);
 
     self.ajaxCall = function() {
@@ -60,9 +60,21 @@ function CandidateCreateModel(){
         });
     }
 
-    self.errorMessages = ko.pureComputed(function() {
-        return Object.keys(self.errorResponse()).map(function(key) {
-            return self.errorResponse()[key];
+    self.errorMessage = ko.pureComputed(function() {
+      if (self.errorResponse() === null) {
+        return ""
+      }
+
+      return self.errorResponse().errorMessage;
+    });
+
+    self.fieldMessages = ko.pureComputed(function() {
+        if (self.errorResponse() === null) {
+          return [];
+        }
+
+        return Object.keys(self.errorResponse().fields).map(function(key) {
+            return self.errorResponse().fields[key];
         });
     });
 

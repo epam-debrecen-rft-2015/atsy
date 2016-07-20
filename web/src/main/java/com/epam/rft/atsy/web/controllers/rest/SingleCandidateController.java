@@ -3,7 +3,7 @@ package com.epam.rft.atsy.web.controllers.rest;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
-import com.epam.rft.atsy.web.ErrorResponse;
+import com.epam.rft.atsy.web.exceptionhandling.ErrorResponse;
 import com.epam.rft.atsy.web.MediaTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

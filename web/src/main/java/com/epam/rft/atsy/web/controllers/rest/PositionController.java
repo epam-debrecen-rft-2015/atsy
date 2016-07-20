@@ -3,7 +3,7 @@ package com.epam.rft.atsy.web.controllers.rest;
 import com.epam.rft.atsy.service.PositionService;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
-import com.epam.rft.atsy.web.ErrorResponse;
+import com.epam.rft.atsy.web.exceptionhandling.ErrorResponse;
 import com.epam.rft.atsy.web.MediaTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +46,7 @@ public class PositionController {
     if (!result.hasErrors()) {
       positionService.saveOrUpdate(positionDTO);
 
-      return new ResponseEntity<>(new ErrorResponse(), HttpStatus.OK);
+      return new ResponseEntity<>(ErrorResponse.NO_ERROR, HttpStatus.OK);
     } else {
       String errorMessage = messageSource.getMessage(EMPTY_POSITION_NAME_MESSAGE_KEY,
           null, locale);

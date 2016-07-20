@@ -1,4 +1,4 @@
-package com.epam.rft.atsy.web;
+package com.epam.rft.atsy.web.exceptionhandling;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * This class handles the unchecked exceptions thrown by the controllers. Registers itself
- * as the last handler among the handlers and renders a generic error page upon receiving an
+ * among the handlers and renders a generic error page upon receiving an
  * ordinary HTTP request or sends a JSON response when it detects an AJAX request.
  */
 @Component
@@ -25,6 +25,7 @@ public class UncheckedExceptionResolver implements HandlerExceptionResolver, Ord
 
   @Override
   public int getOrder() {
+    // places the handler after the ExceptionHandlerExceptionResolver
     return LOWEST_PRECEDENCE - 1;
   }
 
