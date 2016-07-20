@@ -30,6 +30,7 @@
                       <p class="form-control-static">${data.description}</p>
                   </div>
               </div>
+              <spring:message code="candidate.table.state.newstate" var="newstate" />
               <spring:message code="candidate.table.state.cv" var="cv" />
               <spring:message code="candidate.table.state.hr" var="hr" />
               <spring:message code="candidate.table.state.firstTest" var="firstTest" />
@@ -37,6 +38,20 @@
               <spring:message code="candidate.table.state.candidateReject" var="candidateReject" />
               <spring:message code="candidate.table.state.agree" var="agree" />
               <c:choose>
+                  <c:when test="${data.stateType == newstate}">
+                      <div class="form-group">
+                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.position"/></label>
+                          <div class="col-sm-8">
+                              <p class="form-control-static">${data.position.name}</p>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.channel"/></label>
+                          <div class="col-sm-8">
+                              <p class="form-control-static">${data.applicationDTO.channelId}</p>
+                          </div>
+                      </div>
+                  </c:when>
                   <c:when test="${data.stateType == cv}">
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.cv"/></label>
