@@ -4,7 +4,7 @@ import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
-import com.epam.rft.atsy.service.exception.DuplicateRecordException;
+import com.epam.rft.atsy.service.exception.DuplicateCandidateException;
 import com.epam.rft.atsy.service.request.FilterRequest;
 import com.epam.rft.atsy.service.request.SearchOptions;
 import org.hibernate.exception.ConstraintViolationException;
@@ -70,8 +70,7 @@ public class CandidateServiceImpl implements CandidateService {
 
       String candidateName = candidate.getName();
 
-      throw new DuplicateRecordException(candidateName,
-          "Duplication occurred when saving candidate: " + candidateName, ex);
+      throw new DuplicateCandidateException(candidateName, ex);
     }
   }
 

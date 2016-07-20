@@ -2,17 +2,13 @@ package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.service.PositionService;
 import com.epam.rft.atsy.service.domain.PositionDTO;
-import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import com.epam.rft.atsy.web.exceptionhandling.ErrorResponse;
-import com.epam.rft.atsy.web.MediaTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,7 +21,6 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping(value = "/secure/positions")
 public class PositionController {
-  private static final String DUPLICATE_POSITION_MESSAGE_KEY = "settings.positions.error.duplicate";
   private static final String EMPTY_POSITION_NAME_MESSAGE_KEY = "settings.positions.error.empty";
   private static final String TECHNICAL_ERROR_MESSAGE_KEY = "technical.error.message";
   private static final Logger LOGGER = LoggerFactory.getLogger(PositionController.class);
@@ -57,7 +52,7 @@ public class PositionController {
     }
   }
 
-  @ExceptionHandler(DuplicateRecordException.class)
+  /*@ExceptionHandler(DuplicateRecordException.class)
   public ResponseEntity handleDuplicateException(Locale locale, DuplicateRecordException ex) {
     HttpHeaders headers = new HttpHeaders();
 
@@ -65,9 +60,9 @@ public class PositionController {
 
     return new ResponseEntity<>(messageSource.getMessage(DUPLICATE_POSITION_MESSAGE_KEY,
         new Object[]{ex.getName()}, locale), headers, HttpStatus.BAD_REQUEST);
-  }
+  }*/
 
-  @ExceptionHandler(Exception.class)
+  /*@ExceptionHandler(Exception.class)
   public ResponseEntity handleException(Locale locale, Exception ex) {
     LOGGER.error("Error while saving position changes", ex);
 
@@ -77,7 +72,7 @@ public class PositionController {
 
     return new ResponseEntity<>(messageSource.getMessage(TECHNICAL_ERROR_MESSAGE_KEY,
         null, locale), headers, HttpStatus.BAD_REQUEST);
-  }
+  }*/
 
 
 }

@@ -4,7 +4,7 @@ import com.epam.rft.atsy.persistence.entities.ChannelEntity;
 import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
 import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
-import com.epam.rft.atsy.service.exception.DuplicateRecordException;
+import com.epam.rft.atsy.service.exception.DuplicateChannelException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -49,8 +49,7 @@ public class ChannelServiceImpl implements ChannelService {
 
       String channelName = channel.getName();
 
-      throw new DuplicateRecordException(channelName,
-          "Duplication occurred when saving channel: " + channelName, ex);
+      throw new DuplicateChannelException(channelName, ex);
     }
   }
 }
