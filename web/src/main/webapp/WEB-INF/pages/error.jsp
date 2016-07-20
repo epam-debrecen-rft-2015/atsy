@@ -9,7 +9,7 @@
     <jsp:body>
         <div id="error" class="col-lg-12 col-md-12 col-sm-12" >
             <div class="well">
-              <h1><spring:message code="technical.error.message"/>
+              <h1><spring:message code="technical.error.message"/></h1>
             </div>
         </div>
     </jsp:body>

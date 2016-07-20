@@ -51,28 +51,4 @@ public class PositionController {
       return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
   }
-
-  /*@ExceptionHandler(DuplicateRecordException.class)
-  public ResponseEntity handleDuplicateException(Locale locale, DuplicateRecordException ex) {
-    HttpHeaders headers = new HttpHeaders();
-
-    headers.setContentType(MediaTypes.TEXT_PLAIN_UTF8);
-
-    return new ResponseEntity<>(messageSource.getMessage(DUPLICATE_POSITION_MESSAGE_KEY,
-        new Object[]{ex.getName()}, locale), headers, HttpStatus.BAD_REQUEST);
-  }*/
-
-  /*@ExceptionHandler(Exception.class)
-  public ResponseEntity handleException(Locale locale, Exception ex) {
-    LOGGER.error("Error while saving position changes", ex);
-
-    HttpHeaders headers = new HttpHeaders();
-
-    headers.setContentType(MediaTypes.TEXT_PLAIN_UTF8);
-
-    return new ResponseEntity<>(messageSource.getMessage(TECHNICAL_ERROR_MESSAGE_KEY,
-        null, locale), headers, HttpStatus.BAD_REQUEST);
-  }*/
-
-
 }

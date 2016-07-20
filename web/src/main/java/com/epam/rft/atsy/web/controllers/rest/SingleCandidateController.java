@@ -47,28 +47,6 @@ public class SingleCandidateController {
     }
   }
 
-  /*@ExceptionHandler(DuplicateRecordException.class)
-  public ResponseEntity handleDuplicateException(Locale locale, DuplicateRecordException ex) {
-    HttpHeaders headers = new HttpHeaders();
-
-    headers.setContentType(MediaTypes.TEXT_PLAIN_UTF8);
-
-    return new ResponseEntity<>(messageSource.getMessage(DUPLICATE_CANDIDATE_ERROR_KEY,
-        new Object[]{ex.getName()}, locale), headers, HttpStatus.BAD_REQUEST);
-  }*/
-
-  /*@ExceptionHandler(Exception.class)
-  public ResponseEntity handleException(Locale locale, Exception ex) {
-    LOGGER.error("Error while saving position changes", ex);
-
-    HttpHeaders headers = new HttpHeaders();
-
-    headers.setContentType(MediaTypes.TEXT_PLAIN_UTF8);
-
-    return new ResponseEntity<>(messageSource.getMessage(TECHNICAL_ERROR_MESSAGE_KEY,
-        null, locale), headers, HttpStatus.BAD_REQUEST);
-  }*/
-
   private ErrorResponse parseValidationErrors(List<FieldError> fieldErrors, Locale locale) {
     String errorMessage = messageSource.getMessage(COMMON_INVALID_INPUT_MESSAGE_KEY, null, locale);
 
