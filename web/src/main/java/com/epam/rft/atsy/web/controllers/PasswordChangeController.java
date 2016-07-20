@@ -8,10 +8,10 @@ import com.epam.rft.atsy.service.domain.UserDTO;
 import com.epam.rft.atsy.service.exception.PasswordValidationException;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
 import com.epam.rft.atsy.service.security.UserDetailsAdapter;
+import com.epam.rft.atsy.web.CurrentUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -54,17 +54,16 @@ public class PasswordChangeController {
 
   @RequestMapping(method = RequestMethod.POST)
   public ModelAndView changePassword(@ModelAttribute PasswordChangeDTO passwordChangeDTO,
-                                     BindingResult bindingResult) {
+                                     BindingResult bindingResult,
+                                     @CurrentUser UserDetailsAdapter userDetailsAdapter) {
+
 
     ModelAndView model = new ModelAndView(VIEW_NAME);
     if (bindingResult.hasErrors()) {
       model.addObject(LOGIN_ERROR_KEY, LOGIN_BACKEND_VALIDATION);
     } else {
       try {
-        UserDetailsAdapter
-            userDetailsAdapter =
-            (UserDetailsAdapter) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
+
         passwordValidator.validate(passwordChangeDTO);
 
         String newPassword = bCryptPasswordEncoder.encode(passwordChangeDTO.getNewPassword());

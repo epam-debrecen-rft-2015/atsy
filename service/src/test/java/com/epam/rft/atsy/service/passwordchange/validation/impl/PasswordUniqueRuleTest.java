@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.given;
 
 import com.epam.rft.atsy.service.PasswordChangeService;
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
+import com.epam.rft.atsy.service.security.CustomSecurityContextHolderService;
 import com.epam.rft.atsy.service.security.UserDetailsAdapter;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,9 +14,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Arrays;
@@ -42,6 +40,9 @@ public class PasswordUniqueRuleTest {
   @Mock
   private PasswordChangeService passwordChangeService;
 
+  @Mock
+  private CustomSecurityContextHolderService customSecurityContextHolderService;
+
   @InjectMocks
   private PasswordUniqueRule passwordUniqueRule;
 
@@ -62,8 +63,9 @@ public class PasswordUniqueRuleTest {
     UserDetailsAdapter
         userDetailsAdapter =
         new UserDetailsAdapter(USER_ID, USER_NAME, USER_PASSWORD);
-    Authentication auth = new UsernamePasswordAuthenticationToken(userDetailsAdapter, null);
-    SecurityContextHolder.getContext().setAuthentication(auth);
+
+    given(customSecurityContextHolderService.getCurrentUserDetailsAdapter())
+        .willReturn(userDetailsAdapter);
   }
 
   @Test

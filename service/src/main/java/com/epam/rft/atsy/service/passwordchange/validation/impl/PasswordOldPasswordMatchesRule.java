@@ -2,7 +2,7 @@ package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.epam.rft.atsy.service.security.CustomSecurityContextHolderService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.Assert;
@@ -11,10 +11,15 @@ public class PasswordOldPasswordMatchesRule implements PasswordValidationRule {
 
   private static final String MESSAGE_KEY = "passwordchange.validation.oldpasswordmatch";
 
+  private CustomSecurityContextHolderService customSecurityContextHolderService;
+
   private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-  public PasswordOldPasswordMatchesRule() {
+  public PasswordOldPasswordMatchesRule(
+      CustomSecurityContextHolderService customSecurityContextHolderService) {
     bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
+    this.customSecurityContextHolderService = customSecurityContextHolderService;
   }
 
   @Override
@@ -22,8 +27,7 @@ public class PasswordOldPasswordMatchesRule implements PasswordValidationRule {
     Assert.notNull(passwordChangeDTO);
     Assert.notNull(passwordChangeDTO.getOldPassword());
 
-    UserDetails userDetails =
-        (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    UserDetails userDetails = customSecurityContextHolderService.getCurrentUserDetailsAdapter();
 
     if (userDetails == null) {
       return false;
