@@ -8,22 +8,28 @@ import com.epam.rft.atsy.service.exception.DuplicatePositionException;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import java.util.Locale;
+import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Locale;
-import java.util.Map;
 
+/**
+ * A global exception handler class for all exceptions thrown by controllers (including the REST
+ * ones).
+ */
 @ControllerAdvice
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class GlobalControllerExceptionHandler {
   private static final String ERROR_VIEW_NAME = "error";
 
@@ -43,6 +49,14 @@ public class GlobalControllerExceptionHandler {
           .put(DuplicatePositionException.class, "settings.positions.error.duplicate")
           .build();
 
+  /**
+   * Handles {@code DuplicateRecordException}s (and all its descendants). Sends back
+   * a localized error message in a response with {@code HTTP 409 Conflict} status code.
+   *
+   * @param locale the current locale
+   * @param ex the exception to handle
+   * @return a {@code ResponseEntity} containing the localized error message
+   */
   @ExceptionHandler(DuplicateRecordException.class)
   public ResponseEntity<ErrorResponse> handleDuplicate(Locale locale, DuplicateRecordException ex) {
     String
@@ -56,7 +70,8 @@ public class GlobalControllerExceptionHandler {
     return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
   }
 
-  @ExceptionHandler(Exception.class)
+
+  @ExceptionHandler(HttpMessageNotReadableException.class)
   public ModelAndView handleException(HttpServletRequest request, HttpServletResponse response,
                                       Locale locale, Exception ex) {
     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
