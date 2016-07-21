@@ -19,7 +19,7 @@
             </h1>
         <div class="modal fade" id="modal" role="dialog">
             <div class="modal-dialog" >
-                <div class="modal-content">
+                <div class="modal-content" id="pop_up_content">
                     <div class="modal-header">
                     <h4 id="new_application_popup_title">Új jelentkezés</h4>
                     </div>
@@ -59,7 +59,7 @@
                             </div>
                             <div class="col-lg-offset-8 col-md-offset-8 col-sm-offset-8 col-lg-4 col-md-4 col-sm-4">
                                 <a href="candidate/${candidateId}" class="btn btn-danger" id="cancel_button">Vissza</a>
-                                <button type="submit" class="btn btn-success" id="save_button">
+                                <button type="submit" class="btn btn-success" id="save_new_apply_button">
                                     <spring:message code="save.button"/>
                                 </button>
                             </div>

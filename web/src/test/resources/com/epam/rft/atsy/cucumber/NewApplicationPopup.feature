@@ -13,3 +13,24 @@ Feature: New application pop-up
     And the user can add a comment
     And the user can submit the new application
 
+  Scenario: new application appears in the applications list without comment
+    Given the user is on a New application popup of an existing candidate
+    And position Fejlesztő exists
+    And the user selects Fejlesztő position
+    And the user selects direkt source
+    And leaves the comment blank
+    When the user clicks on the Jelentkezés mentése button
+    Then New application popup disappears
+    And the Application page is displayed
+    And application is listed with all details
+
+  Scenario: new application appears in the applications list with comment
+    Given the user is on a New application popup of an existing candidate
+    And position Fejlesztő exists
+    And the user selects Fejlesztő position
+    And the user selects direkt source
+    And the user enters comment Megjegyzés
+    When the user clicks on the Jelentkezés mentése button
+    Then New application popup disappears
+    And the Application page is displayed
+    And application is listed with all details
