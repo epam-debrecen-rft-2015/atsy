@@ -10,7 +10,7 @@ import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordNewMatch
 import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordOldPasswordMatchesRule;
 import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordUniqueRule;
 import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordValidatorImpl;
-import com.epam.rft.atsy.service.security.CustomSecurityContextHolderService;
+import com.epam.rft.atsy.service.security.SpringSecurityAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,15 +25,15 @@ public class PasswordValidatorConfiguration {
   private PasswordChangeService passwordChangeService;
 
   @Autowired
-  private CustomSecurityContextHolderService customSecurityContextHolderService;
+  private SpringSecurityAuthenticationService springSecurityAuthenticationService;
 
   @Bean
   public PasswordValidator passwordValidator() {
     Collection<PasswordValidationRule> rules = Arrays.asList(
         new PasswordAllFieldFilledRule(), new PasswordContainsRule(),
         new PasswordLengthValidationRule(), new PasswordNewMatchValidationRule(),
-        new PasswordOldPasswordMatchesRule(customSecurityContextHolderService),
-        new PasswordUniqueRule(passwordChangeService, customSecurityContextHolderService)
+        new PasswordOldPasswordMatchesRule(springSecurityAuthenticationService),
+        new PasswordUniqueRule(passwordChangeService, springSecurityAuthenticationService)
     );
 
     return new PasswordValidatorImpl(rules);

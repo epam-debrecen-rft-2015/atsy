@@ -6,7 +6,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
-import com.epam.rft.atsy.service.security.CustomSecurityContextHolderService;
+import com.epam.rft.atsy.service.exception.UserNotLoggedInException;
+import com.epam.rft.atsy.service.security.SpringSecurityAuthenticationService;
 import com.epam.rft.atsy.service.security.UserDetailsAdapter;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,26 +29,24 @@ public class PasswordOldPasswordMatchesRuleTest {
   private static final String PASSWORD_CHANGE_DTO_DIFFERENT_OLD_PASSWORD = "differentpassword";
   private static final String MESSAGE_KEY = "passwordchange.validation.oldpasswordmatch";
 
-  private String oldPasswordHash;
-
   @Mock
-  private CustomSecurityContextHolderService customSecurityContextHolderService;
+  private SpringSecurityAuthenticationService springSecurityAuthenticationService;
 
   @InjectMocks
   private PasswordOldPasswordMatchesRule passwordOldPasswordMatchesRule;
 
   @Before
-  public void setUp() {
+  public void setUp() throws UserNotLoggedInException {
 
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-    oldPasswordHash = bCryptPasswordEncoder.encode(PASSWORD_CHANGE_DTO_OLD_PASSWORD);
+    String oldPasswordHash = bCryptPasswordEncoder.encode(PASSWORD_CHANGE_DTO_OLD_PASSWORD);
 
     UserDetailsAdapter
         userDetailsAdapter =
         new UserDetailsAdapter(USER_ID, oldPasswordHash, USER_NAME);
 
-    given(customSecurityContextHolderService.getCurrentUserDetailsAdapter())
+    given(springSecurityAuthenticationService.getCurrentUserDetails())
         .willReturn(userDetailsAdapter);
 
   }
@@ -93,14 +92,14 @@ public class PasswordOldPasswordMatchesRuleTest {
   }
 
   @Test
-  public void isValidShouldNotBeValidWhenUserDetailsIsNull() {
+  public void isValidShouldNotBeValidWhenUserDetailsIsNull() throws UserNotLoggedInException {
     // Given
     PasswordChangeDTO
         passwordChangeDTO =
         PasswordChangeDTO.builder().newPassword(NEW_PASSWORD)
             .newPasswordConfirm(NEW_PASSWORD_CONFIRM).oldPassword(PASSWORD_CHANGE_DTO_OLD_PASSWORD)
             .build();
-    given(customSecurityContextHolderService.getCurrentUserDetailsAdapter()).willReturn(null);
+    given(springSecurityAuthenticationService.getCurrentUserDetails()).willReturn(null);
 
     // When
     boolean result = passwordOldPasswordMatchesRule.isValid(passwordChangeDTO);
@@ -123,7 +122,8 @@ public class PasswordOldPasswordMatchesRuleTest {
   }
 
   @Test
-  public void isValidShouldNotBeValidWhenUserDetailsPasswordFieldIsNull() {
+  public void isValidShouldNotBeValidWhenUserDetailsPasswordFieldIsNull()
+      throws UserNotLoggedInException {
     // Given
     PasswordChangeDTO
         passwordChangeDTO =
@@ -135,7 +135,7 @@ public class PasswordOldPasswordMatchesRuleTest {
         userDetailsAdapterWithNullPassword =
         new UserDetailsAdapter(USER_ID, null, USER_NAME);
 
-    given(customSecurityContextHolderService.getCurrentUserDetailsAdapter())
+    given(springSecurityAuthenticationService.getCurrentUserDetails())
         .willReturn(userDetailsAdapterWithNullPassword);
 
     // When
