@@ -1,6 +1,5 @@
 package com.epam.rft.atsy.service.domain.states;
 
-import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.states.builder.AbstractStateBuilder;
 
 import java.util.Date;
@@ -19,7 +18,6 @@ import lombok.ToString;
 public class StateDTO extends AbstractStateDTO {
 
   private Date creationDate;
-  private ChannelDTO channel;
 
 
   public static StateDTOBuilder builder() {
@@ -46,10 +44,6 @@ public class StateDTO extends AbstractStateDTO {
       return this;
     }
 
-    public StateDTOBuilder channel(ChannelDTO channel) {
-      object.setChannel(channel);
-      return this;
-    }
   }
 
 }

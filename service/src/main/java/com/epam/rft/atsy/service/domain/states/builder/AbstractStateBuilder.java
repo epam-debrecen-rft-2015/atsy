@@ -1,6 +1,7 @@
 package com.epam.rft.atsy.service.domain.states.builder;
 
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
+import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.AbstractStateDTO;
 
@@ -32,6 +33,11 @@ public abstract class AbstractStateBuilder<B extends AbstractStateBuilder<B, T>,
 
   public B position(PositionDTO position) {
     object.setPosition(position);
+    return (B) this;
+  }
+
+  public B channel(ChannelDTO channel) {
+    object.setChannel(channel);
     return (B) this;
   }
 

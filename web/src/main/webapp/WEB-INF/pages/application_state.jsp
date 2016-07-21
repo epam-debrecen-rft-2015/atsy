@@ -144,7 +144,7 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.channel"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static">${data.applicationDTO.channelId}</p>
+                              <p class="form-control-static">${data.channel.name}</p>
                           </div>
                       </div>
                   </c:when>

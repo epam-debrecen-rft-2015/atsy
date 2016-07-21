@@ -9,6 +9,7 @@ import com.epam.rft.atsy.persistence.repositories.StatesRepository;
 import com.epam.rft.atsy.service.StatesService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
+import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateViewDTO;
@@ -105,6 +106,7 @@ public class StatesServiceImpl implements StatesService {
       stateDTOs.get(i).setApplicationDTO(modelMapper.map(applicationEntity, ApplicationDTO.class));
       stateDTOs.get(i).setPosition(modelMapper.map(applicationEntity.getPositionEntity(),
           PositionDTO.class));
+      stateDTOs.get(i).setChannel(modelMapper.map(applicationEntity.getChannelEntity(), ChannelDTO.class));
     }
     return stateDTOs;
   }
