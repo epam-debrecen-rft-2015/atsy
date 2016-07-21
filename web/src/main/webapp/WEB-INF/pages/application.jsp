@@ -58,8 +58,8 @@
                                 </div>
                             </div>
                             <div class="col-lg-offset-8 col-md-offset-8 col-sm-offset-8 col-lg-4 col-md-4 col-sm-4">
-                                <a href="candidate/${candidateId}" class="btn btn-danger">Vissza</a>
-                                <button type="submit" class="btn btn-success">
+                                <a href="candidate/${candidateId}" class="btn btn-danger" id="cancel_button">Vissza</a>
+                                <button type="submit" class="btn btn-success" id="save_button">
                                     <spring:message code="save.button"/>
                                 </button>
                             </div>
