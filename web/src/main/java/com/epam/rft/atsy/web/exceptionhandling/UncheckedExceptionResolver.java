@@ -1,11 +1,7 @@
 package com.epam.rft.atsy.web.exceptionhandling;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,12 +12,7 @@ import javax.servlet.http.HttpServletResponse;
  * response when it detects an AJAX request.
  */
 @Component
-public class UncheckedExceptionResolver implements HandlerExceptionResolver, Ordered {
-  private static final String ERROR_VIEW_NAME = "error";
-
-  @Autowired
-  private MappingJackson2JsonView jsonView;
-
+public class UncheckedExceptionResolver extends AbstractExceptionResolver {
   @Override
   public int getOrder() {
     return HIGHEST_PRECEDENCE + 1;
@@ -38,17 +29,14 @@ public class UncheckedExceptionResolver implements HandlerExceptionResolver, Ord
 
     httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
-    if (!RequestInspector.isAjaxRequest(httpServletRequest)) {
+    if (!isAjaxRequest(httpServletRequest)) {
       return new ModelAndView(ERROR_VIEW_NAME);
     } else {
       ModelAndView modelAndView = new ModelAndView(jsonView);
 
       ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
-      modelAndView.addObject("errorMessage", errorResponse.getErrorMessage());
-      modelAndView.addObject("fields", errorResponse.getFields());
-
-      return modelAndView;
+      return errorResponseToJsonModelAndView(errorResponse);
     }
   }
 }

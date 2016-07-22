@@ -1,12 +1,8 @@
 package com.epam.rft.atsy.web.exceptionhandling;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -19,13 +15,8 @@ import javax.servlet.http.HttpServletResponse;
  * receiving an ordinary HTTP request or sends a JSON response when it detects an AJAX request.
  */
 @Component
-public class DefaultExceptionResolver implements HandlerExceptionResolver, Ordered {
-  private static final String ERROR_VIEW_NAME = "error";
-
+public class DefaultExceptionResolver extends AbstractExceptionResolver {
   private static final String TECHNICAL_ERROR_MESSAGE_KEY = "technical.error.message";
-
-  @Autowired
-  private MappingJackson2JsonView jsonView;
 
   @Resource
   private MessageSource messageSource;
@@ -41,7 +32,7 @@ public class DefaultExceptionResolver implements HandlerExceptionResolver, Order
                                        Exception e) {
     httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
-    if (!RequestInspector.isAjaxRequest(httpServletRequest)) {
+    if (!isAjaxRequest(httpServletRequest)) {
       return new ModelAndView(ERROR_VIEW_NAME);
     } else {
       ModelAndView modelAndView = new ModelAndView(jsonView);
@@ -52,10 +43,7 @@ public class DefaultExceptionResolver implements HandlerExceptionResolver, Order
 
       ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
-      modelAndView.addObject("errorMessage", errorResponse.getErrorMessage());
-      modelAndView.addObject("fields", errorResponse.getFields());
-
-      return modelAndView;
+      return errorResponseToJsonModelAndView(errorResponse);
     }
   }
 }

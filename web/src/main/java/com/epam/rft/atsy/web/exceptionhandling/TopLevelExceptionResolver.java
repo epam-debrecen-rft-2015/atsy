@@ -6,14 +6,10 @@ import com.epam.rft.atsy.service.exception.DuplicateCandidateException;
 import com.epam.rft.atsy.service.exception.DuplicateChannelException;
 import com.epam.rft.atsy.service.exception.DuplicatePositionException;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.core.Ordered;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import java.util.Locale;
 import java.util.Map;
@@ -21,10 +17,16 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * This class handles exceptions that need special treatment. As the first in the exception resolver
+ * chain this class is able to apply a specific handler to the exceptions before they would reach
+ * the more generic {@code UncheckedExceptionResolver} and the completely type-agnostic {@code
+ * DefaultExceptionResolver}
+ * @see UncheckedExceptionResolver
+ * @see DefaultExceptionResolver
+ */
 @Component
-public class TopLevelExceptionResolver implements HandlerExceptionResolver, Ordered {
-  private static final String ERROR_VIEW_NAME = "error";
-
+public class TopLevelExceptionResolver extends AbstractExceptionResolver {
   private static final String TECHNICAL_ERROR_MESSAGE_KEY = "technical.error.message";
 
   private final Map<Class<? extends DuplicateRecordException>, String>
@@ -38,9 +40,6 @@ public class TopLevelExceptionResolver implements HandlerExceptionResolver, Orde
   @Resource
   private MessageSource messageSource;
 
-  @Autowired
-  private MappingJackson2JsonView jsonView;
-
   @Override
   public int getOrder() {
     return HIGHEST_PRECEDENCE;
@@ -52,20 +51,28 @@ public class TopLevelExceptionResolver implements HandlerExceptionResolver, Orde
                                        Exception e) {
     Locale locale = httpServletRequest.getLocale();
 
-    if (duplicateRecordMessageKeyMap.containsKey(e.getClass())) {
+    if (e instanceof DuplicateRecordException) {
       return handleDuplicate(locale, httpServletRequest, httpServletResponse,
           (DuplicateRecordException) e);
-    } else if (e.getClass() == HttpMessageNotReadableException.class) {
+    } else if (e instanceof HttpMessageNotReadableException) {
       return handleNotReadable(locale, httpServletRequest, httpServletResponse, e);
     } else {
       return null;
     }
   }
 
+  /**
+   * Handles {@code DuplicateRecordException} and its descendants.
+   * @param locale the current {@&ode Locale}
+   * @param request the request that caused an exception
+   * @param response the response that will be sent
+   * @param ex the exception to be handled
+   * @return {@code ModelAndView} with either the error view or a JSON response
+   */
   private ModelAndView handleDuplicate(Locale locale, HttpServletRequest request,
                                        HttpServletResponse response,
                                        DuplicateRecordException ex) {
-    if (!RequestInspector.isAjaxRequest(request)) {
+    if (isAjaxRequest(request)) {
       return new ModelAndView(ERROR_VIEW_NAME);
     }
 
@@ -77,18 +84,21 @@ public class TopLevelExceptionResolver implements HandlerExceptionResolver, Orde
 
     ErrorResponse errorResponse = new ErrorResponse(message);
 
-    ModelAndView modelAndView = new ModelAndView(jsonView);
-
-    modelAndView.addObject("errorMessage", errorResponse.getErrorMessage());
-    modelAndView.addObject("fields", errorResponse.getFields());
-
-    return modelAndView;
+    return errorResponseToJsonModelAndView(errorResponse);
   }
 
+  /**
+   * Handles {@code HttpMessageNotReadableException}.
+   * @param locale the current {@&ode Locale}
+   * @param request the request that caused an exception
+   * @param response the response that will be sent
+   * @param ex the exception to be handled
+   * @return {@code ModelAndView} with either the error view or a JSON response
+   */
   private ModelAndView handleNotReadable(Locale locale, HttpServletRequest request,
                                          HttpServletResponse response,
                                          Exception ex) {
-    if (!RequestInspector.isAjaxRequest(request)) {
+    if (!isAjaxRequest(request)) {
       return new ModelAndView(ERROR_VIEW_NAME);
     }
 
@@ -96,12 +106,7 @@ public class TopLevelExceptionResolver implements HandlerExceptionResolver, Orde
 
     ErrorResponse errorResponse = new ErrorResponse(message);
 
-    ModelAndView modelAndView = new ModelAndView(jsonView);
-
-    modelAndView.addObject("errorMessage", errorResponse.getErrorMessage());
-    modelAndView.addObject("fields", errorResponse.getFields());
-
-    return modelAndView;
+    return errorResponseToJsonModelAndView(errorResponse);
   }
 }
 
