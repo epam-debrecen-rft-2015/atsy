@@ -49,7 +49,7 @@ public class DefaultExceptionResolver extends AbstractExceptionResolver {
           messageSource
               .getMessage(TECHNICAL_ERROR_MESSAGE_KEY, null, locale);
 
-      ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+      ErrorResponse errorResponse = new ErrorResponse(message);
 
       return errorResponseToJsonModelAndView(errorResponse);
     }

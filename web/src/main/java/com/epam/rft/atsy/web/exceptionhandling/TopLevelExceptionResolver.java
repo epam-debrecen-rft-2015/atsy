@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Component;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -61,6 +62,8 @@ public class TopLevelExceptionResolver extends AbstractExceptionResolver {
           (DuplicateRecordException) e);
     } else if (e instanceof HttpMessageNotReadableException) {
       return handleNotReadable(locale, httpServletRequest, httpServletResponse, e);
+    } else if (e instanceof HttpRequestMethodNotSupportedException) {
+      return handleNotSupportedMethod(httpServletRequest, httpServletResponse, e);
     } else {
       return null;
     }
@@ -69,7 +72,7 @@ public class TopLevelExceptionResolver extends AbstractExceptionResolver {
   /**
    * Handles {@code DuplicateRecordException} and its descendants.
    * @param locale the current {@&ode Locale}
-   * @param request the request that caused an exception
+   * @param request the currently processed request
    * @param response the response that will be sent
    * @param ex the exception to be handled
    * @return {@code ModelAndView} with either the error view or a JSON response
@@ -97,7 +100,7 @@ public class TopLevelExceptionResolver extends AbstractExceptionResolver {
   /**
    * Handles {@code HttpMessageNotReadableException}.
    * @param locale the current {@&ode Locale}
-   * @param request the request that caused an exception
+   * @param request the currently processed request
    * @param response the response that will be sent
    * @param ex the exception to be handled
    * @return {@code ModelAndView} with either the error view or a JSON response
@@ -116,6 +119,24 @@ public class TopLevelExceptionResolver extends AbstractExceptionResolver {
     ErrorResponse errorResponse = new ErrorResponse(message);
 
     return errorResponseToJsonModelAndView(errorResponse);
+  }
+
+  /**
+   * Handles {@code HttpRequestMethodNotSupportedException}.
+   * @param request the currently processed request
+   * @param response the respomse that will be sent
+   * @param ex the exception to be handled
+   * @return {@code ModelAndView} with either the error view or a JSON response
+   */
+  private ModelAndView handleNotSupportedMethod(HttpServletRequest request,
+                                                HttpServletResponse response, Exception ex) {
+    response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+
+    if (!isAjaxRequest(request)) {
+      return new ModelAndView(ERROR_VIEW_NAME);
+    }
+
+    return errorResponseToJsonModelAndView(new ErrorResponse(ex.getMessage()));
   }
 }
 
