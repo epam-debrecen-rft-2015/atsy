@@ -161,7 +161,7 @@ public class NewApplicationPopupStepDefs {
   }
 
 
-  @And("the user enters comment Megjegyzés")
+  @And("^the user enters comment Megjegyzés$")
   public void the_user_enters_comment_Remark() throws Throwable {
     webDriver.findElement(By.id(DESCRIPTION)).sendKeys(COMMENT_IN_HUN);
   }
