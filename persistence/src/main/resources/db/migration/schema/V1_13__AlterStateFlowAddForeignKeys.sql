@@ -1,0 +1,1 @@
+ALTER TABLE states_history ADD CONSTRAINT fk_state_id FOREIGN KEY (state_id) REFERENCES states(id);

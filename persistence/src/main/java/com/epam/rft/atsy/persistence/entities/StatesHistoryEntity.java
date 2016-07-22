@@ -21,7 +21,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "states_history", schema = "atsy")
-public class StateEntity extends SuperEntity {
+public class StatesHistoryEntity extends SuperEntity {
 
 
   @OneToOne
@@ -60,9 +60,9 @@ public class StateEntity extends SuperEntity {
 
 
   @Builder
-  public StateEntity(Long id, ApplicationEntity applicationEntity, Date creationDate,
-                     Short languageSkill, String description, String result, Long offeredMoney,
-                     Long claim, Date feedbackDate, Date dayOfStart, String stateType, Integer stateIndex) {
+  public StatesHistoryEntity(Long id, ApplicationEntity applicationEntity, Date creationDate,
+                             Short languageSkill, String description, String result, Long offeredMoney,
+                             Long claim, Date feedbackDate, Date dayOfStart, String stateType, Integer stateIndex) {
     super(id);
     this.applicationEntity = applicationEntity;
     this.creationDate = creationDate;

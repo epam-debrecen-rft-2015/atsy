@@ -1,7 +1,7 @@
 package com.epam.rft.atsy.persistence.repositories;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
-import com.epam.rft.atsy.persistence.entities.StateEntity;
+import com.epam.rft.atsy.persistence.entities.StatesHistoryEntity;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -9,14 +9,14 @@ import java.util.List;
 /**
  * Repository that allows operations with the states of applications in database.
  */
-public interface StatesRepository extends CrudRepository<StateEntity, Long> {
+public interface StatesRepository extends CrudRepository<StatesHistoryEntity, Long> {
 
   /**
    * Returns the states of an application in descending order.
    * @param applicationEntity the application
    * @return the list of states of the application
    */
-  List<StateEntity> findByApplicationEntityOrderByStateIndexDesc(
+  List<StatesHistoryEntity> findByApplicationEntityOrderByStateIndexDesc(
       ApplicationEntity applicationEntity);
 
   /**
@@ -24,5 +24,5 @@ public interface StatesRepository extends CrudRepository<StateEntity, Long> {
    * @param applicationEntity the application
    * @return the newest state of the application
    */
-  StateEntity findTopByApplicationEntityOrderByStateIndexDesc(ApplicationEntity applicationEntity);
+  StatesHistoryEntity findTopByApplicationEntityOrderByStateIndexDesc(ApplicationEntity applicationEntity);
 }

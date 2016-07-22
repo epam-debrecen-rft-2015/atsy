@@ -11,7 +11,7 @@ import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.entities.ChannelEntity;
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
-import com.epam.rft.atsy.persistence.entities.StateEntity;
+import com.epam.rft.atsy.persistence.entities.StatesHistoryEntity;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
@@ -59,12 +59,12 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
     ApplicationEntity applicationEntity = getApplicationByCandidateName(CANDIDATE_NAME_A);
 
     // When
-    StateEntity
-        stateEntity =
+    StatesHistoryEntity
+        statesHistoryEntity =
         this.statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(applicationEntity);
 
     // Then
-    assertNull(stateEntity);
+    assertNull(statesHistoryEntity);
   }
 
   @Test
@@ -73,63 +73,63 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
     ApplicationEntity applicationEntity = getApplicationByCandidateName(CANDIDATE_NAME_A);
 
     // When
-    List<StateEntity>
-        stateEntityList =
+    List<StatesHistoryEntity>
+        statesHistoryEntityList =
         this.statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationEntity);
 
     // Then
-    assertThat(stateEntityList, notNullValue());
-    assertThat(stateEntityList, empty());
+    assertThat(statesHistoryEntityList, notNullValue());
+    assertThat(statesHistoryEntityList, empty());
   }
 
   @Test
   public void findTopByApplicationEntityOrderByStateIndexDescShouldFindSingleStateForApplicationWithSingleState() {
     // Given
     ApplicationEntity applicationEntity = getApplicationByCandidateName(CANDIDATE_NAME_B);
-    StateEntity expectedStateEntity = getExpectedStateEntityForSingleState();
+    StatesHistoryEntity expectedStatesHistoryEntity = getExpectedStateEntityForSingleState();
 
     // When
-    StateEntity
-        stateEntity =
+    StatesHistoryEntity
+        statesHistoryEntity =
         this.statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(applicationEntity);
 
     // Then
-    assertStateEntity(stateEntity, expectedStateEntity);
+    assertStateEntity(statesHistoryEntity, expectedStatesHistoryEntity);
   }
 
   @Test
   public void findByApplicationEntityOrderByStateIndexDescShouldFindSingleStateForApplicationWithSingleState() {
     // Given
     ApplicationEntity applicationEntity = getApplicationByCandidateName(CANDIDATE_NAME_B);
-    StateEntity expectedStateEntity = getExpectedStateEntityForSingleState();
+    StatesHistoryEntity expectedStatesHistoryEntity = getExpectedStateEntityForSingleState();
 
     // When
-    List<StateEntity>
-        stateEntityList =
+    List<StatesHistoryEntity>
+        statesHistoryEntityList =
         this.statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationEntity);
-    assertThat(stateEntityList, notNullValue());
-    assertThat(stateEntityList.size(), is(VALUE_ONE));
-    StateEntity stateEntity = stateEntityList.get(ZEROTH_ELEMENT);
+    assertThat(statesHistoryEntityList, notNullValue());
+    assertThat(statesHistoryEntityList.size(), is(VALUE_ONE));
+    StatesHistoryEntity statesHistoryEntity = statesHistoryEntityList.get(ZEROTH_ELEMENT);
 
     // Then
-    assertStateEntity(stateEntity, expectedStateEntity);
+    assertStateEntity(statesHistoryEntity, expectedStatesHistoryEntity);
   }
 
   @Test
   public void findTopByApplicationEntityOrderByStateIndexDescShouldFindThreeStateForApplicationWithThreeState() {
     // Given
     ApplicationEntity applicationEntity = getApplicationByCandidateName(CANDIDATE_NAME_C);
-    StateEntity
-        expectedStateEntity =
+    StatesHistoryEntity
+        expectedStatesHistoryEntity =
         getExpectedSortingStateEntityListWithThreeElements().get(ZEROTH_ELEMENT);
 
     // When
-    StateEntity
-        stateEntity =
+    StatesHistoryEntity
+        statesHistoryEntity =
         this.statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(applicationEntity);
 
     // Then
-    assertStateEntity(stateEntity, expectedStateEntity);
+    assertStateEntity(statesHistoryEntity, expectedStatesHistoryEntity);
   }
 
   @Test
@@ -138,32 +138,32 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
     ApplicationEntity applicationEntity = getApplicationByCandidateName(CANDIDATE_NAME_C);
 
     // When
-    List<StateEntity>
-        stateEntityList =
+    List<StatesHistoryEntity>
+        statesHistoryEntityList =
         this.statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationEntity);
 
     // Then
-    assertThat(stateEntityList, notNullValue());
-    assertThat(stateEntityList.size(), is(VALUE_THREE));
-    checkSortingValidationWithThreeElements(stateEntityList);
+    assertThat(statesHistoryEntityList, notNullValue());
+    assertThat(statesHistoryEntityList.size(), is(VALUE_THREE));
+    checkSortingValidationWithThreeElements(statesHistoryEntityList);
   }
 
-  private void checkSortingValidationWithThreeElements(List<StateEntity> stateEntityList) {
-    List<StateEntity>
-        expectedStateEntityList =
+  private void checkSortingValidationWithThreeElements(List<StatesHistoryEntity> statesHistoryEntityList) {
+    List<StatesHistoryEntity>
+        expectedStatesHistoryEntityList =
         getExpectedSortingStateEntityListWithThreeElements();
 
-    assertThat(stateEntityList, notNullValue());
-    assertThat(expectedStateEntityList, notNullValue());
-    assertThat(stateEntityList.size(), is(expectedStateEntityList.size()));
+    assertThat(statesHistoryEntityList, notNullValue());
+    assertThat(expectedStatesHistoryEntityList, notNullValue());
+    assertThat(statesHistoryEntityList.size(), is(expectedStatesHistoryEntityList.size()));
 
-    for (int i = 0; i < expectedStateEntityList.size(); ++i) {
-      assertStateEntity(stateEntityList.get(i), expectedStateEntityList.get(i));
+    for (int i = 0; i < expectedStatesHistoryEntityList.size(); ++i) {
+      assertStateEntity(statesHistoryEntityList.get(i), expectedStatesHistoryEntityList.get(i));
     }
   }
 
-  private StateEntity getExpectedStateEntityForSingleState() {
-    return StateEntity.builder()
+  private StatesHistoryEntity getExpectedStateEntityForSingleState() {
+    return StatesHistoryEntity.builder()
         .applicationEntity(
             getExpectedApplicationEntity(CANDIDATE_NAME_B, FIRST_ID, CHANNEL_NAME_DIRECT, FIRST_ID,
                 POSITION_NAME_DEVELOPER))
@@ -171,21 +171,21 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
         .build();
   }
 
-  private List<StateEntity> getExpectedSortingStateEntityListWithThreeElements() {
-    List<StateEntity> stateEntityList = Arrays.asList(StateEntity.builder()
+  private List<StatesHistoryEntity> getExpectedSortingStateEntityListWithThreeElements() {
+    List<StatesHistoryEntity> statesHistoryEntityList = Arrays.asList(StatesHistoryEntity.builder()
             .applicationEntity(
                 getExpectedApplicationEntity(CANDIDATE_NAME_C, FOURTH_ID, CHANNEL_NAME_FACEBOOK,
                     FIRST_ID, POSITION_NAME_DEVELOPER))
             .stateIndex(BIGGEST_STATE_INDEX_NUMBER)
             .build(),
 
-        StateEntity.builder()
+        StatesHistoryEntity.builder()
             .applicationEntity(
                 getExpectedApplicationEntity(CANDIDATE_NAME_C, FOURTH_ID, CHANNEL_NAME_FACEBOOK,
                     FIRST_ID, POSITION_NAME_DEVELOPER))
             .stateIndex(MIDDLE_STATE_INDEX_NUMBER)
             .build(),
-        StateEntity.builder()
+        StatesHistoryEntity.builder()
             .applicationEntity(
                 getExpectedApplicationEntity(CANDIDATE_NAME_C, FOURTH_ID, CHANNEL_NAME_FACEBOOK,
                     FIRST_ID, POSITION_NAME_DEVELOPER))
@@ -193,7 +193,7 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
             .build()
     );
 
-    return stateEntityList;
+    return statesHistoryEntityList;
   }
 
   private ApplicationEntity getApplicationByCandidateName(String candidateName) {
@@ -234,18 +234,18 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
     return expectedApplicationEntity;
   }
 
-  private void assertStateEntity(StateEntity stateEntity, StateEntity expectedStateEntity) {
-    assertThat(stateEntity, notNullValue());
-    assertThat(expectedStateEntity, notNullValue());
+  private void assertStateEntity(StatesHistoryEntity statesHistoryEntity, StatesHistoryEntity expectedStatesHistoryEntity) {
+    assertThat(statesHistoryEntity, notNullValue());
+    assertThat(expectedStatesHistoryEntity, notNullValue());
 
-    assertThat(stateEntity.getStateIndex(), notNullValue());
-    assertThat(expectedStateEntity.getStateIndex(), notNullValue());
-    assertThat(stateEntity.getStateIndex(), is(expectedStateEntity.getStateIndex()));
+    assertThat(statesHistoryEntity.getStateIndex(), notNullValue());
+    assertThat(expectedStatesHistoryEntity.getStateIndex(), notNullValue());
+    assertThat(statesHistoryEntity.getStateIndex(), is(expectedStatesHistoryEntity.getStateIndex()));
 
-    assertThat(stateEntity.getApplicationEntity(), notNullValue());
-    assertThat(expectedStateEntity.getApplicationEntity(), notNullValue());
-    assertApplicationEntity(stateEntity.getApplicationEntity(),
-        expectedStateEntity.getApplicationEntity());
+    assertThat(statesHistoryEntity.getApplicationEntity(), notNullValue());
+    assertThat(expectedStatesHistoryEntity.getApplicationEntity(), notNullValue());
+    assertApplicationEntity(statesHistoryEntity.getApplicationEntity(),
+        expectedStatesHistoryEntity.getApplicationEntity());
   }
 
   private void assertApplicationEntity(ApplicationEntity application,
