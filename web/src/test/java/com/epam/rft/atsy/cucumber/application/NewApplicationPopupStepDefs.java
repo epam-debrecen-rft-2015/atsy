@@ -22,7 +22,6 @@ import cucumber.api.java.en.When;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
@@ -102,7 +101,8 @@ public class NewApplicationPopupStepDefs {
   @And("^position Fejlesztő exists$")
   public void position_developer_exists() throws Throwable {
     List<String> existPositionNameList = convertWebElementsToStringList(webDriver.findElements(By.id(POSITION)));
-    assertThat(existPositionNameList, contains(DEVELOPER_IN_HUN));
+    assertThat(isContainsAKeyword(DEVELOPER_IN_HUN, existPositionNameList), is(true));
+    //assertThat(existPositionNameList, contains(DEVELOPER_IN_HUN));
   }
 
   @And("^the user selects Fejlesztő position$")
@@ -172,6 +172,10 @@ public class NewApplicationPopupStepDefs {
 
   private List<String> convertWebElementsToStringList(List<WebElement> webElementList) {
     return webElementList.stream().map(w -> w.getText()).collect(Collectors.toList());
+  }
+
+  private Boolean isContainsAKeyword(String keyword, List<String> keywordList) {
+    return keywordList.stream().anyMatch(k -> k.contains(keyword));
   }
 
   private List<WebElement> getValuesFromTheLastRowFromTheTable(WebElement table) {
