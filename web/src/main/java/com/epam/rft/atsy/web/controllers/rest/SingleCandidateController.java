@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.annotation.Resource;
@@ -39,7 +40,7 @@ public class SingleCandidateController {
     if (!result.hasErrors()) {
       Long candidateId = candidateService.saveOrUpdate(candidateDTO);
 
-      return new ResponseEntity<>(candidateId, HttpStatus.OK);
+      return new ResponseEntity<>(Collections.singletonMap("id", candidateId), HttpStatus.OK);
     } else {
       ErrorResponse errorResponse = parseValidationErrors(result.getFieldErrors(), locale);
 

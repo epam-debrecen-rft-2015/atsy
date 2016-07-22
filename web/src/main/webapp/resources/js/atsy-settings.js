@@ -37,7 +37,7 @@ function SettingsForm() {
                     }
                     $this.find('input').val('');
                 }).error(function (xhr) {
-                    var response = JSON.parse(xhr.responseText);
+                    var response = xhr.responseJSON;
 
                     showError($this, response.errorMessage);
                 });

@@ -42,6 +42,7 @@ function CandidateCreateModel(){
             url: form.attr('action'),
             method: form.attr('method'),
             contentType: 'application/json',
+            dataType: "json",
             data: JSON.stringify({
                 id: self.id(),
                 name: self.name(),
@@ -52,9 +53,9 @@ function CandidateCreateModel(){
                 description: self.description()
             })
         }).done(function (xhr) {
-            window.location = form.attr('action')+ '/' + xhr;
+            window.location = form.attr('action')+ '/' + xhr.id;
         }).error(function (xhr) {
-            self.errorResponse(JSON.parse(xhr.responseText));
+            self.errorResponse(xhr.responseJSON);
 
             self.showError(true);
         });
