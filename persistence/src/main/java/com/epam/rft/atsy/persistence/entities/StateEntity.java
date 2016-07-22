@@ -20,7 +20,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Entity
-@Table(name = "states", schema = "atsy")
+@Table(name = "states_history", schema = "atsy")
 public class StateEntity extends SuperEntity {
 
 
@@ -49,6 +49,9 @@ public class StateEntity extends SuperEntity {
   @Column(name = "feedback_date")
   private Date feedbackDate;
 
+  @Column(name = "day_of_start")
+  private Date dayOfStart;
+
   @Column(name = "state_type", updatable = false)
   private String stateType;
 
@@ -59,7 +62,7 @@ public class StateEntity extends SuperEntity {
   @Builder
   public StateEntity(Long id, ApplicationEntity applicationEntity, Date creationDate,
                      Short languageSkill, String description, String result, Long offeredMoney,
-                     Long claim, Date feedbackDate, String stateType, Integer stateIndex) {
+                     Long claim, Date feedbackDate, Date dayOfStart, String stateType, Integer stateIndex) {
     super(id);
     this.applicationEntity = applicationEntity;
     this.creationDate = creationDate;
@@ -69,6 +72,7 @@ public class StateEntity extends SuperEntity {
     this.offeredMoney = offeredMoney;
     this.claim = claim;
     this.feedbackDate = feedbackDate;
+    this.dayOfStart = dayOfStart;
     this.stateType = stateType;
     this.stateIndex = stateIndex;
   }

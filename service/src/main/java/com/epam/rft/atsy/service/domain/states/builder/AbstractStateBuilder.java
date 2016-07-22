@@ -76,6 +76,11 @@ public abstract class AbstractStateBuilder<B extends AbstractStateBuilder<B, T>,
     return (B) this;
   }
 
+  public B dayOfStart(Date dayOfStart) {
+    object.setDayOfStart(dayOfStart);
+    return (B) this;
+  }
+
   public B stateType(String stateType) {
     object.setStateType(stateType);
     return (B) this;

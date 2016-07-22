@@ -229,7 +229,7 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.dayOfStart"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="dayOfStartP">${data.feedbackDate}</p>
+                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="dayOfStartP">${data.dayOfStart}</p>
                               <c:if test="${stat.first}">
                                   <input class="stateInput" type="text" name="dayOfStart" id="dayOfStartInput" style="display:none">
                               </c:if>

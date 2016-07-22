@@ -26,6 +26,7 @@ public abstract class AbstractStateDTO {
   private Long offeredMoney;
   private Long claim;
   private Date feedbackDate;
+  private Date dayOfStart;
   private String stateType;
   private Integer stateIndex;
 
