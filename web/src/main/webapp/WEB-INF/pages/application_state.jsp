@@ -6,6 +6,9 @@
 <%@page contentType="text/html;charset=UTF-8" %>
 <spring:url value="/secure/application_state" var="application_state"/>
 <atsy:secure_page>
+    <jsp:attribute name="pageJs">
+        <script src="<c:url value="/resources/js/atsy-statehistory.js" />"></script>
+    </jsp:attribute>
   <jsp:body>
       <div class="page-header">
           <h1><spring:message code="application.state.title"/>
@@ -116,21 +119,30 @@
           </form>
       </div>
       <div id="stateList">
-      <c:forEach var="data" items="${states}">
+      <c:forEach var="data" items="${states}" varStatus="stat">
           <div class="page-header">
-              <h4>${data.stateType}</h4>
+              <h4 class="col-sm-6 col-md-6 col-lg-6">${data.stateType}</h4>
+              <c:if test="${stat.first}">
+              <h4 class="glyphicon glyphicon-edit pull-right" id="latestStateEditButton" onclick="editLatestStateOnClick()"></h4>
+              </c:if>
           </div>
-          <form class="form-horizontal">
-              <div class="form-group">
+          <form class="form form-horizontal" role="form" method="POST" action="#">
+              <div class="form-group col-sm-12 col-md-12 col-lg-12">
                   <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.date"/></label>
                   <div class="col-sm-8">
-                      <p class="form-control-static">${data.creationDate}</p>
+                      <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="creationDateP">${data.creationDate}</p>
+                      <c:if test="${stat.first}">
+                          <input class="stateInput" type="text" name="creationDate" id="creationDateInput" style="display:none">
+                      </c:if>
                   </div>
               </div>
               <div class="form-group">
                   <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.description"/></label>
                   <div class="col-sm-8">
-                      <p class="form-control-static">${data.description}</p>
+                      <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="descriptionP">${data.description}</p>
+                      <c:if test="${stat.first}">
+                          <input class="stateInput" type="text" name="description" id="descriptionInput" style="display:none">
+                      </c:if>
                   </div>
               </div>
               <c:choose>
@@ -138,13 +150,19 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.position"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static">${data.position.name}</p>
+                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="positionNameP">${data.position.name}</p>
+                              <c:if test="${stat.first}">
+                                  <input class="stateInput" type="text" name="position.name" id="positionNameInput" style="display:none">
+                              </c:if>
                           </div>
                       </div>
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.channel"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static">${data.channel.name}</p>
+                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="channelNameP">${data.channel.name}</p>
+                              <c:if test="${stat.first}">
+                                  <input class="stateInput" type="text" name="channel.name" id="channelNameInput" style="display:none">
+                              </c:if>
                           </div>
                       </div>
                   </c:when>
@@ -160,7 +178,10 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.languageSkill"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static">${data.languageSkill}</p>
+                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="languageSkillP">${data.languageSkill}</p>
+                              <c:if test="${stat.first}">
+                                  <input class="stateInput" type="text" name="languageSkill" id="languageSkillInput" style="display:none">
+                              </c:if>
                           </div>
                       </div>
                   </c:when>
@@ -168,7 +189,10 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.result"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static">${data.result}</p>
+                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="resultP" >${data.result}</p>
+                              <c:if test="${stat.first}">
+                                  <input class="stateInput" type="text" name="result" id="resultInput" style="display:none">
+                              </c:if>
                           </div>
                       </div>
                   </c:when>
@@ -176,19 +200,28 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.offeredMoney"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static">${data.offeredMoney}</p>
+                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="offeredMoneyP">${data.offeredMoney}</p>
+                              <c:if test="${stat.first}">
+                                  <input class="stateInput" type="text" name="offeredMoney" id="offeredMoneyInput" style="display:none">
+                              </c:if>
                           </div>
                       </div>
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.claim"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static">${data.claim}</p>
+                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="claimP">${data.claim}</p>
+                              <c:if test="${stat.first}">
+                                  <input class="stateInput" type="text" name="claim" id="claimInput" style="display:none">
+                              </c:if>
                           </div>
                       </div>
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.feedbackDate"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static">${data.feedbackDate}</p>
+                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="feedbackDateP">${data.feedbackDate}</p>
+                              <c:if test="${stat.first}">
+                                  <input class="stateInput" type="text" name="feedbackDate" id="feedbackDateInput" style="display:none">
+                              </c:if>
                           </div>
                       </div>
                   </c:when>
@@ -196,11 +229,22 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.dayOfStart"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static">${data.feedbackDate}</p>
+                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="dayOfStartP">${data.feedbackDate}</p>
+                              <c:if test="${stat.first}">
+                                  <input class="stateInput" type="text" name="dayOfStart" id="dayOfStartInput" style="display:none">
+                              </c:if>
                           </div>
                       </div>
                   </c:when>
               </c:choose>
+              <c:if test="${stat.first}">
+                  <button type="submit" class="btn btn-success stateInput" style="display:none">
+                      <spring:message code="save.button"/>
+                  </button>
+                  <button type="reset" class="btn btn-danger stateInput" style="display:none" onclick="cancelButtonOnClick()">
+                      <spring:message code="cancel.button"/>
+                  </button>
+              </c:if>
           </form>
       </c:forEach>
   </jsp:body>
