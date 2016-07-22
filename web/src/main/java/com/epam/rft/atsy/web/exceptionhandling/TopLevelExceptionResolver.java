@@ -6,9 +6,11 @@ import com.epam.rft.atsy.service.exception.DuplicateCandidateException;
 import com.epam.rft.atsy.service.exception.DuplicateChannelException;
 import com.epam.rft.atsy.service.exception.DuplicatePositionException;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Locale;
@@ -40,6 +42,9 @@ public class TopLevelExceptionResolver extends AbstractExceptionResolver {
   @Resource
   private MessageSource messageSource;
 
+  @Autowired
+  private LocaleResolver localeResolver;
+
   @Override
   public int getOrder() {
     return HIGHEST_PRECEDENCE;
@@ -49,7 +54,7 @@ public class TopLevelExceptionResolver extends AbstractExceptionResolver {
   public ModelAndView resolveException(HttpServletRequest httpServletRequest,
                                        HttpServletResponse httpServletResponse, Object o,
                                        Exception e) {
-    Locale locale = httpServletRequest.getLocale();
+    Locale locale = localeResolver.resolveLocale(httpServletRequest);
 
     if (e instanceof DuplicateRecordException) {
       return handleDuplicate(locale, httpServletRequest, httpServletResponse,
@@ -72,7 +77,9 @@ public class TopLevelExceptionResolver extends AbstractExceptionResolver {
   private ModelAndView handleDuplicate(Locale locale, HttpServletRequest request,
                                        HttpServletResponse response,
                                        DuplicateRecordException ex) {
-    if (isAjaxRequest(request)) {
+    response.setStatus(HttpServletResponse.SC_CONFLICT);
+
+    if (!isAjaxRequest(request)) {
       return new ModelAndView(ERROR_VIEW_NAME);
     }
 
@@ -98,6 +105,8 @@ public class TopLevelExceptionResolver extends AbstractExceptionResolver {
   private ModelAndView handleNotReadable(Locale locale, HttpServletRequest request,
                                          HttpServletResponse response,
                                          Exception ex) {
+    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+
     if (!isAjaxRequest(request)) {
       return new ModelAndView(ERROR_VIEW_NAME);
     }

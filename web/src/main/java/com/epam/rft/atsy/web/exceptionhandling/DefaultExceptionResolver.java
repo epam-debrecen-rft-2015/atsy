@@ -1,9 +1,12 @@
 package com.epam.rft.atsy.web.exceptionhandling;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Locale;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +24,9 @@ public class DefaultExceptionResolver extends AbstractExceptionResolver {
   @Resource
   private MessageSource messageSource;
 
+  @Autowired
+  private LocaleResolver localeResolver;
+
   @Override
   public int getOrder() {
     return HIGHEST_PRECEDENCE + 2;
@@ -37,9 +43,11 @@ public class DefaultExceptionResolver extends AbstractExceptionResolver {
     } else {
       ModelAndView modelAndView = new ModelAndView(jsonView);
 
+      Locale locale = localeResolver.resolveLocale(httpServletRequest);
+
       String message =
           messageSource
-              .getMessage(TECHNICAL_ERROR_MESSAGE_KEY, null, httpServletRequest.getLocale());
+              .getMessage(TECHNICAL_ERROR_MESSAGE_KEY, null, locale);
 
       ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
 
