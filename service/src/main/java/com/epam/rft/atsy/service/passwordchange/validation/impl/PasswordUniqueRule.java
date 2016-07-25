@@ -1,11 +1,11 @@
 package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
+import com.epam.rft.atsy.service.AuthenticationService;
 import com.epam.rft.atsy.service.PasswordChangeService;
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.exception.BackendException;
 import com.epam.rft.atsy.service.exception.UserNotLoggedInException;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
-import com.epam.rft.atsy.service.security.SpringSecurityAuthenticationService;
 import com.epam.rft.atsy.service.security.UserDetailsAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -17,14 +17,14 @@ public class PasswordUniqueRule implements PasswordValidationRule {
 
   private PasswordChangeService passwordChangeService;
 
-  private SpringSecurityAuthenticationService springSecurityAuthenticationService;
+  private AuthenticationService authenticationService;
 
   public PasswordUniqueRule(PasswordChangeService passwordChangeService,
-                            SpringSecurityAuthenticationService springSecurityAuthenticationService) {
+                            AuthenticationService authenticationService) {
     bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     this.passwordChangeService = passwordChangeService;
-    this.springSecurityAuthenticationService = springSecurityAuthenticationService;
+    this.authenticationService = authenticationService;
   }
 
   @Override
@@ -32,7 +32,7 @@ public class PasswordUniqueRule implements PasswordValidationRule {
     UserDetailsAdapter userDetails = null;
 
     try {
-      userDetails = springSecurityAuthenticationService.getCurrentUserDetails();
+      userDetails = authenticationService.getCurrentUserDetails();
     } catch (UserNotLoggedInException e) {
       throw new BackendException(e);
     }

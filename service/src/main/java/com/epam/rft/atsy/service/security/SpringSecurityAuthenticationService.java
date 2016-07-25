@@ -17,12 +17,16 @@ public class SpringSecurityAuthenticationService implements AuthenticationServic
   public UserDetailsAdapter getCurrentUserDetails() throws UserNotLoggedInException {
 
     if (SecurityContextHolder.getContext().getAuthentication() != null) {
-      return (UserDetailsAdapter) SecurityContextHolder.getContext().getAuthentication()
-          .getPrincipal();
-    } else {
-      throw new UserNotLoggedInException();
+      UserDetailsAdapter
+          userDetailsAdapter =
+          (UserDetailsAdapter) SecurityContextHolder.getContext().getAuthentication()
+              .getPrincipal();
+      if (userDetailsAdapter != null) {
+        return userDetailsAdapter;
+      }
     }
 
+    throw new UserNotLoggedInException();
   }
 
   @Override

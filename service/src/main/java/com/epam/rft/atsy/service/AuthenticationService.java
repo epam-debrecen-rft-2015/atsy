@@ -2,7 +2,6 @@ package com.epam.rft.atsy.service;
 
 import com.epam.rft.atsy.service.exception.UserNotLoggedInException;
 import com.epam.rft.atsy.service.security.UserDetailsAdapter;
-import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Service interface for authentication purposes.
@@ -13,10 +12,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 public interface AuthenticationService {
 
   /**
-   * Getter for the current user's {@link UserDetails}.
-   * @return the current user's {@code UserDetails}
+   * Getter for the current user's {@link UserDetailsAdapter}.
+   * @return the current user's {@code UserDetailsAdapter}
    */
-  public UserDetails getCurrentUserDetails() throws UserNotLoggedInException;
+  public UserDetailsAdapter getCurrentUserDetails() throws UserNotLoggedInException;
 
   /**
    * Checks if the current user is authenticated.

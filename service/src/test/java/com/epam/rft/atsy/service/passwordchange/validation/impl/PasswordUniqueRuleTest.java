@@ -4,10 +4,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 
+import com.epam.rft.atsy.service.AuthenticationService;
 import com.epam.rft.atsy.service.PasswordChangeService;
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.exception.UserNotLoggedInException;
-import com.epam.rft.atsy.service.security.SpringSecurityAuthenticationService;
 import com.epam.rft.atsy.service.security.UserDetailsAdapter;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,9 +24,9 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class PasswordUniqueRuleTest {
 
-  public static final long USER_ID = 1L;
-  public static final String USER_NAME = "test";
-  public static final String USER_PASSWORD = "test";
+  private static final long USER_ID = 1L;
+  private static final String USER_NAME = "test";
+  private static final String USER_PASSWORD = "test";
 
   private static final String PASSWORD_HISTORY_1 = "password1";
   private static final String PASSWORD_HISTORY_2 = "password2";
@@ -42,7 +42,7 @@ public class PasswordUniqueRuleTest {
   private PasswordChangeService passwordChangeService;
 
   @Mock
-  private SpringSecurityAuthenticationService springSecurityAuthenticationService;
+  private AuthenticationService authenticationService;
 
   @InjectMocks
   private PasswordUniqueRule passwordUniqueRule;
@@ -51,7 +51,7 @@ public class PasswordUniqueRuleTest {
   public void setUp() throws UserNotLoggedInException {
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-    singleElementPasswordHistory = Arrays.asList(
+    singleElementPasswordHistory = Collections.singletonList(
         bCryptPasswordEncoder.encode(PASSWORD_HISTORY_1)
     );
 
@@ -65,7 +65,7 @@ public class PasswordUniqueRuleTest {
         userDetailsAdapter =
         new UserDetailsAdapter(USER_ID, USER_NAME, USER_PASSWORD);
 
-    given(springSecurityAuthenticationService.getCurrentUserDetails())
+    given(authenticationService.getCurrentUserDetails())
         .willReturn(userDetailsAdapter);
   }
 
