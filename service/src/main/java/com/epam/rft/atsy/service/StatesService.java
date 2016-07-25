@@ -1,8 +1,8 @@
 package com.epam.rft.atsy.service;
 
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
-import com.epam.rft.atsy.service.domain.states.StateDTO;
-import com.epam.rft.atsy.service.domain.states.StateViewDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+import com.epam.rft.atsy.service.domain.states.StateViewHistoryDTO;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,14 +25,14 @@ public interface StatesService {
    * @param applicationId the application's id
    * @return the state's id
    */
-  Long saveState(StateDTO state, Long applicationId);
+  Long saveState(StateHistoryDTO state, Long applicationId);
 
   /**
    * Returns the list of states of the given application.
    * @param applicationId the application's id
    * @return the list of states of the application
    */
-  List<StateViewDTO> getStatesByApplicationId(Long applicationId);
+  List<StateViewHistoryDTO> getStatesByApplicationId(Long applicationId);
 
 
 }

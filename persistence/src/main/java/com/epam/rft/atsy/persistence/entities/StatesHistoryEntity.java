@@ -52,17 +52,17 @@ public class StatesHistoryEntity extends SuperEntity {
   @Column(name = "day_of_start")
   private Date dayOfStart;
 
-  @Column(name = "state_type", updatable = false)
-  private String stateType;
+  @OneToOne
+  @JoinColumn(name = "state_id")
+  private StatesEntity statesEntity;
 
-  @Column(name = "state_index")
-  private Integer stateIndex;
+
 
 
   @Builder
   public StatesHistoryEntity(Long id, ApplicationEntity applicationEntity, Date creationDate,
                              Short languageSkill, String description, String result, Long offeredMoney,
-                             Long claim, Date feedbackDate, Date dayOfStart, String stateType, Integer stateIndex) {
+                             Long claim, Date feedbackDate, Date dayOfStart, StatesEntity statesEntity) {
     super(id);
     this.applicationEntity = applicationEntity;
     this.creationDate = creationDate;
@@ -73,8 +73,7 @@ public class StatesHistoryEntity extends SuperEntity {
     this.claim = claim;
     this.feedbackDate = feedbackDate;
     this.dayOfStart = dayOfStart;
-    this.stateType = stateType;
-    this.stateIndex = stateIndex;
+    this.statesEntity = statesEntity;
   }
 }
 

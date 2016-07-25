@@ -1,4 +1,4 @@
-package com.epam.rft.atsy.persistence.repositories;
+/*package com.epam.rft.atsy.persistence.repositories;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.empty;
@@ -18,13 +18,13 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
+import java.util.List;*/
 
 /**
  * Created by Gabor_Ivanyi-Nagy on 7/7/2016.
  */
 
-@Sql("classpath:sql/states/states.sql")
+/*@Sql("classpath:sql/states/states.sql")
 public class StatesRepositoryIT extends AbstractRepositoryIT {
 
   public static final String CANDIDATE_NAME_A = "Candidate A";
@@ -49,7 +49,7 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
   @Autowired
   private ApplicationsRepository applicationsRepository;
   @Autowired
-  private StatesRepository statesRepository;
+  private StatesHistoryRepository statesHistoryRepository;
   @Autowired
   private CandidateRepository candidateRepository;
 
@@ -61,7 +61,7 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
     // When
     StatesHistoryEntity
         statesHistoryEntity =
-        this.statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(applicationEntity);
+        this.statesHistoryRepository.findTopByApplicationEntityOrderByCreationDateDesc(applicationEntity);
 
     // Then
     assertNull(statesHistoryEntity);
@@ -75,7 +75,7 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
     // When
     List<StatesHistoryEntity>
         statesHistoryEntityList =
-        this.statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationEntity);
+        this.statesHistoryRepository.findByApplicationEntityOrderByCreationDateDesc(applicationEntity);
 
     // Then
     assertThat(statesHistoryEntityList, notNullValue());
@@ -91,7 +91,7 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
     // When
     StatesHistoryEntity
         statesHistoryEntity =
-        this.statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(applicationEntity);
+        this.statesHistoryRepository.findTopByApplicationEntityOrderByCreationDateDesc(applicationEntity);
 
     // Then
     assertStateEntity(statesHistoryEntity, expectedStatesHistoryEntity);
@@ -106,7 +106,7 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
     // When
     List<StatesHistoryEntity>
         statesHistoryEntityList =
-        this.statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationEntity);
+        this.statesHistoryRepository.findByApplicationEntityOrderByCreationDateDesc(applicationEntity);
     assertThat(statesHistoryEntityList, notNullValue());
     assertThat(statesHistoryEntityList.size(), is(VALUE_ONE));
     StatesHistoryEntity statesHistoryEntity = statesHistoryEntityList.get(ZEROTH_ELEMENT);
@@ -126,7 +126,7 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
     // When
     StatesHistoryEntity
         statesHistoryEntity =
-        this.statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(applicationEntity);
+        this.statesHistoryRepository.findTopByApplicationEntityOrderByCreationDateDesc(applicationEntity);
 
     // Then
     assertStateEntity(statesHistoryEntity, expectedStatesHistoryEntity);
@@ -140,7 +140,7 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
     // When
     List<StatesHistoryEntity>
         statesHistoryEntityList =
-        this.statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationEntity);
+        this.statesHistoryRepository.findByApplicationEntityOrderByCreationDateDesc(applicationEntity);
 
     // Then
     assertThat(statesHistoryEntityList, notNullValue());
@@ -280,4 +280,4 @@ public class StatesRepositoryIT extends AbstractRepositoryIT {
     assertThat(application.getCreationDate(),
         lessThanOrEqualTo(expectedApplicationEntity.getCreationDate()));
   }
-}
+}*/

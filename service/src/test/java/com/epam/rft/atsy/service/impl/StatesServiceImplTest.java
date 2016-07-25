@@ -1,4 +1,4 @@
-package com.epam.rft.atsy.service.impl;
+/*package com.epam.rft.atsy.service.impl;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -14,10 +14,10 @@ import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.entities.StatesHistoryEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
-import com.epam.rft.atsy.persistence.repositories.StatesRepository;
+import com.epam.rft.atsy.persistence.repositories.StatesHistoryRepository;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
-import com.epam.rft.atsy.service.domain.states.StateDTO;
-import com.epam.rft.atsy.service.domain.states.StateViewDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+import com.epam.rft.atsy.service.domain.states.StateViewHistoryDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -33,20 +33,20 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
+import java.util.List;*/
 
 /**
  * Created by Gabor_Ivanyi-Nagy on 7/11/2016.
  */
 
-@RunWith(MockitoJUnitRunner.class)
+/*@RunWith(MockitoJUnitRunner.class)
 public class StatesServiceImplTest {
 
   private static final Long FIRST_ID = 1L;
   private static final Long SECOND_ID = 2L;
   private static final Long THIRD_ID = 3L;
   private static final Long FIVE_SECONDS = 5L;
-  private static final Type STATE_VIEW_DTO_LIST_TYPE = new TypeToken<List<StateViewDTO>>() {
+  private static final Type STATE_VIEW_DTO_LIST_TYPE = new TypeToken<List<StateViewHistoryDTO>>() {
   }.getType();
 
   private static final String FIRST_POSITION_ENTITY_NAME = "First position";
@@ -72,7 +72,7 @@ public class StatesServiceImplTest {
       EMPTY_APPLICATION_ENTITY_LIST =
       Collections.emptyList();
   private static final List<StatesHistoryEntity> EMPTY_STATE_ENTITY_LIST = Collections.emptyList();
-  private static final List<StateViewDTO> EMPTY_STATE_VIEW_DTO_LIST = Collections.emptyList();
+  private static final List<StateViewHistoryDTO> EMPTY_STATE_VIEW_DTO_LIST = Collections.emptyList();
 
   private final Date presentDate = currentDateMinusSeconds(FIVE_SECONDS);
   private final CandidateEntity
@@ -119,8 +119,9 @@ public class StatesServiceImplTest {
       savedStatesHistoryEntity =
       StatesHistoryEntity.builder().id(FIRST_ID).applicationEntity(secondApplicationEntity)
           .stateType(FIRST_STATE_TYPE_NAME).creationDate(presentDate).build();
-  private final StateViewDTO stateViewDTO = StateViewDTO.builder().id(FIRST_ID).build();
-  private final StateDTO stateDTO = StateDTO.builder().id(FIRST_ID).build();
+  private final StateViewHistoryDTO
+      stateViewHistoryDTO = StateViewHistoryDTO.builder().id(FIRST_ID).build();
+  private final StateHistoryDTO stateHistoryDTO = StateHistoryDTO.builder().id(FIRST_ID).build();
 
   private final List<ApplicationEntity>
       applicationEntityListWithSingleElement =
@@ -135,10 +136,11 @@ public class StatesServiceImplTest {
   private final List<StatesHistoryEntity>
       statesHistoryEntityListWithThreeElements =
       Arrays.asList(firstStatesHistoryEntity, secondStatesHistoryEntity, thirdStatesHistoryEntity);
-  private final List<StateViewDTO> stateViewDTOListWithSingleElement = Arrays.asList(stateViewDTO);
-  private final List<StateViewDTO>
-      stateViewDTOListWithThreeElements =
-      Arrays.asList(stateViewDTO, stateViewDTO, stateViewDTO);
+  private final List<StateViewHistoryDTO>
+      stateViewHistoryDTOListWithSingleElement = Arrays.asList(stateViewHistoryDTO);
+  private final List<StateViewHistoryDTO>
+      stateViewHistoryDTOListWithThreeElements =
+      Arrays.asList(stateViewHistoryDTO, stateViewHistoryDTO, stateViewHistoryDTO);
 
 
   private List<CandidateApplicationDTO>
@@ -174,7 +176,7 @@ public class StatesServiceImplTest {
   private ModelMapper modelMapper;
 
   @Mock
-  private StatesRepository statesRepository;
+  private StatesHistoryRepository statesHistoryRepository;
   @Mock
   private ApplicationsRepository applicationsRepository;
   @Mock
@@ -210,68 +212,68 @@ public class StatesServiceImplTest {
   public void getStatesByApplicationIdShouldReturnAnEmptyList() {
     // Given
     given(applicationsRepository.findOne(FIRST_ID)).willReturn(APPLICATION_ENTITY_WITHOUT_STATES);
-    given(statesRepository
-        .findByApplicationEntityOrderByStateIndexDesc(APPLICATION_ENTITY_WITHOUT_STATES))
+    given(statesHistoryRepository
+        .findByApplicationEntityOrderByCreationDateDesc(APPLICATION_ENTITY_WITHOUT_STATES))
         .willReturn(EMPTY_STATE_ENTITY_LIST);
     given(modelMapper.map(EMPTY_STATE_ENTITY_LIST, STATE_VIEW_DTO_LIST_TYPE))
         .willReturn(EMPTY_STATE_VIEW_DTO_LIST);
 
     // When
-    List<StateViewDTO> stateViewDTOList = statesService.getStatesByApplicationId(FIRST_ID);
+    List<StateViewHistoryDTO> stateViewHistoryDTOList = statesService.getStatesByApplicationId(FIRST_ID);
 
     // Then
-    assertThat(stateViewDTOList, notNullValue());
-    assertThat(stateViewDTOList.isEmpty(), is(true));
+    assertThat(stateViewHistoryDTOList, notNullValue());
+    assertThat(stateViewHistoryDTOList.isEmpty(), is(true));
 
     then(applicationsRepository).should().findOne(FIRST_ID);
-    then(statesRepository).should()
-        .findByApplicationEntityOrderByStateIndexDesc(APPLICATION_ENTITY_WITHOUT_STATES);
+    then(statesHistoryRepository).should()
+        .findByApplicationEntityOrderByCreationDateDesc(APPLICATION_ENTITY_WITHOUT_STATES);
   }
 
   @Test
   public void getStatesByApplicationIdShouldReturnAListWithSingleElement() {
     // Given
     given(applicationsRepository.findOne(FIRST_ID)).willReturn(firstApplicationEntity);
-    given(statesRepository.findByApplicationEntityOrderByStateIndexDesc(firstApplicationEntity))
+    given(statesHistoryRepository.findByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity))
         .willReturn(statesHistoryEntityListWithSingleElement);
     given(modelMapper.map(statesHistoryEntityListWithSingleElement, STATE_VIEW_DTO_LIST_TYPE))
-        .willReturn(stateViewDTOListWithSingleElement);
+        .willReturn(stateViewHistoryDTOListWithSingleElement);
 
     // When
-    List<StateViewDTO> stateViewDTOList = statesService.getStatesByApplicationId(FIRST_ID);
+    List<StateViewHistoryDTO> stateViewHistoryDTOList = statesService.getStatesByApplicationId(FIRST_ID);
 
     // Then
-    assertThat(stateViewDTOList, notNullValue());
-    assertThat(stateViewDTOList.isEmpty(), is(false));
-    assertThat(stateViewDTOList, equalTo(stateViewDTOListWithSingleElement));
-    assertStateViewDtoListByCreationDateAsString(stateViewDTOList);
+    assertThat(stateViewHistoryDTOList, notNullValue());
+    assertThat(stateViewHistoryDTOList.isEmpty(), is(false));
+    assertThat(stateViewHistoryDTOList, equalTo(stateViewHistoryDTOListWithSingleElement));
+    assertStateViewDtoListByCreationDateAsString(stateViewHistoryDTOList);
 
     then(applicationsRepository).should().findOne(FIRST_ID);
-    then(statesRepository).should()
-        .findByApplicationEntityOrderByStateIndexDesc(firstApplicationEntity);
+    then(statesHistoryRepository).should()
+        .findByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity);
   }
 
   @Test
   public void getStatesByApplicationIdShouldReturnAListWithThreeElement() {
     // Given
     given(applicationsRepository.findOne(FIRST_ID)).willReturn(firstApplicationEntity);
-    given(statesRepository.findByApplicationEntityOrderByStateIndexDesc(firstApplicationEntity))
+    given(statesHistoryRepository.findByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity))
         .willReturn(statesHistoryEntityListWithThreeElements);
     given(modelMapper.map(statesHistoryEntityListWithThreeElements, STATE_VIEW_DTO_LIST_TYPE))
-        .willReturn(stateViewDTOListWithThreeElements);
+        .willReturn(stateViewHistoryDTOListWithThreeElements);
 
     // When
-    List<StateViewDTO> stateViewDTOList = statesService.getStatesByApplicationId(FIRST_ID);
+    List<StateViewHistoryDTO> stateViewHistoryDTOList = statesService.getStatesByApplicationId(FIRST_ID);
 
     // Then
-    assertThat(stateViewDTOList, notNullValue());
-    assertThat(stateViewDTOList.isEmpty(), is(false));
-    assertThat(stateViewDTOList, equalTo(stateViewDTOListWithThreeElements));
-    assertStateViewDtoListByCreationDateAsString(stateViewDTOList);
+    assertThat(stateViewHistoryDTOList, notNullValue());
+    assertThat(stateViewHistoryDTOList.isEmpty(), is(false));
+    assertThat(stateViewHistoryDTOList, equalTo(stateViewHistoryDTOListWithThreeElements));
+    assertStateViewDtoListByCreationDateAsString(stateViewHistoryDTOList);
 
     then(applicationsRepository).should().findOne(FIRST_ID);
-    then(statesRepository).should()
-        .findByApplicationEntityOrderByStateIndexDesc(firstApplicationEntity);
+    then(statesHistoryRepository).should()
+        .findByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -279,7 +281,7 @@ public class StatesServiceImplTest {
     // Given
 
     // When
-    statesService.saveState(stateDTO, null);
+    statesService.saveState(stateHistoryDTO, null);
 
     // Then
   }
@@ -297,12 +299,12 @@ public class StatesServiceImplTest {
   @Test
   public void saveStateShouldBeSuccessSaving() {
     // Given
-    given(modelMapper.map(stateDTO, StatesHistoryEntity.class)).willReturn(firstStatesHistoryEntity);
+    given(modelMapper.map(stateHistoryDTO, StatesHistoryEntity.class)).willReturn(firstStatesHistoryEntity);
     given(applicationsRepository.findOne(SECOND_ID)).willReturn(secondApplicationEntity);
-    given(statesRepository.save(firstStatesHistoryEntity)).willReturn(firstStatesHistoryEntity);
+    given(statesHistoryRepository.save(firstStatesHistoryEntity)).willReturn(firstStatesHistoryEntity);
 
     // When
-    Long resultId = statesService.saveState(stateDTO, SECOND_ID);
+    Long resultId = statesService.saveState(stateHistoryDTO, SECOND_ID);
 
     // Then
     assertStateEntityWhenSavingStateEntity(firstStatesHistoryEntity, savedStatesHistoryEntity);
@@ -310,7 +312,7 @@ public class StatesServiceImplTest {
     assertThat(resultId, equalTo(FIRST_ID));
 
     then(applicationsRepository).should().findOne(SECOND_ID);
-    then(statesRepository).should().save(firstStatesHistoryEntity);
+    then(statesHistoryRepository).should().save(firstStatesHistoryEntity);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -361,7 +363,7 @@ public class StatesServiceImplTest {
     given(candidateRepository.findOne(FIRST_ID)).willReturn(firstCandidateEntity);
     given(applicationsRepository.findByCandidateEntity(firstCandidateEntity))
         .willReturn(applicationEntityListWithSingleElement);
-    given(statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(firstApplicationEntity))
+    given(statesHistoryRepository.findTopByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity))
         .willReturn(firstStatesHistoryEntity);
 
     // When
@@ -375,8 +377,8 @@ public class StatesServiceImplTest {
 
     then(candidateRepository).should().findOne(FIRST_ID);
     then(applicationsRepository).should().findByCandidateEntity(firstCandidateEntity);
-    then(statesRepository).should()
-        .findTopByApplicationEntityOrderByStateIndexDesc(firstApplicationEntity);
+    then(statesHistoryRepository).should()
+        .findTopByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity);
   }
 
   @Test
@@ -385,11 +387,11 @@ public class StatesServiceImplTest {
     given(candidateRepository.findOne(FIRST_ID)).willReturn(firstCandidateEntity);
     given(applicationsRepository.findByCandidateEntity(firstCandidateEntity))
         .willReturn(applicationEntityListWithThreeElements);
-    given(statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(firstApplicationEntity))
+    given(statesHistoryRepository.findTopByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity))
         .willReturn(firstStatesHistoryEntity);
-    given(statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(secondApplicationEntity))
+    given(statesHistoryRepository.findTopByApplicationEntityOrderByCreationDateDesc(secondApplicationEntity))
         .willReturn(secondStatesHistoryEntity);
-    given(statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(thirdApplicationEntity))
+    given(statesHistoryRepository.findTopByApplicationEntityOrderByCreationDateDesc(thirdApplicationEntity))
         .willReturn(thirdStatesHistoryEntity);
 
     // When
@@ -403,17 +405,17 @@ public class StatesServiceImplTest {
 
     then(candidateRepository).should().findOne(FIRST_ID);
     then(applicationsRepository).should().findByCandidateEntity(firstCandidateEntity);
-    then(statesRepository).should()
-        .findTopByApplicationEntityOrderByStateIndexDesc(firstApplicationEntity);
-    then(statesRepository).should()
-        .findTopByApplicationEntityOrderByStateIndexDesc(secondApplicationEntity);
-    then(statesRepository).should()
-        .findTopByApplicationEntityOrderByStateIndexDesc(thirdApplicationEntity);
+    then(statesHistoryRepository).should()
+        .findTopByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity);
+    then(statesHistoryRepository).should()
+        .findTopByApplicationEntityOrderByCreationDateDesc(secondApplicationEntity);
+    then(statesHistoryRepository).should()
+        .findTopByApplicationEntityOrderByCreationDateDesc(thirdApplicationEntity);
   }
 
-  private void assertStateViewDtoListByCreationDateAsString(List<StateViewDTO> stateViewDTOList) {
-    for (StateViewDTO stateViewDTO : stateViewDTOList) {
-      assertThat(stateViewDTO.getCreationDate(), equalTo(SIMPLE_DATE_FORMAT.format(presentDate)));
+  private void assertStateViewDtoListByCreationDateAsString(List<StateViewHistoryDTO> stateViewHistoryDTOList) {
+    for (StateViewHistoryDTO stateViewHistoryDTO : stateViewHistoryDTOList) {
+      assertThat(stateViewHistoryDTO.getCreationDate(), equalTo(SIMPLE_DATE_FORMAT.format(presentDate)));
     }
   }
 
@@ -437,4 +439,4 @@ public class StatesServiceImplTest {
   private Date currentDateMinusSeconds(Long seconds) {
     return Date.from(ZonedDateTime.now().minusSeconds(seconds).toInstant());
   }
-}
+}*/

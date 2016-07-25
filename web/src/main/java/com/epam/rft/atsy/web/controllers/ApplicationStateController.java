@@ -1,7 +1,8 @@
 package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.StatesService;
-import com.epam.rft.atsy.service.domain.states.StateViewDTO;
+import com.epam.rft.atsy.service.domain.states.StateDTO;
+import com.epam.rft.atsy.service.domain.states.StateViewHistoryDTO;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,15 +32,15 @@ public class ApplicationStateController {
     ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
     modelAndView.addObject("applicationId", applicationId);
 
-    Collection<StateViewDTO>
+    Collection<StateViewHistoryDTO>
         applicationStates =
         statesService.getStatesByApplicationId(applicationId);
 
-    for (StateViewDTO stateDTO : applicationStates) {
-      String stateType = stateDTO.getStateType();
+    for (StateViewHistoryDTO stateViewHistoryDTO : applicationStates) {
+      String stateType = stateViewHistoryDTO.getStateDTO().getName();
       stateType =
           messageSource.getMessage(APPLICATION_STATE + stateType, new Object[]{stateType}, locale);
-      stateDTO.setStateType(stateType);
+      stateViewHistoryDTO.setStateDTO(new StateDTO(stateViewHistoryDTO.getStateDTO().getId(),stateType));
     }
 
     modelAndView.addObject(STATES_OBJECT_KEY, applicationStates);

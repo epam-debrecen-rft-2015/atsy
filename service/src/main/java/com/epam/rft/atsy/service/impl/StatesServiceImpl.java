@@ -5,6 +5,7 @@ import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.entities.StatesHistoryEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
+import com.epam.rft.atsy.persistence.repositories.StatesHistoryRepository;
 import com.epam.rft.atsy.persistence.repositories.StatesRepository;
 import com.epam.rft.atsy.service.StatesService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
@@ -12,7 +13,8 @@ import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
-import com.epam.rft.atsy.service.domain.states.StateViewDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+import com.epam.rft.atsy.service.domain.states.StateViewHistoryDTO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +33,18 @@ import javax.annotation.Resource;
 public class StatesServiceImpl implements StatesService {
 
   public static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
-  private final static Type STATEVIEWDTO_LIST_TYPE = new TypeToken<List<StateViewDTO>>() {
+  private final static Type STATEVIEWDTO_LIST_TYPE = new TypeToken<List<StateViewHistoryDTO>>() {
   }.getType();
   @Resource
   private ModelMapper modelMapper;
   @Autowired
-  private StatesRepository statesRepository;
+  private StatesHistoryRepository statesHistoryRepository;
   @Autowired
   private ApplicationsRepository applicationsRepository;
   @Autowired
   private CandidateRepository candidateRepository;
+  @Autowired
+  private StatesRepository statesReporitory;
 
   @Override
   public Collection<CandidateApplicationDTO> getCandidateApplicationsByCandidateId(Long id) {
@@ -57,12 +61,12 @@ public class StatesServiceImpl implements StatesService {
     for (ApplicationEntity applicationEntity : applicationList) {
       StatesHistoryEntity
           statesHistoryEntity =
-          statesRepository.findTopByApplicationEntityOrderByStateIndexDesc(applicationEntity);
+          statesHistoryRepository.findTopByApplicationEntityOrderByCreationDateDesc(applicationEntity);
 
       CandidateApplicationDTO candidateApplicationDTO = CandidateApplicationDTO.builder()
           .applicationId(applicationEntity.getId())
           .creationDate(simpleDateFormat.format(applicationEntity.getCreationDate()))
-          .stateType(statesHistoryEntity.getStateType())
+          .stateType(statesHistoryEntity.getStatesEntity().getName())
           .positionName(applicationEntity.getPositionEntity().getName())
           .lastStateId(statesHistoryEntity.getId())
           .modificationDate(simpleDateFormat.format(statesHistoryEntity.getCreationDate())).build();
@@ -74,29 +78,29 @@ public class StatesServiceImpl implements StatesService {
   }
 
   @Override
-  public Long saveState(StateDTO state, Long applicationId) {
+  public Long saveState(StateHistoryDTO state, Long applicationId) {
     Assert.notNull(state);
     Assert.notNull(applicationId);
 
     StatesHistoryEntity statesHistoryEntity = modelMapper.map(state, StatesHistoryEntity.class);
-
+    statesHistoryEntity.setStatesEntity(statesReporitory.findOne(state.getStateDTO().getId()));
     statesHistoryEntity.setCreationDate(new Date());
     statesHistoryEntity.setApplicationEntity(applicationsRepository.findOne(applicationId));
 
-    return statesRepository.save(statesHistoryEntity).getId();
+    return statesHistoryRepository.save(statesHistoryEntity).getId();
   }
 
 
   @Override
-  public List<StateViewDTO> getStatesByApplicationId(Long applicationId) {
+  public List<StateViewHistoryDTO> getStatesByApplicationId(Long applicationId) {
     Assert.notNull(applicationId);
     ApplicationEntity applicationEntity = applicationsRepository.findOne(applicationId);
 
     Assert.notNull(applicationEntity);
     List<StatesHistoryEntity>
         stateEntities =
-        statesRepository.findByApplicationEntityOrderByStateIndexDesc(applicationEntity);
-    List<StateViewDTO> stateDTOs = modelMapper.map(stateEntities, STATEVIEWDTO_LIST_TYPE);
+        statesHistoryRepository.findByApplicationEntityOrderByCreationDateDesc(applicationEntity);
+    List<StateViewHistoryDTO> stateDTOs = modelMapper.map(stateEntities, STATEVIEWDTO_LIST_TYPE);
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
@@ -107,6 +111,7 @@ public class StatesServiceImpl implements StatesService {
       stateDTOs.get(i).setPosition(modelMapper.map(applicationEntity.getPositionEntity(),
           PositionDTO.class));
       stateDTOs.get(i).setChannel(modelMapper.map(applicationEntity.getChannelEntity(), ChannelDTO.class));
+      stateDTOs.get(i).setStateDTO(modelMapper.map(stateEntities.get(i).getStatesEntity(), StateDTO.class));
     }
     return stateDTOs;
   }
