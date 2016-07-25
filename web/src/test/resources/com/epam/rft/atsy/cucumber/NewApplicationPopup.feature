@@ -34,3 +34,20 @@ Feature: New application pop-up
     Then New application popup disappears
     And the Application page is displayed
     And application is listed with all details
+
+  Scenario: new application cannot be saved without position
+    Given the user is on a New application popup of an existing candidate
+    And the user doesn't select a position
+    And the user selects direkt source
+    And the user enters comment Megjegyzés
+    When the user clicks on the Jelentkezés mentése button
+    Then the Kérem válasszon egy pozíciót message appears under the position selector
+
+  Scenario: new application cannot be saved without source
+    Given the user is on a New application popup of an existing candidate
+    And position Fejlesztő exists
+    And the user selects Fejlesztő position
+    And the user doesn't select a source
+    And the user enters comment Megjegyzés
+    When the user clicks on the Jelentkezés mentése button
+    Then the Kérem válasszon jelentkezési forrást message appears under the source selector

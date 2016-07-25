@@ -44,6 +44,9 @@ public class NewApplicationPopupStepDefs {
   private static final String COMMENT_IN_HUN = "Megjegyzés";
   private static final String NEW_APPLY_IN_HUN = "Új jelentkezés";
 
+  private static final String POSITION_DROP_DOWN_ERROR_MESSAGE_IN_HUN = "Kérem válasszon egy pozíciót";
+  private static final String APPLICATION_SOURCE_DROP_DOWN_ERROR_MESSAGE_IN_HUN = "Kérem válasszon egy jelentkezési forrást";
+
   private static final Integer COLUMN_ZEROTH = 0;
   private static final Integer COLUMN_FIRST = 1;
   private static final Integer COLUMN_SECOND = 2;
@@ -165,6 +168,29 @@ public class NewApplicationPopupStepDefs {
   public void the_user_enters_comment_Remark() throws Throwable {
     webDriver.findElement(By.id(DESCRIPTION)).sendKeys(COMMENT_IN_HUN);
   }
+
+  @And("^the user doesn't select a position$")
+  public void the_user_does_not_select_a_position() throws Throwable {
+    // Do nothing
+  }
+
+  @Then("^the Kérem válasszon egy pozíciót message appears under the position selector$")
+  public void the_please_choose_one_position_message_appears_under_the_position_selector() throws Throwable {
+    String positionDropDownErrorMessage = webDriver.findElement(By.id("position_error")).getText();
+    assertThat(positionDropDownErrorMessage, equalTo(POSITION_DROP_DOWN_ERROR_MESSAGE_IN_HUN));
+  }
+
+  @And("^the user doesn't select a source$")
+  public void the_user_does_not_select_a_source() throws Throwable {
+    // Do nothing
+  }
+
+  @Then("^the Kérem válasszon jelentkezési forrást message appears under the source selector$")
+  public void the_please_choose_an_application_source_message_appears_under_the_source_selector() throws Throwable {
+    String applicationSourceDropDownErrorMessage = webDriver.findElement(By.id("application_source_error")).getText();
+    assertThat(applicationSourceDropDownErrorMessage, equalTo(APPLICATION_SOURCE_DROP_DOWN_ERROR_MESSAGE_IN_HUN));
+  }
+
 
   private Integer getOptionsSizeFromDropdown(String dropdownName) {
     return new Select(webDriver.findElement(By.id(dropdownName))).getOptions().size();
