@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -20,4 +21,10 @@ public class StatesEntity extends SuperEntity {
 
   @Column(name = "name")
   private String name;
+
+  @Builder
+  public StatesEntity(Long id, String name) {
+    super(id);
+    this.name = name;
+  }
 }
