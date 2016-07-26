@@ -97,7 +97,7 @@ public class PasswordOldPasswordMatchesRuleTest {
   }
 
   @Test
-  public void isValidShouldNotBeValidWhenUserDetailsIsNull() throws UserNotLoggedInException {
+  public void isValidShouldNotBeValidWhenUserIsNotLoggedIn() throws UserNotLoggedInException {
     // Given
     PasswordChangeDTO
         passwordChangeDTO =
