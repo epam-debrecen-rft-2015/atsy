@@ -18,7 +18,7 @@ public class OptionsControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void loadPageShouldRenderCandidatesView() throws Exception {
+  public void loadPageShouldRenderSettingsView() throws Exception {
     mockMvc.perform(get(REQUEST_URL))
         .andExpect(status().isOk())
         .andExpect(view().name(VIEW_NAME))
