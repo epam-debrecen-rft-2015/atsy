@@ -2,7 +2,7 @@ package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.service.StatesService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
-import com.epam.rft.atsy.service.domain.states.StateViewHistoryDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
 import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,17 +26,18 @@ public class ApplicationStatesController {
   private MessageSource messageSource;
 
   @RequestMapping(method = RequestMethod.GET)
-  public Collection<StateViewHistoryDTO> loadApplications(
+  public Collection<StateHistoryViewDTO> loadApplications(
       @PathVariable(value = "applicationId") Long applicationId, Locale locale) {
-    Collection<StateViewHistoryDTO>
+    Collection<StateHistoryViewDTO>
         applicationStates =
         statesService.getStatesByApplicationId(applicationId);
 
-    for (StateViewHistoryDTO stateViewHistoryDTO : applicationStates) {
-      String stateType = stateViewHistoryDTO.getStateDTO().getName();
+    for (StateHistoryViewDTO stateHistoryViewDTO : applicationStates) {
+      String stateType = stateHistoryViewDTO.getStateDTO().getName();
       stateType =
           messageSource.getMessage(APPLICATION_STATE + stateType, new Object[]{stateType}, locale);
-      stateViewHistoryDTO.setStateDTO(new StateDTO(stateViewHistoryDTO.getStateDTO().getId(),stateType));
+      stateHistoryViewDTO
+          .setStateDTO(new StateDTO(stateHistoryViewDTO.getStateDTO().getId(),stateType));
     }
 
     return applicationStates;

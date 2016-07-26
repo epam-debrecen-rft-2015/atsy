@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class AbstractStateDTO {
+public abstract class AbstractStateHistoryDTO {
 
   private Long id;
   private Long candidateId;

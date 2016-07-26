@@ -2,7 +2,7 @@ package com.epam.rft.atsy.service;
 
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
-import com.epam.rft.atsy.service.domain.states.StateViewHistoryDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
 
 import java.util.Collection;
 import java.util.List;
@@ -32,7 +32,7 @@ public interface StatesService {
    * @param applicationId the application's id
    * @return the list of states of the application
    */
-  List<StateViewHistoryDTO> getStatesByApplicationId(Long applicationId);
+  List<StateHistoryViewDTO> getStatesByApplicationId(Long applicationId);
 
 
 }

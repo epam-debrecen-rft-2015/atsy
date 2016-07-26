@@ -15,7 +15,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class StateHistoryDTO extends AbstractStateDTO {
+public class StateHistoryDTO extends AbstractStateHistoryDTO {
 
   private Date creationDate;
 

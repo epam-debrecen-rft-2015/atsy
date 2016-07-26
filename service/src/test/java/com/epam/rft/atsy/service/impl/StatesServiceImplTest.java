@@ -46,7 +46,7 @@ public class StatesServiceImplTest {
   private static final Long SECOND_ID = 2L;
   private static final Long THIRD_ID = 3L;
   private static final Long FIVE_SECONDS = 5L;
-  private static final Type STATE_VIEW_DTO_LIST_TYPE = new TypeToken<List<StateViewHistoryDTO>>() {
+  private static final Type STATE_VIEW_DTO_LIST_TYPE = new TypeToken<List<StateHistoryViewDTO>>() {
   }.getType();
 
   private static final String FIRST_POSITION_ENTITY_NAME = "First position";
@@ -72,7 +72,7 @@ public class StatesServiceImplTest {
       EMPTY_APPLICATION_ENTITY_LIST =
       Collections.emptyList();
   private static final List<StatesHistoryEntity> EMPTY_STATE_ENTITY_LIST = Collections.emptyList();
-  private static final List<StateViewHistoryDTO> EMPTY_STATE_VIEW_DTO_LIST = Collections.emptyList();
+  private static final List<StateHistoryViewDTO> EMPTY_STATE_VIEW_DTO_LIST = Collections.emptyList();
 
   private final Date presentDate = currentDateMinusSeconds(FIVE_SECONDS);
   private final CandidateEntity
@@ -119,8 +119,8 @@ public class StatesServiceImplTest {
       savedStatesHistoryEntity =
       StatesHistoryEntity.builder().id(FIRST_ID).applicationEntity(secondApplicationEntity)
           .stateType(FIRST_STATE_TYPE_NAME).creationDate(presentDate).build();
-  private final StateViewHistoryDTO
-      stateViewHistoryDTO = StateViewHistoryDTO.builder().id(FIRST_ID).build();
+  private final StateHistoryViewDTO
+      stateViewHistoryDTO = StateHistoryViewDTO.builder().id(FIRST_ID).build();
   private final StateHistoryDTO stateHistoryDTO = StateHistoryDTO.builder().id(FIRST_ID).build();
 
   private final List<ApplicationEntity>
@@ -136,9 +136,9 @@ public class StatesServiceImplTest {
   private final List<StatesHistoryEntity>
       statesHistoryEntityListWithThreeElements =
       Arrays.asList(firstStatesHistoryEntity, secondStatesHistoryEntity, thirdStatesHistoryEntity);
-  private final List<StateViewHistoryDTO>
+  private final List<StateHistoryViewDTO>
       stateViewHistoryDTOListWithSingleElement = Arrays.asList(stateViewHistoryDTO);
-  private final List<StateViewHistoryDTO>
+  private final List<StateHistoryViewDTO>
       stateViewHistoryDTOListWithThreeElements =
       Arrays.asList(stateViewHistoryDTO, stateViewHistoryDTO, stateViewHistoryDTO);
 
@@ -219,7 +219,7 @@ public class StatesServiceImplTest {
         .willReturn(EMPTY_STATE_VIEW_DTO_LIST);
 
     // When
-    List<StateViewHistoryDTO> stateViewHistoryDTOList = statesService.getStatesByApplicationId(FIRST_ID);
+    List<StateHistoryViewDTO> stateViewHistoryDTOList = statesService.getStatesByApplicationId(FIRST_ID);
 
     // Then
     assertThat(stateViewHistoryDTOList, notNullValue());
@@ -240,7 +240,7 @@ public class StatesServiceImplTest {
         .willReturn(stateViewHistoryDTOListWithSingleElement);
 
     // When
-    List<StateViewHistoryDTO> stateViewHistoryDTOList = statesService.getStatesByApplicationId(FIRST_ID);
+    List<StateHistoryViewDTO> stateViewHistoryDTOList = statesService.getStatesByApplicationId(FIRST_ID);
 
     // Then
     assertThat(stateViewHistoryDTOList, notNullValue());
@@ -263,7 +263,7 @@ public class StatesServiceImplTest {
         .willReturn(stateViewHistoryDTOListWithThreeElements);
 
     // When
-    List<StateViewHistoryDTO> stateViewHistoryDTOList = statesService.getStatesByApplicationId(FIRST_ID);
+    List<StateHistoryViewDTO> stateViewHistoryDTOList = statesService.getStatesByApplicationId(FIRST_ID);
 
     // Then
     assertThat(stateViewHistoryDTOList, notNullValue());
@@ -413,8 +413,8 @@ public class StatesServiceImplTest {
         .findTopByApplicationEntityOrderByCreationDateDesc(thirdApplicationEntity);
   }
 
-  private void assertStateViewDtoListByCreationDateAsString(List<StateViewHistoryDTO> stateViewHistoryDTOList) {
-    for (StateViewHistoryDTO stateViewHistoryDTO : stateViewHistoryDTOList) {
+  private void assertStateViewDtoListByCreationDateAsString(List<StateHistoryViewDTO> stateViewHistoryDTOList) {
+    for (StateHistoryViewDTO stateViewHistoryDTO : stateViewHistoryDTOList) {
       assertThat(stateViewHistoryDTO.getCreationDate(), equalTo(SIMPLE_DATE_FORMAT.format(presentDate)));
     }
   }

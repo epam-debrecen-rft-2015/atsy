@@ -3,7 +3,7 @@ package com.epam.rft.atsy.service.domain.states.builder;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
-import com.epam.rft.atsy.service.domain.states.AbstractStateDTO;
+import com.epam.rft.atsy.service.domain.states.AbstractStateHistoryDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 
 import java.util.Date;
@@ -15,7 +15,7 @@ import lombok.AllArgsConstructor;
 
 
 @AllArgsConstructor
-public abstract class AbstractStateBuilder<B extends AbstractStateBuilder<B, T>, T extends AbstractStateDTO>
+public abstract class AbstractStateBuilder<B extends AbstractStateBuilder<B, T>, T extends AbstractStateHistoryDTO>
     implements Builder<T> {
 
   protected String name;

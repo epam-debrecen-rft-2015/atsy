@@ -14,7 +14,7 @@ import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
-import com.epam.rft.atsy.service.domain.states.StateViewHistoryDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ import javax.annotation.Resource;
 public class StatesServiceImpl implements StatesService {
 
   public static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
-  private final static Type STATEVIEWDTO_LIST_TYPE = new TypeToken<List<StateViewHistoryDTO>>() {
+  private final static Type STATEVIEWDTO_LIST_TYPE = new TypeToken<List<StateHistoryViewDTO>>() {
   }.getType();
   @Resource
   private ModelMapper modelMapper;
@@ -92,27 +92,27 @@ public class StatesServiceImpl implements StatesService {
 
 
   @Override
-  public List<StateViewHistoryDTO> getStatesByApplicationId(Long applicationId) {
+  public List<StateHistoryViewDTO> getStatesByApplicationId(Long applicationId) {
     Assert.notNull(applicationId);
     ApplicationEntity applicationEntity = applicationsRepository.findOne(applicationId);
 
     Assert.notNull(applicationEntity);
     List<StatesHistoryEntity>
-        stateEntities =
+        statesHistoryEntities =
         statesHistoryRepository.findByApplicationEntityOrderByCreationDateDesc(applicationEntity);
-    List<StateViewHistoryDTO> stateDTOs = modelMapper.map(stateEntities, STATEVIEWDTO_LIST_TYPE);
+    List<StateHistoryViewDTO> stateHistoryViewDTOs = modelMapper.map(statesHistoryEntities, STATEVIEWDTO_LIST_TYPE);
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
-    for (int i = 0; i < stateDTOs.size(); i++) {
-      stateDTOs.get(i)
-          .setCreationDate(simpleDateFormat.format(stateEntities.get(i).getCreationDate()));
-      stateDTOs.get(i).setApplicationDTO(modelMapper.map(applicationEntity, ApplicationDTO.class));
-      stateDTOs.get(i).setPosition(modelMapper.map(applicationEntity.getPositionEntity(),
+    for (int i = 0; i < stateHistoryViewDTOs.size(); i++) {
+      stateHistoryViewDTOs.get(i)
+          .setCreationDate(simpleDateFormat.format(statesHistoryEntities.get(i).getCreationDate()));
+      stateHistoryViewDTOs.get(i).setApplicationDTO(modelMapper.map(applicationEntity, ApplicationDTO.class));
+      stateHistoryViewDTOs.get(i).setPosition(modelMapper.map(applicationEntity.getPositionEntity(),
           PositionDTO.class));
-      stateDTOs.get(i).setChannel(modelMapper.map(applicationEntity.getChannelEntity(), ChannelDTO.class));
-      stateDTOs.get(i).setStateDTO(modelMapper.map(stateEntities.get(i).getStatesEntity(), StateDTO.class));
+      stateHistoryViewDTOs.get(i).setChannel(modelMapper.map(applicationEntity.getChannelEntity(), ChannelDTO.class));
+      stateHistoryViewDTOs.get(i).setStateDTO(modelMapper.map(statesHistoryEntities.get(i).getStatesEntity(), StateDTO.class));
     }
-    return stateDTOs;
+    return stateHistoryViewDTOs;
   }
 }
