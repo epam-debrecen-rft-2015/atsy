@@ -20,16 +20,12 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Gabor_Ivanyi-Nagy on 7/7/2016.
- */
-
 @Sql("classpath:sql/states/states.sql")
 public class StatesHistoryRepositoryIT extends AbstractRepositoryIT {
 
-  private static final String CANDIDATE_NAME_A = "Candidate A";
-  private static final String CANDIDATE_NAME_B = "Candidate B";
-  private static final String CANDIDATE_NAME_C = "Candidate C";
+  private static final String CANDIDATE_NAME_A = "Candidate D";
+  private static final String CANDIDATE_NAME_B = "Candidate E";
+  private static final String CANDIDATE_NAME_C = "Candidate F";
 
   private static final String CHANNEL_NAME_DIRECT = "direkt";
   private static final String CHANNEL_NAME_FACEBOOK = "facebook";
