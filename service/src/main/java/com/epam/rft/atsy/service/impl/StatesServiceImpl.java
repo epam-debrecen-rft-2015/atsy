@@ -25,6 +25,7 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.Resource;
@@ -61,7 +62,8 @@ public class StatesServiceImpl implements StatesService {
     for (ApplicationEntity applicationEntity : applicationList) {
       StatesHistoryEntity
           statesHistoryEntity =
-          statesHistoryRepository.findTopByApplicationEntityOrderByCreationDateDesc(applicationEntity);
+          statesHistoryRepository
+              .findTopByApplicationEntityOrderByCreationDateDesc(applicationEntity);
 
       CandidateApplicationDTO candidateApplicationDTO = CandidateApplicationDTO.builder()
           .applicationId(applicationEntity.getId())
@@ -100,19 +102,30 @@ public class StatesServiceImpl implements StatesService {
     List<StatesHistoryEntity>
         statesHistoryEntities =
         statesHistoryRepository.findByApplicationEntityOrderByCreationDateDesc(applicationEntity);
-    List<StateHistoryViewDTO> stateHistoryViewDTOs = modelMapper.map(statesHistoryEntities, STATEVIEWDTO_LIST_TYPE);
+    List<StateHistoryViewDTO>
+        stateHistoryViewDTOs =
+        modelMapper.map(statesHistoryEntities, STATEVIEWDTO_LIST_TYPE);
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
-    for (int i = 0; i < stateHistoryViewDTOs.size(); i++) {
-      stateHistoryViewDTOs.get(i)
-          .setCreationDate(simpleDateFormat.format(statesHistoryEntities.get(i).getCreationDate()));
-      stateHistoryViewDTOs.get(i).setApplicationDTO(modelMapper.map(applicationEntity, ApplicationDTO.class));
-      stateHistoryViewDTOs.get(i).setPosition(modelMapper.map(applicationEntity.getPositionEntity(),
+    Iterator<StateHistoryViewDTO> dtoIterator = stateHistoryViewDTOs.iterator();
+    Iterator<StatesHistoryEntity> entityIterator = statesHistoryEntities.iterator();
+    while (dtoIterator.hasNext()) {
+      StateHistoryViewDTO stateHistoryViewDTO = dtoIterator.next();
+      StatesHistoryEntity statesHistoryEntity = entityIterator.next();
+
+      stateHistoryViewDTO
+          .setCreationDate(simpleDateFormat.format(statesHistoryEntity.getCreationDate()));
+      stateHistoryViewDTO
+          .setApplicationDTO(modelMapper.map(applicationEntity, ApplicationDTO.class));
+      stateHistoryViewDTO.setPosition(modelMapper.map(applicationEntity.getPositionEntity(),
           PositionDTO.class));
-      stateHistoryViewDTOs.get(i).setChannel(modelMapper.map(applicationEntity.getChannelEntity(), ChannelDTO.class));
-      stateHistoryViewDTOs.get(i).setStateDTO(modelMapper.map(statesHistoryEntities.get(i).getStatesEntity(), StateDTO.class));
+      stateHistoryViewDTO
+          .setChannel(modelMapper.map(applicationEntity.getChannelEntity(), ChannelDTO.class));
+      stateHistoryViewDTO
+          .setStateDTO(modelMapper.map(statesHistoryEntity.getStatesEntity(), StateDTO.class));
     }
+
     return stateHistoryViewDTOs;
   }
 }
