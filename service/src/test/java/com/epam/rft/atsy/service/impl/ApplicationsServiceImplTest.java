@@ -1,4 +1,4 @@
-/*package com.epam.rft.atsy.service.impl;
+package com.epam.rft.atsy.service.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -17,6 +17,7 @@ import com.epam.rft.atsy.service.StatesService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
+import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import org.junit.Rule;
 import org.junit.Test;
@@ -67,7 +68,7 @@ public class ApplicationsServiceImplTest {
           .candidateEntity(candidateEntity).positionEntity(positionEntity)
           .channelEntity(channelEntity).build();
   private final StateHistoryDTO
-      stateHistoryDTO = StateHistoryDTO.builder().stateType("newstate").stateIndex(0).build();
+      stateHistoryDTO = StateHistoryDTO.builder().stateDTO(new StateDTO(1L,"newstate")).build();
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
   @Mock
@@ -165,8 +166,7 @@ public class ApplicationsServiceImplTest {
     final StateHistoryDTO
         stateHistoryDTO =
         StateHistoryDTO.builder().channel(new ChannelDTO(8L, null)).candidateId(1L)
-            .position(new PositionDTO(1L, null)).description("sss").stateType("newstate")
-            .stateIndex(0).build();
+            .position(new PositionDTO(1L, null)).description("sss").stateDTO(new StateDTO(1L,"newstate")).build();
 
     // Given
     given(modelMapper.map(applicationDTO, ApplicationEntity.class)).willReturn(applicationEntity);
@@ -202,4 +202,4 @@ public class ApplicationsServiceImplTest {
     // When
     Long result = applicationsService.saveApplicaton(applicationDTO, null);
   }
-}*/
+}
