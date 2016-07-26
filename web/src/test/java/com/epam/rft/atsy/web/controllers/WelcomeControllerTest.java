@@ -7,14 +7,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-@RunWith(MockitoJUnitRunner.class)
 public class WelcomeControllerTest {
   private static final String VIEW_PREFIX = "/WEB-INF/pages/";
   private static final String VIEW_SUFFIX = ".jsp";
