@@ -1,6 +1,7 @@
 package com.epam.rft.atsy.service.domain;
 
 
+import java.io.Serializable;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApplicationDTO {
+public class ApplicationDTO implements Serializable {
 
   private Long id;
   private Date creationDate;
