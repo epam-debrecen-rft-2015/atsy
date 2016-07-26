@@ -1,6 +1,7 @@
 package com.epam.rft.atsy.web.controllers;
 
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.epam.rft.atsy.service.AuthenticationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,14 +11,14 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/")
 public class RootRedirectionController {
 
+  @Autowired
+  private AuthenticationService authenticationService;
+
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView pageLoad() {
 
-    if (SecurityContextHolder.getContext().getAuthentication() != null &&
-        SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
-
+    if (authenticationService.isCurrentUserAuthenticated()) {
       return new ModelAndView("redirect:/secure/welcome");
-
     } else {
       return new ModelAndView("redirect:/login");
     }
