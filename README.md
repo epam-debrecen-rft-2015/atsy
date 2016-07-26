@@ -56,6 +56,9 @@ Definition of Done
   * CI server could run tests
 1. Functionality is complete:
   * Acceptance criteria is met
+1. Functionality is covered with tests:
+  * New classes are covered by unit and integration tests
+  * Stories are covered with cucumber tests
 
 Lombok
 ======
