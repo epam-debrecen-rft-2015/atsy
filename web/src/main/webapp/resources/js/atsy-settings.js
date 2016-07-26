@@ -29,14 +29,17 @@ function SettingsForm() {
                     url: $this.attr('action'),
                     method: $this.attr('method'),
                     contentType: 'application/json',
-                    data: JSON.stringify(data)
+                    data: JSON.stringify(data),
+                    dataType: "json"
                 }).done(function () {
                     if (table instanceof $) {
                         table.bootstrapTable('refresh');
                     }
                     $this.find('input').val('');
                 }).error(function (xhr) {
-                    showError($this, xhr.responseText);
+                    var response = xhr.responseJSON;
+
+                    showError($this, response.errorMessage);
                 });
             }
         });

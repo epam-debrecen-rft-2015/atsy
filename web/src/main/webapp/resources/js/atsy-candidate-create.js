@@ -33,7 +33,7 @@ function CandidateCreateModel(){
 
 
     var self = this;
-    self.errorResponse = ko.observable({});
+    self.errorResponse = ko.observable(null);
     self.showError = ko.observable(false);
 
     self.ajaxCall = function() {
@@ -42,6 +42,7 @@ function CandidateCreateModel(){
             url: form.attr('action'),
             method: form.attr('method'),
             contentType: 'application/json',
+            dataType: "json",
             data: JSON.stringify({
                 id: self.id(),
                 name: self.name(),
@@ -52,17 +53,29 @@ function CandidateCreateModel(){
                 description: self.description()
             })
         }).done(function (xhr) {
-            window.location = form.attr('action')+ '/' + xhr;
+            window.location = form.attr('action')+ '/' + xhr.id;
         }).error(function (xhr) {
-            self.errorResponse(JSON.parse(xhr.responseText));
+            self.errorResponse(xhr.responseJSON);
 
             self.showError(true);
         });
     }
 
-    self.errorMessages = ko.pureComputed(function() {
-        return Object.keys(self.errorResponse()).map(function(key) {
-            return self.errorResponse()[key];
+    self.errorMessage = ko.pureComputed(function() {
+      if (self.errorResponse() === null) {
+        return ""
+      }
+
+      return self.errorResponse().errorMessage;
+    });
+
+    self.fieldMessages = ko.pureComputed(function() {
+        if (self.errorResponse() === null) {
+          return [];
+        }
+
+        return Object.keys(self.errorResponse().fields).map(function(key) {
+            return self.errorResponse().fields[key];
         });
     });
 
