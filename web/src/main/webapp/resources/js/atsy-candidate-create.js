@@ -102,8 +102,8 @@ $('#candidate-create-form').validator().on('submit', function (e) {
   if (e.isDefaultPrevented()) {
     // handle the invalid form...
   } else {
-    event.preventDefault();
     candidateModel.ajaxCall();
+    return false;
   }
 });
 
