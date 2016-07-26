@@ -53,16 +53,16 @@ public class GlobalControllerExceptionHandler {
    * @return a {@code ResponseEntity} containing the localized error message
    */
   @ExceptionHandler(DuplicateRecordException.class)
-  public ResponseEntity<ErrorResponse> handleDuplicate(Locale locale, DuplicateRecordException ex) {
+  public ResponseEntity<RestResponse> handleDuplicate(Locale locale, DuplicateRecordException ex) {
     String
         messageKey =
         duplicateRecordMessageKeyMap.getOrDefault(ex.getClass(), TECHNICAL_ERROR_MESSAGE_KEY);
 
     String message = messageSource.getMessage(messageKey, new Object[]{ex.getName()}, locale);
 
-    ErrorResponse errorResponse = new ErrorResponse(message);
+    RestResponse restResponse = new RestResponse(message);
 
-    return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    return new ResponseEntity<>(restResponse, HttpStatus.CONFLICT);
   }
 
   /**
@@ -88,10 +88,10 @@ public class GlobalControllerExceptionHandler {
 
       String message = messageSource.getMessage(TECHNICAL_ERROR_MESSAGE_KEY, null, locale);
 
-      ErrorResponse errorResponse = new ErrorResponse(message);
+      RestResponse restResponse = new RestResponse(message);
 
-      modelAndView.addObject("errorMessage", errorResponse.getErrorMessage());
-      modelAndView.addObject("fields", errorResponse.getFields());
+      modelAndView.addObject("errorMessage", restResponse.getErrorMessage());
+      modelAndView.addObject("fields", restResponse.getFields());
 
       return modelAndView;
     }

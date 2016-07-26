@@ -2,7 +2,7 @@ package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
-import com.epam.rft.atsy.web.exceptionhandling.ErrorResponse;
+import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -36,19 +36,19 @@ public class ChannelController {
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  public ResponseEntity<ErrorResponse> saveOrUpdate(@RequestBody ChannelDTO channelDTO,
-                                                    BindingResult result, Locale locale) {
+  public ResponseEntity<RestResponse> saveOrUpdate(@RequestBody ChannelDTO channelDTO,
+                                                   BindingResult result, Locale locale) {
     if (!result.hasErrors()) {
       channelService.saveOrUpdate(channelDTO);
 
-      return new ResponseEntity<>(ErrorResponse.NO_ERROR, HttpStatus.OK);
+      return new ResponseEntity<>(RestResponse.NO_ERROR, HttpStatus.OK);
     } else {
       String errorMessage = messageSource.getMessage(EMPTY_POSITION_NAME_MESSAGE_KEY,
           null, locale);
 
-      ErrorResponse errorResponse = new ErrorResponse(errorMessage);
+      RestResponse restResponse = new RestResponse(errorMessage);
 
-      return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(restResponse, HttpStatus.BAD_REQUEST);
     }
   }
 }

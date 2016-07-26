@@ -2,7 +2,7 @@ package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
-import com.epam.rft.atsy.web.exceptionhandling.ErrorResponse;
+import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -42,22 +42,22 @@ public class SingleCandidateController {
 
       return new ResponseEntity<>(Collections.singletonMap("id", candidateId), HttpStatus.OK);
     } else {
-      ErrorResponse errorResponse = parseValidationErrors(result.getFieldErrors(), locale);
+      RestResponse restResponse = parseValidationErrors(result.getFieldErrors(), locale);
 
-      return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(restResponse, HttpStatus.BAD_REQUEST);
     }
   }
 
-  private ErrorResponse parseValidationErrors(List<FieldError> fieldErrors, Locale locale) {
+  private RestResponse parseValidationErrors(List<FieldError> fieldErrors, Locale locale) {
     String errorMessage = messageSource.getMessage(COMMON_INVALID_INPUT_MESSAGE_KEY, null, locale);
 
-    ErrorResponse errorResponse = new ErrorResponse(errorMessage);
+    RestResponse restResponse = new RestResponse(errorMessage);
 
     for (FieldError fieldError : fieldErrors) {
-      errorResponse.addField(fieldError.getField(),
+      restResponse.addField(fieldError.getField(),
           messageSource.getMessage(fieldError.getDefaultMessage(), new Object[0], locale));
     }
 
-    return errorResponse;
+    return restResponse;
   }
 }

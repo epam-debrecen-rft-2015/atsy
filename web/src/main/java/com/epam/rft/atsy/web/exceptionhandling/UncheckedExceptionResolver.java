@@ -55,12 +55,12 @@ public class UncheckedExceptionResolver implements HandlerExceptionResolver, Ord
     if (!RequestInspector.isAjaxRequest(httpServletRequest)) {
       return new ModelAndView(ERROR_VIEW_NAME);
     } else {
-      ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+      RestResponse restResponse = new RestResponse(e.getMessage());
 
       ModelAndView modelAndView = new ModelAndView(jsonView);
 
-      modelAndView.addObject("errorMessage", errorResponse.getErrorMessage());
-      modelAndView.addObject("fields", errorResponse.getFields());
+      modelAndView.addObject("errorMessage", restResponse.getErrorMessage());
+      modelAndView.addObject("fields", restResponse.getFields());
 
       return modelAndView;
     }
