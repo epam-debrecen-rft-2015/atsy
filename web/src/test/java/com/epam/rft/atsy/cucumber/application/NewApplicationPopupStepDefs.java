@@ -24,6 +24,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 
 public class NewApplicationPopupStepDefs {
@@ -76,13 +77,13 @@ public class NewApplicationPopupStepDefs {
   @And("^the user can select a position from a dropdown$")
   public void the_user_can_select_a_position_from_a_dropdown() throws Throwable {
     Integer dropdownSize = getOptionsSizeFromDropdown(POSITION);
-    assertThat(dropdownSize, greaterThan(0));
+    assertThat(dropdownSize, greaterThanOrEqualTo(1));
   }
 
   @And("^the user can select a source of application from the list$")
   public void the_user_can_select_a_source_of_application_from_the_list() throws Throwable {
     Integer dropdownSize = getOptionsSizeFromDropdown(CHANNEL);
-    assertThat(dropdownSize, greaterThan(0));
+    assertThat(dropdownSize, greaterThanOrEqualTo(1));
   }
 
   @And("^the user can add a comment$")
@@ -105,7 +106,6 @@ public class NewApplicationPopupStepDefs {
   public void position_developer_exists() throws Throwable {
     List<String> existPositionNameList = convertWebElementsToStringList(webDriver.findElements(By.id(POSITION)));
     assertThat(isContainsAKeyword(DEVELOPER_IN_HUN, existPositionNameList), is(true));
-    //assertThat(existPositionNameList, contains(DEVELOPER_IN_HUN));
   }
 
   @And("^the user selects Fejlesztő position$")
@@ -148,7 +148,7 @@ public class NewApplicationPopupStepDefs {
 
   @And("^application is listed with all details$")
   public void application_is_listed_with_details() throws Throwable {
-    Date presentDate = currentDatePlus(5);
+    Date presentDate = currentDateMinus(5);
     WebElement table = webDriver.findElement(By.id(APPLICATIONS_TABLE));
     List<WebElement> lastRowInTheTable = getValuesFromTheLastRowFromTheTable(table);
 
@@ -210,7 +210,7 @@ public class NewApplicationPopupStepDefs {
     return allRows.get(lastRowIndex).findElements(By.tagName("td"));
   }
 
-  private Date currentDatePlus(long seconds) {
+  private Date currentDateMinus(long seconds) {
     return Date.from(ZonedDateTime.now().plusSeconds(seconds).toInstant());
   }
 
