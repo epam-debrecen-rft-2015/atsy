@@ -54,4 +54,12 @@ public class PositionServiceImpl implements PositionService {
     }
   }
 
+  @Override
+  public PositionDTO getPositionById(Long positionId) {
+    Assert.notNull(positionId);
+
+    PositionEntity positionEntity = positionRepository.findOne(positionId);
+    return modelMapper.map(positionEntity, PositionDTO.class);
+  }
+
 }

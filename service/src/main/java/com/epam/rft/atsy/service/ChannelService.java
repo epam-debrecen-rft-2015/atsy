@@ -20,4 +20,6 @@ public interface ChannelService {
    * @param channel the channel
    */
   void saveOrUpdate(ChannelDTO channel);
+
+  ChannelDTO getChannelById(Long channelId);
 }

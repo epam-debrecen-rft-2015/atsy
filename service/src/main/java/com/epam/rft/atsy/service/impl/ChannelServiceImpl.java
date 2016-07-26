@@ -55,4 +55,12 @@ public class ChannelServiceImpl implements ChannelService {
       throw new DuplicateChannelException(channelName, ex);
     }
   }
+
+  @Override
+  public ChannelDTO getChannelById(Long channelId) {
+    Assert.notNull(channelId);
+
+    ChannelEntity channelEntity = channelRepository.findOne(channelId);
+    return modelMapper.map(channelEntity, ChannelDTO.class);
+  }
 }
