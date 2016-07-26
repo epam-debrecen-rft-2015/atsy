@@ -15,44 +15,31 @@
               <small id="positionName">${states[0].position.name}</small>
           </h1>
       </div>
-      <spring:message code="candidate.table.state.newstate" var="newstate" />
-      <spring:message code="candidate.table.state.cv" var="cv" />
-      <spring:message code="candidate.table.state.hr" var="hr" />
-      <spring:message code="candidate.table.state.firstTest" var="firstTest" />
-      <spring:message code="candidate.table.state.tech" var="tech" />
-      <spring:message code="candidate.table.state.coding" var="coding" />
-      <spring:message code="candidate.table.state.profInterview" var="profInterview" />
-      <spring:message code="candidate.table.state.clientInterview" var="clientInterview" />
-      <spring:message code="candidate.table.state.wageOffer" var="wageOffer" />
-      <spring:message code="candidate.table.state.agree" var="agree" />
-      <spring:message code="candidate.table.state.accept" var="accept" />
-      <spring:message code="candidate.table.state.reject" var="reject" />
-      <spring:message code="candidate.table.state.pause" var="pause" />
       <div class="button-panel clearfix">
           <form class="form-inline pull-right">
-              <c:if test="${states[0].stateDTO.name != reject && states[0].stateDTO.name != accept}">
+              <c:if test="${states[0].stateFullName != reject && states[0].stateFullName != accept}">
               <div class="form-group">
-                  <label class="form-label">Következő lépés:</label>
+                  <label class="form-label"><spring:message code="statehistory.text.nextState"/></label>
               </div>
               <div class="form-group">
                   <div class="btn-group" role="group">
                       <c:choose>
-                          <c:when test="${states[0].stateDTO.name == newstate}">
+                          <c:when test="${states[0].stateName == 'newstate'}">
                               <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.cv"/></a>
                               <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
                               <a href="#" class="btn btn-danger"><spring:message code="statehistory.buttons.reject"/></a>
                           </c:when>
-                          <c:when test="${states[0].stateDTO.name == cv}">
+                          <c:when test="${states[0].stateName == 'cv'}">
                               <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.hr"/></a>
                               <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
                               <a href="#" class="btn btn-danger"><spring:message code="statehistory.buttons.reject"/></a>
                           </c:when>
-                          <c:when test="${states[0].stateDTO.name == hr}">
+                          <c:when test="${states[0].stateName == 'hr'}">
                               <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.firstTest"/></a>
                               <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
                               <a href="#" class="btn btn-danger"><spring:message code="statehistory.buttons.reject"/></a>
                           </c:when>
-                          <c:when test="${states[0].stateDTO.name == firstTest}">
+                          <c:when test="${states[0].stateName == 'firstTest'}">
                               <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.tech"/></a>
                               <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.coding"/></a>
                               <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.profInterview"/></a>
@@ -60,7 +47,7 @@
                               <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
                               <a href="#" class="btn btn-danger"><spring:message code="statehistory.buttons.reject"/></a>
                           </c:when>
-                          <c:when test="${states[0].stateDTO.name == tech}">
+                          <c:when test="${states[0].stateName == 'tech'}">
                               <a href="#" class="btn btn-success"><spring:message code="statehistory.buttons.wageOffer"/></a>
                               <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.coding"/></a>
                               <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.profInterview"/></a>
@@ -68,7 +55,7 @@
                               <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
                               <a href="#" class="btn btn-danger"><spring:message code="statehistory.buttons.reject"/></a>
                           </c:when>
-                          <c:when test="${states[0].stateDTO.name == coding}">
+                          <c:when test="${states[0].stateName == 'coding'}">
                               <a href="#" class="btn btn-success"><spring:message code="statehistory.buttons.wageOffer"/></a>
                               <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.tech"/></a>
                               <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.profInterview"/></a>
@@ -76,7 +63,7 @@
                               <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
                               <a href="#" class="btn btn-danger"><spring:message code="statehistory.buttons.reject"/></a>
                           </c:when>
-                          <c:when test="${states[0].stateDTO.name == profInterview}">
+                          <c:when test="${states[0].stateName == 'profInterview'}">
                               <a href="#" class="btn btn-success"><spring:message code="statehistory.buttons.wageOffer"/></a>
                               <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.tech"/></a>
                               <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.coding"/></a>
@@ -84,7 +71,7 @@
                               <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
                               <a href="#" class="btn btn-danger"><spring:message code="statehistory.buttons.reject"/></a>
                           </c:when>
-                          <c:when test="${states[0].stateDTO.name == clientInterview}">
+                          <c:when test="${states[0].stateName == 'clientInterview'}">
                               <a href="#" class="btn btn-success"><spring:message code="statehistory.buttons.wageOffer"/></a>
                               <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.tech"/></a>
                               <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.coding"/></a>
@@ -92,15 +79,15 @@
                               <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
                               <a href="#" class="btn btn-danger"><spring:message code="statehistory.buttons.reject"/></a>
                           </c:when>
-                          <c:when test="${states[0].stateDTO.name == wageOffer}">
+                          <c:when test="${states[0].stateName == 'wageOffer'}">
                               <a href="#" class="btn btn-success"><spring:message code="statehistory.buttons.agree"/></a>
                               <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
                           </c:when>
-                          <c:when test="${states[0].stateDTO.name == agree}">
+                          <c:when test="${states[0].stateName == 'agree'}">
                               <a href="#" class="btn btn-success"><spring:message code="statehistory.buttons.accept"/></a>
                               <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
                           </c:when>
-                          <c:when test="${states[0].stateDTO.name == pause}">
+                          <c:when test="${states[0].stateName == 'pause'}">
                               <a href="#" class="btn btn-success"><spring:message code="statehistory.buttons.agree"/></a>
                               <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.newApplication"/></a>
                               <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.cv"/></a>
@@ -121,7 +108,7 @@
       <div id="stateList">
       <c:forEach var="data" items="${states}" varStatus="stat">
           <div class="page-header">
-              <h4 class="col-sm-6 col-md-6 col-lg-6">${data.stateDTO.name}</h4>
+              <h4 class="col-sm-6 col-md-6 col-lg-6">${data.stateFullName}</h4>
               <c:if test="${stat.first}">
               <h4 class="glyphicon glyphicon-edit pull-right" id="latestStateEditButton" onclick="editLatestStateOnClick()"></h4>
               </c:if>
@@ -146,7 +133,7 @@
                   </div>
               </div>
               <c:choose>
-                  <c:when test="${data.stateDTO.name == newstate}">
+                  <c:when test="${data.stateName == 'newstate'}">
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.position"/></label>
                           <div class="col-sm-8">
@@ -166,7 +153,7 @@
                           </div>
                       </div>
                   </c:when>
-                  <c:when test="${data.stateDTO.name == cv}">
+                  <c:when test="${data.stateName == 'cv'}">
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.cv"/></label>
                           <div class="col-sm-8">
@@ -174,7 +161,7 @@
                           </div>
                       </div>
                   </c:when>
-                  <c:when test="${data.stateDTO.name == hr}">
+                  <c:when test="${data.stateName == 'hr'}">
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.languageSkill"/></label>
                           <div class="col-sm-8">
@@ -185,7 +172,7 @@
                           </div>
                       </div>
                   </c:when>
-                  <c:when test="${data.stateDTO.name == firstTest}">
+                  <c:when test="${data.stateName == 'firstTest'}">
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.result"/></label>
                           <div class="col-sm-8">
@@ -196,7 +183,7 @@
                           </div>
                       </div>
                   </c:when>
-                  <c:when test="${data.stateDTO.name == wageOffer}">
+                  <c:when test="${data.stateName == 'wageOffer'}">
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.offeredMoney"/></label>
                           <div class="col-sm-8">
@@ -225,7 +212,7 @@
                           </div>
                       </div>
                   </c:when>
-                  <c:when test="${data.stateDTO.name == agree}">
+                  <c:when test="${data.stateName == 'agree'}">
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.dayOfStart"/></label>
                           <div class="col-sm-8">
