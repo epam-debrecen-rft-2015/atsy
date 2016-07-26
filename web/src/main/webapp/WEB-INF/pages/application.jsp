@@ -11,7 +11,7 @@
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
         <script src="<c:url value="/resources/js/atsy-application.js" />"></script>
-        <script src="<c:url value="/resources/js/atsy-new-application-popup.js" />"></script>
+        <script type="text/javascript" src="<c:url value="/resources/js/atsy-new-application-popup.js" />"></script>
     </jsp:attribute>
     <jsp:body>
         <div id="application_page">
@@ -25,7 +25,7 @@
                     <h4 id="new_application_popup_title">Új jelentkezés</h4>
                     </div>
                     <div class="modal-body">
-                        <form class="form" role="form" method="POST" id="application-create-form" action="${new_application_popup}" onsubmit="return validateApplicationSourceAndPositionDropDowns()">
+                        <form class="form" role="form" method="POST" id="application-create-form" action="${new_application_popup}">
                             <input type="hidden" name="candidateId" id="candidateId" value="${candidateId}">
                             <div class="form-group" id="positionDiv">
                                 <label id="positionLabel" class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
@@ -34,7 +34,7 @@
 
                                 <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="drop">
                                     <spring:message code="application.popup.position.drop.down.default.value" var="i18n_position_drop_down_default_value"/>
-                                    <select class="input form-control" name="position.id" id="position" onchange = "positionValidator()">
+                                    <select class="input form-control" name="position.id" id="position">
                                     <option value = "${i18n_position_drop_down_default_value}">${i18n_position_drop_down_default_value}</option>
                                     </select>
                                     <span style="color: red" id="position_error"/>
@@ -47,7 +47,7 @@
 
                                 <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="dropSource">
                                     <spring:message code="application.popup.application.source.drop.down.default.value" var="i18n_application_source_drop_down_default_value"/>
-                                    <select class="input form-control" name="channel.id" id="channel" onchange = "applicationSourceValidator()">
+                                    <select class="input form-control" name="channel.id" id="channel">
                                     <option value = "${i18n_application_source_drop_down_default_value}">${i18n_application_source_drop_down_default_value}</option>
                                     </select>
                                     <span style="color: red" id="application_source_error"/>
