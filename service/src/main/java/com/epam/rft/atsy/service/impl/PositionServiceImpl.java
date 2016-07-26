@@ -4,7 +4,7 @@ import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
 import com.epam.rft.atsy.service.PositionService;
 import com.epam.rft.atsy.service.domain.PositionDTO;
-import com.epam.rft.atsy.service.exception.DuplicateRecordException;
+import com.epam.rft.atsy.service.exception.DuplicatePositionException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -50,8 +50,7 @@ public class PositionServiceImpl implements PositionService {
 
       String positionName = position.getName();
 
-      throw new DuplicateRecordException(positionName,
-          "Duplication occurred when saving position: " + positionName, ex);
+      throw new DuplicatePositionException(positionName, ex);
     }
   }
 

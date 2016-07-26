@@ -41,16 +41,15 @@
             <div id="candidate_data">
                 <div class="row">
                     <form data-toggle="validator" class="form" role="form" method="POST" id="candidate-create-form" action="${candidateURL}" data-bind="css: { 'has-error': showError }">
-                        <div class="globalMessage alert alert-danger" role="alert"
-                             data-bind="visible: showError">
-                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                            <span class="error-message">
+                        <div class="panel panel-danger" role="alert"  data-bind="visible: showError">
+                            <div class="panel-heading" data-bind="text: errorMessage"></div>
+                            <div class="panel-body">
                                 <ul>
-                                <!-- ko foreach: errorMessages -->
-                                    <li data-bind="text: $data"></li>
-                                <!-- /ko -->
+                                    <!-- ko foreach: fieldMessages -->
+                                        <li data-bind="text: $data"></li>
+                                    <!-- /ko -->
                                 </ul>
-                            </span>
+                            </div>
                         </div>
                         <div class="form-group"
                              id="nameDiv">
