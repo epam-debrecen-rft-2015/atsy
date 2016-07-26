@@ -1,6 +1,5 @@
 package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
-import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -8,7 +7,6 @@ import static org.mockito.BDDMockito.given;
 
 import com.epam.rft.atsy.service.AuthenticationService;
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
-import com.epam.rft.atsy.service.exception.BackendException;
 import com.epam.rft.atsy.service.exception.UserNotLoggedInException;
 import com.epam.rft.atsy.service.security.UserDetailsAdapter;
 import org.junit.Before;
@@ -108,11 +106,11 @@ public class PasswordOldPasswordMatchesRuleTest {
             .build();
     given(authenticationService.getCurrentUserDetails()).willThrow(UserNotLoggedInException.class);
 
-    expectedException.expect(BackendException.class);
-    expectedException.expectCause(isA(UserNotLoggedInException.class));
-
     // When
     boolean result = passwordOldPasswordMatchesRule.isValid(passwordChangeDTO);
+
+    // Then
+    assertFalse(result);
   }
 
   @Test(expected = IllegalArgumentException.class)

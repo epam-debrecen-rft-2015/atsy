@@ -2,7 +2,6 @@ package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
 import com.epam.rft.atsy.service.AuthenticationService;
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
-import com.epam.rft.atsy.service.exception.BackendException;
 import com.epam.rft.atsy.service.exception.UserNotLoggedInException;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,10 +32,6 @@ public class PasswordOldPasswordMatchesRule implements PasswordValidationRule {
     try {
       userDetails = authenticationService.getCurrentUserDetails();
     } catch (UserNotLoggedInException e) {
-      throw new BackendException(e);
-    }
-
-    if (userDetails == null) {
       return false;
     }
 
