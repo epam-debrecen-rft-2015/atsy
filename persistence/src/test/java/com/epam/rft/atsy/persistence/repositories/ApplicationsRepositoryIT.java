@@ -15,6 +15,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
@@ -86,24 +88,38 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
         .id(4L)
         .name("facebook")
         .build();
+    ChannelEntity expectedFourthChannelEntity = ChannelEntity.builder()
+        .id(6L)
+        .name("linkedin adatbázis")
+        .build();
     PositionEntity expectedPositionEntity = PositionEntity.builder()
         .id(1L)
         .name("Fejlesztő")
         .build();
     Date nearNow = currentDateMinus(5);
 
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    Date expectedDate = null;
+    try {
+      expectedDate = simpleDateFormat.parse("2016-07-26 11:48:55");
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+
     // When
     List<ApplicationEntity> result = this.repository.findByCandidateEntity(candidateEntityC);
 
     // Then
     assertThat(result, notNullValue());
-    assertThat(result.size(), is(3));
+    assertThat(result.size(), is(4));
 
-    assertApplicationEntity(result.get(0), candidateEntityC, expectedChannelEntity,
+    assertApplicationEntity(result.get(0), candidateEntityC, expectedFourthChannelEntity,
+        expectedPositionEntity, expectedDate);
+    assertApplicationEntity(result.get(1), candidateEntityC, expectedChannelEntity,
         expectedPositionEntity, nearNow);
-    assertApplicationEntity(result.get(1), candidateEntityC, expectedSecondChannelEntity,
+    assertApplicationEntity(result.get(2), candidateEntityC, expectedSecondChannelEntity,
         expectedPositionEntity, nearNow);
-    assertApplicationEntity(result.get(2), candidateEntityC, expectedThirdChannelEntity,
+    assertApplicationEntity(result.get(3), candidateEntityC, expectedThirdChannelEntity,
         expectedPositionEntity, nearNow);
   }
 
