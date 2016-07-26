@@ -5,24 +5,21 @@
   }
 
   function positionValidator() {
-      var ddl = document.getElementById('position');
-      if (ddl.selectedIndex === 0) {
-          document.getElementById('position_error').innerHTML = ddl.options[ddl.selectedIndex].value;
+      var ddl = $('#position');
+      if (ddl.prop('selectedIndex') === 0) {
+          $('#position_error').html(ddl.val());
           return false;
       }
-
-      document.getElementById('position_error').innerHTML = '';
+      $('#position_error').html('');
       return true;
   }
 
   function applicationSourceValidator() {
-      var ddl = document.getElementById('channel');
-
-      if (ddl.selectedIndex === 0) {
-          document.getElementById('application_source_error').innerHTML = ddl.options[ddl.selectedIndex].value;
+      var ddl = $('#channel');
+      if (ddl.prop('selectedIndex') === 0) {
+          $('#application_source_error').html(ddl.val());
           return false;
       }
-
-      document.getElementById('application_source_error').innerHTML = '';
+      $('#application_source_error').html('');
       return true;
   }

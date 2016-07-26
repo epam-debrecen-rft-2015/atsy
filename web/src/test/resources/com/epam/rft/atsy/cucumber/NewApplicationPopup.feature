@@ -50,4 +50,4 @@ Feature: New application pop-up
     And the user doesn't select a source
     And the user enters comment Megjegyzés
     When the user clicks on the Jelentkezés mentése button
-    Then the Kérem válasszon jelentkezési forrást message appears under the source selector
+    Then the Kérem válasszon egy jelentkezési forrást message appears under the source selector

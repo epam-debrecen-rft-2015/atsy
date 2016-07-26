@@ -24,7 +24,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 
 public class NewApplicationPopupStepDefs {
@@ -42,11 +41,7 @@ public class NewApplicationPopupStepDefs {
 
   private static final String DEVELOPER_IN_HUN = "Fejlesztő";
   private static final String DIRECT_IN_HUN = "direkt";
-  private static final String COMMENT_IN_HUN = "Megjegyzés";
   private static final String NEW_APPLY_IN_HUN = "Új jelentkezés";
-
-  private static final String POSITION_DROP_DOWN_ERROR_MESSAGE_IN_HUN = "Kérem válasszon egy pozíciót";
-  private static final String APPLICATION_SOURCE_DROP_DOWN_ERROR_MESSAGE_IN_HUN = "Kérem válasszon egy jelentkezési forrást";
 
   private static final Integer COLUMN_ZEROTH = 0;
   private static final Integer COLUMN_FIRST = 1;
@@ -77,13 +72,13 @@ public class NewApplicationPopupStepDefs {
   @And("^the user can select a position from a dropdown$")
   public void the_user_can_select_a_position_from_a_dropdown() throws Throwable {
     Integer dropdownSize = getOptionsSizeFromDropdown(POSITION);
-    assertThat(dropdownSize, greaterThanOrEqualTo(1));
+    assertThat(dropdownSize, greaterThan(1));
   }
 
   @And("^the user can select a source of application from the list$")
   public void the_user_can_select_a_source_of_application_from_the_list() throws Throwable {
     Integer dropdownSize = getOptionsSizeFromDropdown(CHANNEL);
-    assertThat(dropdownSize, greaterThanOrEqualTo(1));
+    assertThat(dropdownSize, greaterThan(1));
   }
 
   @And("^the user can add a comment$")
@@ -108,10 +103,10 @@ public class NewApplicationPopupStepDefs {
     assertThat(isContainsAKeyword(DEVELOPER_IN_HUN, existPositionNameList), is(true));
   }
 
-  @And("^the user selects Fejlesztő position$")
-  public void the_user_selects_developer_position() throws Throwable {
+  @And("^the user selects (.*) position$")
+  public void the_user_selects_position(String positionName) throws Throwable {
     Select dropdown = new Select(webDriver.findElement(By.id(POSITION)));
-    dropdown.selectByVisibleText(DEVELOPER_IN_HUN);
+    dropdown.selectByVisibleText(positionName);
   }
 
   @And("^the user selects direkt source$")
@@ -164,9 +159,9 @@ public class NewApplicationPopupStepDefs {
   }
 
 
-  @And("^the user enters comment Megjegyzés$")
-  public void the_user_enters_comment_Remark() throws Throwable {
-    webDriver.findElement(By.id(DESCRIPTION)).sendKeys(COMMENT_IN_HUN);
+  @And("^the user enters comment (.*)$")
+  public void the_user_enters_comment(String remark) throws Throwable {
+    webDriver.findElement(By.id(DESCRIPTION)).sendKeys(remark);
   }
 
   @And("^the user doesn't select a position$")
@@ -174,10 +169,10 @@ public class NewApplicationPopupStepDefs {
     // Do nothing
   }
 
-  @Then("^the Kérem válasszon egy pozíciót message appears under the position selector$")
-  public void the_please_choose_one_position_message_appears_under_the_position_selector() throws Throwable {
+  @Then("^the (.*) message appears under the position selector$")
+  public void the_position_message_appears_under_the_position_selector(String positionMessage) throws Throwable {
     String positionDropDownErrorMessage = webDriver.findElement(By.id("position_error")).getText();
-    assertThat(positionDropDownErrorMessage, equalTo(POSITION_DROP_DOWN_ERROR_MESSAGE_IN_HUN));
+    assertThat(positionDropDownErrorMessage, equalTo(positionMessage));
   }
 
   @And("^the user doesn't select a source$")
@@ -185,10 +180,10 @@ public class NewApplicationPopupStepDefs {
     // Do nothing
   }
 
-  @Then("^the Kérem válasszon jelentkezési forrást message appears under the source selector$")
-  public void the_please_choose_an_application_source_message_appears_under_the_source_selector() throws Throwable {
+  @Then("^the (.*) message appears under the source selector$")
+  public void the_application_source_message_appears_under_the_source_selector(String applicationSourceMessage) throws Throwable {
     String applicationSourceDropDownErrorMessage = webDriver.findElement(By.id("application_source_error")).getText();
-    assertThat(applicationSourceDropDownErrorMessage, equalTo(APPLICATION_SOURCE_DROP_DOWN_ERROR_MESSAGE_IN_HUN));
+    assertThat(applicationSourceDropDownErrorMessage, equalTo(applicationSourceMessage));
   }
 
 
