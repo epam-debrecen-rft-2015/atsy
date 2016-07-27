@@ -19,6 +19,18 @@ public abstract class AbstractControllerTest {
 
   protected ObjectMapper objectMapper;
 
+  @Before
+  public void setUp() {
+    objectMapper = new ObjectMapper();
+
+    mockMvc =
+        MockMvcBuilders.standaloneSetup(controllersUnderTest())
+            .setViewResolvers(viewResolver())
+            .setControllerAdvice(controllerAdvice())
+            .setHandlerExceptionResolvers(uncheckedExceptionResolver())
+            .build();
+  }
+
   protected ViewResolver viewResolver() {
     InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
 
@@ -28,24 +40,16 @@ public abstract class AbstractControllerTest {
     return viewResolver;
   }
 
-  @Before
-  public void setUp() {
-    objectMapper = new ObjectMapper();
-
-    mockMvc =
-        MockMvcBuilders.standaloneSetup(controllersUnderTest())
-            .setViewResolvers(viewResolver())
-            .setControllerAdvice(new GlobalControllerExceptionHandler())
-            .setHandlerExceptionResolvers(uncheckedExceptionResolver())
-            .build();
-  }
-
   protected UncheckedExceptionResolver uncheckedExceptionResolver() {
     MappingJackson2JsonView jsonView = new MappingJackson2JsonView(objectMapper);
 
     jsonView.setContentType(MediaTypes.APPLICATION_JSON_UTF8.toString());
 
     return new UncheckedExceptionResolver(jsonView);
+  }
+
+  protected Object[] controllerAdvice() {
+    return new Object[]{new GlobalControllerExceptionHandler()};
   }
 
   protected abstract Object[] controllersUnderTest();
