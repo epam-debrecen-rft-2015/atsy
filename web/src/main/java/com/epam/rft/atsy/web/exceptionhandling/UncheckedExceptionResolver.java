@@ -1,7 +1,5 @@
 package com.epam.rft.atsy.web.exceptionhandling;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
@@ -17,14 +15,16 @@ import javax.servlet.http.HttpServletResponse;
  * Maintains a list of exception classes that require a more specific handling and therefore should
  * be passed to resolvers with lower precedence.
  */
-@Component
 public class UncheckedExceptionResolver implements HandlerExceptionResolver {
   private static final ModelAndView PASS_TO_NEXT_RESOLVER = null;
 
   private static final String ERROR_VIEW_NAME = "error";
 
-  @Autowired
   private MappingJackson2JsonView jsonView;
+
+  public UncheckedExceptionResolver(MappingJackson2JsonView jsonView) {
+    this.jsonView = jsonView;
+  }
 
   @Override
   public ModelAndView resolveException(HttpServletRequest httpServletRequest,
