@@ -11,6 +11,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Type;
@@ -30,18 +31,20 @@ public class PositionServiceImpl implements PositionService {
   @Autowired
   private PositionRepository positionRepository;
 
+  @Transactional(readOnly = true)
   @Override
   public Collection<PositionDTO> getAllPositions() {
     List<PositionEntity> positionEntities = positionRepository.findAll();
     return modelMapper.map(positionEntities, POSITIONDTO_LIST_TYPE);
   }
 
+  @Transactional
   @Override
   public void saveOrUpdate(PositionDTO position) {
     Assert.notNull(position);
     PositionEntity entity = modelMapper.map(position, PositionEntity.class);
     try {
-      positionRepository.save(entity);
+      positionRepository.saveAndFlush(entity);
     } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
       log.error("Save to repository failed.", ex);
 

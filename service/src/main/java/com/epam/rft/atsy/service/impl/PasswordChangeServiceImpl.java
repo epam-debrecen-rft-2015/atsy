@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class PasswordChangeServiceImpl implements PasswordChangeService {
   @Autowired
   private UserRepository userRepository;
 
+  @Transactional
   @Override
   public Long saveOrUpdate(PasswordHistoryDTO passwordHistoryDTO) {
     Assert.notNull(passwordHistoryDTO);
@@ -62,6 +64,7 @@ public class PasswordChangeServiceImpl implements PasswordChangeService {
     }
   }
 
+  @Transactional(readOnly = true)
   @Override
   public List<String> getOldPasswords(Long userId) {
     Assert.notNull(userId);
@@ -75,6 +78,7 @@ public class PasswordChangeServiceImpl implements PasswordChangeService {
     return passwords;
   }
 
+  @Transactional
   @Override
   public void deleteOldestPassword(Long userId) {
     Assert.notNull(userId);

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Type;
@@ -33,6 +34,7 @@ public class CandidateServiceImpl implements CandidateService {
   @Autowired
   private CandidateRepository candidateRepository;
 
+  @Transactional(readOnly = true)
   @Override
   public CandidateDTO getCandidate(Long id) {
     Assert.notNull(id);
@@ -41,6 +43,7 @@ public class CandidateServiceImpl implements CandidateService {
     return modelMapper.map(candidateEntity, CandidateDTO.class);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public Collection<CandidateDTO> getAllCandidate(FilterRequest sortingRequest) {
     validateFilterRequest(sortingRequest);
@@ -59,12 +62,13 @@ public class CandidateServiceImpl implements CandidateService {
     return modelMapper.map(candidateEntities, CANDIDATEDTO_LIST_TYPE);
   }
 
+  @Transactional
   @Override
   public Long saveOrUpdate(CandidateDTO candidate) {
     Assert.notNull(candidate);
     CandidateEntity entity = modelMapper.map(candidate, CandidateEntity.class);
     try {
-      return candidateRepository.save(entity).getId();
+      return candidateRepository.saveAndFlush(entity).getId();
     } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
       log.error("Save to repository failed.", ex);
 
@@ -90,6 +94,7 @@ public class CandidateServiceImpl implements CandidateService {
     Assert.notNull(searchOptions);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public CandidateDTO getCandidateByName(String name) {
     CandidateEntity candidateEntity = candidateRepository.findByName(name);

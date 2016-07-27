@@ -1,12 +1,10 @@
 package com.epam.rft.atsy.persistence.configuration;
 
 import org.flywaydb.core.Flyway;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -30,25 +28,17 @@ public class PersistenceConfiguration {
 
   private static final String JNDI_DATA_SOURCE = "jdbc/database";
 
-  @Bean
-  public static PropertyPlaceholderConfigurer placeHolderConfigurer() {
-    PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
-    configurer
-        .setSystemPropertiesMode(PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
-    return configurer;
-
-  }
 
   @Bean(initMethod = "migrate")
   public Flyway flyway(Environment env) {
-
-    ((AbstractEnvironment) env).getPropertySources().addBefore("servletContextInitParams",
-        ((AbstractEnvironment) env).getPropertySources().get("systemProperties"));
     Flyway flyway = new Flyway();
     flyway.setBaselineOnMigrate(true);
     flyway.setDataSource(dataSource());
+
+    String currentProfileName =
+      env.getActiveProfiles().length == 0 ? env.getDefaultProfiles()[0] : env.getActiveProfiles()[0];
     flyway.setLocations("classpath:db/migration/schema",
-        "classpath:db/migration/data/" + env.getActiveProfiles()[0]);
+        "classpath:db/migration/data/" + currentProfileName);
     return flyway;
   }
 

@@ -16,18 +16,18 @@ import lombok.Value;
  */
 @Value
 @AllArgsConstructor
-public class ErrorResponse {
+public class RestResponse {
   /**
-   * {@code ErrorResponse} instance without an error message and with an empty
+   * {@code RestResponse} instance without an error message and with an empty
    * fields map.
    */
-  public static final ErrorResponse NO_ERROR = new ErrorResponse();
+  public static final RestResponse NO_ERROR = new RestResponse();
 
   private final String errorMessage;
 
   private final Map<String, String> fields = new HashMap<>();
 
-  public  ErrorResponse() {
+  public RestResponse() {
     this(StringUtils.EMPTY);
   }
 

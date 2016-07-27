@@ -2,14 +2,14 @@ package com.epam.rft.atsy.persistence.repositories;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.StateEntity;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 /**
  * Repository that allows operations with the states of applications in database.
  */
-public interface StatesRepository extends CrudRepository<StateEntity, Long> {
+public interface StatesRepository extends JpaRepository<StateEntity, Long> {
 
   /**
    * Returns the states of an application in descending order.

@@ -12,14 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import java.util.Locale;
 import java.util.Map;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * A global exception handler class for all exceptions thrown by controllers (including the REST
@@ -53,47 +50,15 @@ public class GlobalControllerExceptionHandler {
    * @return a {@code ResponseEntity} containing the localized error message
    */
   @ExceptionHandler(DuplicateRecordException.class)
-  public ResponseEntity<ErrorResponse> handleDuplicate(Locale locale, DuplicateRecordException ex) {
+  public ResponseEntity<RestResponse> handleDuplicate(Locale locale, DuplicateRecordException ex) {
     String
         messageKey =
         duplicateRecordMessageKeyMap.getOrDefault(ex.getClass(), TECHNICAL_ERROR_MESSAGE_KEY);
 
     String message = messageSource.getMessage(messageKey, new Object[]{ex.getName()}, locale);
 
-    ErrorResponse errorResponse = new ErrorResponse(message);
+    RestResponse restResponse = new RestResponse(message);
 
-    return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
-  }
-
-  /**
-   * Handles all checked exceptions. Prevents the default Spring exception resolver from rendering a
-   * generic error page, instead renders a project-specific error page or a simple error JSON.
-   *
-   * Spring tries to match the most specific handler when an exception occurs so this method acts as
-   * a fallback/default handler.
-   * @param request the currently processed request
-   * @param response the response to be sent
-   * @param locale the current locale
-   * @param ex the exception to handle
-   */
-  @ExceptionHandler(Exception.class)
-  public ModelAndView handleException(HttpServletRequest request, HttpServletResponse response,
-                                      Locale locale, Exception ex) {
-    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-
-    if (!RequestInspector.isAjaxRequest(request)) {
-      return new ModelAndView(ERROR_VIEW_NAME);
-    } else {
-      ModelAndView modelAndView = new ModelAndView(jsonView);
-
-      String message = messageSource.getMessage(TECHNICAL_ERROR_MESSAGE_KEY, null, locale);
-
-      ErrorResponse errorResponse = new ErrorResponse(message);
-
-      modelAndView.addObject("errorMessage", errorResponse.getErrorMessage());
-      modelAndView.addObject("fields", errorResponse.getFields());
-
-      return modelAndView;
-    }
+    return new ResponseEntity<>(restResponse, HttpStatus.CONFLICT);
   }
 }

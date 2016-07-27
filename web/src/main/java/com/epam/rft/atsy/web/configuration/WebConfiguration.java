@@ -1,6 +1,7 @@
 package com.epam.rft.atsy.web.configuration;
 
 import com.epam.rft.atsy.service.configuration.ServiceConfiguration;
+import com.epam.rft.atsy.web.exceptionhandling.UncheckedExceptionResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -9,24 +10,24 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import java.util.List;
 import java.util.Locale;
 
 @Configuration
-@EnableWebMvc
 @ComponentScan("com.epam.rft.atsy.web")
 @Import({ServiceConfiguration.class})
-public class WebConfiguration extends WebMvcConfigurerAdapter {
+public class WebConfiguration extends WebMvcConfigurationSupport {
 
   @Bean
   public ViewResolver viewResolver() {
@@ -81,5 +82,14 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
   @Bean
   public MappingJackson2JsonView mappingJackson2JsonView() {
     return new MappingJackson2JsonView(objectMapper());
+  }
+
+  @Override
+  protected void configureHandlerExceptionResolvers(
+      List<HandlerExceptionResolver> exceptionResolvers) {
+    addDefaultHandlerExceptionResolvers(exceptionResolvers);
+
+    // The index is 1, in order to add it after the ExceptionHandlerExceptionResolver
+    exceptionResolvers.add(1, new UncheckedExceptionResolver());
   }
 }

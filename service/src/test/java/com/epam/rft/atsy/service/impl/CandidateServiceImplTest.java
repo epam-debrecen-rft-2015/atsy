@@ -238,7 +238,7 @@ public class CandidateServiceImplTest {
     given(modelMapper.map(dummyCandidateDto, CandidateEntity.class))
         .willReturn(dummyCandidateEntity);
 
-    given(candidateRepository.save(dummyCandidateEntity))
+    given(candidateRepository.saveAndFlush(dummyCandidateEntity))
         .willThrow(ConstraintViolationException.class);
 
     expectedException.expect(DuplicateCandidateException.class);
@@ -256,7 +256,7 @@ public class CandidateServiceImplTest {
     given(modelMapper.map(dummyCandidateDto, CandidateEntity.class))
         .willReturn(dummyCandidateEntity);
 
-    given(candidateRepository.save(dummyCandidateEntity))
+    given(candidateRepository.saveAndFlush(dummyCandidateEntity))
         .willThrow(DataIntegrityViolationException.class);
 
     expectedException.expect(DuplicateCandidateException.class);
@@ -273,12 +273,12 @@ public class CandidateServiceImplTest {
     given(modelMapper.map(dummyCandidateDto, CandidateEntity.class))
         .willReturn(dummyCandidateEntity);
 
-    given(candidateRepository.save(dummyCandidateEntity)).willReturn(dummyCandidateEntity);
+    given(candidateRepository.saveAndFlush(dummyCandidateEntity)).willReturn(dummyCandidateEntity);
 
     // When
     candidateService.saveOrUpdate(dummyCandidateDto);
 
     // Then
-    then(candidateRepository).should(times(1)).save(dummyCandidateEntity);
+    then(candidateRepository).should(times(1)).saveAndFlush(dummyCandidateEntity);
   }
 }

@@ -129,7 +129,8 @@ public class PositionServiceImplTest {
     // Given
     given(modelMapper.map(developerDto, PositionEntity.class)).willReturn(developerEntity);
 
-    given(positionRepository.save(developerEntity)).willThrow(ConstraintViolationException.class);
+    given(positionRepository.saveAndFlush(developerEntity))
+        .willThrow(ConstraintViolationException.class);
 
     expectedException.expect(DuplicatePositionException.class);
     expectedException.expectMessage(CoreMatchers.endsWith(DEVELOPER_NAME));
@@ -145,7 +146,7 @@ public class PositionServiceImplTest {
     // Given
     given(modelMapper.map(developerDto, PositionEntity.class)).willReturn(developerEntity);
 
-    given(positionRepository.save(developerEntity))
+    given(positionRepository.saveAndFlush(developerEntity))
         .willThrow(DataIntegrityViolationException.class);
 
     expectedException.expect(DuplicatePositionException.class);
@@ -161,12 +162,12 @@ public class PositionServiceImplTest {
     // Given
     given(modelMapper.map(developerDto, PositionEntity.class)).willReturn(developerEntity);
 
-    given(positionRepository.save(developerEntity)).willReturn(developerEntity);
+    given(positionRepository.saveAndFlush(developerEntity)).willReturn(developerEntity);
 
     // When
     positionService.saveOrUpdate(developerDto);
 
     // Then
-    then(positionRepository).should(times(1)).save(developerEntity);
+    then(positionRepository).should(times(1)).saveAndFlush(developerEntity);
   }
 }
