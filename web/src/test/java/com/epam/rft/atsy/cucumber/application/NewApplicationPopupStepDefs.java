@@ -1,6 +1,7 @@
 package com.epam.rft.atsy.cucumber.application;
 
 import com.epam.rft.atsy.cucumber.util.DriverProvider;
+import com.epam.rft.atsy.cucumber.util.FluentWaitUtil;
 
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -145,11 +146,7 @@ public class NewApplicationPopupStepDefs {
 
   @And("^application is listed with all details$")
   public void application_is_listed_with_details() throws Throwable {
-    WebDriverWait webDriverWait = new WebDriverWait(webDriver, 5);
-    webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id(APPLICATIONS_TABLE)));
-
-    Date presentDate = currentDateMinus(5);
-    WebElement table = webDriver.findElement(By.id(APPLICATIONS_TABLE));
+    WebElement table = FluentWaitUtil.fluentWait(webDriver, By.id(APPLICATIONS_TABLE));
     List<WebElement> lastRowInTheTable = getValuesFromTheLastRowFromTheTable(table);
 
     String positionName = lastRowInTheTable.get(COLUMN_ZEROTH).getText();
@@ -157,6 +154,7 @@ public class NewApplicationPopupStepDefs {
     Date lastModifiedDate = SIMPLE_DATE_FORMAT.parse(lastRowInTheTable.get(COLUMN_SECOND).getText());
     String stateName = lastRowInTheTable.get(COLUMN_THIRD).getText();
 
+    Date presentDate = currentDateMinus(5);
     assertThat(positionName, equalTo(DEVELOPER_IN_HUN));
     assertThat(addedDate, lessThanOrEqualTo(presentDate));
     assertThat(lastModifiedDate, lessThanOrEqualTo(presentDate));
