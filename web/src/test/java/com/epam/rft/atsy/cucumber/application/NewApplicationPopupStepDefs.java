@@ -1,6 +1,7 @@
 package com.epam.rft.atsy.cucumber.application;
 
 import com.epam.rft.atsy.cucumber.util.DriverProvider;
+import com.epam.rft.atsy.cucumber.util.FluentWaitUtil;
 
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -13,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import cucumber.api.java.en.And;
@@ -25,6 +25,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 
 public class NewApplicationPopupStepDefs {
@@ -144,12 +145,10 @@ public class NewApplicationPopupStepDefs {
 
   @And("^application is listed with all details$")
   public void application_is_listed_with_details() throws Throwable {
-    webDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
-    Date presentDate = currentDateMinus(5);
-    WebElement table = webDriver.findElement(By.id(APPLICATIONS_TABLE));
+    WebElement table = FluentWaitUtil.fluentWait(webDriver, By.id(APPLICATIONS_TABLE));
     List<WebElement> lastRowInTheTable = getValuesFromTheLastRowFromTheTable(table);
 
+    Date presentDate = currentDateMinus(5);
     String positionName = lastRowInTheTable.get(COLUMN_ZEROTH).getText();
     Date addedDate = SIMPLE_DATE_FORMAT.parse(lastRowInTheTable.get(COLUMN_FIRST).getText());
     Date lastModifiedDate = SIMPLE_DATE_FORMAT.parse(lastRowInTheTable.get(COLUMN_SECOND).getText());
@@ -210,7 +209,7 @@ public class NewApplicationPopupStepDefs {
   }
 
   private Date currentDateMinus(long seconds) {
-    return Date.from(ZonedDateTime.now().plusSeconds(seconds).toInstant());
+    return Date.from(ZonedDateTime.now().minusSeconds(seconds).toInstant());
   }
 
 }
