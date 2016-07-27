@@ -10,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class DriverProvider {
@@ -20,6 +21,7 @@ public class DriverProvider {
 
       try {
         driver = initiateDriver();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
       } finally {
         Runtime.getRuntime().addShutdownHook(
             new Thread(new BrowserCleanup()));

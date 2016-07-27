@@ -1,7 +1,6 @@
 package com.epam.rft.atsy.cucumber.application;
 
 import com.epam.rft.atsy.cucumber.util.DriverProvider;
-import com.epam.rft.atsy.cucumber.util.FluentWaitUtil;
 
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -25,7 +24,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 
 public class NewApplicationPopupStepDefs {
@@ -145,7 +143,7 @@ public class NewApplicationPopupStepDefs {
 
   @And("^application is listed with all details$")
   public void application_is_listed_with_details() throws Throwable {
-    WebElement table = FluentWaitUtil.fluentWait(webDriver, By.id(APPLICATIONS_TABLE));
+    WebElement table = webDriver.findElement(By.id(APPLICATIONS_TABLE));
     List<WebElement> lastRowInTheTable = getValuesFromTheLastRowFromTheTable(table);
 
     Date presentDate = currentDateMinus(5);
