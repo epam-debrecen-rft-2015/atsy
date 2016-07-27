@@ -5,6 +5,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -26,4 +27,11 @@ public class StateFlowEntity extends SuperEntity {
   @OneToOne
   @JoinColumn(name = "to_id")
   private StatesEntity toStateEntity;
+
+  @Builder
+  public StateFlowEntity(Long id, StatesEntity fromStateEntity, StatesEntity toStateEntity) {
+    super(id);
+    this.fromStateEntity = fromStateEntity;
+    this.toStateEntity = toStateEntity;
+  }
 }

@@ -7,12 +7,12 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 /**
- * Repository that allows operations with the states of applications in database.
+ * Repository that allows operations with the state histories of applications in database.
  */
 public interface StatesHistoryRepository extends CrudRepository<StatesHistoryEntity, Long> {
 
   /**
-   * Returns the states of an application in descending order.
+   * Returns the state histories of an application in descending order.
    * @param applicationEntity the application
    * @return the list of states of the application
    */
@@ -20,9 +20,10 @@ public interface StatesHistoryRepository extends CrudRepository<StatesHistoryEnt
       ApplicationEntity applicationEntity);
 
   /**
-   * Returns the newest state of the application.
+   * Returns the newest state history entity of the application.
    * @param applicationEntity the application
    * @return the newest state of the application
    */
-  StatesHistoryEntity findTopByApplicationEntityOrderByCreationDateDesc(ApplicationEntity applicationEntity);
+  StatesHistoryEntity findTopByApplicationEntityOrderByCreationDateDesc(
+      ApplicationEntity applicationEntity);
 }
