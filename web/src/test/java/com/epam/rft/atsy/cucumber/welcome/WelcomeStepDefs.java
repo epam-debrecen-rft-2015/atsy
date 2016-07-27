@@ -1,6 +1,11 @@
 package com.epam.rft.atsy.cucumber.welcome;
 
-import com.epam.rft.atsy.cucumber.util.FluentWaitUtil;
+import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
+import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForAjax;
+import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForPageLoadAfter;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -9,18 +14,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-
-import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
-import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForAjax;
-import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForPageLoadAfter;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 
 public class WelcomeStepDefs {
   private List<CandidateTableRow> expectedCandidates;
@@ -40,7 +37,9 @@ public class WelcomeStepDefs {
 
   @And("the list of candidates appears with the columns: Név, E-Mail, Telefonszám, Pályázott pozíciók")
   public void tableAppears() {
-    List<WebElement> webElements = getDriver().findElements(By.cssSelector("table > thead > tr > th"));
+    List<WebElement>
+        webElements =
+        getDriver().findElements(By.cssSelector("table > thead > tr > th"));
     assertThat(webElements.get(0).getText(), is("Név"));
     assertThat(webElements.get(1).getText(), is("E-Mail cím"));
     assertThat(webElements.get(2).getText(), is("Telefonszám"));
@@ -55,9 +54,10 @@ public class WelcomeStepDefs {
 
   @And("the list of candidates shown in order")
   public void list_of_candidates_shown(List<CandidateTableRow> table) {
-    List<WebElement> webElements =
-        getDriver().findElement(By.id("candidates_table")).findElements(By.cssSelector("tbody > tr[data-index]"));
-
+    List<WebElement>
+        webElements =
+        getDriver().findElement(By.id("candidates_table"))
+            .findElements(By.cssSelector("tbody > tr[data-index]"));
     assertThat(webElements.size(), is(table.size()));
     for (int index = 0; index < table.size(); index++) {
       CandidateTableRow expectedCandidate = table.get(index);
@@ -71,8 +71,11 @@ public class WelcomeStepDefs {
 
   @When("the user changes the order field to (.*), (.*)")
   public void the_user_changes_the_order_field_to(String field, String order) {
-    WebElement sortElement = FluentWaitUtil.fluentWait(getDriver(), By.cssSelector(
-        "#candidates_table div.fixed-table-header th[data-field=" + field + "] div.sortable"));
+    WebElement
+        sortElement =
+        getDriver().findElement(By.cssSelector(
+            "#candidates_table div.fixed-table-header th[data-field=" + field + "] div.sortable"));
+
     String currentOrderCss = sortElement.getAttribute("class");
 
     if (!(currentOrderCss).contains(order)) {
@@ -109,10 +112,10 @@ public class WelcomeStepDefs {
 
   @Then("the list of filtered candidates shown in order")
   public void list_of_filtered_candidates_shown(List<CandidateTableRow> table) {
-    List<WebElement> webElements =
-        FluentWaitUtil.fluentWait(getDriver(), (By.id("candidates_table")))
+    List<WebElement>
+        webElements =
+        getDriver().findElement(By.id("candidates_table"))
             .findElements(By.cssSelector("tbody > tr[data-index]"));
-
     assertThat(webElements.size(), is(table.size()));
     for (int index = 0; index < table.size(); index++) {
       CandidateTableRow expectedCandidate = table.get(index);
