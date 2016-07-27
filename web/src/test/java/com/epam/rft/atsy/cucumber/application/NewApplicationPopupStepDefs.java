@@ -8,6 +8,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
@@ -25,6 +26,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 
 public class NewApplicationPopupStepDefs {
 
@@ -143,6 +145,9 @@ public class NewApplicationPopupStepDefs {
 
   @And("^application is listed with all details$")
   public void application_is_listed_with_details() throws Throwable {
+    WebDriverWait webDriverWait = new WebDriverWait(webDriver, 5);
+    webDriverWait.until(presenceOfElementLocated(By.id(APPLICATIONS_TABLE)));
+
     Date presentDate = currentDateMinus(5);
     WebElement table = webDriver.findElement(By.id(APPLICATIONS_TABLE));
     List<WebElement> lastRowInTheTable = getValuesFromTheLastRowFromTheTable(table);
@@ -181,7 +186,8 @@ public class NewApplicationPopupStepDefs {
   }
 
   @Then("^the (.*) message appears under the source selector$")
-  public void the_application_source_message_appears_under_the_source_selector(String applicationSourceMessage) throws Throwable {
+  public void the_application_source_message_appears_under_the_source_selector(String applicationSourceMessage)
+      throws Throwable {
     String applicationSourceDropDownErrorMessage = webDriver.findElement(By.id("application_source_error")).getText();
     assertThat(applicationSourceDropDownErrorMessage, equalTo(applicationSourceMessage));
   }
