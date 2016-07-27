@@ -239,7 +239,8 @@ public class StateFlowServiceImplTest {
 
     then(modelMapper).should().map(stateDTO, StatesEntity.class);
     then(stateFlowRepository).should().findByFromStateEntity(statesEntity);
-    then(modelMapper).should(times(301)).map(statesEntity, StateDTO.class);
+    then(modelMapper).should(times(3)).map(statesEntity, StateDTO.class);
+    
     for (int i = 0; i < 3; ++i) {
       then(modelMapper).should()
           .map(threeElementStateFlowEntityList.get(i).getToStateEntity(), StateDTO.class);
