@@ -90,6 +90,6 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
     addDefaultHandlerExceptionResolvers(exceptionResolvers);
 
     // The index is 1, in order to add it after the ExceptionHandlerExceptionResolver
-    exceptionResolvers.add(1, new UncheckedExceptionResolver());
+    exceptionResolvers.add(1, new UncheckedExceptionResolver(mappingJackson2JsonView()));
   }
 }
