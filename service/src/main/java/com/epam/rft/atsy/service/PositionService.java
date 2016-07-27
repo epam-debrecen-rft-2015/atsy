@@ -20,6 +20,4 @@ public interface PositionService {
    * @param position the position
    */
   void saveOrUpdate(PositionDTO position);
-
-  PositionDTO getPositionById(Long positionId);
 }

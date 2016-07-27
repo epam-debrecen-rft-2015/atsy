@@ -1,37 +1,35 @@
 package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.ApplicationsService;
-import com.epam.rft.atsy.service.CandidateService;
-import com.epam.rft.atsy.service.ChannelService;
-import com.epam.rft.atsy.service.PositionService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
-import com.epam.rft.atsy.service.exception.CandidateNotFoundException;
-import com.epam.rft.atsy.service.exception.ChannelNotFoundException;
-import com.epam.rft.atsy.service.exception.ObjectNotFoundException;
-import com.epam.rft.atsy.service.exception.PositionNotFoundException;
+import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
+
+import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
 @Controller
 public class NewApplicationPopupController {
   private static final String VIEW_NAME = "new_application_popup";
+  private static final String COMMON_INVALID_DROPDOWN_MESSAGE_KEY = "common.invalid.dropdown";
 
   @Resource
-  private CandidateService candidateService;
-  @Resource
-  private PositionService positionService;
-  @Resource
-  private ChannelService channelService;
+  private MessageSource messageSource;
   @Resource
   private ApplicationsService applicationsService;
 
@@ -41,16 +39,14 @@ public class NewApplicationPopupController {
   }
 
   @RequestMapping(method = RequestMethod.POST, value = "/secure/new_application_popup")
-  public String saveOrUpdate(@Valid @ModelAttribute StateDTO stateDTO, BindingResult result)
-      throws ObjectNotFoundException {
+  public Object saveOrUpdate(@Valid @ModelAttribute StateDTO stateDTO, BindingResult result, Locale locale) {
     if (result.hasErrors()) {
-      throw new IllegalArgumentException();
+      RestResponse restResponse = parseValidationErrors(result.getFieldErrors(), locale);
+      return new ResponseEntity(restResponse, HttpStatus.BAD_REQUEST);
     }
-    validateIdsBeforeExecuteSaveOrUpdate(stateDTO.getCandidateId(), stateDTO.getChannel().getId(),
-        stateDTO.getPosition().getId());
+
     stateDTO.setStateType("newstate");
     stateDTO.setStateIndex(0);
-
     ApplicationDTO applicationDTO = ApplicationDTO.builder()
         .creationDate(new Date())
         .candidateId(stateDTO.getCandidateId())
@@ -60,24 +56,16 @@ public class NewApplicationPopupController {
 
     applicationsService.saveApplicaton(applicationDTO, stateDTO);
     return "redirect:/secure/candidate/" + stateDTO.getCandidateId();
-
   }
 
-  private void validateIdsBeforeExecuteSaveOrUpdate(Long candidateId, Long channelId,
-                                                    Long positionId)
-      throws ObjectNotFoundException {
-    Assert.notNull(candidateId);
-    Assert.notNull(channelId);
-    Assert.notNull(positionId);
+  private RestResponse parseValidationErrors(List<FieldError> fieldErrors, Locale locale) {
+    String errorMessage = messageSource.getMessage(COMMON_INVALID_DROPDOWN_MESSAGE_KEY, null, locale);
+    RestResponse restResponse = new RestResponse(errorMessage);
 
-    if (candidateService.getCandidate(candidateId) == null) {
-      throw new CandidateNotFoundException("Candidate is not found with this id: " + candidateId);
+    for (FieldError fieldError : fieldErrors) {
+      restResponse.addField(fieldError.getField(),
+          messageSource.getMessage(fieldError.getDefaultMessage(), new Object[0], locale));
     }
-    if (channelService.getChannelById(channelId) == null) {
-      throw new ChannelNotFoundException("Channel is not found with this id: " + channelId);
-    }
-    if (positionService.getPositionById(positionId) == null) {
-      throw new PositionNotFoundException("Position is not found with this id: " + positionId);
-    }
+    return restResponse;
   }
 }

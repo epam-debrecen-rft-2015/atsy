@@ -97,10 +97,10 @@ public class NewApplicationPopupStepDefs {
     webDriver.get("http://localhost:8080/atsy/secure/application?candidateId=1");
   }
 
-  @And("^position Fejlesztő exists$")
-  public void position_developer_exists() throws Throwable {
+  @And("^position (.*) exists$")
+  public void position_developer_exists(String positionName) throws Throwable {
     List<String> existPositionNameList = convertWebElementsToStringList(webDriver.findElements(By.id(POSITION)));
-    assertThat(isContainsAKeyword(DEVELOPER_IN_HUN, existPositionNameList), is(true));
+    assertThat(isContainsAKeyword(positionName, existPositionNameList), is(true));
   }
 
   @And("^the user selects (.*) position$")
