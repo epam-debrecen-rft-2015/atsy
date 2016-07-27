@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Service that operates with states in the database layer and in the view layer.
  */
-public interface StatesService {
+public interface StatesHistoryService {
 
   /**
    * returns the collection of applications of the candidate.
@@ -25,14 +25,14 @@ public interface StatesService {
    * @param applicationId the application's id
    * @return the state's id
    */
-  Long saveState(StateHistoryDTO state, Long applicationId);
+  Long saveStateHistory(StateHistoryDTO state, Long applicationId);
 
   /**
    * Returns the list of states of the given application.
    * @param applicationId the application's id
    * @return the list of states of the application
    */
-  List<StateHistoryViewDTO> getStatesByApplicationId(Long applicationId);
+  List<StateHistoryViewDTO> getStateHistoriesByApplicationId(Long applicationId);
 
 
 }

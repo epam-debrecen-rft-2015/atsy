@@ -13,7 +13,7 @@ import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
-import com.epam.rft.atsy.service.StatesService;
+import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
@@ -74,7 +74,7 @@ public class ApplicationsServiceImplTest {
   @Mock
   private ModelMapper modelMapper;
   @Mock
-  private StatesService statesService;
+  private StatesHistoryService statesHistoryService;
   @Mock
   private ApplicationsRepository applicationsRepository;
   @Mock
@@ -181,7 +181,7 @@ public class ApplicationsServiceImplTest {
     assertNotNull(result);
     assertEquals(APPLICATION_ID, result);
 
-    then(statesService).should().saveState(stateHistoryDTO, APPLICATION_ID);
+    then(statesHistoryService).should().saveStateHistory(stateHistoryDTO, APPLICATION_ID);
     then(modelMapper).should().map(applicationDTO, ApplicationEntity.class);
     then(candidateRepository).should().findOne(CANDIDATE_ID);
     then(positionRepository).should().findOne(POSITION_ID);

@@ -1,7 +1,7 @@
 package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.StateFlowService;
-import com.epam.rft.atsy.service.StatesService;
+import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
 import org.modelmapper.ModelMapper;
@@ -31,7 +31,7 @@ public class ApplicationStateController {
       new TypeToken<List<StateHistoryViewRepresentation>>() {
       }.getType();
   @Resource
-  private StatesService statesService;
+  private StatesHistoryService statesHistoryService;
 
   @Resource
   private StateFlowService stateFlowService;
@@ -49,7 +49,7 @@ public class ApplicationStateController {
 
     List<StateHistoryViewRepresentation>
         stateHistoryViewRepresentations =
-        modelMapper.map(statesService.getStatesByApplicationId(applicationId),
+        modelMapper.map(statesHistoryService.getStateHistoriesByApplicationId(applicationId),
             STATEHISTORYVIEWREPRESENTATION_LIST_TYPE);
 
     for (StateHistoryViewRepresentation stateHistoryViewRepresentation : stateHistoryViewRepresentations) {

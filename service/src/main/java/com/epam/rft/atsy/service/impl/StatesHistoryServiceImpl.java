@@ -7,7 +7,7 @@ import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.persistence.repositories.StatesHistoryRepository;
 import com.epam.rft.atsy.persistence.repositories.StatesRepository;
-import com.epam.rft.atsy.service.StatesService;
+import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
@@ -31,19 +31,26 @@ import java.util.List;
 import javax.annotation.Resource;
 
 @Service
-public class StatesServiceImpl implements StatesService {
+public class StatesHistoryServiceImpl implements StatesHistoryService {
 
-  public static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
-  private final static Type STATEVIEWDTO_LIST_TYPE = new TypeToken<List<StateHistoryViewDTO>>() {
-  }.getType();
+  private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
+  private final static Type
+      STATE_HISTORY_VIEW_DTO_LIST_TYPE =
+      new TypeToken<List<StateHistoryViewDTO>>() {
+      }.getType();
+
   @Resource
   private ModelMapper modelMapper;
+
   @Autowired
   private StatesHistoryRepository statesHistoryRepository;
+
   @Autowired
   private ApplicationsRepository applicationsRepository;
+
   @Autowired
   private CandidateRepository candidateRepository;
+
   @Autowired
   private StatesRepository statesReporitory;
 
@@ -80,7 +87,7 @@ public class StatesServiceImpl implements StatesService {
   }
 
   @Override
-  public Long saveState(StateHistoryDTO state, Long applicationId) {
+  public Long saveStateHistory(StateHistoryDTO state, Long applicationId) {
     Assert.notNull(state);
     Assert.notNull(applicationId);
 
@@ -94,7 +101,7 @@ public class StatesServiceImpl implements StatesService {
 
 
   @Override
-  public List<StateHistoryViewDTO> getStatesByApplicationId(Long applicationId) {
+  public List<StateHistoryViewDTO> getStateHistoriesByApplicationId(Long applicationId) {
     Assert.notNull(applicationId);
     ApplicationEntity applicationEntity = applicationsRepository.findOne(applicationId);
 
@@ -104,7 +111,7 @@ public class StatesServiceImpl implements StatesService {
         statesHistoryRepository.findByApplicationEntityOrderByCreationDateDesc(applicationEntity);
     List<StateHistoryViewDTO>
         stateHistoryViewDTOs =
-        modelMapper.map(statesHistoryEntities, STATEVIEWDTO_LIST_TYPE);
+        modelMapper.map(statesHistoryEntities, STATE_HISTORY_VIEW_DTO_LIST_TYPE);
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 

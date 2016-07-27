@@ -1,7 +1,7 @@
 package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.ApplicationsService;
-import com.epam.rft.atsy.service.StatesService;
+import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
@@ -21,7 +21,7 @@ public class NewApplicationPopupController {
 
   private static final String VIEW_NAME = "new_application_popup";
   @Resource
-  private StatesService statesService;
+  private StatesHistoryService statesHistoryService;
   @Resource
   private ApplicationsService applicationsService;
 

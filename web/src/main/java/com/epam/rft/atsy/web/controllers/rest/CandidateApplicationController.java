@@ -1,6 +1,6 @@
 package com.epam.rft.atsy.web.controllers.rest;
 
-import com.epam.rft.atsy.service.StatesService;
+import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +19,7 @@ public class CandidateApplicationController {
   private static final String APPLICATION_STATE = "candidate.table.state.";
 
   @Resource
-  private StatesService statesService;
+  private StatesHistoryService statesHistoryService;
 
   @Resource
   private MessageSource messageSource;
@@ -29,7 +29,7 @@ public class CandidateApplicationController {
       @PathVariable(value = "candidateId") Long candidateId, Locale locale) {
     Collection<CandidateApplicationDTO>
         applicationStates =
-        statesService.getCandidateApplicationsByCandidateId(candidateId);
+        statesHistoryService.getCandidateApplicationsByCandidateId(candidateId);
 
     for (CandidateApplicationDTO candidateApplicationDTO : applicationStates) {
       String stateType = candidateApplicationDTO.getStateType();
