@@ -29,7 +29,7 @@ public class CandidateEntity extends SuperEntity implements Serializable {
   @Column(name = "email", length = 255)
   private String email;
 
-  @Column(name = "phone", length = 20)
+  @Column(name = "phone", length = 12)
   private String phone;
 
   @Lob
