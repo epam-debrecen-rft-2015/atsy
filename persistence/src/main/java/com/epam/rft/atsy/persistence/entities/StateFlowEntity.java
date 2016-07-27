@@ -16,12 +16,13 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Entity
-@Table(name = "applications", schema = "atsy")
+@Table(name = "state_flow", schema = "atsy")
 public class StateFlowEntity extends SuperEntity {
 
   @OneToOne
   @JoinColumn(name = "from_id")
   private StatesEntity fromStateEntity;
+
   @OneToOne
   @JoinColumn(name = "to_id")
   private StatesEntity toStateEntity;

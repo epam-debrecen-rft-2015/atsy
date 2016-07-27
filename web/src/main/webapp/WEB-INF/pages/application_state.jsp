@@ -17,92 +17,26 @@
       </div>
       <div class="button-panel clearfix">
           <form class="form-inline pull-right">
-              <c:if test="${states[0].stateFullName != reject && states[0].stateFullName != accept}">
               <div class="form-group">
                   <label class="form-label"><spring:message code="statehistory.text.nextState"/></label>
               </div>
               <div class="form-group">
                   <div class="btn-group" role="group">
+                      <c:forEach var="stateflow" items="${stateflows}" varStatus="status">
                       <c:choose>
-                          <c:when test="${states[0].stateName == 'newstate'}">
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.cv"/></a>
-                              <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
-                              <a href="#" class="btn btn-danger"><spring:message code="statehistory.buttons.reject"/></a>
+                          <c:when test="${stateflow.toStateDTO.name == 'pause'}">
+                              <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.${stateflow.toStateDTO.name}"/></a>
                           </c:when>
-                          <c:when test="${states[0].stateName == 'cv'}">
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.hr"/></a>
-                              <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
-                              <a href="#" class="btn btn-danger"><spring:message code="statehistory.buttons.reject"/></a>
+                          <c:when test="${stateflow.toStateDTO.name == 'reject'}">
+                              <a href="#" class="btn btn-danger"><spring:message code="statehistory.buttons.${stateflow.toStateDTO.name}"/></a>
                           </c:when>
-                          <c:when test="${states[0].stateName == 'hr'}">
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.firstTest"/></a>
-                              <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
-                              <a href="#" class="btn btn-danger"><spring:message code="statehistory.buttons.reject"/></a>
-                          </c:when>
-                          <c:when test="${states[0].stateName == 'firstTest'}">
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.tech"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.coding"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.profInterview"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.clientInterview"/></a>
-                              <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
-                              <a href="#" class="btn btn-danger"><spring:message code="statehistory.buttons.reject"/></a>
-                          </c:when>
-                          <c:when test="${states[0].stateName == 'tech'}">
-                              <a href="#" class="btn btn-success"><spring:message code="statehistory.buttons.wageOffer"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.coding"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.profInterview"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.clientInterview"/></a>
-                              <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
-                              <a href="#" class="btn btn-danger"><spring:message code="statehistory.buttons.reject"/></a>
-                          </c:when>
-                          <c:when test="${states[0].stateName == 'coding'}">
-                              <a href="#" class="btn btn-success"><spring:message code="statehistory.buttons.wageOffer"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.tech"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.profInterview"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.clientInterview"/></a>
-                              <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
-                              <a href="#" class="btn btn-danger"><spring:message code="statehistory.buttons.reject"/></a>
-                          </c:when>
-                          <c:when test="${states[0].stateName == 'profInterview'}">
-                              <a href="#" class="btn btn-success"><spring:message code="statehistory.buttons.wageOffer"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.tech"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.coding"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.clientInterview"/></a>
-                              <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
-                              <a href="#" class="btn btn-danger"><spring:message code="statehistory.buttons.reject"/></a>
-                          </c:when>
-                          <c:when test="${states[0].stateName == 'clientInterview'}">
-                              <a href="#" class="btn btn-success"><spring:message code="statehistory.buttons.wageOffer"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.tech"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.coding"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.profInterview"/></a>
-                              <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
-                              <a href="#" class="btn btn-danger"><spring:message code="statehistory.buttons.reject"/></a>
-                          </c:when>
-                          <c:when test="${states[0].stateName == 'wageOffer'}">
-                              <a href="#" class="btn btn-success"><spring:message code="statehistory.buttons.agree"/></a>
-                              <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
-                          </c:when>
-                          <c:when test="${states[0].stateName == 'agree'}">
-                              <a href="#" class="btn btn-success"><spring:message code="statehistory.buttons.accept"/></a>
-                              <a href="#" class="btn btn-warning"><spring:message code="statehistory.buttons.onHold"/></a>
-                          </c:when>
-                          <c:when test="${states[0].stateName == 'pause'}">
-                              <a href="#" class="btn btn-success"><spring:message code="statehistory.buttons.agree"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.newApplication"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.cv"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.hr"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.firstTest"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.tech"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.coding"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.profInterview"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.clientInterview"/></a>
-                              <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.wageOffer"/></a>
-                          </c:when>
+                          <c:otherwise>
+                          <a href="#" class="btn btn-default"><spring:message code="statehistory.buttons.${stateflow.toStateDTO.name}"/></a>
+                          </c:otherwise>
                       </c:choose>
+                      </c:forEach>
                   </div>
               </div>
-              </c:if>
           </form>
       </div>
       <div id="stateList">
