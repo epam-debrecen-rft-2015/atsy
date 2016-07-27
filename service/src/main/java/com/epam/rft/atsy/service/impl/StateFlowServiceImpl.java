@@ -16,6 +16,9 @@ import java.util.Collection;
 import java.util.List;
 import javax.annotation.Resource;
 
+/**
+ * The StateFlowService that responsible for actions with StateFlows.
+ */
 @Service
 public class StateFlowServiceImpl implements StateFlowService {
 
@@ -25,6 +28,12 @@ public class StateFlowServiceImpl implements StateFlowService {
   @Autowired
   private StateFlowRepository stateFlowRepository;
 
+  /**
+   * Returns the collection of StateFlowDTOs where the FromStateDTo is equals to the given
+   * parameter
+   * @param statesDTO the FromStateDTO
+   * @return the collection of StateFlowDTOs
+   */
   @Override
   public Collection<StateFlowDTO> getStateFlowDTOByFromStateDTO(StateDTO statesDTO) {
     Assert.notNull(statesDTO);

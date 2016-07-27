@@ -28,4 +28,11 @@ public class StateFlowEntity extends SuperEntity {
   @OneToOne
   @JoinColumn(name = "to_id")
   private StatesEntity toStateEntity;
+
+  @Builder
+  public StateFlowEntity(Long id, StatesEntity fromStateEntity, StatesEntity toStateEntity) {
+    super(id);
+    this.fromStateEntity = fromStateEntity;
+    this.toStateEntity = toStateEntity;
+  }
 }
