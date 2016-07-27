@@ -16,7 +16,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@Builder
 @Entity
 @Table(name = "state_flow", schema = "atsy")
 public class StateFlowEntity extends SuperEntity {
