@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -26,7 +27,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
-import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 
 public class NewApplicationPopupStepDefs {
 
@@ -146,7 +146,7 @@ public class NewApplicationPopupStepDefs {
   @And("^application is listed with all details$")
   public void application_is_listed_with_details() throws Throwable {
     WebDriverWait webDriverWait = new WebDriverWait(webDriver, 5);
-    webDriverWait.until(presenceOfElementLocated(By.id(APPLICATIONS_TABLE)));
+    webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id(APPLICATIONS_TABLE)));
 
     Date presentDate = currentDateMinus(5);
     WebElement table = webDriver.findElement(By.id(APPLICATIONS_TABLE));
