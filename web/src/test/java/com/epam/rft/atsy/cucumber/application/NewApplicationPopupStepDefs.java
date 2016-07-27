@@ -7,14 +7,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import cucumber.api.java.en.And;
@@ -145,8 +144,7 @@ public class NewApplicationPopupStepDefs {
 
   @And("^application is listed with all details$")
   public void application_is_listed_with_details() throws Throwable {
-    WebDriverWait webDriverWait = new WebDriverWait(webDriver, 5);
-    webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id(APPLICATIONS_TABLE)));
+    webDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
     Date presentDate = currentDateMinus(5);
     WebElement table = webDriver.findElement(By.id(APPLICATIONS_TABLE));
