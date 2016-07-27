@@ -9,6 +9,7 @@ import com.epam.rft.atsy.service.domain.states.StateFlowDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,11 +21,16 @@ public class StateFlowServiceImpl implements StateFlowService {
 
   @Resource
   private ModelMapper modelMapper;
+
   @Autowired
   private StateFlowRepository stateFlowRepository;
 
   @Override
   public Collection<StateFlowDTO> getStateFlowDTOByFromStateDTO(StateDTO statesDTO) {
+    Assert.notNull(statesDTO);
+    Assert.notNull(statesDTO.getId());
+    Assert.notNull(statesDTO.getName());
+
     List<StateFlowEntity>
         stateFlowEntities =
         stateFlowRepository.findByFromStateEntity(modelMapper.map(statesDTO,
