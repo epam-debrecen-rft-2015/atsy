@@ -106,7 +106,7 @@
                                        data-pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
                                        data-pattern-error="<spring:message
                                     code="candidate.error.email.incorrect"/>"
-                                       required maxlength="320">
+                                       required maxlength="255">
                                 <span class="help-block with-errors"></span>
 
                                 <p class="showValue form-control-static">
