@@ -1,56 +1,95 @@
 package com.epam.rft.atsy.web.controllers;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.web.servlet.ModelAndView;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Map;
+@RunWith(MockitoJUnitRunner.class)
+public class CandidateCreationControllerTest extends AbstractControllerTest {
+  private static final String VIEW_NAME = "candidate_create";
 
-public class CandidateCreationControllerTest {
+  private static final String CANDIDATE_CREATION_REQUEST_URL = "/secure/candidate";
+
+  private static final Long CANDIDATE_ID = 1L;
+
+  private static final String EXISTING_CANDIDATE_REQUEST_URL =
+      "/secure/candidate/" + CANDIDATE_ID.toString();
+
+  private static final String NON_EXISTING_CANDIDATE_REQUEST_URL =
+      "/secure/candidate/" + CANDIDATE_ID.toString();
+
+  private static final String CANDIDATE_OBJECT_KEY = "candidate";
+
+  private CandidateDTO emptyCandidateDto;
+
+  private CandidateDTO persistedCandidateDto;
 
   @Mock
-  CandidateService service;
+  private CandidateService candidateService;
+
   @InjectMocks
-  private CandidateCreationController underTest;
+  private CandidateCreationController candidateCreationController;
 
-  @BeforeMethod
-  public void setUp() {
-    MockitoAnnotations.initMocks(this);
+  @Override
+  protected Object[] controllersUnderTest() {
+    return new Object[]{candidateCreationController};
+  }
+
+  @Before
+  public void setUpTestDate() {
+    emptyCandidateDto = CandidateDTO.builder().build();
+
+    persistedCandidateDto = CandidateDTO.builder().id(CANDIDATE_ID).build();
   }
 
   @Test
-  public void loadCandidateTest() {
-    //when
-    ModelAndView model = underTest.loadCandidate();
-    Map<String, Object> testMap = model.getModel();
-    //then
-    assertThat(model.getViewName(), is("candidate_create"));
-    assertThat(testMap.containsKey("candidate"), is(true));
+  public void loadCandidateShouldRenderCandidateCreateViewWithEmptyDtoWhenRequestUrlIsCandidateCreationRequestUrl()
+      throws Exception {
+    mockMvc.perform(get(CANDIDATE_CREATION_REQUEST_URL))
+        .andExpect(status().isOk())
+        .andExpect(view().name(VIEW_NAME))
+        .andExpect(forwardedUrl(VIEW_PREFIX + VIEW_NAME + VIEW_SUFFIX))
+        .andExpect(model().attributeExists(CANDIDATE_OBJECT_KEY))
+        .andExpect(model().attribute(CANDIDATE_OBJECT_KEY, emptyCandidateDto));
   }
 
   @Test
-  public void loadCandidateTestSpecified() {
-    //given
-    Long candidateId = new Long(1);
-    given(service.getCandidate(candidateId)).willReturn(
-        new CandidateDTO(candidateId, "Candidate A", "candidate.a@atsy.com", "+36105555555",
-            "Elegáns, kicsit furi", (short) 5, "google"));
+  public void loadCandidateShouldRenderCandidateDetailsViewWhenCandidateWithIdInPathParamExists()
+      throws Exception {
+    given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(persistedCandidateDto);
 
-    //when
-    ModelAndView model = underTest.loadCandidate(candidateId);
-    Map<String, Object> testMap = model.getModel();
-    //then
-    assertThat(model.getViewName(), is("candidate_create"));
-    assertThat(testMap.containsKey("candidate"), is(true));
-    assertThat(testMap.get("candidate"), is(service.getCandidate(candidateId)));
+    mockMvc.perform(get(EXISTING_CANDIDATE_REQUEST_URL))
+        .andExpect(status().isOk())
+        .andExpect(view().name(VIEW_NAME))
+        .andExpect(forwardedUrl(VIEW_PREFIX + VIEW_NAME + VIEW_SUFFIX))
+        .andExpect(model().attributeExists(CANDIDATE_OBJECT_KEY))
+        .andExpect(model().attribute(CANDIDATE_OBJECT_KEY, persistedCandidateDto));
+
+    then(candidateService).should().getCandidate(CANDIDATE_ID);
+  }
+
+  @Test
+  public void loadCandidateShouldRenderErrorViewWhenThereIsNoCandidateWithIdInPathParam()
+      throws Exception {
+    given(candidateService.getCandidate(CANDIDATE_ID)).willThrow(new IllegalArgumentException());
+
+    mockMvc.perform(get(NON_EXISTING_CANDIDATE_REQUEST_URL))
+        .andExpect(status().isInternalServerError())
+        .andExpect(forwardedUrl(VIEW_PREFIX + "error" + VIEW_SUFFIX));
+
+    then(candidateService).should().getCandidate(CANDIDATE_ID);
   }
 }
