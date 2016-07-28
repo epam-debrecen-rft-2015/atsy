@@ -21,6 +21,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class CandidateCreationControllerTest extends AbstractControllerTest {
   private static final String VIEW_NAME = "candidate_create";
 
+  private static final String ERROR_VIEW_NAME = "error";
+
   private static final String CANDIDATE_CREATION_REQUEST_URL = "/secure/candidate";
 
   private static final Long CANDIDATE_ID = 1L;
@@ -28,7 +30,7 @@ public class CandidateCreationControllerTest extends AbstractControllerTest {
   private static final String EXISTING_CANDIDATE_REQUEST_URL =
       "/secure/candidate/" + CANDIDATE_ID.toString();
 
-  private static final String NON_EXISTING_CANDIDATE_REQUEST_URL =
+  private static final String NON_EXISTENT_CANDIDATE_REQUEST_URL =
       "/secure/candidate/" + CANDIDATE_ID.toString();
 
   private static final String CANDIDATE_OBJECT_KEY = "candidate";
@@ -56,7 +58,7 @@ public class CandidateCreationControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void loadCandidateShouldRenderCandidateCreateViewWithEmptyDtoWhenRequestUrlIsCandidateCreationRequestUrl()
+  public void loadCandidateShouldRenderCandidateCreationViewWithEmptyDtoWhenRequestUrlIsCandidateCreationRequestUrl()
       throws Exception {
     mockMvc.perform(get(CANDIDATE_CREATION_REQUEST_URL))
         .andExpect(status().isOk())
@@ -84,11 +86,12 @@ public class CandidateCreationControllerTest extends AbstractControllerTest {
   @Test
   public void loadCandidateShouldRenderErrorViewWhenThereIsNoCandidateWithIdInPathParam()
       throws Exception {
-    given(candidateService.getCandidate(CANDIDATE_ID)).willThrow(new IllegalArgumentException());
+    given(candidateService.getCandidate(CANDIDATE_ID)).willThrow(IllegalArgumentException.class);
 
-    mockMvc.perform(get(NON_EXISTING_CANDIDATE_REQUEST_URL))
+    mockMvc.perform(get(NON_EXISTENT_CANDIDATE_REQUEST_URL))
         .andExpect(status().isInternalServerError())
-        .andExpect(forwardedUrl(VIEW_PREFIX + "error" + VIEW_SUFFIX));
+        .andExpect(view().name(ERROR_VIEW_NAME))
+        .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
 
     then(candidateService).should().getCandidate(CANDIDATE_ID);
   }
