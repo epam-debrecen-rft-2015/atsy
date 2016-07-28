@@ -23,6 +23,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
@@ -37,11 +38,14 @@ public class NewApplicationPopupControllerTest extends AbstractControllerTest {
   private static final String REQUEST_URL_GET = "/new_application_popup";
   private static final String REQUEST_URL_POST = "/secure/new_application_popup";
   private static final String REDIRECT_URL_FOR_CANDIDATE_A = "/secure/candidate/1";
+  private static final String REDIRECT_URL_FOR_NON_EXISTING_CANDIDATE = "/secure/candidate/null";
 
   private static final String CHANNEL_NAME_FACEBOOK = "facebook";
   private static final String POSITION_NAME_DEVELOPER = "Fejlesztő";
   private static final String NEW_STATE = "newstate";
   private static final String DESCRIPTION = "description";
+  private static final String TEXT = "TEXT";
+  private static final String STRING_VALUE_ONE = "1";
 
   @Mock
   private ApplicationsService applicationsService;
@@ -72,22 +76,61 @@ public class NewApplicationPopupControllerTest extends AbstractControllerTest {
   @Test
   public void saveOrUpdateShouldBeSuccessful() throws Exception {
     this.mockMvc.perform(post(REQUEST_URL_POST)
-        .param("candidateId", "1")
-        .param("position.id", "1").param("position.name", POSITION_NAME_DEVELOPER)
-        .param("channel.id", "1").param("channel.name", CHANNEL_NAME_FACEBOOK)
+        .param("candidateId", STRING_VALUE_ONE)
+        .param("position.id", STRING_VALUE_ONE).param("position.name", POSITION_NAME_DEVELOPER)
+        .param("channel.id", STRING_VALUE_ONE).param("channel.name", CHANNEL_NAME_FACEBOOK)
         .param("description", DESCRIPTION))
-        .andExpect(redirectedUrl(REDIRECT_URL_FOR_CANDIDATE_A))
-        .andExpect(status().is3xxRedirection());
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl(REDIRECT_URL_FOR_CANDIDATE_A));
 
     val applicationDTOCaptor = ArgumentCaptor.forClass(ApplicationDTO.class);
     val stateHistoryDTOCaptor = ArgumentCaptor.forClass(StateHistoryDTO.class);
 
     then(applicationsService).should().saveApplicaton(applicationDTOCaptor.capture(), stateHistoryDTOCaptor.capture());
     assertThat(stateHistoryDTOCaptor.getValue(), equalTo(stateHistoryDTO));
-    assertApplicationDto(applicationDTOCaptor);
+    assertApplicationDtoWhenSaveOrUpdateIsSuccess(applicationDTOCaptor);
   }
 
-  private void assertApplicationDto(ArgumentCaptor<ApplicationDTO> applicationDTOCaptor) {
+  @Test
+  public void saveOrUpdateShouldBeUnsuccessfulWhenCandidateIdIsNotANumber() throws Exception {
+    this.mockMvc.perform(post(REQUEST_URL_POST)
+        .param("candidateId", TEXT)
+        .param("position.id", STRING_VALUE_ONE).param("position.name", POSITION_NAME_DEVELOPER)
+        .param("channel.id", STRING_VALUE_ONE).param("channel.name", CHANNEL_NAME_FACEBOOK)
+        .param("description", DESCRIPTION))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl(REDIRECT_URL_FOR_NON_EXISTING_CANDIDATE));
+
+    verifyZeroInteractions(applicationsService);
+  }
+
+  @Test
+  public void saveOrUpdateShouldBeUnsuccessfulWhenPositionIdIsNotANumber() throws Exception {
+    this.mockMvc.perform(post(REQUEST_URL_POST)
+        .param("candidateId", STRING_VALUE_ONE)
+        .param("position.id", TEXT).param("position.name", POSITION_NAME_DEVELOPER)
+        .param("channel.id", STRING_VALUE_ONE).param("channel.name", CHANNEL_NAME_FACEBOOK)
+        .param("description", DESCRIPTION))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl(REDIRECT_URL_FOR_CANDIDATE_A));
+
+    verifyZeroInteractions(applicationsService);
+  }
+
+  @Test
+  public void saveOrUpdateShouldBeUnsuccessfulWhenChannelIdIsNotANumber() throws Exception {
+    this.mockMvc.perform(post(REQUEST_URL_POST)
+        .param("candidateId", STRING_VALUE_ONE)
+        .param("position.id", STRING_VALUE_ONE).param("position.name", POSITION_NAME_DEVELOPER)
+        .param("channel.id", TEXT).param("channel.name", CHANNEL_NAME_FACEBOOK)
+        .param("description", DESCRIPTION))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl(REDIRECT_URL_FOR_CANDIDATE_A));
+
+    verifyZeroInteractions(applicationsService);
+  }
+
+  private void assertApplicationDtoWhenSaveOrUpdateIsSuccess(ArgumentCaptor<ApplicationDTO> applicationDTOCaptor) {
     Date presentDate = currentDateMinus(5);
     assertThat(applicationDTOCaptor.getValue().getCandidateId(), equalTo(1L));
     assertThat(applicationDTOCaptor.getValue().getChannelId(), equalTo(1L));
