@@ -38,6 +38,18 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
 
   private static final String EMAIL_INCORRECT_ERROR_MESSAGE_KEY = "candidate.error.email.incorrect";
 
+  private static final String PHONE_LENGTH_ERROR_MESSAGE_KEY = "candidate.error.phone.long";
+
+  private static final String PHONE_INCORRECT_ERROR_MESSAGE_KEY = "candidate.error.phone.incorrect";
+
+  private static final String REFERER_LENGTH_ERROR_MESSAGE_KEY = "candidate.error.referer.long";
+
+  private static final String LANGUAGE_SKILL_TOO_LOW_MESSAGE_KEY =
+      "javax.validation.constraints.Min.message";
+
+  private static final String LANGUAGE_SKILL_TOO_HIGH_MESSAGE_KEY =
+      "javax.validation.constraints.Max.message";
+
   private final String missingName = null;
   private final String emptyName = StringUtils.EMPTY;
   private final String tooLongName = StringUtils.repeat('a', 101);
@@ -46,11 +58,11 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   private final String missingEmail = null;
   private final String emptyEmail = StringUtils.EMPTY;
   private final String tooLongEmail = StringUtils.repeat('a', 400) + "@email.com";
-  private final String malformedEmail = "malformed";
+  private final String incorrectEmail = "malformed";
   private final String correctEmail = "john@doe.com";
 
   private final String tooLongPhone = StringUtils.repeat('0', 21);
-  private final String malformedPhone = "malformed";
+  private final String incorrectPhone = "malformed";
   private final String correctPhone = "06301111111";
 
   private final String tooLongReferer = StringUtils.repeat('a', 21);
@@ -59,6 +71,10 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   private final Short tooLowLanguageSkill = -1;
   private final Short tooHighLanguageSkill = 11;
   private final Short correctLanguageSkill = 10;
+
+  private final String correctDescription = "correctDescription";
+
+  private final Long candidateId = 1L;
 
   @Mock
   private CandidateService candidateService;
@@ -70,9 +86,17 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   private SingleCandidateController singleCandidateController;
 
   /**
-   * TODO: Document this!
+   * Contains a correct email and a correct name so there won't be {@code NotNull} validation errors
+   * for these fields. In each method where we expect error response this object gets used and
+   * filled with malformed input. That way we can ensure that only one error message will be
+   * returned per test method.
    */
   private CandidateDTO baseCandidateDto;
+
+  /**
+   * All fields are filled with correct values.
+   */
+  private CandidateDTO correctCandidateDto;
 
   @Override
   protected Object[] controllersUnderTest() {
@@ -103,6 +127,11 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   @Before
   public void setUpTestData() {
     baseCandidateDto = CandidateDTO.builder().name(correctName).email(correctEmail).build();
+
+    correctCandidateDto =
+        CandidateDTO.builder().name(correctName).email(correctEmail).phone(correctPhone)
+            .referer(correctReferer).languageSkill(correctLanguageSkill)
+            .description(correctDescription).build();
   }
 
   @Test
@@ -174,13 +203,82 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void saveOrUpdateShouldRespondWithErrorResponseWhenEmailIsMalformed() throws Exception {
-    baseCandidateDto.setEmail(malformedEmail);
+  public void saveOrUpdateShouldRespondWithErrorResponseWhenEmailIsIncorrect() throws Exception {
+    baseCandidateDto.setEmail(incorrectEmail);
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.email").exists())
         .andExpect(jsonPath("$.fields.email", equalTo(EMAIL_INCORRECT_ERROR_MESSAGE_KEY)));
+  }
+
+  @Test
+  public void saveOrUpdateShouldRespondWithErrorResponseWhenPhoneIsTooLong() throws Exception {
+    baseCandidateDto.setPhone(tooLongPhone);
+
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
+        .andExpect(jsonPath("$.fields.phone").exists())
+        .andExpect(jsonPath("$.fields.phone", equalTo(PHONE_LENGTH_ERROR_MESSAGE_KEY)));
+  }
+
+  @Test
+  public void saveOrUpdateShouldRespondWithErrorResponseWhenPhoneIsIncorrect() throws Exception {
+    baseCandidateDto.setPhone(incorrectPhone);
+
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
+        .andExpect(jsonPath("$.fields.phone").exists())
+        .andExpect(jsonPath("$.fields.phone", equalTo(PHONE_INCORRECT_ERROR_MESSAGE_KEY)));
+  }
+
+  @Test
+  public void saveOrUpdateShouldRespondWithErrorResponseWhenRefererIsTooLong() throws Exception {
+    baseCandidateDto.setReferer(tooLongReferer);
+
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
+        .andExpect(jsonPath("$.fields.referer").exists())
+        .andExpect(jsonPath("$.fields.referer", equalTo(REFERER_LENGTH_ERROR_MESSAGE_KEY)));
+  }
+
+  @Test
+  public void saveOrUpdateShouldRespondWithErrorResponseWhenLanguageSkillIsTooLow()
+      throws Exception {
+    baseCandidateDto.setLanguageSkill(tooLowLanguageSkill);
+
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
+        .andExpect(jsonPath("$.fields.languageSkill").exists())
+        .andExpect(jsonPath("$.fields.languageSkill", equalTo(LANGUAGE_SKILL_TOO_LOW_MESSAGE_KEY)));
+  }
+
+  @Test
+  public void saveOrUpdateShouldRespondWithErrorResponseWhenLanguageSkillIsTooHigh()
+      throws Exception {
+    baseCandidateDto.setLanguageSkill(tooHighLanguageSkill);
+
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
+        .andExpect(jsonPath("$.fields.languageSkill").exists())
+        .andExpect(
+            jsonPath("$.fields.languageSkill", equalTo(LANGUAGE_SKILL_TOO_HIGH_MESSAGE_KEY)));
+  }
+
+  @Test
+  public void saveOrUpdateShouldRespondWithAnIdWhenPostedDtoIsCorrect() throws Exception {
+    given(candidateService.saveOrUpdate(correctCandidateDto)).willReturn(candidateId);
+
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, correctCandidateDto))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").exists())
+        .andExpect(jsonPath("$.id").isNumber())
+        .andExpect(jsonPath("$.id", equalTo(candidateId.intValue())));
   }
 }
