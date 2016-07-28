@@ -15,8 +15,7 @@ import java.util.List;
 
 @Sql("classpath:sql/stateflow/stateflow.sql")
 public class StateFlowRepositoryIT extends AbstractRepositoryIT {
-
-  private static final Long INVALID_STATE_ID = -1L;
+  
   private static final Long VALID_STATE_ID = 80L;
   private static final String VALID_FROM_STATE_NAME = "test";
   public static final long STATES_ENTITY_ACCEPT_ID = 12L;
@@ -57,18 +56,6 @@ public class StateFlowRepositoryIT extends AbstractRepositoryIT {
   private StatesRepository statesRepository;
 
   @Test
-  public void findByFromStateEntityShouldNotFindStateFlowEntityListWhenInvalidFromStateEntityIsGiven() {
-    //Given
-    StatesEntity statesEntity = this.statesRepository.findOne(INVALID_STATE_ID);
-
-    //When
-    List<StateFlowEntity> result = this.stateFlowRepository.findByFromStateEntity(statesEntity);
-
-    //Then
-    assertThat(result, is(emptyCollectionOf(StateFlowEntity.class)));
-  }
-
-  @Test
   public void findByFromStateEntityShouldNotFindStateFlowEntityListWhenGivenFromStateEntityIsNull() {
 
     //When
@@ -91,6 +78,6 @@ public class StateFlowRepositoryIT extends AbstractRepositoryIT {
     List<StateFlowEntity> result = this.stateFlowRepository.findByFromStateEntity(statesEntity);
 
     //Then
-    assertThat(result,is(expectedList));
+    assertThat(result, is(expectedList));
   }
 }

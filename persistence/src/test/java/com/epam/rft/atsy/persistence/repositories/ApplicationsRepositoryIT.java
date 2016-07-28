@@ -73,7 +73,8 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-  public void findByCandidateEntityShouldFindThreeApplicationForCandidateWithThreeApplication() {
+  public void findByCandidateEntityShouldFindThreeApplicationForCandidateWithThreeApplication()
+      throws ParseException {
     // Given
     CandidateEntity candidateEntityC = this.candidateRepository.findOne(CANDIDATE_C_ID);
     ChannelEntity expectedChannelEntity = ChannelEntity.builder()
@@ -99,13 +100,7 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
     Date nearNow = currentDateMinus(5);
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    Date expectedDate = null;
-    try {
-      expectedDate = simpleDateFormat.parse("2016-07-26 11:48:55");
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
-
+    Date expectedDate = simpleDateFormat.parse("2016-07-26 11:48:55");
     // When
     List<ApplicationEntity> result = this.repository.findByCandidateEntity(candidateEntityC);
 
