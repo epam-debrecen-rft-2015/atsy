@@ -13,11 +13,12 @@ import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
-import com.epam.rft.atsy.service.StatesService;
+import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -66,13 +67,14 @@ public class ApplicationsServiceImplTest {
       ApplicationEntity.builder().id(APPLICATION_ID).creationDate(new Date())
           .candidateEntity(candidateEntity).positionEntity(positionEntity)
           .channelEntity(channelEntity).build();
-  private final StateDTO stateDTO = StateDTO.builder().stateType("newstate").stateIndex(0).build();
+  private final StateHistoryDTO
+      stateHistoryDTO = StateHistoryDTO.builder().stateDTO(new StateDTO(1L,"newstate")).build();
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
   @Mock
   private ModelMapper modelMapper;
   @Mock
-  private StatesService statesService;
+  private StatesHistoryService statesHistoryService;
   @Mock
   private ApplicationsRepository applicationsRepository;
   @Mock
@@ -161,11 +163,10 @@ public class ApplicationsServiceImplTest {
 
   @Test
   public void saveApplicationShouldSaveAProperApplicationDTOAndStateDTO() {
-    final StateDTO
-        stateDTO =
-        StateDTO.builder().channel(new ChannelDTO(8L, null)).candidateId(1L)
-            .position(new PositionDTO(1L, null)).description("sss").stateType("newstate")
-            .stateIndex(0).build();
+    final StateHistoryDTO
+        stateHistoryDTO =
+        StateHistoryDTO.builder().channel(new ChannelDTO(8L, null)).candidateId(1L)
+            .position(new PositionDTO(1L, null)).description("sss").stateDTO(new StateDTO(1L,"newstate")).build();
 
     // Given
     given(modelMapper.map(applicationDTO, ApplicationEntity.class)).willReturn(applicationEntity);
@@ -174,13 +175,13 @@ public class ApplicationsServiceImplTest {
     given(channelRepository.findOne(CHANNEL_ID)).willReturn(channelEntity);
     given(applicationsRepository.save(applicationEntity)).willReturn(this.applicationEntity);
     // When
-    Long result = applicationsService.saveApplicaton(applicationDTO, stateDTO);
+    Long result = applicationsService.saveApplicaton(applicationDTO, stateHistoryDTO);
 
     // Then
     assertNotNull(result);
     assertEquals(APPLICATION_ID, result);
 
-    then(statesService).should().saveState(stateDTO, APPLICATION_ID);
+    then(statesHistoryService).should().saveStateHistory(stateHistoryDTO, APPLICATION_ID);
     then(modelMapper).should().map(applicationDTO, ApplicationEntity.class);
     then(candidateRepository).should().findOne(CANDIDATE_ID);
     then(positionRepository).should().findOne(POSITION_ID);
@@ -192,7 +193,7 @@ public class ApplicationsServiceImplTest {
   public void saveApplicationWithApplicationDTONullShouldThrowIllegalArgumentException() {
 
     // When
-    Long result = applicationsService.saveApplicaton(null, stateDTO);
+    Long result = applicationsService.saveApplicaton(null, stateHistoryDTO);
   }
 
   @Test(expected = IllegalArgumentException.class)

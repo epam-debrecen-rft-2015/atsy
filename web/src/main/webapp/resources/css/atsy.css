@@ -196,3 +196,20 @@ textarea {
 #application_page .modal-footer{
     border-top:none;
 }
+.button-panel {
+    padding: 1em !important;
+}
+
+.form-group.col-lg-6,
+.form-group.col-lg-6 > .col-sm-8 {
+    padding-right: 0 !important;
+}
+
+form > .button-panel {
+    padding-right: 3em !important;
+    padding-top: 0 !important;
+}
+
+form > .button-panel > .btn {
+    margin-right: 1em;
+}

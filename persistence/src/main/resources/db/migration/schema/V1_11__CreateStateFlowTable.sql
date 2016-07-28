@@ -1,0 +1,8 @@
+CREATE TABLE state_flow
+(
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+from_id BIGINT,
+to_id BIGINT,
+FOREIGN KEY (from_id) REFERENCES states(id),
+FOREIGN KEY (to_id) REFERENCES states(id)
+)

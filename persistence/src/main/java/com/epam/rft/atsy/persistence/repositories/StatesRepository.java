@@ -1,28 +1,18 @@
 package com.epam.rft.atsy.persistence.repositories;
 
-import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
-import com.epam.rft.atsy.persistence.entities.StateEntity;
+import com.epam.rft.atsy.persistence.entities.StatesEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 /**
  * Repository that allows operations with the states of applications in database.
  */
-public interface StatesRepository extends JpaRepository<StateEntity, Long> {
+public interface StatesRepository extends JpaRepository<StatesEntity, Long> {
 
   /**
-   * Returns the states of an application in descending order.
-   * @param applicationEntity the application
-   * @return the list of states of the application
+   * Returns a state with the specified name.
+   * @param name the name of the requested state
+   * @return state with the specified name
    */
-  List<StateEntity> findByApplicationEntityOrderByStateIndexDesc(
-      ApplicationEntity applicationEntity);
+  public StatesEntity findByName(String name);
 
-  /**
-   * Returns the newest state of the application.
-   * @param applicationEntity the application
-   * @return the newest state of the application
-   */
-  StateEntity findTopByApplicationEntityOrderByStateIndexDesc(ApplicationEntity applicationEntity);
 }
