@@ -19,6 +19,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Type;
@@ -54,6 +55,7 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
   @Autowired
   private StatesRepository statesReporitory;
 
+  @Transactional(readOnly = true)
   @Override
   public Collection<CandidateApplicationDTO> getCandidateApplicationsByCandidateId(Long id) {
     Assert.notNull(id);
@@ -86,6 +88,7 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
     return candidateApplicationDTOList;
   }
 
+  @Transactional
   @Override
   public Long saveStateHistory(StateHistoryDTO state, Long applicationId) {
     Assert.notNull(state);
@@ -99,7 +102,7 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
     return statesHistoryRepository.save(statesHistoryEntity).getId();
   }
 
-
+  @Transactional(readOnly = true)
   @Override
   public List<StateHistoryViewDTO> getStateHistoriesByApplicationId(Long applicationId) {
     Assert.notNull(applicationId);
