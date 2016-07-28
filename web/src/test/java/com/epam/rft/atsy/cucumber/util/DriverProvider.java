@@ -18,10 +18,8 @@ public class DriverProvider {
 
   public synchronized static WebDriver getDriver() {
     if (driver == null) {
-
       try {
         driver = initiateDriver();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
       } finally {
         Runtime.getRuntime().addShutdownHook(
             new Thread(new BrowserCleanup()));
@@ -31,7 +29,9 @@ public class DriverProvider {
   }
 
   private static WebDriver initiateDriver() {
-    return new FirefoxDriver();
+    WebDriver firefoxDriver = new FirefoxDriver();
+    firefoxDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+    return firefoxDriver;
   }
 
   public static void waitForAjax() {

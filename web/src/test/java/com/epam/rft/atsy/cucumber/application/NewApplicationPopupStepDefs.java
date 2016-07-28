@@ -29,7 +29,7 @@ import static org.hamcrest.Matchers.lessThanOrEqualTo;
 public class NewApplicationPopupStepDefs {
 
   private static WebDriver webDriver = DriverProvider.getDriver();
-  private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-dd-mm hh:mm:ss");
+  private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
   private static final String POP_UP_CONTENT = "pop_up_content";
   private static final String APPLICATIONS_TABLE = "applications_table";
@@ -146,15 +146,15 @@ public class NewApplicationPopupStepDefs {
     WebElement table = webDriver.findElement(By.id(APPLICATIONS_TABLE));
     List<WebElement> lastRowInTheTable = getValuesFromTheLastRowFromTheTable(table);
 
-    Date presentDate = currentDateMinus(5);
+    Date presentDate = currentDateMinus(15);
     String positionName = lastRowInTheTable.get(COLUMN_ZEROTH).getText();
     Date addedDate = SIMPLE_DATE_FORMAT.parse(lastRowInTheTable.get(COLUMN_FIRST).getText());
     Date lastModifiedDate = SIMPLE_DATE_FORMAT.parse(lastRowInTheTable.get(COLUMN_SECOND).getText());
     String stateName = lastRowInTheTable.get(COLUMN_THIRD).getText();
 
     assertThat(positionName, equalTo(DEVELOPER_IN_HUN));
-    assertThat(addedDate, lessThanOrEqualTo(presentDate));
-    assertThat(lastModifiedDate, lessThanOrEqualTo(presentDate));
+    assertThat(addedDate, greaterThan(presentDate));
+    assertThat(lastModifiedDate, greaterThan(presentDate));
     assertThat(stateName, equalTo(NEW_APPLY_IN_HUN));
   }
 
