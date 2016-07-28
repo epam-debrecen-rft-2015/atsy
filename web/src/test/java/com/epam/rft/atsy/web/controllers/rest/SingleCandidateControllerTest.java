@@ -2,8 +2,10 @@ package com.epam.rft.atsy.web.controllers.rest;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -111,7 +113,8 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
 
     validatorFactoryBean.setValidationMessageSource(messageSource);
 
-    // always return the message key
+    // always return the message key so we don't have to mock each call to return
+    // a message key specific error message
     given(messageSource.getMessage(anyString(), any(Object[].class), any(Locale.class)))
         .willAnswer(i -> i.getArgumentAt(0, String.class));
 
@@ -143,6 +146,8 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.name").exists())
         .andExpect(jsonPath("$.fields.name", equalTo(NOT_NULL_MESSAGE_KEY)));
+
+    verifyZeroInteractions(candidateService);
   }
 
   @Test
@@ -155,6 +160,8 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$.fields.name").exists())
         .andExpect(jsonPath("$.fields.name", equalTo(NAME_LENGTH_ERROR_MESSAGE_KEY)))
         .andReturn();
+
+    verifyZeroInteractions(candidateService);
   }
 
   @Test
@@ -167,6 +174,8 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$.fields.name").exists())
         .andExpect(jsonPath("$.fields.name", equalTo(NAME_LENGTH_ERROR_MESSAGE_KEY)))
         .andReturn();
+
+    verifyZeroInteractions(candidateService);
   }
 
   @Test
@@ -178,6 +187,8 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.email").exists())
         .andExpect(jsonPath("$.fields.email", equalTo(NOT_NULL_MESSAGE_KEY)));
+
+    verifyZeroInteractions(candidateService);
   }
 
   @Test
@@ -189,6 +200,8 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.email").exists())
         .andExpect(jsonPath("$.fields.email", equalTo(EMAIL_INCORRECT_ERROR_MESSAGE_KEY)));
+
+    verifyZeroInteractions(candidateService);
   }
 
   @Test
@@ -200,6 +213,8 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.email").exists())
         .andExpect(jsonPath("$.fields.email", equalTo(EMAIL_LENGTH_ERROR_MESSAGE_KEY)));
+
+    verifyZeroInteractions(candidateService);
   }
 
   @Test
@@ -211,6 +226,8 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.email").exists())
         .andExpect(jsonPath("$.fields.email", equalTo(EMAIL_INCORRECT_ERROR_MESSAGE_KEY)));
+
+    verifyZeroInteractions(candidateService);
   }
 
   @Test
@@ -222,6 +239,8 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.phone").exists())
         .andExpect(jsonPath("$.fields.phone", equalTo(PHONE_LENGTH_ERROR_MESSAGE_KEY)));
+
+    verifyZeroInteractions(candidateService);
   }
 
   @Test
@@ -233,6 +252,8 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.phone").exists())
         .andExpect(jsonPath("$.fields.phone", equalTo(PHONE_INCORRECT_ERROR_MESSAGE_KEY)));
+
+    verifyZeroInteractions(candidateService);
   }
 
   @Test
@@ -244,6 +265,8 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.referer").exists())
         .andExpect(jsonPath("$.fields.referer", equalTo(REFERER_LENGTH_ERROR_MESSAGE_KEY)));
+
+    verifyZeroInteractions(candidateService);
   }
 
   @Test
@@ -256,6 +279,8 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.languageSkill").exists())
         .andExpect(jsonPath("$.fields.languageSkill", equalTo(LANGUAGE_SKILL_TOO_LOW_MESSAGE_KEY)));
+
+    verifyZeroInteractions(candidateService);
   }
 
   @Test
@@ -269,6 +294,8 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$.fields.languageSkill").exists())
         .andExpect(
             jsonPath("$.fields.languageSkill", equalTo(LANGUAGE_SKILL_TOO_HIGH_MESSAGE_KEY)));
+
+    verifyZeroInteractions(candidateService);
   }
 
   @Test
@@ -280,5 +307,7 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$.id").exists())
         .andExpect(jsonPath("$.id").isNumber())
         .andExpect(jsonPath("$.id", equalTo(candidateId.intValue())));
+
+    then(candidateService).should().saveOrUpdate(correctCandidateDto);
   }
 }
