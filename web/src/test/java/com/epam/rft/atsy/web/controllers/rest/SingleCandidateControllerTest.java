@@ -32,10 +32,18 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
 
   private static final String NOT_NULL_MESSAGE_KEY = "javax.validation.constraints.NotNull.message";
 
+  private static final String NAME_LENGTH_ERROR_MESSAGE_KEY = "candidate.error.name.long";
+
+  private static final String EMAIL_LENGTH_ERROR_MESSAGE_KEY = "candidate.error.email.long";
+
+  private static final String EMAIL_INCORRECT_ERROR_MESSAGE_KEY = "candidate.error.email.incorrect";
+
+  private final String missingName = null;
   private final String emptyName = StringUtils.EMPTY;
   private final String tooLongName = StringUtils.repeat('a', 101);
   private final String correctName = "John Doe";
 
+  private final String missingEmail = null;
   private final String emptyEmail = StringUtils.EMPTY;
   private final String tooLongEmail = StringUtils.repeat('a', 400) + "@email.com";
   private final String malformedEmail = "malformed";
@@ -61,7 +69,10 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   @InjectMocks
   private SingleCandidateController singleCandidateController;
 
-  private CandidateDTO emptyCandidateDto;
+  /**
+   * TODO: Document this!
+   */
+  private CandidateDTO baseCandidateDto;
 
   @Override
   protected Object[] controllersUnderTest() {
@@ -90,13 +101,50 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   }
 
   @Before
-  public void setUpTestDate() {
-    emptyCandidateDto = CandidateDTO.builder().build();
+  public void setUpTestData() {
+    baseCandidateDto = CandidateDTO.builder().name(correctName).email(correctEmail).build();
+  }
+
+  @Test
+  public void saveOrUpdateShouldRespondWithErrorResponseWhenNameIsNull() throws Exception {
+    baseCandidateDto.setName(missingName);
+
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
+        .andExpect(jsonPath("$.fields.name").exists())
+        .andExpect(jsonPath("$.fields.name", equalTo(NOT_NULL_MESSAGE_KEY)));
+  }
+
+  @Test
+  public void saveOrUpdateShouldRespondWithErrorResponseWhenNameIsEmpty() throws Exception {
+    baseCandidateDto.setName(emptyName);
+
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
+        .andExpect(jsonPath("$.fields.name").exists())
+        .andExpect(jsonPath("$.fields.name", equalTo(NAME_LENGTH_ERROR_MESSAGE_KEY)))
+        .andReturn();
+  }
+
+  @Test
+  public void saveOrUpdateShouldRespondWithErrorResponseWhenNameIsTooLong() throws Exception {
+    baseCandidateDto.setName(tooLongName);
+
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
+        .andExpect(jsonPath("$.fields.name").exists())
+        .andExpect(jsonPath("$.fields.name", equalTo(NAME_LENGTH_ERROR_MESSAGE_KEY)))
+        .andReturn();
   }
 
   @Test
   public void saveOrUpdateShouldRespondWithErrorResponseWhenEmailIsNull() throws Exception {
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, emptyCandidateDto))
+    baseCandidateDto.setEmail(missingEmail);
+
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.email").exists())
@@ -104,13 +152,35 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void saveOrUpdateShouldRespondWithErrorResponseWhenNameIsNull() throws Exception {
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, emptyCandidateDto))
+  public void saveOrUpdateShouldRespondWithErrorResponseWhenEmailIsEmpty() throws Exception {
+    baseCandidateDto.setEmail(emptyEmail);
+
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
-        .andExpect(jsonPath("$.fields.name").exists())
-        .andExpect(jsonPath("$.fields.name", equalTo(NOT_NULL_MESSAGE_KEY)));
+        .andExpect(jsonPath("$.fields.email").exists())
+        .andExpect(jsonPath("$.fields.email", equalTo(EMAIL_INCORRECT_ERROR_MESSAGE_KEY)));
   }
 
+  @Test
+  public void saveOrUpdateShouldRespondWithErrorResponseWhenEmailIsTooLong() throws Exception {
+    baseCandidateDto.setEmail(tooLongEmail);
 
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
+        .andExpect(jsonPath("$.fields.email").exists())
+        .andExpect(jsonPath("$.fields.email", equalTo(EMAIL_LENGTH_ERROR_MESSAGE_KEY)));
+  }
+
+  @Test
+  public void saveOrUpdateShouldRespondWithErrorResponseWhenEmailIsMalformed() throws Exception {
+    baseCandidateDto.setEmail(malformedEmail);
+
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
+        .andExpect(jsonPath("$.fields.email").exists())
+        .andExpect(jsonPath("$.fields.email", equalTo(EMAIL_INCORRECT_ERROR_MESSAGE_KEY)));
+  }
 }
