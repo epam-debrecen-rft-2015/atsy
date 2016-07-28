@@ -19,9 +19,7 @@ import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -39,38 +37,36 @@ public class ApplicationsServiceImplTest {
   private static final String CANDIDATE_EMAIL = "candidate.a@atsy.com";
   private static final String CANDIDATE_PHONE = "+36105555555";
   private static final String CANDIDATE_DESCRIPTION = "Elegáns, kicsit furi";
-  private static final String CANDIDATE_REFERER = "google";
+  private static final String CANDIDATE_REFERRER = "google";
   private static final Short CANDIDATE_LANG_SKILL = 5;
-  private static final long POSITION_ID = 1L;
+  private static final Long POSITION_ID = 1L;
   private static final String POSITION_NAME = "Fejlesztő";
-  private static final long CHANNEL_ID = 8L;
-  private static final String CHANNEL_NAME = "állásbőrze";
-  private static final long SAVE_OR_UPDATE_RETURN_VALUE = 1L;
+  private static final Long CHANNEL_ID = 8L;
+  private static final String CHANNEL_NAME = "állásbörze";
 
-  private final ApplicationDTO
-      applicationDTO =
+  private final ApplicationDTO applicationDTO =
       ApplicationDTO.builder().id(APPLICATION_ID).creationDate(new Date()).candidateId(CANDIDATE_ID)
           .positionId(POSITION_ID).channelId(CHANNEL_ID).build();
-  private final CandidateEntity
-      candidateEntity =
+
+  private final CandidateEntity candidateEntity =
       CandidateEntity.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).email(CANDIDATE_EMAIL)
-          .phone(CANDIDATE_PHONE).description(CANDIDATE_DESCRIPTION).referer(CANDIDATE_REFERER)
+          .phone(CANDIDATE_PHONE).description(CANDIDATE_DESCRIPTION).referer(CANDIDATE_REFERRER)
           .languageSkill(CANDIDATE_LANG_SKILL).build();
-  private final PositionEntity
-      positionEntity =
+
+  private final PositionEntity positionEntity =
       PositionEntity.builder().id(POSITION_ID).name(POSITION_NAME).build();
-  private final ChannelEntity
-      channelEntity =
+  private final ChannelEntity channelEntity =
       ChannelEntity.builder().id(CHANNEL_ID).name(CHANNEL_NAME).build();
-  private final ApplicationEntity
-      applicationEntity =
+
+  private final ApplicationEntity applicationEntity =
       ApplicationEntity.builder().id(APPLICATION_ID).creationDate(new Date())
           .candidateEntity(candidateEntity).positionEntity(positionEntity)
           .channelEntity(channelEntity).build();
+
   private final StateHistoryDTO
       stateHistoryDTO = StateHistoryDTO.builder().stateDTO(new StateDTO(1L,"newstate")).build();
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
+
+
   @Mock
   private ModelMapper modelMapper;
   @Mock
@@ -123,48 +119,43 @@ public class ApplicationsServiceImplTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void saveOrUpdateWithApplicationDTONullShouldThrowIllegalArgumentException() {
-
     // When
-    Long result = applicationsService.saveOrUpdate(null);
+    applicationsService.saveOrUpdate(null);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveOrUpdateWithApplicationDTOsCandidateIDNullShouldThrowIllegalArgumentException() {
-    final ApplicationDTO
-        applicationDTO =
+    final ApplicationDTO applicationDTO =
         ApplicationDTO.builder().id(APPLICATION_ID).creationDate(new Date()).candidateId(null)
             .positionId(POSITION_ID).channelId(CHANNEL_ID).build();
 
     // When
-    Long result = applicationsService.saveOrUpdate(applicationDTO);
+    applicationsService.saveOrUpdate(applicationDTO);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveOrUpdateWithApplicationDTOsPositionIDNullShouldThrowIllegalArgumentException() {
-    final ApplicationDTO
-        applicationDTO =
+    final ApplicationDTO applicationDTO =
         ApplicationDTO.builder().id(APPLICATION_ID).creationDate(new Date())
             .candidateId(CANDIDATE_ID).positionId(null).channelId(CHANNEL_ID).build();
 
     // When
-    Long result = applicationsService.saveOrUpdate(applicationDTO);
+    applicationsService.saveOrUpdate(applicationDTO);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveOrUpdateWithApplicationDTOsChannelIDNullShouldThrowIllegalArgumentException() {
-    final ApplicationDTO
-        applicationDTO =
+    final ApplicationDTO applicationDTO =
         ApplicationDTO.builder().id(APPLICATION_ID).creationDate(new Date())
             .candidateId(CANDIDATE_ID).positionId(POSITION_ID).channelId(null).build();
 
     // When
-    Long result = applicationsService.saveOrUpdate(applicationDTO);
+    applicationsService.saveOrUpdate(applicationDTO);
   }
 
   @Test
   public void saveApplicationShouldSaveAProperApplicationDTOAndStateDTO() {
-    final StateHistoryDTO
-        stateHistoryDTO =
+    final StateHistoryDTO stateHistoryDTO =
         StateHistoryDTO.builder().channel(new ChannelDTO(8L, null)).candidateId(1L)
             .position(new PositionDTO(1L, null)).description("sss").stateDTO(new StateDTO(1L,"newstate")).build();
 
@@ -191,15 +182,13 @@ public class ApplicationsServiceImplTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void saveApplicationWithApplicationDTONullShouldThrowIllegalArgumentException() {
-
     // When
-    Long result = applicationsService.saveApplicaton(null, stateHistoryDTO);
+    applicationsService.saveApplicaton(null, stateHistoryDTO);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveApplicationWithStateDTONullShouldThrowIllegalArgumentException() {
-
     // When
-    Long result = applicationsService.saveApplicaton(applicationDTO, null);
+    applicationsService.saveApplicaton(applicationDTO, null);
   }
 }
