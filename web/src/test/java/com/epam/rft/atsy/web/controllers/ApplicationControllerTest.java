@@ -1,28 +1,50 @@
 package com.epam.rft.atsy.web.controllers;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
-import org.springframework.web.servlet.ModelAndView;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.Test;
 
-public class ApplicationControllerTest {
-  @InjectMocks
-  private ApplicationController underTest;
+public class ApplicationControllerTest extends AbstractControllerTest {
+  private static final String VIEW_NAME = "application";
 
-  @BeforeMethod
-  public void setUp() {
-    MockitoAnnotations.initMocks(this);
+  private static final String ERROR_VIEW_NAME = "error";
+
+  private static final String REQUEST_URL = "/secure/application";
+
+  private static final String CANDIDATE_ID_PARAM_NAME = "candidateId";
+
+  private static final String CORRECT_CANDIDATE_ID_PARAM_VALUE = "1";
+
+  private static final String MALFORMED_CANDIDATE_ID_PARAM_VALUE = "asd";
+
+  @Override
+  protected Object[] controllersUnderTest() {
+    return new Object[]{new ApplicationController()};
   }
 
   @Test
-  public void shouldReturnViewModel() {
-    //when
-    ModelAndView model = underTest.loadPage(1l);
-    //then
-    assertThat(model.getViewName(), is("application"));
+  public void loadPageShouldRenderApplicationViewWhenCandidateIdParamIsCorrect() throws Exception {
+    mockMvc
+        .perform(get(REQUEST_URL).param(CANDIDATE_ID_PARAM_NAME, CORRECT_CANDIDATE_ID_PARAM_VALUE))
+        .andExpect(status().isOk())
+        .andExpect(view().name(VIEW_NAME))
+        .andExpect(forwardedUrl(VIEW_PREFIX + VIEW_NAME + VIEW_SUFFIX))
+        .andExpect(model().attributeExists(CANDIDATE_ID_PARAM_NAME))
+        .andExpect(
+            model().attribute(CANDIDATE_ID_PARAM_NAME,
+                Long.valueOf(CORRECT_CANDIDATE_ID_PARAM_VALUE)));
+  }
+
+  @Test
+  public void loadPageShouldRenderErrorViewWhenCandidateIdParamIsMalformed() throws Exception {
+    mockMvc.perform(
+        get(REQUEST_URL).param(CANDIDATE_ID_PARAM_NAME, MALFORMED_CANDIDATE_ID_PARAM_VALUE))
+        .andExpect(status().isInternalServerError())
+        .andExpect(view().name(ERROR_VIEW_NAME))
+        .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
   }
 }
