@@ -11,7 +11,7 @@ import static org.mockito.Mockito.verify;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
-import com.epam.rft.atsy.service.exception.DuplicateRecordException;
+import com.epam.rft.atsy.service.exception.DuplicateCandidateException;
 import com.epam.rft.atsy.service.request.FilterRequest;
 import com.epam.rft.atsy.service.request.SearchOptions;
 import com.epam.rft.atsy.service.request.SortingRequest;
@@ -233,15 +233,15 @@ public class CandidateServiceImplTest {
 
   @Test
   public void saveOrUpdateShouldThrowDREAfterCatchingConstraintViolationException()
-      throws DuplicateRecordException {
+      throws DuplicateCandidateException {
     // Given
     given(modelMapper.map(dummyCandidateDto, CandidateEntity.class))
         .willReturn(dummyCandidateEntity);
 
-    given(candidateRepository.save(dummyCandidateEntity))
+    given(candidateRepository.saveAndFlush(dummyCandidateEntity))
         .willThrow(ConstraintViolationException.class);
 
-    expectedException.expect(DuplicateRecordException.class);
+    expectedException.expect(DuplicateCandidateException.class);
     expectedException.expectMessage(CoreMatchers.endsWith(NAME));
     expectedException.expectCause(Matchers.isA(ConstraintViolationException.class));
 
@@ -251,15 +251,15 @@ public class CandidateServiceImplTest {
 
   @Test
   public void saveOrUpdateShouldThrowDREAfterCatchingDataIntegrityViolationException()
-      throws DuplicateRecordException {
+      throws DuplicateCandidateException {
     // Given
     given(modelMapper.map(dummyCandidateDto, CandidateEntity.class))
         .willReturn(dummyCandidateEntity);
 
-    given(candidateRepository.save(dummyCandidateEntity))
+    given(candidateRepository.saveAndFlush(dummyCandidateEntity))
         .willThrow(DataIntegrityViolationException.class);
 
-    expectedException.expect(DuplicateRecordException.class);
+    expectedException.expect(DuplicateCandidateException.class);
     expectedException.expectMessage(CoreMatchers.endsWith(NAME));
     expectedException.expectCause(Matchers.isA(DataIntegrityViolationException.class));
 
@@ -273,12 +273,12 @@ public class CandidateServiceImplTest {
     given(modelMapper.map(dummyCandidateDto, CandidateEntity.class))
         .willReturn(dummyCandidateEntity);
 
-    given(candidateRepository.save(dummyCandidateEntity)).willReturn(dummyCandidateEntity);
+    given(candidateRepository.saveAndFlush(dummyCandidateEntity)).willReturn(dummyCandidateEntity);
 
     // When
     candidateService.saveOrUpdate(dummyCandidateDto);
 
     // Then
-    then(candidateRepository).should(times(1)).save(dummyCandidateEntity);
+    then(candidateRepository).should(times(1)).saveAndFlush(dummyCandidateEntity);
   }
 }

@@ -10,10 +10,12 @@ public class PasswordAllFieldFilledRule implements PasswordValidationRule {
   @Override
   public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
     String newPassword = passwordChangeDTO.getNewPassword();
+    String oldPassword = passwordChangeDTO.getOldPassword();
+    String newPasswordConfirm = passwordChangeDTO.getNewPasswordConfirm();
 
     return StringUtils.isNotBlank(newPassword) &&
-        StringUtils.isNotBlank(newPassword) &&
-        StringUtils.isNotBlank(newPassword);
+        StringUtils.isNotBlank(oldPassword) &&
+        StringUtils.isNotBlank(newPasswordConfirm);
   }
 
   @Override

@@ -11,7 +11,7 @@ import static org.mockito.Mockito.times;
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
 import com.epam.rft.atsy.service.domain.PositionDTO;
-import com.epam.rft.atsy.service.exception.DuplicateRecordException;
+import com.epam.rft.atsy.service.exception.DuplicatePositionException;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.hibernate.exception.ConstraintViolationException;
@@ -125,13 +125,14 @@ public class PositionServiceImplTest {
 
   @Test
   public void saveOrUpdateShouldThrowDREAfterCatchingConstraintViolationException()
-      throws DuplicateRecordException {
+      throws DuplicatePositionException {
     // Given
     given(modelMapper.map(developerDto, PositionEntity.class)).willReturn(developerEntity);
 
-    given(positionRepository.save(developerEntity)).willThrow(ConstraintViolationException.class);
+    given(positionRepository.saveAndFlush(developerEntity))
+        .willThrow(ConstraintViolationException.class);
 
-    expectedException.expect(DuplicateRecordException.class);
+    expectedException.expect(DuplicatePositionException.class);
     expectedException.expectMessage(CoreMatchers.endsWith(DEVELOPER_NAME));
     expectedException.expectCause(Matchers.isA(ConstraintViolationException.class));
 
@@ -141,14 +142,14 @@ public class PositionServiceImplTest {
 
   @Test
   public void saveOrUpdateShouldThrowDREAfterCatchingDataIntegrityViolationException()
-      throws DuplicateRecordException {
+      throws DuplicatePositionException {
     // Given
     given(modelMapper.map(developerDto, PositionEntity.class)).willReturn(developerEntity);
 
-    given(positionRepository.save(developerEntity))
+    given(positionRepository.saveAndFlush(developerEntity))
         .willThrow(DataIntegrityViolationException.class);
 
-    expectedException.expect(DuplicateRecordException.class);
+    expectedException.expect(DuplicatePositionException.class);
     expectedException.expectMessage(CoreMatchers.endsWith(DEVELOPER_NAME));
     expectedException.expectCause(Matchers.isA(DataIntegrityViolationException.class));
 
@@ -161,12 +162,12 @@ public class PositionServiceImplTest {
     // Given
     given(modelMapper.map(developerDto, PositionEntity.class)).willReturn(developerEntity);
 
-    given(positionRepository.save(developerEntity)).willReturn(developerEntity);
+    given(positionRepository.saveAndFlush(developerEntity)).willReturn(developerEntity);
 
     // When
     positionService.saveOrUpdate(developerDto);
 
     // Then
-    then(positionRepository).should(times(1)).save(developerEntity);
+    then(positionRepository).should(times(1)).saveAndFlush(developerEntity);
   }
 }

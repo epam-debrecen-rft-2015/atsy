@@ -2,17 +2,13 @@ package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
-import com.epam.rft.atsy.service.exception.DuplicateRecordException;
-import com.epam.rft.atsy.web.MediaTypes;
-import org.apache.commons.lang3.StringUtils;
+import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,7 +21,6 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping(value = "/secure/channels")
 public class ChannelController {
-  private static final String DUPLICATE_POSITION_MESSAGE_KEY = "settings.channels.error.duplicate";
   private static final String EMPTY_POSITION_NAME_MESSAGE_KEY = "settings.channels.error.empty";
   private static final String TECHNICAL_ERROR_MESSAGE_KEY = "technical.error.message";
   private static final Logger LOGGER = LoggerFactory.getLogger(ChannelController.class);
@@ -41,40 +36,19 @@ public class ChannelController {
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  public ResponseEntity<String> saveOrUpdate(@RequestBody ChannelDTO channelDTO,
-                                             BindingResult result, Locale locale) {
-    ResponseEntity<String> entity = new ResponseEntity<>(StringUtils.EMPTY, HttpStatus.OK);
-
+  public ResponseEntity<RestResponse> saveOrUpdate(@RequestBody ChannelDTO channelDTO,
+                                                   BindingResult result, Locale locale) {
     if (!result.hasErrors()) {
       channelService.saveOrUpdate(channelDTO);
+
+      return new ResponseEntity<>(RestResponse.NO_ERROR, HttpStatus.OK);
     } else {
-      entity = new ResponseEntity<>(messageSource.getMessage(EMPTY_POSITION_NAME_MESSAGE_KEY,
-          null, locale), HttpStatus.BAD_REQUEST);
+      String errorMessage = messageSource.getMessage(EMPTY_POSITION_NAME_MESSAGE_KEY,
+          null, locale);
+
+      RestResponse restResponse = new RestResponse(errorMessage);
+
+      return new ResponseEntity<>(restResponse, HttpStatus.BAD_REQUEST);
     }
-    return entity;
   }
-
-  @ExceptionHandler(DuplicateRecordException.class)
-  public ResponseEntity handleDuplicateException(Locale locale, DuplicateRecordException ex) {
-    HttpHeaders headers = new HttpHeaders();
-
-    headers.setContentType(MediaTypes.TEXT_PLAIN_UTF8);
-
-    return new ResponseEntity<>(messageSource.getMessage(DUPLICATE_POSITION_MESSAGE_KEY,
-        new Object[]{ex.getName()}, locale), headers, HttpStatus.BAD_REQUEST);
-  }
-
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity handleException(Locale locale, Exception ex) {
-    LOGGER.error("Error while saving channel changes", ex);
-
-    HttpHeaders headers = new HttpHeaders();
-
-    headers.setContentType(MediaTypes.TEXT_PLAIN_UTF8);
-
-    return new ResponseEntity<>(messageSource.getMessage(TECHNICAL_ERROR_MESSAGE_KEY,
-        null, locale), headers, HttpStatus.BAD_REQUEST);
-  }
-
-
 }

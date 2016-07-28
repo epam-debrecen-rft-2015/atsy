@@ -10,7 +10,7 @@ import static org.mockito.BDDMockito.then;
 import com.epam.rft.atsy.persistence.entities.ChannelEntity;
 import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
-import com.epam.rft.atsy.service.exception.DuplicateRecordException;
+import com.epam.rft.atsy.service.exception.DuplicateChannelException;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.hibernate.exception.ConstraintViolationException;
@@ -133,13 +133,14 @@ public class ChannelServiceImplTest {
 
   @Test
   public void saveOrUpdateShouldThrowDREAfterCatchingConstraintViolationException()
-      throws DuplicateRecordException {
+      throws DuplicateChannelException {
     // Given
     given(modelMapper.map(facebookDto, ChannelEntity.class)).willReturn(facebookEntity);
 
-    given(channelRepository.save(facebookEntity)).willThrow(ConstraintViolationException.class);
+    given(channelRepository.saveAndFlush(facebookEntity))
+        .willThrow(ConstraintViolationException.class);
 
-    expectedException.expect(DuplicateRecordException.class);
+    expectedException.expect(DuplicateChannelException.class);
     expectedException.expectMessage(CoreMatchers.endsWith(CHANNEL_NAME_FACEBOOK));
     expectedException.expectCause(Matchers.isA(ConstraintViolationException.class));
 
@@ -149,13 +150,14 @@ public class ChannelServiceImplTest {
 
   @Test
   public void saveOrUpdateShouldThrowDREAfterCatchingDataIntegrityViolationException()
-      throws DuplicateRecordException {
+      throws DuplicateChannelException {
     // Given
     given(modelMapper.map(facebookDto, ChannelEntity.class)).willReturn(facebookEntity);
 
-    given(channelRepository.save(facebookEntity)).willThrow(DataIntegrityViolationException.class);
+    given(channelRepository.saveAndFlush(facebookEntity))
+        .willThrow(DataIntegrityViolationException.class);
 
-    expectedException.expect(DuplicateRecordException.class);
+    expectedException.expect(DuplicateChannelException.class);
     expectedException.expectMessage(CoreMatchers.endsWith(CHANNEL_NAME_FACEBOOK));
     expectedException.expectCause(Matchers.isA(DataIntegrityViolationException.class));
 
@@ -168,13 +170,13 @@ public class ChannelServiceImplTest {
     // Given
     given(modelMapper.map(facebookDto, ChannelEntity.class)).willReturn(facebookEntity);
 
-    given(channelRepository.save(facebookEntity)).willReturn(facebookEntity);
+    given(channelRepository.saveAndFlush(facebookEntity)).willReturn(facebookEntity);
 
     // When
     channelService.saveOrUpdate(facebookDto);
 
     // Then
-    then(channelRepository).should().save(facebookEntity);
+    then(channelRepository).should().saveAndFlush(facebookEntity);
   }
 
   @Test(expected = IllegalArgumentException.class)

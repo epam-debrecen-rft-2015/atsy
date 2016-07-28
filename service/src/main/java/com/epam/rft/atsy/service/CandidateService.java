@@ -31,7 +31,5 @@ public interface CandidateService {
    */
   Long saveOrUpdate(CandidateDTO candidate);
 
-
   CandidateDTO getCandidateByName(String name);
-
 }

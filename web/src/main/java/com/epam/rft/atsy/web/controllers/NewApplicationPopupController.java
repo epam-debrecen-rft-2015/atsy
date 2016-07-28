@@ -1,7 +1,6 @@
 package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.ApplicationsService;
-import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
@@ -18,10 +17,8 @@ import javax.validation.Valid;
 
 @Controller
 public class NewApplicationPopupController {
-
   private static final String VIEW_NAME = "new_application_popup";
-  @Resource
-  private StatesHistoryService statesHistoryService;
+
   @Resource
   private ApplicationsService applicationsService;
 
@@ -31,9 +28,10 @@ public class NewApplicationPopupController {
   }
 
   @RequestMapping(method = RequestMethod.POST, value = "/secure/new_application_popup")
-  public String saveOrUpdate(@Valid @ModelAttribute StateHistoryDTO stateHistoryDTO, BindingResult result) {
+  public String saveOrUpdate(@Valid @ModelAttribute StateHistoryDTO stateHistoryDTO,
+                             BindingResult result) {
     if (!result.hasErrors()) {
-      stateHistoryDTO.setStateDTO(new StateDTO(1L,"newstate"));
+      stateHistoryDTO.setStateDTO(new StateDTO(1L, "newstate"));
 
       ApplicationDTO applicationDTO = ApplicationDTO.builder()
           .creationDate(new Date())

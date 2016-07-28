@@ -39,6 +39,7 @@ public class ApplicationsServiceImpl implements ApplicationsService {
   private ChannelRepository channelRepository;
 
 
+  @Transactional
   @Override
   public Long saveOrUpdate(ApplicationDTO applicationDTO) {
     Assert.notNull(applicationDTO);
