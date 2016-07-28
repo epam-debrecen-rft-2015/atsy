@@ -1,11 +1,15 @@
 package com.epam.rft.atsy.web.controllers;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import com.epam.rft.atsy.web.MediaTypes;
 import com.epam.rft.atsy.web.exceptionhandling.GlobalControllerExceptionHandler;
 import com.epam.rft.atsy.web.exceptionhandling.UncheckedExceptionResolver;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -50,6 +54,13 @@ public abstract class AbstractControllerTest {
 
   protected Object[] controllerAdvice() {
     return new Object[]{new GlobalControllerExceptionHandler()};
+  }
+
+  protected MockHttpServletRequestBuilder buildJsonPostRequest(String requestUrl, Object content)
+      throws JsonProcessingException {
+    return post(requestUrl).contentType(MediaTypes.APPLICATION_JSON_UTF8)
+        .accept(MediaTypes.APPLICATION_JSON_UTF8)
+        .content(objectMapper.writeValueAsBytes(content));
   }
 
   protected abstract Object[] controllersUnderTest();
