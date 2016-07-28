@@ -11,7 +11,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,6 +36,8 @@ import java.util.Locale;
 @RunWith(MockitoJUnitRunner.class)
 public class ChannelControllerTest extends AbstractControllerTest {
   private static final String REQUEST_URL = "/secure/channels";
+
+  private static final Object MISSING_REQUEST_BODY = null;
 
   private static final Long CHANNEL_ID = 1L;
 
@@ -133,9 +134,7 @@ public class ChannelControllerTest extends AbstractControllerTest {
   @Test
   public void saveOrUpdateShouldRespondWithErrorResponseWhenRequestBodyIsMissing()
       throws Exception {
-    mockMvc.perform(post(REQUEST_URL)
-        .contentType(MediaTypes.APPLICATION_JSON_UTF8)
-        .accept(MediaTypes.APPLICATION_JSON_UTF8))
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, MISSING_REQUEST_BODY))
         .andExpect(status().isInternalServerError())
         .andExpect(content().contentType(MediaTypes.APPLICATION_JSON_UTF8))
         .andExpect(jsonPath("$.errorMessage").isNotEmpty())
@@ -155,10 +154,7 @@ public class ChannelControllerTest extends AbstractControllerTest {
             any(Locale.class)))
         .willReturn(VALIDATION_ERROR_MESSAGE);
 
-    mockMvc.perform(post(REQUEST_URL)
-        .contentType(MediaTypes.APPLICATION_JSON_UTF8)
-        .accept(MediaTypes.APPLICATION_JSON_UTF8)
-        .content(objectMapper.writeValueAsBytes(emptyPostedDto)))
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, emptyPostedDto))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage").isNotEmpty())
         .andExpect(jsonPath("$.errorMessage", equalTo(VALIDATION_ERROR_MESSAGE)))
@@ -170,10 +166,7 @@ public class ChannelControllerTest extends AbstractControllerTest {
   @Test
   public void saveOrUpdateShouldRespondWithNoErrorResponseWhenThePostedJsonIsCorrect()
       throws Exception {
-    mockMvc.perform(post(REQUEST_URL)
-        .contentType(MediaTypes.APPLICATION_JSON_UTF8)
-        .accept(MediaTypes.APPLICATION_JSON_UTF8)
-        .content(objectMapper.writeValueAsBytes(correctPostedDto)))
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, correctPostedDto))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.errorMessage").isEmpty())
         .andExpect(jsonPath("$.fields").isEmpty());
