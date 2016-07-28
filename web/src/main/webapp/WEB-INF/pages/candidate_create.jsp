@@ -189,7 +189,7 @@
                                             code="cancel.button"/></a>
                                 </c:otherwise>
                             </c:choose>
-                            <button type="submit" class="btn btn-success">
+                            <button type="submit" id="save-button" class="btn btn-success">
                                 <spring:message code="save.button"/>
                             </button>
                         </div>

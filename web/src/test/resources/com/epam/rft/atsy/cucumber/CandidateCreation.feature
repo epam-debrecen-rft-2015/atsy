@@ -1,6 +1,7 @@
 Feature: candidate creation test
 
-  Background: Given The user is logged in
+  Background:
+    Given The user signed in
 
   Scenario Outline: user can't create new candidate because of empty required field
 
