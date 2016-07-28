@@ -17,10 +17,8 @@ import javax.validation.Valid;
 
 @Controller
 public class NewApplicationPopupController {
-
   private static final String VIEW_NAME = "new_application_popup";
-  @Resource
-  private StatesService statesService;
+
   @Resource
   private ApplicationsService applicationsService;
 
