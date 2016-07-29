@@ -57,7 +57,7 @@ public class ApplicationsServiceImpl implements ApplicationsService {
 
   @Transactional
   @Override
-  public Long saveApplicaton(ApplicationDTO applicationDTO, StateHistoryDTO stateHistoryDTO) {
+  public Long saveApplication(ApplicationDTO applicationDTO, StateHistoryDTO stateHistoryDTO) {
     Assert.notNull(stateHistoryDTO);
 
     Long applicationId = saveOrUpdate(applicationDTO);
