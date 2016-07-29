@@ -44,7 +44,7 @@
                         <div class="panel panel-danger" role="alert"  data-bind="visible: showError">
                             <div class="panel-heading" data-bind="text: errorMessage"></div>
                             <div class="panel-body">
-                                <ul>
+                                <ul id="field-messages">
                                     <!-- ko foreach: fieldMessages -->
                                         <li data-bind="text: $data"></li>
                                     <!-- /ko -->
