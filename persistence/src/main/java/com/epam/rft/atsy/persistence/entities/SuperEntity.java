@@ -1,5 +1,6 @@
 package com.epam.rft.atsy.persistence.entities;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,8 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass
-public abstract class SuperEntity {
-
+public abstract class SuperEntity implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

@@ -166,7 +166,7 @@ public class ApplicationsServiceImplTest {
     given(channelRepository.findOne(CHANNEL_ID)).willReturn(channelEntity);
     given(applicationsRepository.save(applicationEntity)).willReturn(this.applicationEntity);
     // When
-    Long result = applicationsService.saveApplicaton(applicationDTO, stateHistoryDTO);
+    Long result = applicationsService.saveApplication(applicationDTO, stateHistoryDTO);
 
     // Then
     assertNotNull(result);
@@ -183,12 +183,12 @@ public class ApplicationsServiceImplTest {
   @Test(expected = IllegalArgumentException.class)
   public void saveApplicationWithApplicationDTONullShouldThrowIllegalArgumentException() {
     // When
-    applicationsService.saveApplicaton(null, stateHistoryDTO);
+    applicationsService.saveApplication(null, stateHistoryDTO);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveApplicationWithStateDTONullShouldThrowIllegalArgumentException() {
     // When
-    applicationsService.saveApplicaton(applicationDTO, null);
+    applicationsService.saveApplication(applicationDTO, null);
   }
 }

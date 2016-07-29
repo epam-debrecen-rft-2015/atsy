@@ -21,5 +21,5 @@ public interface ApplicationsService {
    * @param stateHistoryDTO the state of application
    * @return the id of application
    */
-  Long saveApplicaton(ApplicationDTO applicationDTO, StateHistoryDTO stateHistoryDTO);
+  Long saveApplication(ApplicationDTO applicationDTO, StateHistoryDTO stateHistoryDTO);
 }
