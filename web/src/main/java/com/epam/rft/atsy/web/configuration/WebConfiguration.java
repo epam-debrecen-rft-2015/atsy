@@ -1,6 +1,7 @@
 package com.epam.rft.atsy.web.configuration;
 
 import com.epam.rft.atsy.service.configuration.ServiceConfiguration;
+import com.epam.rft.atsy.web.MediaTypes;
 import com.epam.rft.atsy.web.exceptionhandling.UncheckedExceptionResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
@@ -81,7 +82,13 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
 
   @Bean
   public MappingJackson2JsonView mappingJackson2JsonView() {
-    return new MappingJackson2JsonView(objectMapper());
+    MappingJackson2JsonView jsonView = new MappingJackson2JsonView(objectMapper());
+
+    // Maintain consistency with the MappingJackson2HttpMessageConverter that automatically
+    // adds "charset=UTF-8" to the content-type.
+    jsonView.setContentType(MediaTypes.APPLICATION_JSON_UTF8.toString());
+
+    return jsonView;
   }
 
   @Override
