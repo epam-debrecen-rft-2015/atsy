@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
@@ -33,6 +34,7 @@ public abstract class AbstractControllerTest {
             .setViewResolvers(viewResolver())
             .setControllerAdvice(controllerAdvice())
             .setHandlerExceptionResolvers(uncheckedExceptionResolver())
+            .setValidator(localValidatorFactoryBean())
             .build();
   }
 
@@ -51,6 +53,10 @@ public abstract class AbstractControllerTest {
     jsonView.setContentType(MediaTypes.APPLICATION_JSON_UTF8.toString());
 
     return new UncheckedExceptionResolver(jsonView);
+  }
+
+  protected LocalValidatorFactoryBean localValidatorFactoryBean() {
+    return new LocalValidatorFactoryBean();
   }
 
   protected Object[] controllerAdvice() {
