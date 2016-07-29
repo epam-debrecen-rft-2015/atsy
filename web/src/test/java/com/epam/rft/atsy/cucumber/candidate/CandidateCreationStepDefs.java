@@ -11,6 +11,7 @@ import com.epam.rft.atsy.cucumber.welcome.CandidateTableRow;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -26,8 +27,6 @@ public class CandidateCreationStepDefs {
   private static final String
       CANDIDATE_CREATION_URL =
       "http://localhost:8080/atsy/secure/candidate";
-
-  private static final String WELCOME_PAGE_URL = "http://localhost:8080/atsy/secure/welcome";
 
   private static final String DESCRIPTION_ID = "description";
   private static final String NAME_ID = "name";
@@ -165,11 +164,7 @@ public class CandidateCreationStepDefs {
   public void the_user_enters_name_longer_than_characters(int arg1) throws Throwable {
     String longName = RandomStringUtils.randomAlphabetic(arg1 + 1);
     assertTrue(longName.length() > arg1);
-    JavascriptExecutor executor = (JavascriptExecutor) getDriver();
-    executor.executeScript(
-        "document.getElementById('" + NAME_ID + "').setAttribute('maxlength', '" + String
-            .valueOf(longName.length()) + "')");
-
+    setMaxLengthAttribute(NAME_ID, longName.length(), getDriver());
     getDriver().findElement(By.id(NAME_ID)).sendKeys(longName);
   }
 
@@ -177,10 +172,7 @@ public class CandidateCreationStepDefs {
   public void the_user_enters_e_mail_address_longer_than_characters(int arg1) throws Throwable {
     String longEmail = RandomStringUtils.randomAlphabetic(arg1) + EMAIL_SUFFIX;
     assertTrue(longEmail.length() > arg1);
-    JavascriptExecutor executor = (JavascriptExecutor) getDriver();
-    executor.executeScript(
-        "document.getElementById('" + EMAIL_ID + "').setAttribute('maxlength', '" + String
-            .valueOf(longEmail.length()) + "')");
+    setMaxLengthAttribute(EMAIL_ID, longEmail.length(), getDriver());
     getDriver().findElement(By.id(EMAIL_ID)).sendKeys(longEmail);
   }
 
@@ -188,10 +180,7 @@ public class CandidateCreationStepDefs {
   public void the_user_enters_phone_number_longer_than_characters(int arg1) throws Throwable {
     String longPhoneNumber = RandomStringUtils.randomNumeric(arg1 + 1);
     assertTrue(longPhoneNumber.length() > arg1);
-    JavascriptExecutor executor = (JavascriptExecutor) getDriver();
-    executor.executeScript(
-        "document.getElementById('" + PHONE_ID + "').setAttribute('maxlength', '" + String
-            .valueOf(longPhoneNumber.length()) + "')");
+    setMaxLengthAttribute(PHONE_ID, longPhoneNumber.length(), getDriver());
     getDriver().findElement(By.id(PHONE_ID)).sendKeys(longPhoneNumber);
   }
 
@@ -200,10 +189,7 @@ public class CandidateCreationStepDefs {
       int arg1) throws Throwable {
     String longReferer = RandomStringUtils.randomAlphabetic(arg1 + 1);
     assertTrue(longReferer.length() > arg1);
-    JavascriptExecutor executor = (JavascriptExecutor) getDriver();
-    executor.executeScript(
-        "document.getElementById('" + REFERER_ID + "').setAttribute('maxlength', '" + String
-            .valueOf(longReferer.length()) + "')");
+    setMaxLengthAttribute(REFERER_ID, longReferer.length(), getDriver());
     getDriver().findElement(By.id(REFERER_ID)).sendKeys(longReferer);
   }
 
@@ -216,5 +202,12 @@ public class CandidateCreationStepDefs {
         webDriverWait.until(presenceOfAllElementsLocatedBy(By.cssSelector(selector)));
     assertTrue(listings.size() > 0);
     assertTrue(listings.stream().map(li -> li.getText()).anyMatch(text -> text.equals(arg1)));
+  }
+
+  private void setMaxLengthAttribute(String id, int length, WebDriver driver) {
+    JavascriptExecutor executor = (JavascriptExecutor) driver;
+    executor.executeScript(
+        "document.getElementById('" + id + "').setAttribute('maxlength', '" + String.valueOf(length)
+            + "')");
   }
 }
