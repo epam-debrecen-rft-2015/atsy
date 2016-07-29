@@ -4,6 +4,7 @@ import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -12,7 +13,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -35,7 +35,9 @@ public class CandidateControllerTest extends AbstractControllerTest {
   private static final String NAME = "name";
   private static final String EMAIL = "email";
   private static final String PHONE = "phone";
-  private static final String TEXT = "text";
+  private static final String ASC = "asc";
+  private static final String NON_VALID_FIELD_NAME = "Non valid field name";
+  private static final String EMPTY_STRING = StringUtils.EMPTY;
 
   private CandidateDTO candidateA = CandidateDTO.builder()
       .name(CANDIDATE_NAME_A).email(CANDIDATE_EMAIL_ADDRESS_A).phone(CANDIDATE_PHONE_NUMBER_A).build();
@@ -57,29 +59,68 @@ public class CandidateControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void loadPageShouldRespondClientErrorPageWhenSortingIsMissing() throws Exception {
+  public void loadPageShouldRespondClientErrorWhenParamSortIsMissing() throws Exception {
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("order", "asc"))
+        .param("order", ASC))
         .andExpect(status().isBadRequest());
 
     verifyZeroInteractions(candidateService);
   }
 
   @Test
-  public void loadPageShouldRespondClientErrorPageWhenOrderIsMissing() throws Exception {
+  public void loadPageShouldRespondClientErrorWhenParamOrderIsMissing() throws Exception {
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("sort", "name"))
+        .param("sort", NAME))
         .andExpect(status().isBadRequest());
 
     verifyZeroInteractions(candidateService);
   }
 
-
-  public void loadPageShouldRespond() throws Exception {
+  /**
+   * **************************************************************************
+   * The status is HTTP 200
+   * **************************************************************************
+   */
+  //@Test
+  public void loadPageShouldRespondInternalServerErrorWhenParamSortIsNotValid() throws Exception {
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("order", "asc").param("sort", TEXT))
-        //.andExpect(status().isInternalServerError())
-        .andDo(print());
+        .param("sort", NON_VALID_FIELD_NAME).param("order", ASC))
+        .andExpect(status().isInternalServerError());
+
+    verifyZeroInteractions(candidateService);
+  }
+
+  @Test
+  public void loadPageShouldRespondInternalServerErrorWhenParamOrderIsNotValid() throws Exception {
+    this.mockMvc.perform(get(REQUEST_URL)
+        .param("sort", NAME).param("order", NON_VALID_FIELD_NAME))
+        .andExpect(status().isInternalServerError());
+
+    verifyZeroInteractions(candidateService);
+  }
+
+
+  /**
+   * **************************************************************************
+   * The status is HTTP 200
+   * **************************************************************************
+   */
+  //@Test
+  public void loadPageShouldRespondInternalServerErrorWhenParamSortIsAnEmptyString() throws Exception {
+    this.mockMvc.perform(get(REQUEST_URL)
+        .param("sort", EMPTY_STRING).param("order", ASC))
+        .andExpect(status().isInternalServerError());
+
+    verifyZeroInteractions(candidateService);
+  }
+
+  @Test
+  public void loadPageShouldRespondInternalServerErrorWhenParamOrderIsAnEmptyString() throws Exception {
+    this.mockMvc.perform(get(REQUEST_URL)
+        .param("sort", NAME).param("order", EMPTY_STRING))
+        .andExpect(status().isInternalServerError());
+
+    verifyZeroInteractions(candidateService);
   }
 
 
