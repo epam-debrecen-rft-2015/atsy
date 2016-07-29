@@ -42,8 +42,9 @@ public class CandidateCreationStepDefs {
 
   @Given("^other candidates data collected$")
   public void other_candidates_data_collected() {
-    WebDriverWait wait = DriverProvider.wait(getDriver());
-    wait.until(presenceOfElementLocated(By.id("candidates_table")));
+    WebDriverWait webDriverWait = new WebDriverWait(getDriver(), 10);
+    webDriverWait.until(
+        presenceOfElementLocated(By.id("candidates_table")));
 
     List<WebElement>
         webElements =
@@ -202,6 +203,15 @@ public class CandidateCreationStepDefs {
         webDriverWait.until(presenceOfAllElementsLocatedBy(By.cssSelector(selector)));
     assertTrue(listings.size() > 0);
     assertTrue(listings.stream().map(li -> li.getText()).anyMatch(text -> text.equals(arg1)));
+  }
+
+  @Then("^a \"([^\"]*)\" message is shown on the top of the page$")
+  public void a_message_is_shown_on_the_top_of_the_page(String arg1) {
+    String selector = "#candidate-create-form > div.panel.panel-danger > div.panel-heading";
+
+    WebDriverWait webDriverWait = DriverProvider.wait(getDriver());
+    webDriverWait.until(presenceOfElementLocated(By.cssSelector(selector)));
+    assertEquals(arg1, getDriver().findElement(By.cssSelector(selector)).getText());
   }
 
   private void setMaxLengthAttribute(String id, int length, WebDriver driver) {

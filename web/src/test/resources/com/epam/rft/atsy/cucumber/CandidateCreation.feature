@@ -21,33 +21,33 @@ Feature: candidate creation test
       | name  | A jelentkező nevét kötelező megadni!       |
       | email | A jelentkező email címét kötelező megadni! |
 
-#  Scenario: user can't create new candidate because of duplication based on same email address
-#
-#    Given other candidates data collected
-#    Given the user is on the Candidate creation page
-#    And the candidate details are empty
-#    And another candidate's e-mail address is "candidate.c@atsy.com"
-#    And the user enters name "other"
-#    And the user enters e-mail address "candidate.c@atsy.com"
-#    And the user enters phone number "+36301234568"
-#    And the user enters the place where the candidate has heard about the company "place"
-#    And the user enters the language level "4"
-#    When the user clicks on the "Mentés" button
-#    Then a "A megadott e-mail című jelentkező már létezik!" message is shown under the email field
-#
-#  Scenario: user can't create new candidate because of duplication based on same phone number
-#
-#    Given other candidates data collected
-#    Given the user is on the Candidate creation page
-#    And the candidate details are empty
-#    And another candidate's phone number is "+36105555555"
-#    And the user enters name "other"
-#    And the user enters e-mail address "other@atsy.com"
-#    And the user enters phone number "+36105555555"
-#    And the user enters the place where the candidate has heard about the company "place"
-#    And the user enters the language level "4"
-#    When the user clicks on the "Mentés" button
-#    Then a "A megadott telefonszámú jelentkező már létezik!" message is shown under the phone number field
+  Scenario: user can't create new candidate because of duplication based on same email address
+
+    Given other candidates data collected
+    Given the user is on the Candidate creation page
+    And the candidate details are empty
+    And another candidate's e-mail address is "candidate.c@atsy.com"
+    And the user enters name "other"
+    And the user enters e-mail address "candidate.c@atsy.com"
+    And the user enters phone number "+36301234568"
+    And the user enters the place where the candidate has heard about the company "place"
+    And the user enters the language level "4"
+    When the user clicks on the "Mentés" button
+    Then a "Már létezik ilyen e-mail címmel vagy telefonszámmal jelentkező!" message is shown on the top of the page
+
+  Scenario: user can't create new candidate because of duplication based on same phone number
+
+    Given other candidates data collected
+    Given the user is on the Candidate creation page
+    And the candidate details are empty
+    And another candidate's phone number is "+36105555555"
+    And the user enters name "other"
+    And the user enters e-mail address "other@atsy.com"
+    And the user enters phone number "+36105555555"
+    And the user enters the place where the candidate has heard about the company "place"
+    And the user enters the language level "4"
+    When the user clicks on the "Mentés" button
+    Then a "Már létezik ilyen e-mail címmel vagy telefonszámmal jelentkező!" message is shown on the top of the page
 
   Scenario: user can't create new candidate because of name is longer than 100 characters
 
