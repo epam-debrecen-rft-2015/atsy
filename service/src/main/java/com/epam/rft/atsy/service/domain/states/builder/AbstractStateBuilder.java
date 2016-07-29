@@ -1,8 +1,10 @@
 package com.epam.rft.atsy.service.domain.states.builder;
 
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
+import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
-import com.epam.rft.atsy.service.domain.states.AbstractStateDTO;
+import com.epam.rft.atsy.service.domain.states.AbstractStateHistoryDTO;
+import com.epam.rft.atsy.service.domain.states.StateDTO;
 
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -13,7 +15,7 @@ import lombok.AllArgsConstructor;
 
 
 @AllArgsConstructor
-public abstract class AbstractStateBuilder<B extends AbstractStateBuilder<B, T>, T extends AbstractStateDTO>
+public abstract class AbstractStateBuilder<B extends AbstractStateBuilder<B, T>, T extends AbstractStateHistoryDTO>
     implements Builder<T> {
 
   protected String name;
@@ -32,6 +34,11 @@ public abstract class AbstractStateBuilder<B extends AbstractStateBuilder<B, T>,
 
   public B position(PositionDTO position) {
     object.setPosition(position);
+    return (B) this;
+  }
+
+  public B channel(ChannelDTO channel) {
+    object.setChannel(channel);
     return (B) this;
   }
 
@@ -70,16 +77,15 @@ public abstract class AbstractStateBuilder<B extends AbstractStateBuilder<B, T>,
     return (B) this;
   }
 
-  public B stateType(String stateType) {
-    object.setStateType(stateType);
+  public B dayOfStart(Date dayOfStart) {
+    object.setDayOfStart(dayOfStart);
     return (B) this;
   }
 
-  public B stateIndex(Integer stateIndex) {
-    object.setStateIndex(stateIndex);
+  public B stateDTO(StateDTO stateDTO) {
+    object.setStateDTO(stateDTO);
     return (B) this;
   }
-
 
   @Override
   public T build() {

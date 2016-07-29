@@ -56,7 +56,7 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
 
   private final String missingEmail = null;
   private final String emptyEmail = StringUtils.EMPTY;
-  private final String tooLongEmail = StringUtils.repeat('a', 400) + "@email.com";
+  private final String tooLongEmail = StringUtils.repeat('a', 255) + "@email.com";
   private final String incorrectEmail = "malformed";
   private final String correctEmail = "john@doe.com";
 

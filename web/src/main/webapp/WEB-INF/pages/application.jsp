@@ -11,6 +11,7 @@
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
         <script src="<c:url value="/resources/js/atsy-application.js" />"></script>
+        <script type="text/javascript" src="<c:url value="/resources/js/atsy-new-application-popup.js" />"></script>
     </jsp:attribute>
     <jsp:body>
         <div id="application_page">
@@ -19,7 +20,7 @@
             </h1>
         <div class="modal fade" id="modal" role="dialog">
             <div class="modal-dialog" >
-                <div class="modal-content">
+                <div class="modal-content" id="pop_up_content">
                     <div class="modal-header">
                     <h4 id="new_application_popup_title">Új jelentkezés</h4>
                     </div>
@@ -32,8 +33,11 @@
                                     code="application.create.position.label"/></label>
 
                                 <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="drop">
+                                    <spring:message code="application.popup.position.drop.down.default.value" var="i18n_position_drop_down_default_value"/>
                                     <select class="input form-control" name="position.id" id="position">
+                                    <option value = "${i18n_position_drop_down_default_value}">${i18n_position_drop_down_default_value}</option>
                                     </select>
+                                    <span style="color: red" id="position_error"/>
                                 </div>
                             </div>
                             <div class="form-group" id="sourceDiv">
@@ -42,8 +46,11 @@
                                     code="application.create.source.label"/></label>
 
                                 <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="dropSource">
+                                    <spring:message code="application.popup.application.source.drop.down.default.value" var="i18n_application_source_drop_down_default_value"/>
                                     <select class="input form-control" name="channel.id" id="channel">
+                                    <option value = "${i18n_application_source_drop_down_default_value}">${i18n_application_source_drop_down_default_value}</option>
                                     </select>
+                                    <span style="color: red" id="application_source_error"/>
                                 </div>
                             </div>
                             <div class="form-group" id="descriptionDiv">
@@ -58,8 +65,8 @@
                                 </div>
                             </div>
                             <div class="col-lg-offset-8 col-md-offset-8 col-sm-offset-8 col-lg-4 col-md-4 col-sm-4">
-                                <a href="candidate/${candidateId}" class="btn btn-danger">Vissza</a>
-                                <button type="submit" class="btn btn-success">
+                                <a href="candidate/${candidateId}" class="btn btn-danger" id="cancel_button">Vissza</a>
+                                <button type="submit" class="btn btn-success" id="save_new_apply_button" >
                                     <spring:message code="save.button"/>
                                 </button>
                             </div>

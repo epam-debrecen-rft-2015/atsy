@@ -1,7 +1,7 @@
 package com.epam.rft.atsy.service;
 
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
-import com.epam.rft.atsy.service.domain.states.StateDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 
 /**
  * Service that operates with applications in the database layer and in the view layer.
@@ -18,8 +18,8 @@ public interface ApplicationsService {
   /**
    * Saves an application and a state to the database and returns the application's id.
    * @param applicationDTO the application
-   * @param stateDTO the state of application
+   * @param stateHistoryDTO the state of application
    * @return the id of application
    */
-  Long saveApplicaton(ApplicationDTO applicationDTO, StateDTO stateDTO);
+  Long saveApplicaton(ApplicationDTO applicationDTO, StateHistoryDTO stateHistoryDTO);
 }

@@ -1,9 +1,9 @@
 package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.ApplicationsService;
-import com.epam.rft.atsy.service.StatesService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,10 +17,8 @@ import javax.validation.Valid;
 
 @Controller
 public class NewApplicationPopupController {
-
   private static final String VIEW_NAME = "new_application_popup";
-  @Resource
-  private StatesService statesService;
+
   @Resource
   private ApplicationsService applicationsService;
 
@@ -30,20 +28,20 @@ public class NewApplicationPopupController {
   }
 
   @RequestMapping(method = RequestMethod.POST, value = "/secure/new_application_popup")
-  public String saveOrUpdate(@Valid @ModelAttribute StateDTO stateDTO, BindingResult result) {
+  public String saveOrUpdate(@Valid @ModelAttribute StateHistoryDTO stateHistoryDTO,
+                             BindingResult result) {
     if (!result.hasErrors()) {
-      stateDTO.setStateType("newstate");
-      stateDTO.setStateIndex(0);
+      stateHistoryDTO.setStateDTO(new StateDTO(1L, "newstate"));
 
       ApplicationDTO applicationDTO = ApplicationDTO.builder()
           .creationDate(new Date())
-          .candidateId(stateDTO.getCandidateId())
-          .positionId(stateDTO.getPosition().getId())
-          .channelId(stateDTO.getChannel().getId())
+          .candidateId(stateHistoryDTO.getCandidateId())
+          .positionId(stateHistoryDTO.getPosition().getId())
+          .channelId(stateHistoryDTO.getChannel().getId())
           .build();
 
-      applicationsService.saveApplicaton(applicationDTO, stateDTO);
+      applicationsService.saveApplicaton(applicationDTO, stateHistoryDTO);
     }
-    return "redirect:/secure/candidate/" + stateDTO.getCandidateId();
+    return "redirect:/secure/candidate/" + stateHistoryDTO.getCandidateId();
   }
 }

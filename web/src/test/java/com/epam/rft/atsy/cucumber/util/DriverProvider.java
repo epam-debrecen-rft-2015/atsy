@@ -10,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class DriverProvider {
@@ -17,7 +18,6 @@ public class DriverProvider {
 
   public synchronized static WebDriver getDriver() {
     if (driver == null) {
-
       try {
         driver = initiateDriver();
       } finally {
@@ -29,7 +29,9 @@ public class DriverProvider {
   }
 
   private static WebDriver initiateDriver() {
-    return new FirefoxDriver();
+    WebDriver firefoxDriver = new FirefoxDriver();
+    firefoxDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+    return firefoxDriver;
   }
 
   public static void waitForAjax() {

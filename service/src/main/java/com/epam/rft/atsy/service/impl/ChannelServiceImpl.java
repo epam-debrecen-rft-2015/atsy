@@ -5,6 +5,7 @@ import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
 import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.exception.DuplicateChannelException;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -17,7 +18,9 @@ import org.springframework.util.Assert;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
+
 import javax.annotation.Resource;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Service
