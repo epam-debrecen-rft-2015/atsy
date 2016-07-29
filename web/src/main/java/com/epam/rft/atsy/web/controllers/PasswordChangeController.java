@@ -26,26 +26,31 @@ import javax.annotation.Resource;
 @Controller
 @RequestMapping(path = "/secure/password/manage")
 public class PasswordChangeController {
-  public static final String LOGIN_ERROR_KEY = "loginErrorKey";
-  public static final String VALIDATION_SUCCESS_KEY = "validationSuccessKey";
-  public static final String VALIDATION_ERROR_KEY = "validationErrorKey";
-  public static final String LOGIN_BACKEND_VALIDATION = "login.backend.validation";
-  public static final String
-      PASSWORDCHANGE_VALIDATION_SUCCESS =
+  private static final String LOGIN_ERROR_KEY = "loginErrorKey";
+
+  private static final String VALIDATION_SUCCESS_KEY = "validationSuccessKey";
+
+  private static final String VALIDATION_ERROR_KEY = "validationErrorKey";
+
+  private static final String LOGIN_BACKEND_VALIDATION = "login.backend.validation";
+
+  private static final String PASSWORDCHANGE_VALIDATION_SUCCESS =
       "passwordchange.validation.success";
+
   private static final String VIEW_NAME = "password_change";
+
   private static Logger logger = LoggerFactory.getLogger(PasswordChangeController.class);
 
   @Resource
-  PasswordChangeService passwordChangeService;
+  private PasswordChangeService passwordChangeService;
 
   @Resource
-  UserService userService;
+  private UserService userService;
 
   @Autowired
-  PasswordValidator passwordValidator;
+  private PasswordValidator passwordValidator;
 
-  BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+  private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView loadPage() {
@@ -56,14 +61,12 @@ public class PasswordChangeController {
   public ModelAndView changePassword(@ModelAttribute PasswordChangeDTO passwordChangeDTO,
                                      BindingResult bindingResult,
                                      @CurrentUser UserDetailsAdapter userDetailsAdapter) {
-
-
     ModelAndView model = new ModelAndView(VIEW_NAME);
+
     if (bindingResult.hasErrors()) {
       model.addObject(LOGIN_ERROR_KEY, LOGIN_BACKEND_VALIDATION);
     } else {
       try {
-
         passwordValidator.validate(passwordChangeDTO);
 
         String newPassword = bCryptPasswordEncoder.encode(passwordChangeDTO.getNewPassword());
@@ -86,6 +89,7 @@ public class PasswordChangeController {
         model.addObject(VALIDATION_ERROR_KEY, e.getMessageKey());
       }
     }
+
     return model;
   }
 }
