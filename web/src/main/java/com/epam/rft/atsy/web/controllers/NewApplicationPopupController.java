@@ -40,7 +40,7 @@ public class NewApplicationPopupController {
           .channelId(stateHistoryDTO.getChannel().getId())
           .build();
 
-      applicationsService.saveApplicaton(applicationDTO, stateHistoryDTO);
+      applicationsService.saveApplication(applicationDTO, stateHistoryDTO);
     }
     return "redirect:/secure/candidate/" + stateHistoryDTO.getCandidateId();
   }

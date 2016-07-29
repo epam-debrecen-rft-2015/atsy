@@ -86,7 +86,7 @@ public class NewApplicationPopupControllerTest extends AbstractControllerTest {
     val applicationDTOCaptor = ArgumentCaptor.forClass(ApplicationDTO.class);
     val stateHistoryDTOCaptor = ArgumentCaptor.forClass(StateHistoryDTO.class);
 
-    then(applicationsService).should().saveApplicaton(applicationDTOCaptor.capture(), stateHistoryDTOCaptor.capture());
+    then(applicationsService).should().saveApplication(applicationDTOCaptor.capture(), stateHistoryDTOCaptor.capture());
     assertThat(stateHistoryDTOCaptor.getValue(), equalTo(stateHistoryDTO));
     assertApplicationDtoWhenSaveOrUpdateIsSuccess(applicationDTOCaptor);
   }
