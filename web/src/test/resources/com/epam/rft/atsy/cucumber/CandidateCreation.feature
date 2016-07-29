@@ -109,7 +109,7 @@ Feature: candidate creation test
     And the user enters the place where the candidate has heard about the company "place"
     And the user enters the language level "4"
     When the user clicks on the "Mentés" button
-    Then a "A jelentkező email címének megfelelő formában kell lennie, például kovacs.jozsef@email.hu!" message is shown under the email address field
+    Then a "A jelentkező email címének megfelelő formában kell lennie, például kovacs.jozsef@email.hu!" message is shown under the email field
 
   Scenario: user can't create new candidate because of phone number is malformed
 

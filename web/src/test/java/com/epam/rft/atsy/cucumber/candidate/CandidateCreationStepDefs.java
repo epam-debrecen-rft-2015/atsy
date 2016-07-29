@@ -5,6 +5,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -28,6 +29,7 @@ public class CandidateCreationStepDefs {
   private static final String REFERER_ID = "referer";
   private static final String LANGUAGE_SKILL_ID = "languageSkill";
   private static final String SAVE_BUTTON_ID = "save-button";
+  private static final String EMAIL_SUFFIX = "@epam.com";
 
 
   @Given("^the user is on the Candidate creation page$")
@@ -131,33 +133,39 @@ public class CandidateCreationStepDefs {
 
   @Then("^a \"([^\"]*)\" message is shown under the phone number field$")
   public void a_message_is_shown_under_the_phone_number_field(String arg1) throws Throwable {
-    // Write code here that turns the phrase above into concrete actions
-    throw new PendingException();
+    String selector = "#phoneDiv > div > div > ul > li:nth-child(1)";
+    WebDriverWait webDriverWait = new WebDriverWait(getDriver(), 5);
+    webDriverWait.until(presenceOfElementLocated(By.cssSelector(selector)));
+    assertEquals(arg1, getDriver().findElement(By.cssSelector(selector)).getText());
   }
 
   @Given("^the user enters name longer than (\\d+) characters$")
   public void the_user_enters_name_longer_than_characters(int arg1) throws Throwable {
-    // Write code here that turns the phrase above into concrete actions
-    throw new PendingException();
+    String longName = RandomStringUtils.randomAlphabetic(arg1 + 1);
+    assertTrue(longName.length() > arg1);
+    getDriver().findElement(By.id(NAME_ID)).sendKeys(longName);
   }
 
   @Given("^the user enters e-mail address longer than (\\d+) characters$")
   public void the_user_enters_e_mail_address_longer_than_characters(int arg1) throws Throwable {
-    // Write code here that turns the phrase above into concrete actions
-    throw new PendingException();
+    String longEmail = RandomStringUtils.randomAlphabetic(arg1) + EMAIL_SUFFIX;
+    assertTrue(longEmail.length() > arg1);
+    getDriver().findElement(By.id(EMAIL_ID)).sendKeys(longEmail);
   }
 
   @Given("^the user enters phone number longer than (\\d+) characters$")
   public void the_user_enters_phone_number_longer_than_characters(int arg1) throws Throwable {
-    // Write code here that turns the phrase above into concrete actions
-    throw new PendingException();
+    String longPhoneNumber = RandomStringUtils.randomNumeric(arg1 + 1);
+    assertTrue(longPhoneNumber.length() > arg1);
+    getDriver().findElement(By.id(PHONE_ID)).sendKeys(longPhoneNumber);
   }
 
   @Given("^the user enters the place where the candidate has heard about the company longer than (\\d+) characters$")
   public void the_user_enters_the_place_where_the_candidate_has_heard_about_the_company_longer_than_characters(
       int arg1) throws Throwable {
-    // Write code here that turns the phrase above into concrete actions
-    throw new PendingException();
+    String longReferer = RandomStringUtils.randomAlphabetic(arg1 + 1);
+    assertTrue(longReferer.length() > arg1);
+    getDriver().findElement(By.id(REFERER_ID)).sendKeys(longReferer);
   }
 
   @Then("^a \"([^\"]*)\" message is shown under the referer field$")
