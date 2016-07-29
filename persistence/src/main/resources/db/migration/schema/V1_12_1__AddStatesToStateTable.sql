@@ -1,0 +1,14 @@
+INSERT INTO states (id,name) VALUES (1,'newstate');
+INSERT INTO states (id,name) VALUES (2,'cv');
+INSERT INTO states (id,name) VALUES (3,'hr');
+INSERT INTO states (id,name) VALUES (4,'firstTest');
+INSERT INTO states (id,name) VALUES (5,'tech');
+INSERT INTO states (id,name) VALUES (6,'coding');
+INSERT INTO states (id,name) VALUES (7,'profInterview');
+INSERT INTO states (id,name) VALUES (8,'clientInterview');
+INSERT INTO states (id,name) VALUES (9,'wageOffer');
+INSERT INTO states (id,name) VALUES (10,'candidateReject');
+INSERT INTO states (id,name) VALUES (11,'agree');
+INSERT INTO states (id,name) VALUES (12,'accept');
+INSERT INTO states (id,name) VALUES (13,'reject');
+INSERT INTO states (id,name) VALUES (14,'pause');

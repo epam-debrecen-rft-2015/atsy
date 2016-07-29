@@ -11,8 +11,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @Builder
-public class StateDTO {
+public class StateFlowDTO {
 
-  private Long id;
-  private String name;
+  private StateDTO fromStateDTO;
+  private StateDTO toStateDTO;
 }

@@ -14,7 +14,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class StateViewDTO extends AbstractStateDTO {
+public class StateHistoryViewDTO extends AbstractStateHistoryDTO {
 
 
   private String creationDate;
@@ -30,14 +30,14 @@ public class StateViewDTO extends AbstractStateDTO {
 
 
   public static class StateViewDTOBuilder
-      extends AbstractStateBuilder<StateViewDTOBuilder, StateViewDTO> {
+      extends AbstractStateBuilder<StateViewDTOBuilder, StateHistoryViewDTO> {
 
-    private StateViewDTOBuilder(StateViewDTO stateViewDTO) {
-      super("StateViewDTOBuilder", stateViewDTO);
+    private StateViewDTOBuilder(StateHistoryViewDTO stateHistoryViewDTO) {
+      super("StateViewDTOBuilder", stateHistoryViewDTO);
     }
 
     private StateViewDTOBuilder() {
-      this(new StateViewDTO());
+      this(new StateHistoryViewDTO());
     }
 
     public StateViewDTOBuilder creationDate(String creationDate) {
