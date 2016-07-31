@@ -3,10 +3,9 @@ package com.epam.rft.atsy.cucumber.candidate;
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
-import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfAllElementsLocatedBy;
-import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfAllElementsLocatedBy;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
-import com.epam.rft.atsy.cucumber.util.DriverProvider;
 import com.epam.rft.atsy.cucumber.welcome.CandidateTableRow;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.By;
@@ -38,18 +37,18 @@ public class CandidateCreationStepDefs {
 
   private static final String EMAIL_SUFFIX = "@epam.com";
 
+  private static final long TIMEOUT = 7L;
+
   private static List<CandidateTableRow> candidateTableRows;
 
   @Given("^other candidates data collected$")
   public void other_candidates_data_collected() {
-    WebDriverWait webDriverWait = new WebDriverWait(getDriver(), 10);
-    webDriverWait.until(
-        presenceOfElementLocated(By.id("candidates_table")));
+    WebDriverWait webDriverWait = new WebDriverWait(getDriver(), TIMEOUT);
 
     List<WebElement>
         webElements =
-        getDriver().findElement(By.id("candidates_table"))
-            .findElements(By.cssSelector("tbody > tr[data-index]"));
+        webDriverWait
+            .until(visibilityOfAllElementsLocatedBy(By.cssSelector("tbody > tr[data-index]")));
 
     candidateTableRows = new ArrayList<>();
     for (WebElement element : webElements) {
@@ -72,7 +71,6 @@ public class CandidateCreationStepDefs {
   public void the_candidate_details_are_empty() throws Throwable {
     WebElement descriptionElement = getDriver().findElement(By.id(DESCRIPTION_ID));
     descriptionElement.clear();
-
     assertTrue(descriptionElement.getText().isEmpty());
   }
 
@@ -107,7 +105,6 @@ public class CandidateCreationStepDefs {
   public void the_user_clears_field_name() throws Throwable {
     WebElement nameElement = getDriver().findElement(By.id(NAME_ID));
     nameElement.clear();
-
     assertTrue(nameElement.getText().isEmpty());
   }
 
@@ -119,28 +116,28 @@ public class CandidateCreationStepDefs {
   @Then("^a \"([^\"]*)\" message is shown under the name field$")
   public void a_message_is_shown_under_the_name_field(String arg1) throws Throwable {
     String selector = ".list-unstyled > li:nth-child(1)";
-    WebDriverWait webDriverWait = DriverProvider.wait(getDriver());
-    webDriverWait.until(presenceOfElementLocated(By.cssSelector(selector)));
-
-    assertEquals(arg1, getDriver().findElement(By.cssSelector(selector)).getText());
+    WebDriverWait webDriverWait = new WebDriverWait(getDriver(), TIMEOUT);
+    WebElement elem = webDriverWait.until(visibilityOfElementLocated(By.cssSelector(selector)));
+    assertEquals(arg1, elem.getText());
   }
 
   @Given("^the user clears field email$")
   public void the_user_clears_field_email() throws Throwable {
     WebElement emailElement = getDriver().findElement(By.id(EMAIL_ID));
     emailElement.clear();
-
     assertTrue(emailElement.getText().isEmpty());
   }
 
   @Then("^a \"([^\"]*)\" message is shown under the email field$")
   public void a_message_is_shown_under_the_email_field(String arg1) throws Throwable {
+    //When there is an error message regarding the email or name field exclusively,
+    // the error message selector is the same.
     a_message_is_shown_under_the_name_field(arg1);
   }
 
   @Given("^another candidate's name is \"([^\"]*)\"$")
   public void another_candidate_s_name_is(String arg1) throws Throwable {
-    assertTrue(candidateTableRows.stream().anyMatch(c -> c.getName().endsWith(arg1)));
+    assertTrue(candidateTableRows.stream().anyMatch(c -> c.getName().equals(arg1)));
   }
 
   @Given("^another candidate's e-mail address is \"([^\"]*)\"$")
@@ -156,15 +153,14 @@ public class CandidateCreationStepDefs {
   @Then("^a \"([^\"]*)\" message is shown under the phone number field$")
   public void a_message_is_shown_under_the_phone_number_field(String arg1) throws Throwable {
     String selector = "#phoneDiv > div > div > ul > li:nth-child(1)";
-    WebDriverWait webDriverWait = DriverProvider.wait(getDriver());
-    webDriverWait.until(presenceOfElementLocated(By.cssSelector(selector)));
-    assertEquals(arg1, getDriver().findElement(By.cssSelector(selector)).getText());
+    WebDriverWait webDriverWait = new WebDriverWait(getDriver(), TIMEOUT);
+    WebElement elem = webDriverWait.until(visibilityOfElementLocated(By.cssSelector(selector)));
+    assertEquals(arg1, elem.getText());
   }
 
   @Given("^the user enters name longer than (\\d+) characters$")
   public void the_user_enters_name_longer_than_characters(int arg1) throws Throwable {
     String longName = RandomStringUtils.randomAlphabetic(arg1 + 1);
-    assertTrue(longName.length() > arg1);
     setMaxLengthAttribute(NAME_ID, longName.length(), getDriver());
     getDriver().findElement(By.id(NAME_ID)).sendKeys(longName);
   }
@@ -172,7 +168,6 @@ public class CandidateCreationStepDefs {
   @Given("^the user enters e-mail address longer than (\\d+) characters$")
   public void the_user_enters_e_mail_address_longer_than_characters(int arg1) throws Throwable {
     String longEmail = RandomStringUtils.randomAlphabetic(arg1) + EMAIL_SUFFIX;
-    assertTrue(longEmail.length() > arg1);
     setMaxLengthAttribute(EMAIL_ID, longEmail.length(), getDriver());
     getDriver().findElement(By.id(EMAIL_ID)).sendKeys(longEmail);
   }
@@ -180,7 +175,6 @@ public class CandidateCreationStepDefs {
   @Given("^the user enters phone number longer than (\\d+) characters$")
   public void the_user_enters_phone_number_longer_than_characters(int arg1) throws Throwable {
     String longPhoneNumber = RandomStringUtils.randomNumeric(arg1 + 1);
-    assertTrue(longPhoneNumber.length() > arg1);
     setMaxLengthAttribute(PHONE_ID, longPhoneNumber.length(), getDriver());
     getDriver().findElement(By.id(PHONE_ID)).sendKeys(longPhoneNumber);
   }
@@ -189,7 +183,6 @@ public class CandidateCreationStepDefs {
   public void the_user_enters_the_place_where_the_candidate_has_heard_about_the_company_longer_than_characters(
       int arg1) throws Throwable {
     String longReferer = RandomStringUtils.randomAlphabetic(arg1 + 1);
-    assertTrue(longReferer.length() > arg1);
     setMaxLengthAttribute(REFERER_ID, longReferer.length(), getDriver());
     getDriver().findElement(By.id(REFERER_ID)).sendKeys(longReferer);
   }
@@ -197,21 +190,20 @@ public class CandidateCreationStepDefs {
   @Then("a \"([^\"]*)\" message appears")
   public void a_message_appears(String arg1) {
     String selector = "#field-messages > li";
-    WebDriverWait webDriverWait = DriverProvider.wait(getDriver());
+    WebDriverWait webDriverWait = new WebDriverWait(getDriver(), TIMEOUT);
     List<WebElement>
         listings =
-        webDriverWait.until(presenceOfAllElementsLocatedBy(By.cssSelector(selector)));
+        webDriverWait.until(visibilityOfAllElementsLocatedBy(By.cssSelector(selector)));
     assertTrue(listings.size() > 0);
     assertTrue(listings.stream().map(li -> li.getText()).anyMatch(text -> text.equals(arg1)));
   }
 
   @Then("^a \"([^\"]*)\" message is shown on the top of the page$")
   public void a_message_is_shown_on_the_top_of_the_page(String arg1) {
-    String selector = "#candidate-create-form > div.panel.panel-danger > div.panel-heading";
-
-    WebDriverWait webDriverWait = DriverProvider.wait(getDriver());
-    webDriverWait.until(presenceOfElementLocated(By.cssSelector(selector)));
-    assertEquals(arg1, getDriver().findElement(By.cssSelector(selector)).getText());
+    String selector = ".panel-heading";
+    WebDriverWait webDriverWait = new WebDriverWait(getDriver(), TIMEOUT);
+    WebElement elem = webDriverWait.until(visibilityOfElementLocated(By.cssSelector(selector)));
+    assertEquals(arg1, elem.getText());
   }
 
   private void setMaxLengthAttribute(String id, int length, WebDriver driver) {
