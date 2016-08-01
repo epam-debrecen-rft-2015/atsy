@@ -1,7 +1,6 @@
 package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.service.CandidateService;
-import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.request.FilterRequest;
 import com.epam.rft.atsy.service.request.SearchOptions;
 import com.epam.rft.atsy.service.request.SortingRequest;
@@ -12,19 +11,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.Arrays;
-import java.util.Collection;
 
 import lombok.val;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,33 +29,22 @@ public class CandidateControllerTest extends AbstractControllerTest {
 
   private static final String REQUEST_URL = "/secure/candidates";
 
-  private static final String CANDIDATE_NAME_A = "Candidate A";
-  private static final String CANDIDATE_NAME_B = "Candidate B";
-  private static final String CANDIDATE_NAME_C = "Candidate C";
-
-  private static final String CANDIDATE_EMAIL_ADDRESS_A = "candidate.a@atsy.com";
-  private static final String CANDIDATE_EMAIL_ADDRESS_B = "candidate.b@atsy.com";
-  private static final String CANDIDATE_EMAIL_ADDRESS_C = "candidate.c@atsy.com";
-
-  private static final String CANDIDATE_PHONE_NUMBER_A = "+36105555555";
-  private static final String CANDIDATE_PHONE_NUMBER_B = "+36106666666";
-  private static final String CANDIDATE_PHONE_NUMBER_C = "+36107777777";
-
   private static final String NAME = "name";
-  private static final String EMAIL = "email";
-  private static final String PHONE = "phone";
   private static final String ASC = "asc";
+  private static final String CANDIDATE_NAME = "Candidate";
+  private static final String CANDIDATE_PHONE = "+36";
+  private static final String CANDIDATE_EMAIL = "@";
   private static final String NON_VALID_FIELD_NAME = "Non valid field name";
+  private static final String NON_VALID_CANDIDATE_NAME = "Not a candidate name";
+
+  private static final String JSON_NON_VALID_CANDIDATE_NAME = "{\"name\":\"Not a candidate name\"}";
+  private static final String JSON_CANDIDATE_NAME = "{\"name\":\"Candidate\"}";
+  private static final String JSON_CANDIDATE_EMAIL_AND_PHONE = "{\"email\":\"@\", \"phone\":\"+36\"}";
+  private static final String JSON_CANDIDATE_NAME_AND_EMAIL_AND_PHONE =
+      "{\"name\":\"Candidate\", \"email\":\"@\", \"phone\":\"+36\"}";
+
+  private static final String EMPTY_JSON = "{}";
   private static final String EMPTY_STRING = StringUtils.EMPTY;
-
-  private CandidateDTO candidateA = CandidateDTO.builder()
-      .name(CANDIDATE_NAME_A).email(CANDIDATE_EMAIL_ADDRESS_A).phone(CANDIDATE_PHONE_NUMBER_A).build();
-
-  private CandidateDTO candidateB = CandidateDTO.builder()
-      .name(CANDIDATE_NAME_B).email(CANDIDATE_EMAIL_ADDRESS_B).phone(CANDIDATE_PHONE_NUMBER_B).build();
-
-  private CandidateDTO candidateC = CandidateDTO.builder()
-      .name(CANDIDATE_NAME_C).email(CANDIDATE_EMAIL_ADDRESS_C).phone(CANDIDATE_PHONE_NUMBER_C).build();
 
   @Mock
   private CandidateService candidateService;
@@ -82,7 +66,7 @@ public class CandidateControllerTest extends AbstractControllerTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void loadPageShouldRespondClientErrorWhenParamSortIsNull() throws Exception {
+  public void loadPageShouldThrowIllegalArgumentExceptionWhenParamSortIsNull() throws Exception {
     this.mockMvc.perform(get(REQUEST_URL)
         .param("sort", null).param("order", ASC));
   }
@@ -116,7 +100,7 @@ public class CandidateControllerTest extends AbstractControllerTest {
 
 
   @Test(expected = IllegalArgumentException.class)
-  public void loadPageShouldRespondClientErrorWhenParamOrderIsNull() throws Exception {
+  public void loadPageShouldThrowIllegalArgumentExceptionWhenParamOrderIsNull() throws Exception {
     this.mockMvc.perform(get(REQUEST_URL)
         .param("sort", NAME).param("order", null));
   }
@@ -142,11 +126,11 @@ public class CandidateControllerTest extends AbstractControllerTest {
 
 
   @Test
-  public void loadPageShouldRespondCandidateCollectionOrderByNameAscWithoutFilters() throws Exception {
+  public void loadPageShouldRespondCandidateCollectionWhenOrderByNameAscWithoutFilters() throws Exception {
     final SearchOptions searchOptions =
         SearchOptions.builder().name(EMPTY_STRING).email(EMPTY_STRING).phone(EMPTY_STRING).build();
-    final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC).fieldName(
-        SortingRequest.Field.NAME).searchOptions(searchOptions).build();
+    final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC)
+        .fieldName(SortingRequest.Field.NAME).searchOptions(searchOptions).build();
 
     val filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
     this.mockMvc.perform(get(REQUEST_URL)
@@ -155,25 +139,146 @@ public class CandidateControllerTest extends AbstractControllerTest {
 
     then(candidateService).should().getAllCandidate(filterRequestArgumentCaptor.capture());
     assertThat(filterRequestArgumentCaptor.getValue(), equalTo(filterRequest));
+
+    verifyNoMoreInteractions(candidateService);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void loadPageShouldThrowIllegalArgumentExceptionWhenParamFilterIsNull() throws Exception {
+    this.mockMvc.perform(get(REQUEST_URL)
+        .param("filter", null).param("sort", NAME).param("order", ASC));
   }
 
   @Test
-  public void loadPageShouldRespondCandidateCollectionOrderByNameAscWithFilterByName() throws Exception {
-    final Collection<CandidateDTO> candidateDTOCollection = Arrays.asList(candidateA);
-    given(candidateService.getAllCandidate(Matchers.any(FilterRequest.class))).willReturn(candidateDTOCollection);
+  public void loadPageShouldRespondCandidateCollectionWhenFilterIsEmptyString() throws Exception {
     final SearchOptions searchOptions =
-        SearchOptions.builder().name(CANDIDATE_NAME_A).email(EMPTY_STRING).phone(EMPTY_STRING).build();
-    final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC).fieldName(
-        SortingRequest.Field.NAME).searchOptions(searchOptions).build();
-
+        SearchOptions.builder().name(EMPTY_STRING).email(EMPTY_STRING).phone(EMPTY_STRING).build();
+    final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC)
+        .fieldName(SortingRequest.Field.NAME).searchOptions(searchOptions).build();
 
     val filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("filter", "{\"name\":\"Candidate A\"}").param("sort", NAME).param("order", ASC))
+        .param("filter", EMPTY_STRING).param("sort", NAME).param("order", ASC))
         .andExpect(status().isOk());
 
     then(candidateService).should().getAllCandidate(filterRequestArgumentCaptor.capture());
     assertThat(filterRequestArgumentCaptor.getValue(), equalTo(filterRequest));
+
+    verifyNoMoreInteractions(candidateService);
   }
 
+  @Test
+  public void loadPageShouldRespondCandidateCollectionWhenFilterIsEmptyJson() throws Exception {
+    final SearchOptions searchOptions =
+        SearchOptions.builder().name(EMPTY_STRING).email(EMPTY_STRING).phone(EMPTY_STRING).build();
+    final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC)
+        .fieldName(SortingRequest.Field.NAME).searchOptions(searchOptions).build();
+
+    val filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
+    this.mockMvc.perform(get(REQUEST_URL)
+        .param("filter", EMPTY_JSON).param("sort", NAME).param("order", ASC))
+        .andExpect(status().isOk());
+
+    then(candidateService).should().getAllCandidate(filterRequestArgumentCaptor.capture());
+    assertThat(filterRequestArgumentCaptor.getValue(), equalTo(filterRequest));
+
+    verifyNoMoreInteractions(candidateService);
+  }
+
+  @Test
+  public void loadPageShouldRespondCandidateCollectionWhenOrderByNameAscWithFilterWhenParsingThrowJsonSyntaxException()
+      throws Exception {
+
+    final SearchOptions searchOptions =
+        SearchOptions.builder().name(EMPTY_STRING).email(EMPTY_STRING).phone(EMPTY_STRING).build();
+    final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC)
+        .fieldName(SortingRequest.Field.NAME).searchOptions(searchOptions).build();
+
+    val filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
+    this.mockMvc.perform(get(REQUEST_URL)
+        .param("filter", JSON_CANDIDATE_NAME_AND_EMAIL_AND_PHONE + NON_VALID_FIELD_NAME).param("sort", NAME)
+        .param("order", ASC))
+        .andExpect(status().isOk());
+
+    then(candidateService).should().getAllCandidate(filterRequestArgumentCaptor.capture());
+    assertThat(filterRequestArgumentCaptor.getValue(), equalTo(filterRequest));
+
+    verifyNoMoreInteractions(candidateService);
+  }
+
+  @Test
+  public void loadPageShouldRespondCandidateCollectionWhenOrderByNameAscWithFilterByNameWhenNameIsNotValid()
+      throws Exception {
+
+    final SearchOptions searchOptions =
+        SearchOptions.builder().name(NON_VALID_CANDIDATE_NAME).email(EMPTY_STRING).phone(EMPTY_STRING).build();
+    final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC)
+        .fieldName(SortingRequest.Field.NAME).searchOptions(searchOptions).build();
+
+    val filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
+    this.mockMvc.perform(get(REQUEST_URL)
+        .param("filter", JSON_NON_VALID_CANDIDATE_NAME).param("sort", NAME).param("order", ASC))
+        .andExpect(status().isOk());
+
+    then(candidateService).should().getAllCandidate(filterRequestArgumentCaptor.capture());
+    assertThat(filterRequestArgumentCaptor.getValue(), equalTo(filterRequest));
+
+    verifyNoMoreInteractions(candidateService);
+  }
+
+  @Test
+  public void loadPageShouldRespondCandidateCollectionWhenOrderByNameAscWithFilterByName() throws Exception {
+    final SearchOptions searchOptions =
+        SearchOptions.builder().name(CANDIDATE_NAME).email(EMPTY_STRING).phone(EMPTY_STRING).build();
+    final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC)
+        .fieldName(SortingRequest.Field.NAME).searchOptions(searchOptions).build();
+
+    val filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
+    this.mockMvc.perform(get(REQUEST_URL)
+        .param("filter", JSON_CANDIDATE_NAME).param("sort", NAME).param("order", ASC))
+        .andExpect(status().isOk());
+
+    then(candidateService).should().getAllCandidate(filterRequestArgumentCaptor.capture());
+    assertThat(filterRequestArgumentCaptor.getValue(), equalTo(filterRequest));
+
+    verifyNoMoreInteractions(candidateService);
+  }
+
+  @Test
+  public void loadPageShouldRespondCandidateCollectionWhenOrderByNameAscWithFilterByEmailAndPhone() throws Exception {
+    final SearchOptions searchOptions =
+        SearchOptions.builder().name(EMPTY_STRING).email(CANDIDATE_EMAIL).phone(CANDIDATE_PHONE).build();
+    final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC)
+        .fieldName(SortingRequest.Field.NAME).searchOptions(searchOptions).build();
+
+    val filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
+    this.mockMvc.perform(get(REQUEST_URL)
+        .param("filter", JSON_CANDIDATE_EMAIL_AND_PHONE).param("sort", NAME).param("order", ASC))
+        .andExpect(status().isOk());
+
+    then(candidateService).should().getAllCandidate(filterRequestArgumentCaptor.capture());
+    assertThat(filterRequestArgumentCaptor.getValue(), equalTo(filterRequest));
+
+    verifyNoMoreInteractions(candidateService);
+  }
+
+  @Test
+  public void loadPageShouldRespondCandidateCollectionWhenOrderByNameAscWithFilterByNameAndEmailAndPhone()
+      throws Exception {
+
+    final SearchOptions searchOptions =
+        SearchOptions.builder().name(CANDIDATE_NAME).email(CANDIDATE_EMAIL).phone(CANDIDATE_PHONE).build();
+    final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC)
+        .fieldName(SortingRequest.Field.NAME).searchOptions(searchOptions).build();
+
+    val filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
+    this.mockMvc.perform(get(REQUEST_URL)
+        .param("filter", JSON_CANDIDATE_NAME_AND_EMAIL_AND_PHONE).param("sort", NAME).param("order", ASC))
+        .andExpect(status().isOk());
+
+    then(candidateService).should().getAllCandidate(filterRequestArgumentCaptor.capture());
+    assertThat(filterRequestArgumentCaptor.getValue(), equalTo(filterRequest));
+
+    verifyNoMoreInteractions(candidateService);
+  }
 }

@@ -9,7 +9,6 @@ import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.request.FilterRequest;
 import com.epam.rft.atsy.service.request.SearchOptions;
 import com.epam.rft.atsy.service.request.SortingRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -35,8 +34,7 @@ public class CandidateController {
   private static final Logger LOGGER = LoggerFactory.getLogger(CandidateController.class);
   @Resource
   private CandidateService candidateService;
-  @Resource
-  private ObjectMapper objectMapper;
+
 
   @RequestMapping(method = RequestMethod.GET)
   public Collection<CandidateDTO> loadPage(
