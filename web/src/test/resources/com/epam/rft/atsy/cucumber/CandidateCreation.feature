@@ -12,9 +12,9 @@ Feature: candidate creation test
     And the user enters phone number "+36301234567"
     And the user enters the place where the candidate has heard about the company "place"
     And the user enters the language level "4"
-    And the user clears field <field>
+    And the user clears field "<field>"
     When the user clicks on the "Mentés" button
-    Then a "<message>" message is shown under the <field> field
+    Then a "<message>" message is shown under the "<field>" field
 
     Examples:
       | field | message                                    |

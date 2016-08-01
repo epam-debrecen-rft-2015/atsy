@@ -101,38 +101,35 @@ public class CandidateCreationStepDefs {
     select.selectByVisibleText(arg1);
   }
 
-  @Given("^the user clears field name$")
-  public void the_user_clears_field_name() throws Throwable {
-    WebElement nameElement = getDriver().findElement(By.id(NAME_ID));
-    nameElement.clear();
-    assertTrue(nameElement.getText().isEmpty());
-  }
-
   @When("^the user clicks on the \"([^\"]*)\" button$")
   public void the_user_clicks_on_the_button(String arg1) throws Throwable {
     getDriver().findElement(By.id(SAVE_BUTTON_ID)).click();
   }
 
-  @Then("^a \"([^\"]*)\" message is shown under the name field$")
-  public void a_message_is_shown_under_the_name_field(String arg1) throws Throwable {
+  @Then("^a \"([^\"]*)\" message is shown under the \"([^\"]*)\" field$")
+  public void a_message_is_shown_under_the_field(String msg, String field) throws Throwable {
+    //the selector is the same in both cases
     String selector = ".list-unstyled > li:nth-child(1)";
     WebDriverWait webDriverWait = new WebDriverWait(getDriver(), TIMEOUT);
     WebElement elem = webDriverWait.until(visibilityOfElementLocated(By.cssSelector(selector)));
-    assertEquals(arg1, elem.getText());
+    assertEquals(msg, elem.getText());
   }
 
-  @Given("^the user clears field email$")
-  public void the_user_clears_field_email() throws Throwable {
-    WebElement emailElement = getDriver().findElement(By.id(EMAIL_ID));
-    emailElement.clear();
-    assertTrue(emailElement.getText().isEmpty());
+  @Given("^the user clears field \"([^\"]*)\"$")
+  public void the_user_clears_field(String arg1) throws Throwable {
+    WebElement element = null;
+    if (arg1.equals(EMAIL_ID)) {
+      element = getDriver().findElement(By.id(EMAIL_ID));
+    } else if (arg1.equals(NAME_ID)) {
+      element = getDriver().findElement(By.id(NAME_ID));
+    }
+    element.clear();
+    assertTrue(element.getText().isEmpty());
   }
 
-  @Then("^a \"([^\"]*)\" message is shown under the email field$")
-  public void a_message_is_shown_under_the_email_field(String arg1) throws Throwable {
-    //When there is an error message regarding the email or name field exclusively,
-    // the error message selector is the same.
-    a_message_is_shown_under_the_name_field(arg1);
+  @Then("a \"([^\"]*)\" message is shown under the email field")
+  public void a_message_is_shown_under_the_email_field(String msg) throws Throwable {
+    a_message_is_shown_under_the_field(msg, null);
   }
 
   @Given("^another candidate's name is \"([^\"]*)\"$")
