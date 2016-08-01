@@ -2,15 +2,29 @@ package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
+import com.epam.rft.atsy.service.request.FilterRequest;
+import com.epam.rft.atsy.service.request.SearchOptions;
+import com.epam.rft.atsy.service.request.SortingRequest;
 import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+import lombok.val;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -67,11 +81,17 @@ public class CandidateControllerTest extends AbstractControllerTest {
     verifyZeroInteractions(candidateService);
   }
 
-  @Test
-  public void loadPageShouldRespondClientErrorWhenParamOrderIsMissing() throws Exception {
+  @Test(expected = IllegalArgumentException.class)
+  public void loadPageShouldRespondClientErrorWhenParamSortIsNull() throws Exception {
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("sort", NAME))
-        .andExpect(status().isBadRequest());
+        .param("sort", null).param("order", ASC));
+  }
+
+  @Test
+  public void loadPageShouldRespondInternalServerErrorWhenParamSortIsAnEmptyString() throws Exception {
+    this.mockMvc.perform(get(REQUEST_URL)
+        .param("sort", EMPTY_STRING).param("order", ASC))
+        .andExpect(status().isInternalServerError());
 
     verifyZeroInteractions(candidateService);
   }
@@ -86,22 +106,21 @@ public class CandidateControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void loadPageShouldRespondInternalServerErrorWhenParamOrderIsNotValid() throws Exception {
+  public void loadPageShouldRespondClientErrorWhenParamOrderIsMissing() throws Exception {
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("sort", NAME).param("order", NON_VALID_FIELD_NAME))
-        .andExpect(status().isInternalServerError());
+        .param("sort", NAME))
+        .andExpect(status().isBadRequest());
 
     verifyZeroInteractions(candidateService);
   }
 
-  @Test
-  public void loadPageShouldRespondInternalServerErrorWhenParamSortIsAnEmptyString() throws Exception {
-    this.mockMvc.perform(get(REQUEST_URL)
-        .param("sort", EMPTY_STRING).param("order", ASC))
-        .andExpect(status().isInternalServerError());
 
-    verifyZeroInteractions(candidateService);
+  @Test(expected = IllegalArgumentException.class)
+  public void loadPageShouldRespondClientErrorWhenParamOrderIsNull() throws Exception {
+    this.mockMvc.perform(get(REQUEST_URL)
+        .param("sort", NAME).param("order", null));
   }
+
 
   @Test
   public void loadPageShouldRespondInternalServerErrorWhenParamOrderIsAnEmptyString() throws Exception {
@@ -112,5 +131,49 @@ public class CandidateControllerTest extends AbstractControllerTest {
     verifyZeroInteractions(candidateService);
   }
 
+  @Test
+  public void loadPageShouldRespondInternalServerErrorWhenParamOrderIsNotValid() throws Exception {
+    this.mockMvc.perform(get(REQUEST_URL)
+        .param("sort", NAME).param("order", NON_VALID_FIELD_NAME))
+        .andExpect(status().isInternalServerError());
+
+    verifyZeroInteractions(candidateService);
+  }
+
+
+  @Test
+  public void loadPageShouldRespondCandidateCollectionOrderByNameAscWithoutFilters() throws Exception {
+    final SearchOptions searchOptions =
+        SearchOptions.builder().name(EMPTY_STRING).email(EMPTY_STRING).phone(EMPTY_STRING).build();
+    final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC).fieldName(
+        SortingRequest.Field.NAME).searchOptions(searchOptions).build();
+
+    val filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
+    this.mockMvc.perform(get(REQUEST_URL)
+        .param("sort", NAME).param("order", ASC))
+        .andExpect(status().isOk());
+
+    then(candidateService).should().getAllCandidate(filterRequestArgumentCaptor.capture());
+    assertThat(filterRequestArgumentCaptor.getValue(), equalTo(filterRequest));
+  }
+
+  @Test
+  public void loadPageShouldRespondCandidateCollectionOrderByNameAscWithFilterByName() throws Exception {
+    final Collection<CandidateDTO> candidateDTOCollection = Arrays.asList(candidateA);
+    given(candidateService.getAllCandidate(Matchers.any(FilterRequest.class))).willReturn(candidateDTOCollection);
+    final SearchOptions searchOptions =
+        SearchOptions.builder().name(CANDIDATE_NAME_A).email(EMPTY_STRING).phone(EMPTY_STRING).build();
+    final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC).fieldName(
+        SortingRequest.Field.NAME).searchOptions(searchOptions).build();
+
+
+    val filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
+    this.mockMvc.perform(get(REQUEST_URL)
+        .param("filter", "{\"name\":\"Candidate A\"}").param("sort", NAME).param("order", ASC))
+        .andExpect(status().isOk());
+
+    then(candidateService).should().getAllCandidate(filterRequestArgumentCaptor.capture());
+    assertThat(filterRequestArgumentCaptor.getValue(), equalTo(filterRequest));
+  }
 
 }
