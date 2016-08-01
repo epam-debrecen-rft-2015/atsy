@@ -39,9 +39,12 @@ public class CandidateController {
       @RequestParam("order") String order,
       @RequestParam("sort") String sortField) {
 
+    SortingRequest.Order orderDirection = SortingRequest.Order.valueOf(StringUtils.upperCase(order));
+    SortingRequest.Field fieldName = SortingRequest.Field.valueOf(StringUtils.upperCase(sortField));
+
     FilterRequest filterRequest = FilterRequest.builder()
-        .order(SortingRequest.Order.valueOf(StringUtils.upperCase(order)))
-        .fieldName(sortField)
+        .order(orderDirection)
+        .fieldName(fieldName)
         .searchOptions(parseFilters(filter))
         .build();
 

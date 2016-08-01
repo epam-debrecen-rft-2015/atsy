@@ -10,13 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FilterRequest extends SortingRequest {
-
-
   private SearchOptions searchOptions;
 
-
   @Builder
-  public FilterRequest(String fieldName, Order order, SearchOptions searchOptions) {
+  public FilterRequest(Field fieldName, Order order, SearchOptions searchOptions) {
     super(fieldName, order);
     this.searchOptions = searchOptions;
   }

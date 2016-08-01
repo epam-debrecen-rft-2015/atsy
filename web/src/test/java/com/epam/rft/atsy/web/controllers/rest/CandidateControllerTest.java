@@ -76,12 +76,7 @@ public class CandidateControllerTest extends AbstractControllerTest {
     verifyZeroInteractions(candidateService);
   }
 
-  /**
-   * **************************************************************************
-   * The status is HTTP 200
-   * **************************************************************************
-   */
-  //@Test
+  @Test
   public void loadPageShouldRespondInternalServerErrorWhenParamSortIsNotValid() throws Exception {
     this.mockMvc.perform(get(REQUEST_URL)
         .param("sort", NON_VALID_FIELD_NAME).param("order", ASC))
@@ -99,13 +94,7 @@ public class CandidateControllerTest extends AbstractControllerTest {
     verifyZeroInteractions(candidateService);
   }
 
-
-  /**
-   * **************************************************************************
-   * The status is HTTP 200
-   * **************************************************************************
-   */
-  //@Test
+  @Test
   public void loadPageShouldRespondInternalServerErrorWhenParamSortIsAnEmptyString() throws Exception {
     this.mockMvc.perform(get(REQUEST_URL)
         .param("sort", EMPTY_STRING).param("order", ASC))
