@@ -34,5 +34,4 @@ public interface StatesHistoryService {
    */
   List<StateHistoryViewDTO> getStateHistoriesByApplicationId(Long applicationId);
 
-
 }
