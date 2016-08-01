@@ -97,26 +97,19 @@ Feature: candidate creation test
     When the user clicks on the "Mentés" button
     Then a "A megadott hely túl hosszú!" message appears
 
-  Scenario: user can't create new candidate because of email is malformed
+  Scenario Outline: user can't create new candidate because of email or phone number is malformed
 
     Given the user is on the Candidate creation page
     And the candidate details are empty
     And the user enters name "name"
-    And the user enters e-mail address "email/atsy.com"
-    And the user enters phone number "+36301234567"
+    And the user enters e-mail address "<email>"
+    And the user enters phone number "<phone>"
     And the user enters the place where the candidate has heard about the company "place"
     And the user enters the language level "4"
     When the user clicks on the "Mentés" button
-    Then a "A jelentkező email címének megfelelő formában kell lennie, például kovacs.jozsef@email.hu!" message is shown under the email field
+    Then a "<message>" message is shown under the "<field>" field
 
-  Scenario: user can't create new candidate because of phone number is malformed
-
-    Given the user is on the Candidate creation page
-    And the candidate details are empty
-    And the user enters name "name"
-    And the user enters e-mail address "email@atsy.com"
-    And the user enters phone number "+36a301234567"
-    And the user enters the place where the candidate has heard about the company "place"
-    And the user enters the language level "4"
-    When the user clicks on the "Mentés" button
-    Then a "A jelentkező telefonszáma egy plusz jellel kezdődhet és utánna számjegyekből állhat!" message is shown under the phone number field
+    Examples:
+      | email          | phone         | message                                                                                    | field |
+      | email/atsy.com | +36301234567  | A jelentkező email címének megfelelő formában kell lennie, például kovacs.jozsef@email.hu! | email |
+      | email@atsy.com | +36a301234567 | A jelentkező telefonszáma egy plusz jellel kezdődhet és utánna számjegyekből állhat!       | phone |

@@ -3,8 +3,8 @@ package com.epam.rft.atsy.cucumber.candidate;
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.openqa.selenium.support.ui.ExpectedConditions.textToBe;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfAllElementsLocatedBy;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 import com.epam.rft.atsy.cucumber.welcome.CandidateTableRow;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -37,7 +37,7 @@ public class CandidateCreationStepDefs {
 
   private static final String EMAIL_SUFFIX = "@epam.com";
 
-  private static final long TIMEOUT = 7L;
+  private static final long TIMEOUT = 10L;
 
   private static List<CandidateTableRow> candidateTableRows;
 
@@ -108,11 +108,14 @@ public class CandidateCreationStepDefs {
 
   @Then("^a \"([^\"]*)\" message is shown under the \"([^\"]*)\" field$")
   public void a_message_is_shown_under_the_field(String msg, String field) throws Throwable {
-    //the selector is the same in both cases
-    String selector = ".list-unstyled > li:nth-child(1)";
+    String nameOrPhoneErrorSelector = ".list-unstyled > li:nth-child(1)";
+    String phoneErrorSelector = "#phoneDiv > div > div > ul > li:nth-child(1)";
     WebDriverWait webDriverWait = new WebDriverWait(getDriver(), TIMEOUT);
-    WebElement elem = webDriverWait.until(visibilityOfElementLocated(By.cssSelector(selector)));
-    assertEquals(msg, elem.getText());
+    if (field.equals("phone")) {
+      assertTrue(webDriverWait.until(textToBe(By.cssSelector(phoneErrorSelector), msg)));
+    } else {
+      assertTrue(webDriverWait.until(textToBe(By.cssSelector(nameOrPhoneErrorSelector), msg)));
+    }
   }
 
   @Given("^the user clears field \"([^\"]*)\"$")
@@ -125,11 +128,6 @@ public class CandidateCreationStepDefs {
     }
     element.clear();
     assertTrue(element.getText().isEmpty());
-  }
-
-  @Then("a \"([^\"]*)\" message is shown under the email field")
-  public void a_message_is_shown_under_the_email_field(String msg) throws Throwable {
-    a_message_is_shown_under_the_field(msg, null);
   }
 
   @Given("^another candidate's name is \"([^\"]*)\"$")
@@ -150,9 +148,7 @@ public class CandidateCreationStepDefs {
   @Then("^a \"([^\"]*)\" message is shown under the phone number field$")
   public void a_message_is_shown_under_the_phone_number_field(String arg1) throws Throwable {
     String selector = "#phoneDiv > div > div > ul > li:nth-child(1)";
-    WebDriverWait webDriverWait = new WebDriverWait(getDriver(), TIMEOUT);
-    WebElement elem = webDriverWait.until(visibilityOfElementLocated(By.cssSelector(selector)));
-    assertEquals(arg1, elem.getText());
+    assertEquals(arg1, getDriver().findElement(By.cssSelector(selector)));
   }
 
   @Given("^the user enters name longer than (\\d+) characters$")
@@ -199,8 +195,7 @@ public class CandidateCreationStepDefs {
   public void a_message_is_shown_on_the_top_of_the_page(String arg1) {
     String selector = ".panel-heading";
     WebDriverWait webDriverWait = new WebDriverWait(getDriver(), TIMEOUT);
-    WebElement elem = webDriverWait.until(visibilityOfElementLocated(By.cssSelector(selector)));
-    assertEquals(arg1, elem.getText());
+    assertTrue(webDriverWait.until(textToBe(By.cssSelector(selector), arg1)));
   }
 
   private void setMaxLengthAttribute(String id, int length, WebDriver driver) {
