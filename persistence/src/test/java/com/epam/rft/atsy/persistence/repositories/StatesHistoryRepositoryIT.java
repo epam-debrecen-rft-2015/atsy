@@ -38,7 +38,6 @@ public class StatesHistoryRepositoryIT extends AbstractRepositoryIT {
   private static final long FIRST_ID = 1L;
   private static final long FOURTH_ID = 4L;
 
-  private static final String STATE_NAME_NEWSTATE = "newstate";
   private static final String STATE_NAME_CODING = "coding";
   private static final String STATE_NAME_FIRST_TEST = "firstTest";
   private static final String STATE_NAME_HR = "hr";
