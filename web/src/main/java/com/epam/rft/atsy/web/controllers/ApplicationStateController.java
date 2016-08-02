@@ -95,8 +95,6 @@ public class ApplicationStateController {
   @RequestMapping(method = RequestMethod.POST)
   public ModelAndView saveOrUpdate(@RequestParam Long applicationId,
                                    @Valid @ModelAttribute StateHistoryViewRepresentation stateHistoryViewRepresentation) {
-    System.out.println(stateHistoryViewRepresentation);
-
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
     StateHistoryDTO
@@ -110,11 +108,15 @@ public class ApplicationStateController {
           .result(stateHistoryViewRepresentation.getResult())
           .offeredMoney(stateHistoryViewRepresentation.getOfferedMoney())
           .claim(stateHistoryViewRepresentation.getClaim())
-          .feedbackDate(stateHistoryViewRepresentation.getFeedbackDate() != null ? simpleDateFormat
+          .feedbackDate(stateHistoryViewRepresentation.getFeedbackDate() != null
+              && !stateHistoryViewRepresentation.getFeedbackDate().isEmpty() ? simpleDateFormat
               .parse(stateHistoryViewRepresentation.getFeedbackDate()) : null)
-          .dayOfStart(stateHistoryViewRepresentation.getDayOfStart() != null ? simpleDateFormat
+          .dayOfStart(stateHistoryViewRepresentation.getDayOfStart() != null
+              && !stateHistoryViewRepresentation.getDayOfStart().isEmpty() ? simpleDateFormat
               .parse(stateHistoryViewRepresentation.getDayOfStart()) : null)
-          .creationDate(simpleDateFormat.parse(stateHistoryViewRepresentation.getCreationDate()))
+          .creationDate(stateHistoryViewRepresentation.getCreationDate() != null
+              && !stateHistoryViewRepresentation.getCreationDate().isEmpty() ? simpleDateFormat
+              .parse(stateHistoryViewRepresentation.getCreationDate()) : null)
           .stateDTO(StateDTO.builder().id(stateHistoryViewRepresentation.getStateId())
               .name(stateHistoryViewRepresentation.getStateName()).build())
           .build();
