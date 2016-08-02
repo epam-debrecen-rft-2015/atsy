@@ -24,5 +24,10 @@ public interface CandidateRepository extends JpaRepository<CandidateEntity, Long
                                                                                     String phone,
                                                                                     Sort sort);
 
+  /**
+   * Returns the candidate whose name is equal to the specified name.
+   * @param name the name of the candidate we're searching for
+   * @return the candidate
+   */
   CandidateEntity findByName(String name);
 }
