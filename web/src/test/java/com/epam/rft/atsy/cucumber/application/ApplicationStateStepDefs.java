@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -17,7 +18,7 @@ public class ApplicationStateStepDefs {
 
   private static final String
       BUTTON_SELECTOR =
-      "#body > div.button-panel > form.form-inline  div.btn-group > a.btn-default";
+      "#body > div.button-panel > form.form-inline  div.btn-group > a.btn";
 
   private static final String
       PAUSE_BUTTON_SELECTOR =
@@ -33,7 +34,7 @@ public class ApplicationStateStepDefs {
 
   private static final String
       LATEST_STATE_NAME_SELECTOR =
-      "#body > #stateList > div.page-header:nth-of-type(1)";
+      "#stateList > div.page-header:nth-of-type(1) > h4:nth-child(1)";
 
   private static final String SAVE_BUTTON_SELECTOR = "#stateList button.btn-success[type=submit]";
 
@@ -51,11 +52,24 @@ public class ApplicationStateStepDefs {
 
   @And("^the application has the latest state \"([^\"]*)\"$")
   public void the_application_has_the_latest_state(String latestStateName) throws Throwable {
+    try {
+      getDriver().findElement(By.cssSelector("#body > div.button-panel"));
+    } catch (NoSuchElementException e) {
+      waitForPageLoadAfter(driver -> driver.get(getDriver().getCurrentUrl() + "&state=newstate"));
+      waitForPageLoadAfter(
+          driver -> driver.findElement(By.cssSelector(SAVE_BUTTON_SELECTOR))
+              .click());
+    }
+
     if (!getDriver()
         .findElement(By.cssSelector(LATEST_STATE_NAME_SELECTOR))
         .getText().equals(latestStateName)) {
-      waitForPageLoadAfter(
-          driver -> driver.findElement(By.cssSelector(PAUSE_BUTTON_SELECTOR)).click());
+
+      if (!getDriver().findElements(By.cssSelector(BUTTON_SELECTOR)).stream()
+          .anyMatch(b -> b.getText().equals(latestStateName))) {
+        waitForPageLoadAfter(
+            driver -> driver.findElement(By.cssSelector(PAUSE_BUTTON_SELECTOR)).click());
+      }
 
       waitForPageLoadAfter(driver -> driver.findElements(By.cssSelector(
           BUTTON_SELECTOR)).stream().filter(t -> t.getText().equals(latestStateName)).findFirst()
@@ -86,6 +100,7 @@ public class ApplicationStateStepDefs {
         getDriver()
             .findElement(By.cssSelector(LATEST_STATE_NAME_SELECTOR))
             .getText();
+
     assertThat(latestStateName, is(expectedLatestStateName));
   }
 

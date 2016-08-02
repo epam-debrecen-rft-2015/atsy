@@ -92,7 +92,7 @@ Feature: application state switching
     And the user is on the application page of the candidate
     And the application has the latest state "<state>"
   #And the user has entered all the necessary details of the latest state
-    When the user clicks on "Elutasítva" button
+    When the user clicks on "Elutasít" button
     Then the latest state became "Elutasítva"
 
     Examples:
