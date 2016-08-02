@@ -44,7 +44,6 @@ public class StatesHistoryServiceImplTest {
   private static final Long FIRST_ID = 1L;
   private static final Long SECOND_ID = 2L;
   private static final Long THIRD_ID = 3L;
-  private static final Long FIVE_SECONDS = 5L;
   private static final Type STATE_HISTORY_VIEW_DTO_LIST_TYPE = new TypeToken<List<StateHistoryViewDTO>>() {}.getType();
 
   private static final String FIRST_POSITION_ENTITY_NAME = "First position";
@@ -67,7 +66,9 @@ public class StatesHistoryServiceImplTest {
 
   private static final List<StateHistoryViewDTO> EMPTY_STATE_HISTORY_VIEW_DTO_LIST = Collections.emptyList();
 
-  private final Date presentDate = currentDateMinusSeconds(FIVE_SECONDS);
+  private final Date futureDate = currentDateMinusSeconds(0L);
+  private final Date presentDate = currentDateMinusSeconds(5L);
+  private final Date pastDate = currentDateMinusSeconds(10L);
 
   private final CandidateEntity firstCandidateEntity = CandidateEntity.builder().id(FIRST_ID).build();
 
@@ -82,7 +83,7 @@ public class StatesHistoryServiceImplTest {
 
   private final ApplicationEntity firstApplicationEntity =
       ApplicationEntity.builder().id(FIRST_ID).candidateEntity(firstCandidateEntity)
-          .positionEntity(firstPositionEntity).creationDate(presentDate).build();
+          .positionEntity(firstPositionEntity).creationDate(futureDate).build();
 
   private final ApplicationEntity secondApplicationEntity =
       ApplicationEntity.builder().id(SECOND_ID).candidateEntity(firstCandidateEntity)
@@ -90,7 +91,7 @@ public class StatesHistoryServiceImplTest {
 
   private final ApplicationEntity thirdApplicationEntity =
       ApplicationEntity.builder().id(THIRD_ID).candidateEntity(firstCandidateEntity)
-          .positionEntity(thirdPositionEntity).creationDate(presentDate).build();
+          .positionEntity(thirdPositionEntity).creationDate(pastDate).build();
 
   private final StatesEntity firstStateEntity = StatesEntity.builder().id(FIRST_ID).name(FIRST_STATE_TYPE_NAME).build();
 
@@ -101,25 +102,31 @@ public class StatesHistoryServiceImplTest {
 
   private final StatesHistoryEntity firstStatesHistoryEntity =
       StatesHistoryEntity.builder().id(FIRST_ID).applicationEntity(firstApplicationEntity)
-          .statesEntity(firstStateEntity).creationDate(presentDate).build();
+          .statesEntity(firstStateEntity).creationDate(futureDate).build();
 
   private final StatesHistoryEntity secondStatesHistoryEntity =
       StatesHistoryEntity.builder().id(SECOND_ID).applicationEntity(secondApplicationEntity)
-          .statesEntity(secondStateEntity).creationDate(presentDate).build();
+          .statesEntity(secondStateEntity).creationDate(presentDate)
+          .build();
 
   private final StatesHistoryEntity thirdStatesHistoryEntity =
       StatesHistoryEntity.builder().id(THIRD_ID).applicationEntity(thirdApplicationEntity)
-          .statesEntity(thirdStateEntity).creationDate(presentDate).build();
+          .statesEntity(thirdStateEntity)
+          .creationDate(pastDate).build();
 
   private final StatesHistoryEntity savedStatesHistoryEntity =
       StatesHistoryEntity.builder().id(FIRST_ID).applicationEntity(secondApplicationEntity)
           .statesEntity(firstStateEntity).creationDate(presentDate).build();
 
-  private final StateHistoryViewDTO stateViewHistoryDTO = StateHistoryViewDTO.builder().id(FIRST_ID).creationDate(presentDate).build();
+  private final StateHistoryViewDTO
+      stateViewHistoryDTO =
+      StateHistoryViewDTO.builder().id(FIRST_ID).creationDate(presentDate).build();
 
   private final StateDTO firstStateDTO = StateDTO.builder().id(FIRST_ID).name(FIRST_STATE_TYPE_NAME).build();
 
-  private final StateHistoryDTO stateHistoryDTO = StateHistoryDTO.builder().id(FIRST_ID).stateDTO(firstStateDTO).build();
+  private final StateHistoryDTO
+      stateHistoryDTO =
+      StateHistoryDTO.builder().id(FIRST_ID).stateDTO(firstStateDTO).build();
 
   private final List<ApplicationEntity> applicationEntityListWithSingleElement =
       Collections.singletonList(firstApplicationEntity);
@@ -143,16 +150,16 @@ public class StatesHistoryServiceImplTest {
       Collections.singletonList(
           CandidateApplicationDTO.builder().applicationId(FIRST_ID).stateType(FIRST_STATE_TYPE_NAME)
               .positionName(FIRST_POSITION_ENTITY_NAME).lastStateId(FIRST_ID)
-              .creationDate(presentDate)
-              .modificationDate(presentDate).build()
+              .creationDate(futureDate)
+              .modificationDate(futureDate).build()
       );
 
   private List<CandidateApplicationDTO> candidateApplicationDTOListWithThreeElements =
       Arrays.asList(
           CandidateApplicationDTO.builder().applicationId(FIRST_ID).stateType(FIRST_STATE_TYPE_NAME)
               .positionName(FIRST_POSITION_ENTITY_NAME).lastStateId(FIRST_ID)
-              .creationDate(presentDate)
-              .modificationDate(presentDate).build(),
+              .creationDate(futureDate)
+              .modificationDate(futureDate).build(),
 
           CandidateApplicationDTO.builder().applicationId(SECOND_ID)
               .stateType(SECOND_STATE_TYPE_NAME).positionName(SECOND_POSITION_ENTITY_NAME)
@@ -162,8 +169,8 @@ public class StatesHistoryServiceImplTest {
 
           CandidateApplicationDTO.builder().applicationId(THIRD_ID).stateType(THIRD_STATE_TYPE_NAME)
               .positionName(THIRD_POSITION_ENTITY_NAME).lastStateId(THIRD_ID)
-              .creationDate(presentDate)
-              .modificationDate(presentDate).build()
+              .creationDate(pastDate)
+              .modificationDate(pastDate).build()
       );
 
   @Mock
@@ -319,7 +326,7 @@ public class StatesHistoryServiceImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void getCandidateApplicationsByCandidateIdShouldThrowIllegalArgumentExceptionWhenCandidateIdIsNull() {
+  public void getCandidateApplicationsByCandidateIdOrderByModificationDateDescShouldThrowIllegalArgumentExceptionWhenCandidateIdIsNull() {
     // Given
 
     // When
@@ -329,7 +336,7 @@ public class StatesHistoryServiceImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void getCandidateApplicationsByCandidateIdShouldThrowIllegalArgumentExceptionWhenCandidateEntityIsNull() {
+  public void getCandidateApplicationsByCandidateIdOrderByModificationDateDescThrowIllegalArgumentExceptionWhenCandidateEntityIsNull() {
     // Given
     given(candidateRepository.findOne(FIRST_ID)).willReturn(null);
 
@@ -340,7 +347,7 @@ public class StatesHistoryServiceImplTest {
   }
 
   @Test
-  public void getCandidateApplicationsByCandidateIdShouldReturnAnEmptyList() {
+  public void getCandidateApplicationsByCandidateIdOrderByModificationDateDescShouldReturnAnEmptyList() {
     // Given
     given(candidateRepository.findOne(FIRST_ID)).willReturn(CANDIDATE_ENTITY_WITHOUT_APPLICATIONS);
     given(applicationsRepository.findByCandidateEntity(CANDIDATE_ENTITY_WITHOUT_APPLICATIONS))
@@ -361,7 +368,7 @@ public class StatesHistoryServiceImplTest {
   }
 
   @Test
-  public void getCandidateApplicationsByCandidateIdShouldReturnAListWithSingleElement() {
+  public void getCandidateApplicationsByCandidateIdOrderByModificationDateDescShouldReturnAListWithSingleElement() {
     // Given
     given(candidateRepository.findOne(FIRST_ID)).willReturn(firstCandidateEntity);
     given(applicationsRepository.findByCandidateEntity(firstCandidateEntity))
@@ -386,7 +393,7 @@ public class StatesHistoryServiceImplTest {
   }
 
   @Test
-  public void getCandidateApplicationsByCandidateShouldReturnAListWithThreeElements() {
+  public void getCandidateApplicationsByCandidateIdOrderByModificationDateDescShouldReturnAListWithThreeElements() {
     // Given
     given(candidateRepository.findOne(FIRST_ID)).willReturn(firstCandidateEntity);
     given(applicationsRepository.findByCandidateEntity(firstCandidateEntity))
