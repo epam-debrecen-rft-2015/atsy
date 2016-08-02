@@ -323,7 +323,7 @@ public class StatesHistoryServiceImplTest {
     // Given
 
     // When
-    statesHistoryService.getCandidateApplicationsByCandidateId(null);
+    statesHistoryService.getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(null);
 
     // Then
   }
@@ -334,7 +334,7 @@ public class StatesHistoryServiceImplTest {
     given(candidateRepository.findOne(FIRST_ID)).willReturn(null);
 
     // When
-    statesHistoryService.getCandidateApplicationsByCandidateId(FIRST_ID);
+    statesHistoryService.getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(FIRST_ID);
 
     // Then
   }
@@ -349,7 +349,7 @@ public class StatesHistoryServiceImplTest {
     // When
     Collection<CandidateApplicationDTO>
         candidateApplicationDTOCollection =
-        statesHistoryService.getCandidateApplicationsByCandidateId(FIRST_ID);
+        statesHistoryService.getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(FIRST_ID);
 
     // Then
     assertThat(candidateApplicationDTOCollection, notNullValue());
@@ -373,7 +373,7 @@ public class StatesHistoryServiceImplTest {
     // When
     Collection<CandidateApplicationDTO>
         candidateApplicationDTOCollection =
-        statesHistoryService.getCandidateApplicationsByCandidateId(FIRST_ID);
+        statesHistoryService.getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(FIRST_ID);
 
     // Then
     assertCandidateApplicationDTOCollection(candidateApplicationDTOCollection,
@@ -403,7 +403,7 @@ public class StatesHistoryServiceImplTest {
 
     // When
     Collection<CandidateApplicationDTO> candidateApplicationDTOCollection =
-        statesHistoryService.getCandidateApplicationsByCandidateId(FIRST_ID);
+        statesHistoryService.getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(FIRST_ID);
 
     // Then
     assertCandidateApplicationDTOCollection(candidateApplicationDTOCollection,

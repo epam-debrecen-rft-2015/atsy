@@ -15,6 +15,7 @@ import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,22 +24,20 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 
 @Service
 public class StatesHistoryServiceImpl implements StatesHistoryService {
-
-  private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
   private final static Type
-      STATE_HISTORY_VIEW_DTO_LIST_TYPE =
-      new TypeToken<List<StateHistoryViewDTO>>() {
-      }.getType();
+      STATE_HISTORY_VIEW_DTO_LIST_TYPE = new TypeToken<List<StateHistoryViewDTO>>() {
+  }.getType();
 
   @Resource
   private ModelMapper modelMapper;
@@ -57,13 +56,12 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
 
   @Transactional(readOnly = true)
   @Override
-  public Collection<CandidateApplicationDTO> getCandidateApplicationsByCandidateId(Long id) {
+  public Collection<CandidateApplicationDTO> getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(Long id) {
     Assert.notNull(id);
     CandidateEntity candidateEntity = candidateRepository.findOne(id);
 
     Assert.notNull(candidateEntity);
     List<ApplicationEntity> applicationList = applicationsRepository.findByCandidateEntity(candidateEntity);
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
     List<CandidateApplicationDTO> candidateApplicationDTOList = new LinkedList<>();
     for (ApplicationEntity applicationEntity : applicationList) {
@@ -81,7 +79,9 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
       candidateApplicationDTOList.add(candidateApplicationDTO);
 
     }
-    return candidateApplicationDTOList;
+    return candidateApplicationDTOList.stream()
+        .sorted((m1, m2) -> m2.getModificationDate().compareTo(m1.getModificationDate()))
+        .collect(Collectors.toList());
   }
 
   @Transactional
@@ -109,7 +109,6 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
         statesHistoryRepository.findByApplicationEntityOrderByCreationDateDesc(applicationEntity);
     List<StateHistoryViewDTO> stateHistoryViewDTOs =
         modelMapper.map(statesHistoryEntities, STATE_HISTORY_VIEW_DTO_LIST_TYPE);
-
 
     Iterator<StateHistoryViewDTO> dtoIterator = stateHistoryViewDTOs.iterator();
     Iterator<StatesHistoryEntity> entityIterator = statesHistoryEntities.iterator();

@@ -146,7 +146,7 @@ public class NewApplicationPopupStepDefs {
     WebElement table = webDriver.findElement(By.id(APPLICATIONS_TABLE));
     List<WebElement> lastRowInTheTable = getValuesFromTheLastRowFromTheTable(table);
 
-    Date presentDate = currentDateMinus(15);
+    Date presentDate = currentDateMinus(25);
     String positionName = lastRowInTheTable.get(COLUMN_ZEROTH).getText();
     Date addedDate = SIMPLE_DATE_FORMAT.parse(lastRowInTheTable.get(COLUMN_FIRST).getText());
     Date lastModifiedDate = SIMPLE_DATE_FORMAT.parse(lastRowInTheTable.get(COLUMN_SECOND).getText());
