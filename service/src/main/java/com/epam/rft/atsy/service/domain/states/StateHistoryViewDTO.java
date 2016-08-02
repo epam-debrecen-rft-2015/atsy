@@ -2,6 +2,8 @@ package com.epam.rft.atsy.service.domain.states;
 
 import com.epam.rft.atsy.service.domain.states.builder.AbstractStateBuilder;
 
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +19,7 @@ import lombok.ToString;
 public class StateHistoryViewDTO extends AbstractStateHistoryDTO {
 
 
-  private String creationDate;
+  private Date creationDate;
 
 
   public static StateViewDTOBuilder builder() {
@@ -40,7 +42,7 @@ public class StateHistoryViewDTO extends AbstractStateHistoryDTO {
       this(new StateHistoryViewDTO());
     }
 
-    public StateViewDTOBuilder creationDate(String creationDate) {
+    public StateViewDTOBuilder creationDate(Date creationDate) {
       object.setCreationDate(creationDate);
       return this;
     }

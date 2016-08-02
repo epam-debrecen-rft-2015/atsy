@@ -121,3 +121,35 @@ $('#candidate-create-form').validator().on('submit', function (e) {
 });
 
 ko.applyBindings(candidateModel);
+
+
+
+function creationDateFormatter(value, row, index) {
+    var dateTime = new Date(row.creationDate);
+    return dateTimeFormatter(dateTime);
+}
+
+function modificationDateFormatter(value, row, index) {
+    var dateTime = new Date(row.modificationDate);
+    return dateTimeFormatter(dateTime);
+}
+
+function dateTimeFormatter(dateTime) {
+    var year = dateTime.getFullYear();
+    var month = dateTime.getMonth() + 1;
+    month = month.length == 2 ? month : ('0' + month);
+
+    var day = dateTime.getDate();
+    day = day.length == 2 ? day : ('0' + day);
+
+    var hour = dateTime.getHours();
+    hour = hour.toString().length == 2 ? hour : ('0' + hour);
+
+    var minute = dateTime.getMinutes();
+    minute = minute.toString().length == 2 ? minute : ('0' + minute);
+
+    var second = dateTime.getSeconds();
+    second = second.toString().length == 2 ? second : ('0' + second);
+
+    return year + '-' + month + '-' + day + " " + hour + ":" + minute + ':' + second;
+}
