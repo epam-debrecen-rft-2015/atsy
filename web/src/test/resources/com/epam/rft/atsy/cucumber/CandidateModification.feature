@@ -1,13 +1,14 @@
 Feature: candidate modification test
 
   Background:
-    Given The user is signed in
+#    Given The user is signed in
 
   Scenario: user can't modify the existing candidate because the name field is empty
 
     Given the following existing candidates:
       | name            | email              | phone        | place | language | description |
       | The Actual Name | candidate@atsy.com | +36301234567 | place | 3        | desc        |
+
     And the user is on the Candidate profile page of the candidate "The Actual Name"
     And the user enters name ""
     When the user clicks on the "Mentés" button
@@ -113,14 +114,3 @@ Feature: candidate modification test
     And the user enters an invalid email address
     When the user clicks on "Mentés" button
     Then a "A jelentkező email címének megfelelő formában kell lennie, például kovacs.jozsef@email.hu" message appears under the email address field
-
-  Scenario: user can't modify the existing candidate because of language level is out of range
-
-    Given the following existing candidates:
-      | name            | email              | phone        | place | language | description |
-      | The Actual Name | candidate@atsy.com | +36301234567 | place | 3        | desc        |
-
-    And the user is on the Candidate profile page of the candidate "The Actual Name"
-    And the user enters language level 11
-    When the user clicks on "Mentés" button
-    Then a "A megadott nyelvi szint 0 és 10 közé kell essen" message appears under the language level field
