@@ -100,7 +100,7 @@ Feature: candidate modification test
       | The Actual Name | candidate@atsy.com | +36301234567 | place | 3        | desc        |
 
     And the user is on the Candidate profile page of the candidate "The Actual Name"
-    And the user enters a phone number which doesn't match \+?[:digit:]+ pattern
+    And the user enters a phone number which doesn't match "\+?[:digit:]+" pattern
     When the user clicks on the "Mentés" button
     Then a "A jelentkező telefonszáma egy plusz jellel kezdődhet és utánna számjegyekből állhat!" message appears under the phone number field
 

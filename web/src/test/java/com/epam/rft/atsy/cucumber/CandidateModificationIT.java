@@ -8,6 +8,7 @@ import cucumber.api.junit.Cucumber;
 @RunWith(Cucumber.class)
 @CucumberOptions(format = {"json:target/report.json", "pretty"}, features = {
     "src/test/resources/com/epam/rft/atsy/cucumber/CandidateModification.feature"}, glue = {
-    "com.epam.rft.atsy.cucumber.candidate", "com.epam.rft.atsy.cucumber.util"})
+    "com.epam.rft.atsy.cucumber.candidate.CandidateModification",
+    "com.epam.rft.atsy.cucumber.util"})
 public class CandidateModificationIT {
 }
