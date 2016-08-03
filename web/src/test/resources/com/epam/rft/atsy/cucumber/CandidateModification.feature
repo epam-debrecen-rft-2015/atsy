@@ -6,8 +6,8 @@ Feature: candidate modification test
   Scenario: user can't modify the existing candidate because the name field is empty
 
     Given the following existing candidates:
-      | name            | email              | phone        | place | language | description |
-      | The Actual Name | candidate@atsy.com | +36301234567 | place | 3        | desc        |
+      | name            | email              | phone        | referer | languageSkill | description |
+      | The Actual Name | candidate@atsy.com | +36301234567 | place   | 3             | desc        |
 
     And the user is on the Candidate profile page of the candidate "The Actual Name"
     And the user enters name ""
@@ -17,8 +17,8 @@ Feature: candidate modification test
   Scenario: user can't modify the existing candidate because the e-mail address field is empty
 
     Given the following existing candidates:
-      | name            | email              | phone        | place | language | description |
-      | The Actual Name | candidate@atsy.com | +36301234567 | place | 3        | desc        |
+      | name            | email              | phone        | referer | languageSkill | description |
+      | The Actual Name | candidate@atsy.com | +36301234567 | place   | 3             | desc        |
 
     And the user is on the Candidate profile page of the candidate "The Actual Name"
     And the user enters e-mail address ""
@@ -28,9 +28,9 @@ Feature: candidate modification test
   Scenario: user can't modify the existing candidate because of duplication of email address
 
     Given the following existing candidates:
-      | name            | email              | phone         | place | language | description |
-      | The Actual Name | candidate@atsy.com | +36301234567  | place | 3        | desc        |
-      | existing name   | existing@atsy.com  | +3630123456-8 | place | 3        | description |
+      | name            | email              | phone         | referer | languageSkill | description |
+      | The Actual Name | candidate@atsy.com | +36301234567  | place   | 3             | desc        |
+      | existing name   | existing@atsy.com  | +3630123456-8 | place   | 3             | description |
 
     And the user is on the Candidate profile page of the candidate "The Actual Name"
     And the user enters e-mail address "existing@atsy.com"
@@ -40,9 +40,9 @@ Feature: candidate modification test
   Scenario: user can't modify the existing candidate because of duplication of phone number
 
     Given the following existing candidates:
-      | name            | email              | phone         | place | language | description |
-      | The Actual Name | candidate@atsy.com | +36301234567  | place | 3        | desc        |
-      | existing name   | existing@atsy.com  | +3630123456-8 | place | 3        | description |
+      | name            | email              | phone         | referer | languageSkill | description |
+      | The Actual Name | candidate@atsy.com | +36301234567  | place   | 3             | desc        |
+      | existing name   | existing@atsy.com  | +3630123456-8 | place   | 3             | description |
 
     And the user is on the Candidate profile page of the candidate "The Actual Name"
     And the user enters phone number "+3630123456-8"
@@ -52,8 +52,8 @@ Feature: candidate modification test
   Scenario: user can't modify the existing candidate because of name is longer than 100 characters
 
     Given the following existing candidates:
-      | name            | email              | phone        | place | language | description |
-      | The Actual Name | candidate@atsy.com | +36301234567 | place | 3        | desc        |
+      | name            | email              | phone        | referer | languageSkill | description |
+      | The Actual Name | candidate@atsy.com | +36301234567 | place   | 3             | desc        |
 
     And the user is on the Candidate profile page of the candidate "The Actual Name"
     And the user enters a name longer than 100 characters
@@ -63,8 +63,8 @@ Feature: candidate modification test
   Scenario: user can't modify the existing candidate because of email address is longer than 400 characters
 
     Given the following existing candidates:
-      | name            | email              | phone        | place | language | description |
-      | The Actual Name | candidate@atsy.com | +36301234567 | place | 3        | desc        |
+      | name            | email              | phone        | referer | languageSkill | description |
+      | The Actual Name | candidate@atsy.com | +36301234567 | place   | 3             | desc        |
 
     And the user is on the Candidate profile page of the candidate "The Actual Name"
     And the user enters a valid email address longer than 100 characters
@@ -74,8 +74,8 @@ Feature: candidate modification test
   Scenario: user can't modify the existing candidate because of phone number is longer than 20 characters
 
     Given the following existing candidates:
-      | name            | email              | phone        | place | language | description |
-      | The Actual Name | candidate@atsy.com | +36301234567 | place | 3        | desc        |
+      | name            | email              | phone        | referer | languageSkill | description |
+      | The Actual Name | candidate@atsy.com | +36301234567 | place   | 3             | desc        |
 
     And the user is on the Candidate profile page of the candidate "The Actual Name"
     And the user enters a valid phone number longer than 20 characters
@@ -85,8 +85,8 @@ Feature: candidate modification test
   Scenario: user can't modify the existing candidate because of place is longer than 20 characters
 
     Given the following existing candidates:
-      | name            | email              | phone        | place | language | description |
-      | The Actual Name | candidate@atsy.com | +36301234567 | place | 3        | desc        |
+      | name            | email              | phone        | referer | languageSkill | description |
+      | The Actual Name | candidate@atsy.com | +36301234567 | place   | 3             | desc        |
 
     And the user is on the Candidate profile page of the candidate "The Actual Name"
     And the user enters a valid place longer than 20 characters
@@ -96,8 +96,8 @@ Feature: candidate modification test
   Scenario: user can't modify the existing candidate because of phone number is not a valid phone number
 
     Given the following existing candidates:
-      | name            | email              | phone        | place | language | description |
-      | The Actual Name | candidate@atsy.com | +36301234567 | place | 3        | desc        |
+      | name            | email              | phone        | referer | languageSkill | description |
+      | The Actual Name | candidate@atsy.com | +36301234567 | place   | 3             | desc        |
 
     And the user is on the Candidate profile page of the candidate "The Actual Name"
     And the user enters a phone number which doesn't match "\+?[:digit:]+" pattern
@@ -107,10 +107,10 @@ Feature: candidate modification test
   Scenario: user can't modify the existing candidate because of email address is not a valid email address
 
     Given the following existing candidates:
-      | name            | email              | phone        | place | language | description |
-      | The Actual Name | candidate@atsy.com | +36301234567 | place | 3        | desc        |
+      | name            | email              | phone        | referer | languageSkill | description |
+      | The Actual Name | candidate@atsy.com | +36301234567 | place   | 3             | desc        |
 
     And the user is on the Candidate profile page of the candidate "The Actual Name"
-    And the user enters an invalid email address
+    And the user enters an invalid email address "email/atsy.com"
     When the user clicks on the "Mentés" button
     Then a "A jelentkező email címének megfelelő formában kell lennie, például kovacs.jozsef@email.hu!" message appears under the email address field
