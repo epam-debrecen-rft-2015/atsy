@@ -1,4 +1,4 @@
-package com.epam.rft.atsy.cucumber.candidate;
+package com.epam.rft.atsy.cucumber.candidate.creation;
 
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
 import static junit.framework.TestCase.assertTrue;
