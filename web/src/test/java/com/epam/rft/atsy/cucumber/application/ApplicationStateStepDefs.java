@@ -5,7 +5,9 @@ import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForAjax;
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForPageLoadAfter;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.openqa.selenium.support.ui.ExpectedConditions.textToBe;
 
+import com.epam.rft.atsy.cucumber.util.DriverProvider;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 
@@ -94,13 +96,13 @@ public class ApplicationStateStepDefs {
 
   @Then("^the latest state became \"([^\"]*)\"$")
   public void the_latest_state_became(String expectedLatestStateName) throws Throwable {
-    waitForAjax();
+    DriverProvider.wait(getDriver())
+        .until(textToBe(By.cssSelector(LATEST_STATE_NAME_SELECTOR), expectedLatestStateName));
     String
         latestStateName =
         getDriver()
             .findElement(By.cssSelector(LATEST_STATE_NAME_SELECTOR))
             .getText();
-
     assertThat(latestStateName, is(expectedLatestStateName));
   }
 
