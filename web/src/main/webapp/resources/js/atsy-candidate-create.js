@@ -137,10 +137,10 @@ function modificationDateFormatter(value, row, index) {
 function dateTimeFormatter(dateTime) {
     var year = dateTime.getFullYear();
     var month = dateTime.getMonth() + 1;
-    month = month.length == 2 ? month : ('0' + month);
+    month = month.toString().length == 2 ? month : ('0' + month);
 
     var day = dateTime.getDate();
-    day = day.length == 2 ? day : ('0' + day);
+    day = day.toString().length == 2 ? day : ('0' + day);
 
     var hour = dateTime.getHours();
     hour = hour.toString().length == 2 ? hour : ('0' + hour);
