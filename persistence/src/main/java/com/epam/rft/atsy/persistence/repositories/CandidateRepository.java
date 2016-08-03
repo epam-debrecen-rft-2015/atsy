@@ -25,9 +25,9 @@ public interface CandidateRepository extends JpaRepository<CandidateEntity, Long
                                                                                     Sort sort);
 
   /**
-   * Returns the candidate whose name is equal to the specified name.
-   * @param name the name of the candidate we're searching for
+   * Returns the candidate whose email is equal to the specified email.
+   * @param email the email of the candidate we're searching for
    * @return the candidate
    */
-  CandidateEntity findByName(String name);
+  CandidateEntity findByEmail(String email);
 }
