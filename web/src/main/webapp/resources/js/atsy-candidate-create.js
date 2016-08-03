@@ -135,21 +135,6 @@ function modificationDateFormatter(value, row, index) {
 }
 
 function dateTimeFormatter(dateTime) {
-    var year = dateTime.getFullYear();
-    var month = dateTime.getMonth() + 1;
-    month = month.toString().length == 2 ? month : ('0' + month);
-
-    var day = dateTime.getDate();
-    day = day.toString().length == 2 ? day : ('0' + day);
-
-    var hour = dateTime.getHours();
-    hour = hour.toString().length == 2 ? hour : ('0' + hour);
-
-    var minute = dateTime.getMinutes();
-    minute = minute.toString().length == 2 ? minute : ('0' + minute);
-
-    var second = dateTime.getSeconds();
-    second = second.toString().length == 2 ? second : ('0' + second);
-
-    return year + '-' + month + '-' + day + " " + hour + ":" + minute + ':' + second;
+    var options = {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
+    return dateTime.toLocaleDateString('hu-HU', options);
 }
