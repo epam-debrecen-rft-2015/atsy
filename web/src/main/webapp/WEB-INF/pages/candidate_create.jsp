@@ -3,6 +3,7 @@
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
 <%@page contentType="text/html;charset=UTF-8" %>
 <spring:url value="/secure/positions" var="positions"/>
@@ -205,17 +206,17 @@
                 </div>
                 <%--table--%>
                 <div id="application_table">
-                    <div>
                         <table class="table table-hover" id="applications_table"  data-toggle="table" data-url="../applications/${candidate.id}" data-height="500"
                                data-sort-name="name">
                             <thead>
                             <tr>
                                 <th data-field="positionName" data-align="left"><spring:message
                                         code="candidate.table.application.position"/></th>
-                                <th data-field="creationDate" data-align="left">
+                                <th data-field="creationDate" data-align="left" data-formatter="creationDateFormatter">
                                     <spring:message code="candidate.table.application.added.date"/>
                                 </th>
-                                <th data-field="modificationDate" data-align="left"><spring:message
+                                <th data-field="modificationDate" data-align="left" data-formatter="modificationDateFormatter">
+                                <spring:message
                                         code="candidate.table.application.modified.date"/></th>
                                 <th data-field="stateType" data-align="left"><spring:message
                                         code="candidate.table.application.state"/></th>

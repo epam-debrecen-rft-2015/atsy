@@ -112,3 +112,20 @@ $('#candidate-create-form').validator().on('submit', function (e) {
 });
 
 ko.applyBindings(candidateModel);
+
+
+
+function creationDateFormatter(value, row, index) {
+    var dateTime = new Date(row.creationDate);
+    return dateTimeFormatter(dateTime);
+}
+
+function modificationDateFormatter(value, row, index) {
+    var dateTime = new Date(row.modificationDate);
+    return dateTimeFormatter(dateTime);
+}
+
+function dateTimeFormatter(dateTime) {
+    var options = {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
+    return dateTime.toLocaleDateString('hu-HU', options);
+}

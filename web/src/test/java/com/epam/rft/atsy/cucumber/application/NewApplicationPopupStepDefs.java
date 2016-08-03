@@ -29,7 +29,7 @@ import static org.hamcrest.Matchers.lessThanOrEqualTo;
 public class NewApplicationPopupStepDefs {
 
   private static WebDriver webDriver = DriverProvider.getDriver();
-  private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss");
 
   private static final String POP_UP_CONTENT = "pop_up_content";
   private static final String APPLICATIONS_TABLE = "applications_table";
@@ -146,7 +146,7 @@ public class NewApplicationPopupStepDefs {
     WebElement table = webDriver.findElement(By.id(APPLICATIONS_TABLE));
     List<WebElement> lastRowInTheTable = getValuesFromTheLastRowFromTheTable(table);
 
-    Date presentDate = currentDateMinus(15);
+    Date presentDate = currentDateMinus(25);
     String positionName = lastRowInTheTable.get(COLUMN_ZEROTH).getText();
     Date addedDate = SIMPLE_DATE_FORMAT.parse(lastRowInTheTable.get(COLUMN_FIRST).getText());
     Date lastModifiedDate = SIMPLE_DATE_FORMAT.parse(lastRowInTheTable.get(COLUMN_SECOND).getText());
