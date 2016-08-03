@@ -89,15 +89,10 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
         .id(4L)
         .name("facebook")
         .build();
-    ChannelEntity expectedFourthChannelEntity = ChannelEntity.builder()
-        .id(6L)
-        .name("linkedin adatbázis")
-        .build();
     PositionEntity expectedPositionEntity = PositionEntity.builder()
         .id(1L)
         .name("Fejlesztő")
         .build();
-    Date nearNow = currentDateMinus(5);
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Date expectedDate = simpleDateFormat.parse("2016-07-26 11:48:55");
@@ -106,16 +101,14 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
 
     // Then
     assertThat(result, notNullValue());
-    assertThat(result.size(), is(4));
+    assertThat(result.size(), is(3));
 
-    assertApplicationEntity(result.get(0), candidateEntityC, expectedFourthChannelEntity,
+    assertApplicationEntity(result.get(0), candidateEntityC, expectedChannelEntity,
         expectedPositionEntity, expectedDate);
-    assertApplicationEntity(result.get(1), candidateEntityC, expectedChannelEntity,
-        expectedPositionEntity, nearNow);
-    assertApplicationEntity(result.get(2), candidateEntityC, expectedSecondChannelEntity,
-        expectedPositionEntity, nearNow);
-    assertApplicationEntity(result.get(3), candidateEntityC, expectedThirdChannelEntity,
-        expectedPositionEntity, nearNow);
+    assertApplicationEntity(result.get(1), candidateEntityC, expectedSecondChannelEntity,
+        expectedPositionEntity, expectedDate);
+    assertApplicationEntity(result.get(2), candidateEntityC, expectedThirdChannelEntity,
+        expectedPositionEntity, expectedDate);
   }
 
   private void assertApplicationEntity(ApplicationEntity application,
