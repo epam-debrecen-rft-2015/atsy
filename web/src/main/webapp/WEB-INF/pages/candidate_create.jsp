@@ -44,7 +44,7 @@
                         <div class="panel panel-danger" role="alert"  data-bind="visible: showError">
                             <div class="panel-heading" data-bind="text: errorMessage"></div>
                             <div class="panel-body">
-                                <ul>
+                                <ul id="field-messages">
                                     <!-- ko foreach: fieldMessages -->
                                         <li data-bind="text: $data"></li>
                                     <!-- /ko -->
@@ -189,7 +189,7 @@
                                             code="cancel.button"/></a>
                                 </c:otherwise>
                             </c:choose>
-                            <button type="submit" class="btn btn-success">
+                            <button type="submit" id="save-button" class="btn btn-success">
                                 <spring:message code="save.button"/>
                             </button>
                         </div>
