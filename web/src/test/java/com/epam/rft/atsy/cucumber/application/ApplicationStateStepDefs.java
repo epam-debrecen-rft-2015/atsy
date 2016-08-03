@@ -7,9 +7,9 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openqa.selenium.support.ui.ExpectedConditions.textToBe;
 
-import com.epam.rft.atsy.cucumber.util.DriverProvider;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -96,7 +96,7 @@ public class ApplicationStateStepDefs {
 
   @Then("^the latest state became \"([^\"]*)\"$")
   public void the_latest_state_became(String expectedLatestStateName) throws Throwable {
-    DriverProvider.wait(getDriver())
+    new WebDriverWait(getDriver(), 15)
         .until(textToBe(By.cssSelector(LATEST_STATE_NAME_SELECTOR), expectedLatestStateName));
     String
         latestStateName =
