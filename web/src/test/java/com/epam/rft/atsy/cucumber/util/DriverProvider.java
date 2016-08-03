@@ -30,7 +30,7 @@ public class DriverProvider {
 
   private static WebDriver initiateDriver() {
     WebDriver firefoxDriver = new FirefoxDriver();
-    firefoxDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+    firefoxDriver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
     return firefoxDriver;
   }
 
