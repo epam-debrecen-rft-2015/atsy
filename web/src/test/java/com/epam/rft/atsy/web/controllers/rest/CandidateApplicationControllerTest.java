@@ -24,6 +24,7 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -123,19 +124,15 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
     given(statesHistoryService.getCandidateApplicationsByCandidateId(CANDIDATE_ID))
         .willReturn(Collections.singletonList(developerApplicationDto));
 
-    mockMvc.perform(
+    ResultActions resultActions = mockMvc.perform(
         get(REQUEST_URL + CANDIDATE_ID.toString()).accept(MediaTypes.APPLICATION_JSON_UTF8))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaTypes.APPLICATION_JSON_UTF8))
         .andExpect(jsonPath("$").isArray())
         .andExpect(jsonPath("$[0]").exists())
-        .andExpect(jsonPath("$[0].lastStateId", equalTo(LAST_STATE_ID.intValue())))
-        .andExpect(jsonPath("$[0].applicationId", equalTo(APPLICATION_ID.intValue())))
-        .andExpect(jsonPath("$[0].positionName", equalTo(DEVELOPER_POSITION)))
-        .andExpect(jsonPath("$[0].creationDate", equalTo(CREATION_DATE)))
-        .andExpect(jsonPath("$[0].modificationDate", equalTo(MODIFICATION_DATE)))
-        .andExpect(jsonPath("$[0].stateType", equalTo(LOCALIZED_STATE_TYPE)))
         .andExpect(jsonPath("$[1]").doesNotExist());
+
+    assertApplicationResponse(resultActions, 0, developerApplicationDto);
 
     then(statesHistoryService).should().getCandidateApplicationsByCandidateId(CANDIDATE_ID);
 
@@ -150,31 +147,39 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
     given(statesHistoryService.getCandidateApplicationsByCandidateId(CANDIDATE_ID))
         .willReturn(candidateApplicationCollection);
 
-    mockMvc.perform(
+    ResultActions resultActions = mockMvc.perform(
         get(REQUEST_URL + CANDIDATE_ID.toString()).accept(MediaTypes.APPLICATION_JSON_UTF8))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaTypes.APPLICATION_JSON_UTF8))
         .andExpect(jsonPath("$").isArray())
         .andExpect(jsonPath("$[0]").exists())
-        .andExpect(jsonPath("$[0].lastStateId", equalTo(LAST_STATE_ID.intValue())))
-        .andExpect(jsonPath("$[0].applicationId", equalTo(APPLICATION_ID.intValue())))
-        .andExpect(jsonPath("$[0].positionName", equalTo(DEVELOPER_POSITION)))
-        .andExpect(jsonPath("$[0].creationDate", equalTo(CREATION_DATE)))
-        .andExpect(jsonPath("$[0].modificationDate", equalTo(MODIFICATION_DATE)))
-        .andExpect(jsonPath("$[0].stateType", equalTo(LOCALIZED_STATE_TYPE)))
         .andExpect(jsonPath("$[1]").exists())
-        .andExpect(jsonPath("$[1].lastStateId", equalTo(LAST_STATE_ID.intValue())))
-        .andExpect(jsonPath("$[1].applicationId", equalTo(APPLICATION_ID.intValue())))
-        .andExpect(jsonPath("$[1].positionName", equalTo(SYSADMIN_POSITION)))
-        .andExpect(jsonPath("$[1].creationDate", equalTo(CREATION_DATE)))
-        .andExpect(jsonPath("$[1].modificationDate", equalTo(MODIFICATION_DATE)))
-        .andExpect(jsonPath("$[1].stateType", equalTo(LOCALIZED_STATE_TYPE)))
         .andExpect(jsonPath("$[2]").doesNotExist());
+
+    assertApplicationResponse(resultActions, 0, developerApplicationDto);
+
+    assertApplicationResponse(resultActions, 1, sysadminApplicationDto);
 
     then(statesHistoryService).should().getCandidateApplicationsByCandidateId(CANDIDATE_ID);
 
     then(messageSource).should(times(2))
         .getMessage(eq(APPLICATION_STATE + RAW_STATE_TYPE), eq(new Object[]{RAW_STATE_TYPE}),
             any(Locale.class));
+  }
+
+  private void assertApplicationResponse(ResultActions resultActions, int index,
+                                         CandidateApplicationDTO applicationDto) throws Exception {
+    String basePath = "$[" + index + "].";
+
+    resultActions
+        .andExpect(jsonPath(basePath + "lastStateId",
+                   equalTo(applicationDto.getLastStateId().intValue())))
+        .andExpect(jsonPath(basePath + "applicationId",
+                   equalTo(applicationDto.getApplicationId().intValue())))
+        .andExpect(jsonPath(basePath + "positionName", equalTo(applicationDto.getPositionName())))
+        .andExpect(jsonPath(basePath + "creationDate", equalTo(applicationDto.getCreationDate())))
+        .andExpect(jsonPath(basePath + "modificationDate",
+                   equalTo(applicationDto.getModificationDate())))
+        .andExpect(jsonPath(basePath + "stateType", equalTo(LOCALIZED_STATE_TYPE)));
   }
 }
