@@ -30,7 +30,7 @@ public class CandidateController {
   public static final String EMAIL = "email";
   public static final String PHONE = "phone";
 
-  private static final String EMPTY_STRING = StringUtils.EMPTY;
+  private static final String EMPTY_JSON = "{}";
   private static final Logger LOGGER = LoggerFactory.getLogger(CandidateController.class);
   @Resource
   private CandidateService candidateService;
@@ -55,19 +55,26 @@ public class CandidateController {
   }
 
   private SearchOptions parseFilters(String filterJson) {
-    if (filterJson != null && StringUtils.isNotEmpty(filterJson) && !filterJson.equals("{}")) {
+    if (StringUtils.isNotEmpty(filterJson) && !filterJson.equals(EMPTY_JSON)) {
       try {
         JsonObject jsonObject = (JsonObject) new JsonParser().parse(filterJson);
 
-        String name = (jsonObject.get(NAME) != null) ? jsonObject.get(NAME).getAsString() : EMPTY_STRING;
-        String email = (jsonObject.get(EMAIL) != null) ? jsonObject.get(EMAIL).getAsString() : EMPTY_STRING;
-        String phone = (jsonObject.get(PHONE) != null) ? jsonObject.get(PHONE).getAsString() : EMPTY_STRING;
+        String name = getValueFromJsonObjectByMemberName(jsonObject, NAME);
+        String email = getValueFromJsonObjectByMemberName(jsonObject, EMAIL);
+        String phone = getValueFromJsonObjectByMemberName(jsonObject, PHONE);
         return SearchOptions.builder().name(name).email(email).phone(phone).build();
 
       } catch (JsonSyntaxException e) {
         LOGGER.error("Cannot read filters from json", e);
       }
     }
-    return SearchOptions.builder().name(EMPTY_STRING).email(EMPTY_STRING).phone(EMPTY_STRING).build();
+    return SearchOptions.builder().name(StringUtils.EMPTY).email(StringUtils.EMPTY).phone(StringUtils.EMPTY).build();
+  }
+
+  private String getValueFromJsonObjectByMemberName(JsonObject jsonObject, String memberName) {
+    if (jsonObject.get(memberName) != null) {
+      return jsonObject.get(memberName).getAsString();
+    }
+    return StringUtils.EMPTY;
   }
 }

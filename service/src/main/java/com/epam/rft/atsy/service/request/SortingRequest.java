@@ -18,23 +18,11 @@ public class SortingRequest {
   }
 
   public enum Field {
-    NAME {
-      @Override
-      public String toString() {
-        return this.name().toLowerCase();
-      }
-    },
-    EMAIL {
-      @Override
-      public String toString() {
-        return this.name().toLowerCase();
-      }
-    },
-    PHONE {
-      @Override
-      public String toString() {
-        return this.name().toLowerCase();
-      }
+    NAME , EMAIL, PHONE;
+
+    @Override
+    public String toString() {
+      return this.name().toLowerCase();
     }
   }
 

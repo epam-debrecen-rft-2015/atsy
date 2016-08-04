@@ -31,20 +31,23 @@ public class CandidateControllerTest extends AbstractControllerTest {
 
   private static final String NAME = "name";
   private static final String ASC = "asc";
+  private static final String SORT = "sort";
+  private static final String ORDER = "order";
+  private static final String FILTER = "filter";
+
   private static final String CANDIDATE_NAME = "Candidate";
-  private static final String CANDIDATE_PHONE = "+36";
-  private static final String CANDIDATE_EMAIL = "@";
+  private static final String CANDIDATE_PHONE = "+36105555555";
+  private static final String CANDIDATE_EMAIL = "candidate.a@atsy.com";
   private static final String NON_VALID_FIELD_NAME = "Non valid field name";
   private static final String NON_VALID_CANDIDATE_NAME = "Not a candidate name";
 
   private static final String JSON_NON_VALID_CANDIDATE_NAME = "{\"name\":\"Not a candidate name\"}";
   private static final String JSON_CANDIDATE_NAME = "{\"name\":\"Candidate\"}";
-  private static final String JSON_CANDIDATE_EMAIL_AND_PHONE = "{\"email\":\"@\", \"phone\":\"+36\"}";
+  private static final String JSON_CANDIDATE_EMAIL_AND_PHONE = "{\"email\":\"candidate.a@atsy.com\", \"phone\":\"+36105555555\"}";
   private static final String JSON_CANDIDATE_NAME_AND_EMAIL_AND_PHONE =
-      "{\"name\":\"Candidate\", \"email\":\"@\", \"phone\":\"+36\"}";
+      "{\"name\":\"Candidate\", \"email\":\"candidate.a@atsy.com\", \"phone\":\"+36105555555\"}";
 
   private static final String EMPTY_JSON = "{}";
-  private static final String EMPTY_STRING = StringUtils.EMPTY;
 
   @Mock
   private CandidateService candidateService;
@@ -59,7 +62,7 @@ public class CandidateControllerTest extends AbstractControllerTest {
   @Test
   public void loadPageShouldRespondClientErrorWhenParamSortIsMissing() throws Exception {
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("order", ASC))
+        .param(ORDER, ASC))
         .andExpect(status().isBadRequest());
 
     verifyZeroInteractions(candidateService);
@@ -68,13 +71,13 @@ public class CandidateControllerTest extends AbstractControllerTest {
   @Test(expected = IllegalArgumentException.class)
   public void loadPageShouldThrowIllegalArgumentExceptionWhenParamSortIsNull() throws Exception {
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("sort", null).param("order", ASC));
+        .param(SORT, null).param(ORDER, ASC));
   }
 
   @Test
   public void loadPageShouldRespondInternalServerErrorWhenParamSortIsAnEmptyString() throws Exception {
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("sort", EMPTY_STRING).param("order", ASC))
+        .param(SORT, StringUtils.EMPTY).param(ORDER, ASC))
         .andExpect(status().isInternalServerError());
 
     verifyZeroInteractions(candidateService);
@@ -83,7 +86,7 @@ public class CandidateControllerTest extends AbstractControllerTest {
   @Test
   public void loadPageShouldRespondInternalServerErrorWhenParamSortIsNotValid() throws Exception {
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("sort", NON_VALID_FIELD_NAME).param("order", ASC))
+        .param(SORT, NON_VALID_FIELD_NAME).param(ORDER, ASC))
         .andExpect(status().isInternalServerError());
 
     verifyZeroInteractions(candidateService);
@@ -92,7 +95,7 @@ public class CandidateControllerTest extends AbstractControllerTest {
   @Test
   public void loadPageShouldRespondClientErrorWhenParamOrderIsMissing() throws Exception {
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("sort", NAME))
+        .param(SORT, NAME))
         .andExpect(status().isBadRequest());
 
     verifyZeroInteractions(candidateService);
@@ -102,14 +105,14 @@ public class CandidateControllerTest extends AbstractControllerTest {
   @Test(expected = IllegalArgumentException.class)
   public void loadPageShouldThrowIllegalArgumentExceptionWhenParamOrderIsNull() throws Exception {
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("sort", NAME).param("order", null));
+        .param(SORT, NAME).param(ORDER, null));
   }
 
 
   @Test
   public void loadPageShouldRespondInternalServerErrorWhenParamOrderIsAnEmptyString() throws Exception {
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("sort", NAME).param("order", EMPTY_STRING))
+        .param(SORT, NAME).param(ORDER, StringUtils.EMPTY))
         .andExpect(status().isInternalServerError());
 
     verifyZeroInteractions(candidateService);
@@ -118,7 +121,7 @@ public class CandidateControllerTest extends AbstractControllerTest {
   @Test
   public void loadPageShouldRespondInternalServerErrorWhenParamOrderIsNotValid() throws Exception {
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("sort", NAME).param("order", NON_VALID_FIELD_NAME))
+        .param(SORT, NAME).param(ORDER, NON_VALID_FIELD_NAME))
         .andExpect(status().isInternalServerError());
 
     verifyZeroInteractions(candidateService);
@@ -128,13 +131,13 @@ public class CandidateControllerTest extends AbstractControllerTest {
   @Test
   public void loadPageShouldRespondCandidateCollectionWhenOrderByNameAscWithoutFilters() throws Exception {
     final SearchOptions searchOptions =
-        SearchOptions.builder().name(EMPTY_STRING).email(EMPTY_STRING).phone(EMPTY_STRING).build();
+        SearchOptions.builder().name(StringUtils.EMPTY).email(StringUtils.EMPTY).phone(StringUtils.EMPTY).build();
     final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC)
         .fieldName(SortingRequest.Field.NAME).searchOptions(searchOptions).build();
 
-    val filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
+    ArgumentCaptor<FilterRequest> filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("sort", NAME).param("order", ASC))
+        .param(SORT, NAME).param(ORDER, ASC))
         .andExpect(status().isOk());
 
     then(candidateService).should().getAllCandidate(filterRequestArgumentCaptor.capture());
@@ -146,19 +149,19 @@ public class CandidateControllerTest extends AbstractControllerTest {
   @Test(expected = IllegalArgumentException.class)
   public void loadPageShouldThrowIllegalArgumentExceptionWhenParamFilterIsNull() throws Exception {
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("filter", null).param("sort", NAME).param("order", ASC));
+        .param(FILTER, null).param(SORT, NAME).param(ORDER, ASC));
   }
 
   @Test
   public void loadPageShouldRespondCandidateCollectionWhenFilterIsEmptyString() throws Exception {
     final SearchOptions searchOptions =
-        SearchOptions.builder().name(EMPTY_STRING).email(EMPTY_STRING).phone(EMPTY_STRING).build();
+        SearchOptions.builder().name(StringUtils.EMPTY).email(StringUtils.EMPTY).phone(StringUtils.EMPTY).build();
     final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC)
         .fieldName(SortingRequest.Field.NAME).searchOptions(searchOptions).build();
 
-    val filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
+    ArgumentCaptor<FilterRequest> filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("filter", EMPTY_STRING).param("sort", NAME).param("order", ASC))
+        .param(FILTER, StringUtils.EMPTY).param(SORT, NAME).param(ORDER, ASC))
         .andExpect(status().isOk());
 
     then(candidateService).should().getAllCandidate(filterRequestArgumentCaptor.capture());
@@ -170,13 +173,13 @@ public class CandidateControllerTest extends AbstractControllerTest {
   @Test
   public void loadPageShouldRespondCandidateCollectionWhenFilterIsEmptyJson() throws Exception {
     final SearchOptions searchOptions =
-        SearchOptions.builder().name(EMPTY_STRING).email(EMPTY_STRING).phone(EMPTY_STRING).build();
+        SearchOptions.builder().name(StringUtils.EMPTY).email(StringUtils.EMPTY).phone(StringUtils.EMPTY).build();
     final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC)
         .fieldName(SortingRequest.Field.NAME).searchOptions(searchOptions).build();
 
-    val filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
+    ArgumentCaptor<FilterRequest> filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("filter", EMPTY_JSON).param("sort", NAME).param("order", ASC))
+        .param(FILTER, EMPTY_JSON).param(SORT, NAME).param(ORDER, ASC))
         .andExpect(status().isOk());
 
     then(candidateService).should().getAllCandidate(filterRequestArgumentCaptor.capture());
@@ -190,14 +193,14 @@ public class CandidateControllerTest extends AbstractControllerTest {
       throws Exception {
 
     final SearchOptions searchOptions =
-        SearchOptions.builder().name(EMPTY_STRING).email(EMPTY_STRING).phone(EMPTY_STRING).build();
+        SearchOptions.builder().name(StringUtils.EMPTY).email(StringUtils.EMPTY).phone(StringUtils.EMPTY).build();
     final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC)
         .fieldName(SortingRequest.Field.NAME).searchOptions(searchOptions).build();
 
-    val filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
+    ArgumentCaptor<FilterRequest> filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("filter", JSON_CANDIDATE_NAME_AND_EMAIL_AND_PHONE + NON_VALID_FIELD_NAME).param("sort", NAME)
-        .param("order", ASC))
+        .param(FILTER, JSON_CANDIDATE_NAME_AND_EMAIL_AND_PHONE + NON_VALID_FIELD_NAME).param(SORT, NAME)
+        .param(ORDER, ASC))
         .andExpect(status().isOk());
 
     then(candidateService).should().getAllCandidate(filterRequestArgumentCaptor.capture());
@@ -211,13 +214,13 @@ public class CandidateControllerTest extends AbstractControllerTest {
       throws Exception {
 
     final SearchOptions searchOptions =
-        SearchOptions.builder().name(NON_VALID_CANDIDATE_NAME).email(EMPTY_STRING).phone(EMPTY_STRING).build();
+        SearchOptions.builder().name(NON_VALID_CANDIDATE_NAME).email(StringUtils.EMPTY).phone(StringUtils.EMPTY).build();
     final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC)
         .fieldName(SortingRequest.Field.NAME).searchOptions(searchOptions).build();
 
-    val filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
+    ArgumentCaptor<FilterRequest> filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("filter", JSON_NON_VALID_CANDIDATE_NAME).param("sort", NAME).param("order", ASC))
+        .param(FILTER, JSON_NON_VALID_CANDIDATE_NAME).param(SORT, NAME).param(ORDER, ASC))
         .andExpect(status().isOk());
 
     then(candidateService).should().getAllCandidate(filterRequestArgumentCaptor.capture());
@@ -229,13 +232,13 @@ public class CandidateControllerTest extends AbstractControllerTest {
   @Test
   public void loadPageShouldRespondCandidateCollectionWhenOrderByNameAscWithFilterByName() throws Exception {
     final SearchOptions searchOptions =
-        SearchOptions.builder().name(CANDIDATE_NAME).email(EMPTY_STRING).phone(EMPTY_STRING).build();
+        SearchOptions.builder().name(CANDIDATE_NAME).email(StringUtils.EMPTY).phone(StringUtils.EMPTY).build();
     final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC)
         .fieldName(SortingRequest.Field.NAME).searchOptions(searchOptions).build();
 
-    val filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
+    ArgumentCaptor<FilterRequest> filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("filter", JSON_CANDIDATE_NAME).param("sort", NAME).param("order", ASC))
+        .param(FILTER, JSON_CANDIDATE_NAME).param(SORT, NAME).param(ORDER, ASC))
         .andExpect(status().isOk());
 
     then(candidateService).should().getAllCandidate(filterRequestArgumentCaptor.capture());
@@ -247,13 +250,13 @@ public class CandidateControllerTest extends AbstractControllerTest {
   @Test
   public void loadPageShouldRespondCandidateCollectionWhenOrderByNameAscWithFilterByEmailAndPhone() throws Exception {
     final SearchOptions searchOptions =
-        SearchOptions.builder().name(EMPTY_STRING).email(CANDIDATE_EMAIL).phone(CANDIDATE_PHONE).build();
+        SearchOptions.builder().name(StringUtils.EMPTY).email(CANDIDATE_EMAIL).phone(CANDIDATE_PHONE).build();
     final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC)
         .fieldName(SortingRequest.Field.NAME).searchOptions(searchOptions).build();
 
-    val filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
+    ArgumentCaptor<FilterRequest> filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("filter", JSON_CANDIDATE_EMAIL_AND_PHONE).param("sort", NAME).param("order", ASC))
+        .param(FILTER, JSON_CANDIDATE_EMAIL_AND_PHONE).param(SORT, NAME).param(ORDER, ASC))
         .andExpect(status().isOk());
 
     then(candidateService).should().getAllCandidate(filterRequestArgumentCaptor.capture());
@@ -271,9 +274,9 @@ public class CandidateControllerTest extends AbstractControllerTest {
     final FilterRequest filterRequest = FilterRequest.builder().order(SortingRequest.Order.ASC)
         .fieldName(SortingRequest.Field.NAME).searchOptions(searchOptions).build();
 
-    val filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
+    ArgumentCaptor<FilterRequest> filterRequestArgumentCaptor = ArgumentCaptor.forClass(FilterRequest.class);
     this.mockMvc.perform(get(REQUEST_URL)
-        .param("filter", JSON_CANDIDATE_NAME_AND_EMAIL_AND_PHONE).param("sort", NAME).param("order", ASC))
+        .param(FILTER, JSON_CANDIDATE_NAME_AND_EMAIL_AND_PHONE).param(SORT, NAME).param(ORDER, ASC))
         .andExpect(status().isOk());
 
     then(candidateService).should().getAllCandidate(filterRequestArgumentCaptor.capture());
