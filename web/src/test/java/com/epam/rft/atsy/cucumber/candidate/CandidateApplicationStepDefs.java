@@ -1,24 +1,42 @@
 package com.epam.rft.atsy.cucumber.candidate;
 
 import com.epam.rft.atsy.cucumber.util.DriverProvider;
+import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfAllElementsLocatedBy;
 
 public class CandidateApplicationStepDefs {
   private static WebDriver webDriver = DriverProvider.getDriver();
 
   private static final String APPLICATIONS_TABLE = "applications_table";
+  private static final String POSITION_NAME = "Fejlesztő";
+  private static final String STATE_TYPE = "Beugró";
+
+  private static final Integer TIME_OUT_FIVE_SECONDS = 5;
+  private static final Integer COLUMN_ZEROTH = 0;
+  private static final Integer COLUMN_FIRST = 1;
+  private static final Integer COLUMN_SECOND = 2;
+  private static final Integer COLUMN_THIRD = 3;
+
   private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss");
 
 
@@ -29,7 +47,7 @@ public class CandidateApplicationStepDefs {
 
   @And("^there are more than one applications exist for the candidate$")
   public void there_are_more_than_one_applications_exist_for_the_candidate() throws Throwable {
-    Integer rowNumber = getNumberOfRowsInTable(APPLICATIONS_TABLE);
+    Integer rowNumber = getNumberOfRowsInTableByTableId(APPLICATIONS_TABLE);
     assertThat(rowNumber, greaterThan(1));
   }
 
@@ -37,16 +55,79 @@ public class CandidateApplicationStepDefs {
   public void the_application_list_displays_all_the_applications_ordered_by_last_modification_date_and_time_descending()
       throws Throwable {
 
+    isSortedCandidateApplicationDTOListByModificationDate(getCandidateApplicationDTOListFromDataTableByTableId(APPLICATIONS_TABLE));
   }
 
   @And("^each application has the values of creation date and time, last modification date and time, position, state$")
-  public void each_application_has_the_values_of_creation_date_and_time_last_modification_date_and_time_position_state() throws Throwable {
+  public void each_application_has_the_values_of_creation_date_and_time_last_modification_date_and_time_position_state()
+      throws Throwable {
+
+    assertThat(getCandidateApplicationDTOListFromDataTableByTableId(APPLICATIONS_TABLE),
+        equalTo(getExpectedCandidateApplicationDTOList()));
 
   }
 
-  private Integer getNumberOfRowsInTable(String tableId) {
-    WebElement table = webDriver.findElement(By.id(tableId));
-    return table.findElements(By.tagName("tr")).size();
+  private Integer getNumberOfRowsInTableByTableId(String tableId) {
+    return getDataTableByTableId(tableId).size();
   }
+
+  private List<CandidateApplicationDTO> getCandidateApplicationDTOListFromDataTableByTableId(String tableId)
+      throws ParseException {
+    List<CandidateApplicationDTO> candidateApplicationDTOList = new ArrayList<>();
+
+    for (WebElement webElement : getDataTableByTableId(tableId)) {
+      List<WebElement> currentRow = webElement.findElements(By.tagName("td"));
+      String positionName = currentRow.get(COLUMN_ZEROTH).getText();
+      Date creationDate = SIMPLE_DATE_FORMAT.parse(currentRow.get(COLUMN_FIRST).getText());
+      Date lastModifiedDate = SIMPLE_DATE_FORMAT.parse(currentRow.get(COLUMN_SECOND).getText());
+      String stateName = currentRow.get(COLUMN_THIRD).getText();
+
+      CandidateApplicationDTO candidateApplicationDTO = CandidateApplicationDTO.builder().positionName(positionName).
+          creationDate(creationDate).modificationDate(lastModifiedDate).stateType(stateName).build();
+
+      candidateApplicationDTOList.add(candidateApplicationDTO);
+    }
+
+    return candidateApplicationDTOList;
+  }
+
+  private List<WebElement> getDataTableByTableId(String tableId) {
+    WebDriverWait webDriverWait = new WebDriverWait(webDriver, TIME_OUT_FIVE_SECONDS);
+    return webDriverWait
+        .until(visibilityOfAllElementsLocatedBy(By.cssSelector("#" + tableId + " >" + "tbody > tr[data-index]")));
+  }
+
+
+  private List<CandidateApplicationDTO> getExpectedCandidateApplicationDTOList() throws ParseException {
+    final Date firstCreationDate = SIMPLE_DATE_FORMAT.parse("2016. 07. 26. 11:48:56");
+    final Date secondCreationDate = SIMPLE_DATE_FORMAT.parse("2016. 07. 26. 11:48:57");
+    final Date thirdCreationDate = SIMPLE_DATE_FORMAT.parse("2016. 07. 26. 11:48:58");
+
+    final Date firstModificationDate = SIMPLE_DATE_FORMAT.parse("2016. 07. 26. 11:48:58");
+    final Date secondModificationDate = SIMPLE_DATE_FORMAT.parse("2016. 07. 26. 11:48:57");
+    final Date thirdModificationDate = SIMPLE_DATE_FORMAT.parse("2016. 07. 26. 11:48:56");
+
+    CandidateApplicationDTO firstCandidateApplicationDTO = CandidateApplicationDTO.builder().positionName(POSITION_NAME)
+        .creationDate(firstCreationDate).modificationDate(firstModificationDate).stateType(STATE_TYPE).build();
+    CandidateApplicationDTO secondCandidateApplicationDTO =
+        CandidateApplicationDTO.builder().positionName(POSITION_NAME)
+            .creationDate(secondCreationDate).modificationDate(secondModificationDate).stateType(STATE_TYPE).build();
+    CandidateApplicationDTO thirdCandidateApplicationDTO = CandidateApplicationDTO.builder().positionName(POSITION_NAME)
+        .creationDate(thirdCreationDate).modificationDate(thirdModificationDate).stateType(STATE_TYPE).build();
+
+    return Arrays.asList(firstCandidateApplicationDTO, secondCandidateApplicationDTO, thirdCandidateApplicationDTO);
+  }
+
+  public boolean isSortedCandidateApplicationDTOListByModificationDate(List<CandidateApplicationDTO> candidateApplicationDTOList) {
+    boolean sorted = true;
+    for (int i = 1; i < candidateApplicationDTOList.size(); i++) {
+      if (candidateApplicationDTOList.get(i - 1).getModificationDate()
+          .compareTo(candidateApplicationDTOList.get(i).getModificationDate()) > 0) {
+        sorted = false;
+      }
+    }
+    return sorted;
+  }
+
 
 }
