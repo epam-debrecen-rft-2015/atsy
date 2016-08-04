@@ -48,7 +48,7 @@ Feature: candidate modification test
       | existing name   | existing@atsy.com  | +363012345678 | place   | 3             | description |
 
     And the user is on the Candidate profile page of the candidate "The Actual Name"
-    And the user enters phone number "+36301234568"
+    And the user enters phone number "+363012345678"
     When the user clicks on the "Mentés" button
     Then a "Már létezik ilyen e-mail címmel vagy telefonszámmal jelentkező!" message appears
 
@@ -70,7 +70,7 @@ Feature: candidate modification test
       | The Actual Name | candidate@atsy.com | +36301234567 | place   | 3             | desc        |
 
     And the user is on the Candidate profile page of the candidate "The Actual Name"
-    And the user enters a valid email address longer than 100 characters
+    And the user enters a valid email address longer than 255 characters
     When the user clicks on the "Mentés" button
     Then a "A megadott email cím túl hosszú!" message appears in the listing
 
@@ -103,7 +103,7 @@ Feature: candidate modification test
       | The Actual Name | candidate@atsy.com | +36301234567 | place   | 3             | desc        |
 
     And the user is on the Candidate profile page of the candidate "The Actual Name"
-    And the user enters a phone number which doesn't match "\+?[\\d]\\+" pattern
+    And the user enters a phone number which doesn't match "\\+?[\d]+" pattern
     When the user clicks on the "Mentés" button
     Then a "A jelentkező telefonszáma egy plusz jellel kezdődhet és utánna számjegyekből állhat!" message appears under the phone number field
 
