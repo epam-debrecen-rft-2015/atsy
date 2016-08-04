@@ -3,6 +3,9 @@ Feature: candidate modification test
   Background:
     Given The user signed in
 
+  @setup
+  Scenario: dummy setup scenario
+
   Scenario: user can't modify the existing candidate because the name field is empty
 
     Given the following existing candidates:
@@ -30,7 +33,7 @@ Feature: candidate modification test
     Given the following existing candidates:
       | name            | email              | phone         | referer | languageSkill | description |
       | The Actual Name | candidate@atsy.com | +36301234567  | place   | 3             | desc        |
-      | existing name   | existing@atsy.com  | +3630123456-8 | place   | 3             | description |
+      | existing name   | existing@atsy.com  | +363012345678 | place   | 3             | description |
 
     And the user is on the Candidate profile page of the candidate "The Actual Name"
     And the user enters e-mail address "existing@atsy.com"
@@ -42,10 +45,10 @@ Feature: candidate modification test
     Given the following existing candidates:
       | name            | email              | phone         | referer | languageSkill | description |
       | The Actual Name | candidate@atsy.com | +36301234567  | place   | 3             | desc        |
-      | existing name   | existing@atsy.com  | +3630123456-8 | place   | 3             | description |
+      | existing name   | existing@atsy.com  | +363012345678 | place   | 3             | description |
 
     And the user is on the Candidate profile page of the candidate "The Actual Name"
-    And the user enters phone number "+3630123456-8"
+    And the user enters phone number "+36301234568"
     When the user clicks on the "Mentés" button
     Then a "Már létezik ilyen e-mail címmel vagy telefonszámmal jelentkező!" message appears
 
@@ -58,7 +61,7 @@ Feature: candidate modification test
     And the user is on the Candidate profile page of the candidate "The Actual Name"
     And the user enters a name longer than 100 characters
     When the user clicks on the "Mentés" button
-    Then a "A megadott név túl hosszú!" message appears under the name field
+    Then a "A megadott név túl hosszú!" message appears in the listing
 
   Scenario: user can't modify the existing candidate because of email address is longer than 400 characters
 
@@ -69,7 +72,7 @@ Feature: candidate modification test
     And the user is on the Candidate profile page of the candidate "The Actual Name"
     And the user enters a valid email address longer than 100 characters
     When the user clicks on the "Mentés" button
-    Then a "A megadott email cím túl hosszú!" message appears under the email address field
+    Then a "A megadott email cím túl hosszú!" message appears in the listing
 
   Scenario: user can't modify the existing candidate because of phone number is longer than 20 characters
 
@@ -80,7 +83,7 @@ Feature: candidate modification test
     And the user is on the Candidate profile page of the candidate "The Actual Name"
     And the user enters a valid phone number longer than 20 characters
     When the user clicks on the "Mentés" button
-    Then a "A megadott telefonszám túl hosszú!" message appears under the phone number field
+    Then a "A megadott telefonszám túl hosszú!" message appears in the listing
 
   Scenario: user can't modify the existing candidate because of place is longer than 20 characters
 
@@ -91,7 +94,7 @@ Feature: candidate modification test
     And the user is on the Candidate profile page of the candidate "The Actual Name"
     And the user enters a valid place longer than 20 characters
     When the user clicks on the "Mentés" button
-    Then a "A megadott hely túl hosszú!" message appears under the place field
+    Then a "A megadott hely túl hosszú!" message appears in the listing
 
   Scenario: user can't modify the existing candidate because of phone number is not a valid phone number
 
@@ -100,7 +103,7 @@ Feature: candidate modification test
       | The Actual Name | candidate@atsy.com | +36301234567 | place   | 3             | desc        |
 
     And the user is on the Candidate profile page of the candidate "The Actual Name"
-    And the user enters a phone number which doesn't match "\+?[:digit:]+" pattern
+    And the user enters a phone number which doesn't match "\+?[\\d]\\+" pattern
     When the user clicks on the "Mentés" button
     Then a "A jelentkező telefonszáma egy plusz jellel kezdődhet és utánna számjegyekből állhat!" message appears under the phone number field
 
