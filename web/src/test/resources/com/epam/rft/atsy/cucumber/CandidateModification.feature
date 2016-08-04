@@ -3,8 +3,11 @@ Feature: candidate modification test
   Background:
     Given The user signed in
 
-  @setup
   Scenario: dummy setup scenario
+    Given the table is populated with these candidates:
+      | name            | email              | phone         | referer | languageSkill | description |
+      | The Actual Name | candidate@atsy.com | +36301234567  | place   | 3             | desc        |
+      | existing name   | existing@atsy.com  | +363012345678 | place   | 3             | description |
 
   Scenario: user can't modify the existing candidate because the name field is empty
 
