@@ -14,6 +14,7 @@ function editLatestStateOnClick() {
     $('.stateInput').show();
     $('.stateData').hide();
     $('#latestStateEditButton').hide();
+    $('div.button-panel > form.form-inline div.btn-group > a').addClass("disabled");
 }
 
 function cancelButtonOnClick() {
@@ -28,4 +29,5 @@ function cancelButtonOnClick() {
     $('.stateInput').hide();
     $('.stateData').show();
     $('#latestStateEditButton').show();
+    $('div.button-panel > form.form-inline div.btn-group > a').removeClass("disabled");
 }

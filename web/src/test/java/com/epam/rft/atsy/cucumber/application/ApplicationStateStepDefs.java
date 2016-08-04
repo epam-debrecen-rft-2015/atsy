@@ -71,6 +71,10 @@ public class ApplicationStateStepDefs {
           .anyMatch(b -> b.getText().equals(latestStateName))) {
         waitForPageLoadAfter(
             driver -> driver.findElement(By.cssSelector(PAUSE_BUTTON_SELECTOR)).click());
+
+        waitForPageLoadAfter(
+            driver -> driver.findElement(By.cssSelector(SAVE_BUTTON_SELECTOR))
+                .click());
       }
 
       waitForPageLoadAfter(driver -> driver.findElements(By.cssSelector(
