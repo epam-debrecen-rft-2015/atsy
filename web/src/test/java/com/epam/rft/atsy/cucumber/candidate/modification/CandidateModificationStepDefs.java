@@ -9,7 +9,6 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClick
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfAllElementsLocatedBy;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
-import com.epam.rft.atsy.cucumber.util.DriverProvider;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.By;
@@ -22,13 +21,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
-import cucumber.api.java.After;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 public class CandidateModificationStepDefs {
+
+  private static final long TIMEOUT = 60L;
 
   private static final String
       CANDIDATE_CREATION_URL =
@@ -44,21 +43,9 @@ public class CandidateModificationStepDefs {
   private static final String SAVE_BUTTON_TEXT = "Mentés";
   private static final String EMAIL_SUFFIX = "@epam.com";
 
-  @After("@setup")
-  public void setup_before_scenario() {
-    CandidateEntity
-        entity1 =
-        CandidateEntity.builder().name("The Actual Name").email("candidate@atsy.com")
-            .phone("+36301234567").referer("place").languageSkill((short) 3).description("desc")
-            .build();
-    CandidateEntity
-        entity2 =
-        CandidateEntity.builder().name("eixsing name").email("existing@atsy.com")
-            .phone("+363012345678").referer("place").languageSkill((short) 3)
-            .description("description")
-            .build();
-
-    Stream.of(entity1, entity2).forEach(candidate -> {
+  @Given("^the table is populated with these candidates:$")
+  public void setup_scenario(List<CandidateEntity> candidates) {
+    candidates.forEach(candidate -> {
       waitForPageLoadAfter(event -> getDriver().get(CANDIDATE_CREATION_URL));
       fillOutCreationForm(candidate);
       try {
@@ -73,7 +60,7 @@ public class CandidateModificationStepDefs {
   @Given("^the following existing candidates:$")
   public void the_following_existing_candidates(List<CandidateEntity> candidates)
       throws Throwable {
-    //TODO only check for existing
+    //TODO this step is redundant, consult with a mentor
   }
 
   private void fillOutCreationForm(CandidateEntity candidate) {
@@ -109,7 +96,7 @@ public class CandidateModificationStepDefs {
     waitForPageLoadAfter(event -> getDriver().get(WELCOME_PAGE));
     List<WebElement>
         webElements =
-        DriverProvider.wait(getDriver())
+        new WebDriverWait(getDriver(), TIMEOUT)
             .until(visibilityOfAllElementsLocatedBy(By.cssSelector("tbody > tr[data-index]")));
 
     //find the candidate that needs to be edited, then click the ref link
@@ -123,16 +110,16 @@ public class CandidateModificationStepDefs {
       }
     }
 
-    //now we are on the candidate creation page, lets click modify to start editing it
+    //now we are on the candidate creation page, lets click modify to start editing
     the_user_clicks_on_the_button("Módosítás");
   }
 
   @When("^the user clicks on the \"([^\"]*)\" button$")
   public void the_user_clicks_on_the_button(String text) throws Throwable {
-    //reminder: this might not find "buttons" by Bootstrap, since they are not
-    //button tags, only divs with link
+    //reminder: this might not find "buttons" created by Bootstrap, since they are not
+    //button tags, only divs with links
     List<WebElement> buttons = getDriver().findElements(By.tagName("button"));
-    WebDriverWait webDriverWait = DriverProvider.wait(getDriver());
+    WebDriverWait webDriverWait = new WebDriverWait(getDriver(), TIMEOUT);
     WebElement
         elem =
         webDriverWait.until(elementToBeClickable(
@@ -148,7 +135,7 @@ public class CandidateModificationStepDefs {
   }
 
   private void waitForAMessageToBeVisible(By locator, String expectedMessage) {
-    WebDriverWait webDriverWait = DriverProvider.wait(getDriver());
+    WebDriverWait webDriverWait = new WebDriverWait(getDriver(), TIMEOUT);
     WebElement elem = webDriverWait.until(visibilityOfElementLocated(locator));
     assertEquals(expectedMessage, elem.getText());
   }
@@ -196,10 +183,10 @@ public class CandidateModificationStepDefs {
   }
 
   private void waitForAMessageToAppearInTheKnockoutJsListing(String errorMessage) {
-    //error message provided by KnockoutJS as a listing
-    // there can be multiple messages
+    //error messages provided by KnockoutJS as a listing
+    //there can be multiple messages
     String selector = "#field-messages > li";
-    WebDriverWait webDriverWait = DriverProvider.wait(getDriver());
+    WebDriverWait webDriverWait = new WebDriverWait(getDriver(), TIMEOUT);
     List<WebElement>
         listings =
         webDriverWait.until(visibilityOfAllElementsLocatedBy(By.cssSelector(selector)));
@@ -255,7 +242,7 @@ public class CandidateModificationStepDefs {
   public void the_user_enters_a_phone_number_which_doesn_t_match_digit_pattern(String pattern)
       throws Throwable {
     String str = RandomStringUtils.randomAlphabetic(11);
-    Pattern pat = Pattern.compile(pattern);
+    Pattern pat = Pattern.compile(Pattern.quote(pattern));
     Matcher matcher = pat.matcher(str);
     if (!matcher.matches()) {
       clearThenFillAnInputField(By.id(PHONE_ID), str);
