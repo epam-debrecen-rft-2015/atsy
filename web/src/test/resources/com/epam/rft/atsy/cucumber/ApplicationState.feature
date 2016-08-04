@@ -38,6 +38,7 @@ Feature: application state switching
       | Ügyfél beszélgetés      | Kódolás                 |
       | Ügyfél beszélgetés      | Szakmai beszélgetés     |
       | Ügyfél beszélgetés      | Ajánlat                 |
+      | Ajánlat                 | Jelölt visszautasít     |
       | Ajánlat                 | Elfogadás               |
       | Elfogadás               | Belépett                |
 
@@ -62,6 +63,7 @@ Feature: application state switching
       | Szakmai beszélgetés     |
       | Ügyfél beszélgetés      |
       | Ajánlat                 |
+      | Jelölt visszautasít     |
       | Elfogadás               |
 
   Scenario Outline: user can switch from on hold
@@ -84,6 +86,7 @@ Feature: application state switching
       | Szakmai beszélgetés     |
       | Ügyfél beszélgetés      |
       | Ajánlat                 |
+      | Jelölt visszautasít     |
       | Elfogadás               |
 
   Scenario Outline: user can switch to denied
@@ -106,3 +109,4 @@ Feature: application state switching
       | Kódolás                 |
       | Szakmai beszélgetés     |
       | Ügyfél beszélgetés      |
+      | Jelölt visszautasít     |
