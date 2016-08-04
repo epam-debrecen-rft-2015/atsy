@@ -1,5 +1,6 @@
 package com.epam.rft.atsy.web.controllers.rest;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Matchers.any;
@@ -24,6 +25,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -177,35 +179,20 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
     given(messageSource.getMessage(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoA.getName()),
         any(Object[].class), any(Locale.class))).willReturn(STATE_A_LOCALIZED_NAME);
 
-    mockMvc.perform(get(REQUEST_URL + APPLICATION_ID.toString()))
+    ResultActions resultActions = mockMvc.perform(get(REQUEST_URL + APPLICATION_ID.toString()))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$").isArray())
         .andExpect(jsonPath("$[0]").exists())
-        .andExpect(jsonPath("$[1]").doesNotExist())
-        .andExpect(jsonPath("$[0].id").value(STATE_HISTORY_ID.intValue()))
-        .andExpect(jsonPath("$[0].languageSkill").value(LANGUAGE_SKILL.intValue()))
-        .andExpect(jsonPath("$[0].description").value(DESCRIPTION))
-        .andExpect(jsonPath("$[0].result").value(RESULT))
-        .andExpect(jsonPath("$[0].offeredMoney").value(OFFERED_MONEY.intValue()))
-        .andExpect(jsonPath("$[0].claim").value(CLAIM.intValue()))
-        .andExpect(jsonPath("$[0].creationDate").value(STATE_HISTORY_CREATION_DATE.toString()))
-        .andExpect(jsonPath("$[0].feedbackDate").value(FEEDBACK_DATE.toInstant().toEpochMilli()))
-        .andExpect(jsonPath("$[0].dayOfStart").value(DAY_OF_START.toInstant().toEpochMilli()))
-        .andExpect(jsonPath("$[0].stateDTO.id").value(stateDtoA.getId().intValue()))
-        .andExpect(jsonPath("$[0].stateDTO.name").value(STATE_A_LOCALIZED_NAME))
-        .andExpect(jsonPath("$[0].applicationDTO.id").value(APPLICATION_ID.intValue()))
-        .andExpect(jsonPath("$[0].applicationDTO.candidateId").value(CANDIDATE_ID.intValue()))
-        .andExpect(jsonPath("$[0].applicationDTO.positionId").value(POSITION_ID.intValue()))
-        .andExpect(jsonPath("$[0].applicationDTO.channelId").value(CHANNEL_ID.intValue()))
-        .andExpect(jsonPath("$[0].channel.id").value(CHANNEL_ID.intValue()))
-        .andExpect(jsonPath("$[0].channel.name").value(CHANNEL_NAME))
-        .andExpect(jsonPath("$[0].position.id").value(POSITION_ID.intValue()))
-        .andExpect(jsonPath("$[0].position.name").value(POSITION_NAME));
+        .andExpect(jsonPath("$[1]").doesNotExist());
+
+    assertStateHistoryViewResponse(resultActions, 0, dummyStateHistoryViewDto,
+        STATE_A_LOCALIZED_NAME);
 
     then(statesHistoryService).should().getStateHistoriesByApplicationId(APPLICATION_ID);
 
-    then(messageSource).should().getMessage(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoA.getName()),
-        any(Object[].class), any(Locale.class));
+    then(messageSource).should()
+        .getMessage(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoA.getName()),
+            any(Object[].class), any(Locale.class));
 
     verifyNoMoreInteractions(messageSource);
   }
@@ -225,49 +212,78 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
     given(messageSource.getMessage(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoC.getName()),
         any(Object[].class), any(Locale.class))).willReturn(STATE_C_LOCALIZED_NAME);
 
-    mockMvc.perform(get(REQUEST_URL + APPLICATION_ID.toString()))
+    ResultActions resultActions = mockMvc.perform(get(REQUEST_URL + APPLICATION_ID.toString()))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$").isArray())
         .andExpect(jsonPath("$[0]").exists())
         .andExpect(jsonPath("$[1]").exists())
         .andExpect(jsonPath("$[2]").exists())
-        .andExpect(jsonPath("$[3]").doesNotExist())
-        .andExpect(jsonPath("$[0].id").value(STATE_HISTORY_ID.intValue()))
-        .andExpect(jsonPath("$[0].languageSkill").value(LANGUAGE_SKILL.intValue()))
-        .andExpect(jsonPath("$[0].description").value(DESCRIPTION))
-        .andExpect(jsonPath("$[0].result").value(RESULT))
-        .andExpect(jsonPath("$[0].offeredMoney").value(OFFERED_MONEY.intValue()))
-        .andExpect(jsonPath("$[0].claim").value(CLAIM.intValue()))
-        .andExpect(jsonPath("$[0].creationDate").value(STATE_HISTORY_CREATION_DATE.toString()))
-        .andExpect(jsonPath("$[0].feedbackDate").value(FEEDBACK_DATE.toInstant().toEpochMilli()))
-        .andExpect(jsonPath("$[0].dayOfStart").value(DAY_OF_START.toInstant().toEpochMilli()))
-        .andExpect(jsonPath("$[0].stateDTO.id").value(stateDtoA.getId().intValue()))
-        .andExpect(jsonPath("$[0].stateDTO.name").value(STATE_A_LOCALIZED_NAME))
-        .andExpect(jsonPath("$[0].applicationDTO.id").value(APPLICATION_ID.intValue()))
-        .andExpect(jsonPath("$[0].applicationDTO.candidateId").value(CANDIDATE_ID.intValue()))
-        .andExpect(jsonPath("$[0].applicationDTO.positionId").value(POSITION_ID.intValue()))
-        .andExpect(jsonPath("$[0].applicationDTO.channelId").value(CHANNEL_ID.intValue()))
-        .andExpect(jsonPath("$[0].channel.id").value(CHANNEL_ID.intValue()))
-        .andExpect(jsonPath("$[0].channel.name").value(CHANNEL_NAME))
-        .andExpect(jsonPath("$[0].position.id").value(POSITION_ID.intValue()))
-        .andExpect(jsonPath("$[0].position.name").value(POSITION_NAME))
-        .andExpect(jsonPath("$[1].stateDTO.id").value(stateDtoB.getId().intValue()))
-        .andExpect(jsonPath("$[1].stateDTO.name").value(STATE_B_LOCALIZED_NAME))
-        .andExpect(jsonPath("$[2].stateDTO.id").value(stateDtoC.getId().intValue()))
-        .andExpect(jsonPath("$[2].stateDTO.name").value(STATE_C_LOCALIZED_NAME));
+        .andExpect(jsonPath("$[3]").doesNotExist());
 
+    assertStateHistoryViewResponse(resultActions, 0, dummyStateHistoryViewList.get(0),
+        STATE_A_LOCALIZED_NAME);
+
+    assertStateHistoryViewResponse(resultActions, 1, dummyStateHistoryViewList.get(1),
+        STATE_B_LOCALIZED_NAME);
+
+    assertStateHistoryViewResponse(resultActions, 2, dummyStateHistoryViewList.get(2),
+        STATE_C_LOCALIZED_NAME);
 
     then(statesHistoryService).should().getStateHistoriesByApplicationId(APPLICATION_ID);
 
-    then(messageSource).should().getMessage(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoA.getName()),
-        any(Object[].class), any(Locale.class));
+    then(messageSource).should()
+        .getMessage(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoA.getName()),
+            any(Object[].class), any(Locale.class));
 
-    then(messageSource).should().getMessage(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoB.getName()),
-        any(Object[].class), any(Locale.class));
+    then(messageSource).should()
+        .getMessage(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoB.getName()),
+            any(Object[].class), any(Locale.class));
 
-    then(messageSource).should().getMessage(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoC.getName()),
-        any(Object[].class), any(Locale.class));
+    then(messageSource).should()
+        .getMessage(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoC.getName()),
+            any(Object[].class), any(Locale.class));
 
     verifyNoMoreInteractions(messageSource);
+  }
+
+  private void assertStateHistoryViewResponse(ResultActions resultActions, int index,
+                                              StateHistoryViewDTO historyViewDto,
+                                              String localizedStateName) throws Exception {
+    String basePath = "$[" + index + "].";
+
+    resultActions
+        .andExpect(jsonPath(basePath + "id", equalTo(historyViewDto.getId().intValue())))
+        .andExpect(jsonPath(basePath + "languageSkill",
+            equalTo(historyViewDto.getLanguageSkill().intValue())))
+        .andExpect(jsonPath(basePath + "description", equalTo(historyViewDto.getDescription())))
+        .andExpect(jsonPath(basePath + "result", equalTo(historyViewDto.getResult())))
+        .andExpect(jsonPath(basePath + "offeredMoney",
+            equalTo(historyViewDto.getOfferedMoney().intValue())))
+        .andExpect(jsonPath(basePath + "claim", equalTo(historyViewDto.getClaim().intValue())))
+        .andExpect(jsonPath(basePath + "creationDate",
+            equalTo(historyViewDto.getCreationDate())))
+        .andExpect(jsonPath(basePath + "feedbackDate",
+            equalTo(historyViewDto.getFeedbackDate().toInstant().toEpochMilli())))
+        .andExpect(jsonPath(basePath + "dayOfStart",
+            equalTo(historyViewDto.getDayOfStart().toInstant().toEpochMilli())))
+        .andExpect(jsonPath(basePath + "stateDTO.id",
+            equalTo(historyViewDto.getStateDTO().getId().intValue())))
+        .andExpect(jsonPath(basePath + "stateDTO.name", equalTo(localizedStateName)))
+        .andExpect(jsonPath(basePath + "applicationDTO.id",
+            equalTo(historyViewDto.getApplicationDTO().getId().intValue())))
+        .andExpect(jsonPath(basePath + "applicationDTO.candidateId",
+            equalTo(historyViewDto.getApplicationDTO().getCandidateId().intValue())))
+        .andExpect(jsonPath(basePath + "applicationDTO.positionId",
+            equalTo(historyViewDto.getApplicationDTO().getPositionId().intValue())))
+        .andExpect(jsonPath(basePath + "applicationDTO.channelId",
+            equalTo(historyViewDto.getApplicationDTO().getChannelId().intValue())))
+        .andExpect(jsonPath(basePath + "channel.id",
+            equalTo(historyViewDto.getChannel().getId().intValue())))
+        .andExpect(jsonPath(basePath + "channel.name",
+            equalTo(historyViewDto.getChannel().getName())))
+        .andExpect(jsonPath(basePath + "position.id",
+            equalTo(historyViewDto.getPosition().getId().intValue())))
+        .andExpect(jsonPath(basePath + "position.name",
+            equalTo(historyViewDto.getPosition().getName())));
   }
 }
