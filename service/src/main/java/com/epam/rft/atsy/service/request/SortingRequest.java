@@ -4,26 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class SortingRequest {
 
-  private Field fieldName;
+
+  private String fieldName;
   private Order order;
 
   public enum Order {
     ASC,
     DESC
-  }
-
-  public enum Field {
-    NAME , EMAIL, PHONE;
-
-    @Override
-    public String toString() {
-      return this.name().toLowerCase();
-    }
   }
 
 }

@@ -42,7 +42,7 @@ public class CandidateServiceImplTest {
   private static final String REFERER = "Jane Doe";
   private static final Short LANGUAGE_SKILL = 5;
   private static final String DESCRIPTION = "Simply John Doe.";
-  private static final SortingRequest.Field SORT_FIELD = SortingRequest.Field.NAME;
+  private static final String SORT_FIELD = "name";
   private static final CandidateEntity NOT_FOUND_CANDIDATE_ENTITY = null;
   private static final CandidateDTO NOT_FOUND_CANDIDATE_DTO = null;
   @Rule
@@ -77,7 +77,7 @@ public class CandidateServiceImplTest {
         FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.DESC)
             .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
 
-    ascendingSort = new Sort(Sort.Direction.ASC, SORT_FIELD.toString());
+    ascendingSort = new Sort(Sort.Direction.ASC, SORT_FIELD);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -214,7 +214,7 @@ public class CandidateServiceImplTest {
   @Test
   public void getAllCandidateShouldCallRepositoryWithDescendingSortWhenPassingDescendingFilterRequest() {
     // Given
-    Sort descendingSort = new Sort(Sort.Direction.DESC, SORT_FIELD.toString());
+    Sort descendingSort = new Sort(Sort.Direction.DESC, SORT_FIELD);
 
     // When
     Collection<CandidateDTO> result = candidateService.getAllCandidate(descendingFilterRequest);

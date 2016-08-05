@@ -52,7 +52,7 @@ public class CandidateServiceImpl implements CandidateService {
 
     Sort.Direction sortDirection = Sort.Direction.fromString(sortingRequest.getOrder().name());
 
-    Sort sort = new Sort(sortDirection, sortingRequest.getFieldName().toString());
+    Sort sort = new Sort(sortDirection, sortingRequest.getFieldName());
 
     Collection<CandidateEntity>
         candidateEntities =
