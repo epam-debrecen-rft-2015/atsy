@@ -15,6 +15,10 @@ public class UserDetailsAdapter implements UserDetails {
 
   private String username;
 
+  public UserDetailsAdapter() {
+    // Nothing to do
+  }
+
   public UserDetailsAdapter(Long userId, String password, String username) {
     this.userId = userId;
     this.password = password;
