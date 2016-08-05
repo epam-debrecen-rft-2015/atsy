@@ -4,7 +4,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.util.Assert;
 
 import java.util.Locale;
 
@@ -17,8 +16,6 @@ public class MessageKeyResolverImpl implements MessageKeyResolver, MessageSource
 
   @Override
   public String resolveMessage(String messageKey, Object... substitutions) {
-    Assert.notNull(messageKey);
-
     Locale currentLocale = LocaleContextHolder.getLocale();
 
     try {
@@ -26,7 +23,7 @@ public class MessageKeyResolverImpl implements MessageKeyResolver, MessageSource
 
       return resolvedMessage;
     } catch (NoSuchMessageException e) {
-      throw new MessageResolutionFailedException(messageKey, e);
+      throw new MessageResolutionFailedException(messageKey, currentLocale, e);
     }
   }
 
