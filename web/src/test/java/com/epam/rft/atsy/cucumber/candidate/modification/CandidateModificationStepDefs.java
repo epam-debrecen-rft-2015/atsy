@@ -15,7 +15,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
@@ -29,70 +28,26 @@ public class CandidateModificationStepDefs {
 
   private static final long TIMEOUT = 60L;
 
-  private static final String
-      CANDIDATE_CREATION_URL =
-      "http://localhost:8080/atsy/secure/candidate";
-
   private static final String WELCOME_PAGE = "http://localhost:8080/atsy/secure/welcome";
 
   private static final String NAME_ID = "name";
   private static final String EMAIL_ID = "email";
   private static final String PHONE_ID = "phone";
-  private static final String LANGUAGE_SKILL_ID = "languageSkill";
   private static final String REFERER_ID = "referer";
-  private static final String SAVE_BUTTON_TEXT = "Mentés";
   private static final String EMAIL_SUFFIX = "@epam.com";
 
-  @Given("^the table is populated with these candidates:$")
-  public void setup_scenario(List<CandidateEntity> candidates) {
-    candidates.forEach(candidate -> {
-      waitForPageLoadAfter(event -> getDriver().get(CANDIDATE_CREATION_URL));
-      fillOutCreationForm(candidate);
-      try {
-        the_user_clicks_on_the_button(SAVE_BUTTON_TEXT);
-      } catch (Throwable throwable) {
-        throwable.printStackTrace();
-      }
-    });
-  }
-
+  private List<CandidateEntity> existingCandidates;
 
   @Given("^the following existing candidates:$")
   public void the_following_existing_candidates(List<CandidateEntity> candidates)
       throws Throwable {
-    //TODO this step is redundant, consult with a mentor
-  }
-
-  private void fillOutCreationForm(CandidateEntity candidate) {
-    String inputSelector = "input";
-    List<WebElement> inputElements = getDriver().findElements(By.cssSelector(inputSelector));
-    for (WebElement elem : inputElements) {
-      switch (elem.getAttribute("id")) {
-        case "name":
-          elem.sendKeys(candidate.getName());
-          break;
-        case "email":
-          elem.sendKeys(candidate.getEmail());
-          break;
-        case "phone":
-          elem.sendKeys(candidate.getPhone());
-          break;
-        case "referer":
-          elem.sendKeys(candidate.getReferer());
-          break;
-        case "description":
-          elem.sendKeys(candidate.getDescription());
-          break;
-      }
-    }
-    Select languageSkillSelector = new Select(getDriver().findElement(By.id(LANGUAGE_SKILL_ID)));
-    languageSkillSelector.selectByVisibleText(String.valueOf(candidate.getLanguageSkill()));
+    this.existingCandidates = candidates;
   }
 
   @Given("^the user is on the Candidate profile page of the candidate \"([^\"]*)\"$")
   public void the_user_is_on_the_Candidate_profile_page_of_the_candidate(String candidateName)
       throws Throwable {
-    //go to the welcome page and scrape the candidates from the table
+    //go to the welcome page and scrape the existingCandidates from the table
     waitForPageLoadAfter(event -> getDriver().get(WELCOME_PAGE));
     List<WebElement>
         webElements =
@@ -102,8 +57,10 @@ public class CandidateModificationStepDefs {
     //find the candidate that needs to be edited, then click the ref link
     for (WebElement element : webElements) {
       List<WebElement> columns = element.findElements(By.tagName("td"));
-      String name = columns.get(0).getText();
-      if (name.equals(candidateName)) {
+      String email = columns.get(1).getText();
+      //name is not unique, but phone or email is, which ensures we navigate to the right candidate
+      if (existingCandidates.stream()
+          .anyMatch(c -> c.getEmail().equals(email) && c.getName().equals(candidateName))) {
         waitForPageLoadAfter(
             event -> columns.get(columns.size() - 1).findElement(By.cssSelector("a > i")).click());
         break;

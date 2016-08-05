@@ -37,7 +37,7 @@ public class CandidateCreationStepDefs {
 
   private static final String EMAIL_SUFFIX = "@epam.com";
 
-  private static final long TIMEOUT = 10L;
+  private static final long TIMEOUT = 60L;
 
   private static List<CandidateTableRow> candidateTableRows;
 
