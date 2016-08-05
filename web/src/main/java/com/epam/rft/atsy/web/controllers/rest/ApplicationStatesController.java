@@ -28,16 +28,18 @@ public class ApplicationStatesController {
   @RequestMapping(method = RequestMethod.GET)
   public Collection<StateHistoryViewDTO> loadApplications(
       @PathVariable(value = "applicationId") Long applicationId, Locale locale) {
-    Collection<StateHistoryViewDTO>
-        applicationStates =
+
+    Collection<StateHistoryViewDTO> applicationStates =
         statesHistoryService.getStateHistoriesByApplicationId(applicationId);
 
     for (StateHistoryViewDTO stateHistoryViewDTO : applicationStates) {
       String stateType = stateHistoryViewDTO.getStateDTO().getName();
-      stateType =
-          messageSource.getMessage(APPLICATION_STATE + stateType, new Object[]{stateType}, locale);
+
+      String localizedStateName =
+          messageSource.getMessage(APPLICATION_STATE + stateType, null, locale);
+
       stateHistoryViewDTO
-          .setStateDTO(new StateDTO(stateHistoryViewDTO.getStateDTO().getId(),stateType));
+          .setStateDTO(new StateDTO(stateHistoryViewDTO.getStateDTO().getId(), localizedStateName));
     }
 
     return applicationStates;
