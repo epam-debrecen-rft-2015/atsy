@@ -62,8 +62,6 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
 
     MessageKeyResolver messageKeyResolver = new MessageKeyResolverImpl(source);
 
-    messageKeyResolver.resolveMessage(null, "asd");
-
     return messageKeyResolver;
   }
 
