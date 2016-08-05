@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collection;
 import java.util.Locale;
 import javax.annotation.Resource;
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/secure/channels")
@@ -37,7 +36,7 @@ public class ChannelController {
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  public ResponseEntity<RestResponse> saveOrUpdate(@RequestBody @Valid ChannelDTO channelDTO,
+  public ResponseEntity<RestResponse> saveOrUpdate(@RequestBody ChannelDTO channelDTO,
                                                    BindingResult result, Locale locale) {
     if (!result.hasErrors()) {
       channelService.saveOrUpdate(channelDTO);

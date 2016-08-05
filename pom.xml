@@ -55,8 +55,6 @@
         <org.springframework.security.version>4.0.3.RELEASE</org.springframework.security.version>
 
         <org.projectlombok.version>1.16.8</org.projectlombok.version>
-
-        <com.jayway.jsonpath.version>2.2.0</com.jayway.jsonpath.version>
     </properties>
 
     <modules>
@@ -451,19 +449,6 @@
                 <artifactId>lombok</artifactId>
                 <version>${org.projectlombok.version}</version>
                 <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>com.jayway.jsonpath</groupId>
-                <artifactId>json-path</artifactId>
-                <version>${com.jayway.jsonpath.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.jayway.jsonpath</groupId>
-                <artifactId>json-path-assert</artifactId>
-                <version>${com.jayway.jsonpath.version}</version>
-                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -1,27 +1,137 @@
 package com.epam.rft.atsy.web.controllers;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+/*public class LoginControllerTest {
 
-import org.junit.Test;
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginControllerTest.class);
+    private static final Locale LOCALE = Locale.UK;
+    private static final String REDIRECT_PARAM = "redirect";
 
-public class LoginControllerTest extends AbstractControllerTest {
-  private static final String VIEW_NAME = "login";
+    @InjectMocks
+    LoginController loginController;
 
-  private static final String REQUEST_URL = "/login";
+    @Mock
+    UserService userService;
 
-  @Override
-  protected Object[] controllersUnderTest() {
-    return new Object[]{new LoginController()};
-  }
+    @Mock
+    HttpServletRequest request;
 
-  @Test
-  public void pageLoadShouldRenderLoginView() throws Exception {
-    mockMvc.perform(get(REQUEST_URL))
-        .andExpect(status().isOk())
-        .andExpect(view().name(VIEW_NAME))
-        .andExpect(forwardedUrl(VIEW_PREFIX + VIEW_NAME + VIEW_SUFFIX));
-  }
+    @Mock
+    UserDTO userDTO;
+
+    @Mock
+    BindingResult bindingResult;
+
+    @Mock
+    HttpSession session;
+
+    @BeforeMethod
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void loadPageTest(){
+        given(request.getSession()).willReturn(session);
+        ModelAndView model = loginController.pageLoad(request);
+
+        assertThat(model.getViewName(), is(equalToIgnoringCase("login")));
+    }
+
+    @Test
+    public void handleLoginTest() throws UserNotFoundException {
+
+        given(userDTO.getName()).willReturn("test");
+        given(userDTO.getPassword()).willReturn("pass1");
+        given(userService.login(userDTO)).willReturn(userDTO);
+        given(bindingResult.hasErrors()).willReturn(false);
+        given(request.getSession()).willReturn(session);
+        doNothing().when(session).setAttribute("user", userDTO);
+        //when
+        ModelAndView model = loginController.handleLogin(userDTO, LOCALE, bindingResult, request);
+
+        //then
+        assertThat(model.getViewName(), containsString("redirect:"));
+    }
+
+    @Test
+    public void handleLoginTestWithBackendException() throws UserNotFoundException {
+
+        given(userDTO.getName()).willReturn("test");
+        given(userDTO.getPassword()).willReturn("pass1");
+        given(userService.login(userDTO)).willThrow(BackendException.class);
+        given(bindingResult.hasErrors()).willReturn(false);
+        given(request.getSession()).willReturn(session);
+        doNothing().when(session).setAttribute("user", userDTO);
+        //when
+        ModelAndView model = loginController.handleLogin(userDTO, LOCALE, bindingResult, request);
+
+        //then
+        assertThat(model.getViewName(),is(equalToIgnoringCase("login")));
+    }
+
+    @Test
+    public void handleLoginTestWithUserNotFoundException() throws UserNotFoundException {
+
+        given(userDTO.getName()).willReturn("test");
+        given(userDTO.getPassword()).willReturn("pass1");
+        given(userService.login(userDTO)).willThrow(UserNotFoundException.class);
+        given(bindingResult.hasErrors()).willReturn(false);
+        given(request.getSession()).willReturn(session);
+        doNothing().when(session).setAttribute("user", userDTO);
+        //when
+        ModelAndView model = loginController.handleLogin(userDTO, LOCALE, bindingResult, request);
+
+        //then
+        assertThat(model.getViewName(),is(equalToIgnoringCase("login")));
+    }
+
+    @Test
+    public void handleLoginTestWithEmptyName() throws UserNotFoundException {
+
+        given(userDTO.getName()).willReturn("");
+        given(userDTO.getPassword()).willReturn("pass1");
+        given(userService.login(userDTO)).willReturn(userDTO);
+        given(bindingResult.hasErrors()).willReturn(true);
+        given(request.getSession()).willReturn(session);
+        doNothing().when(session).setAttribute("user", userDTO);
+        //when
+        ModelAndView model = loginController.handleLogin(userDTO, LOCALE, bindingResult, request);
+
+        //then
+        assertThat(model.getViewName(),is(equalToIgnoringCase("login")));
+    }
+
+    @Test
+    public void handleLoginTestWithEmptyPassword() throws UserNotFoundException {
+
+        given(userDTO.getName()).willReturn("test");
+        given(userDTO.getPassword()).willReturn("");
+        given(userService.login(userDTO)).willReturn(userDTO);
+        given(bindingResult.hasErrors()).willReturn(true);
+        given(request.getSession()).willReturn(session);
+        doNothing().when(session).setAttribute("user", userDTO);
+        //when
+        ModelAndView model = loginController.handleLogin(userDTO, LOCALE, bindingResult, request);
+
+        //then
+        assertThat(model.getViewName(),is(equalToIgnoringCase("login")));
+    }
+
+    @Test
+    public void resolveRedirectStringUtilsIsNotBlank() throws UserNotFoundException{
+        given(userDTO.getName()).willReturn("test");
+        given(userDTO.getPassword()).willReturn("pass1");
+        given(userService.login(userDTO)).willReturn(userDTO);
+        given(bindingResult.hasErrors()).willReturn(false);
+        given(request.getSession()).willReturn(session);
+        given(request.getParameter(REDIRECT_PARAM)).willReturn("anything");
+        doNothing().when(session).setAttribute("user", userDTO);
+        //when
+        ModelAndView model = loginController.handleLogin(userDTO, LOCALE, bindingResult, request);
+
+        //then
+        assertThat(model.getViewName(), containsString("redirect:"));
+
+    }
 }
+*/

@@ -1,27 +1,28 @@
 package com.epam.rft.atsy.web.controllers;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
+import org.springframework.web.servlet.ModelAndView;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-public class WelcomeControllerTest extends AbstractControllerTest {
-  private static final String VIEW_NAME = "candidates";
+public class WelcomeControllerTest {
+  @InjectMocks
+  private WelcomeController underTest;
 
-  private static final String REQUEST_URL = "/secure/welcome";
-
-  @Override
-  protected Object[] controllersUnderTest() {
-    return new Object[] { new WelcomeController() };
+  @BeforeMethod
+  public void setUp() {
+    MockitoAnnotations.initMocks(this);
   }
 
   @Test
-  public void loadPageShouldRenderCandidatesView() throws Exception {
-    mockMvc.perform(get(REQUEST_URL))
-        .andExpect(status().isOk())
-        .andExpect(view().name(VIEW_NAME))
-        .andExpect(forwardedUrl(VIEW_PREFIX + VIEW_NAME + VIEW_SUFFIX));
+  public void shouldReturnViewModel() {
+    //when
+    ModelAndView model = underTest.loadPage();
+    //then
+    assertThat(model.getViewName(), is("candidates"));
   }
 }
