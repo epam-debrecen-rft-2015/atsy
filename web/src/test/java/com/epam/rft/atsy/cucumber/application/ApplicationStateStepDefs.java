@@ -5,11 +5,12 @@ import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForAjax;
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForPageLoadAfter;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 import static org.openqa.selenium.support.ui.ExpectedConditions.textToBe;
 
+import com.epam.rft.atsy.cucumber.util.DriverProvider;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -89,6 +90,9 @@ public class ApplicationStateStepDefs {
 
   @When("^the user clicks on \"([^\"]*)\" button$")
   public void the_user_clicks_on_button(String buttonName) throws Throwable {
+    DriverProvider.wait(getDriver())
+        .until(presenceOfElementLocated(By.cssSelector(BUTTON_SELECTOR)));
+
     waitForPageLoadAfter(driver -> driver.findElements(By.cssSelector(
         BUTTON_SELECTOR)).stream().filter(t -> t.getText().equals(buttonName)).findFirst()
         .ifPresent(x -> x.click()));
@@ -100,7 +104,7 @@ public class ApplicationStateStepDefs {
 
   @Then("^the latest state became \"([^\"]*)\"$")
   public void the_latest_state_became(String expectedLatestStateName) throws Throwable {
-    new WebDriverWait(getDriver(), 15)
+    DriverProvider.wait(getDriver())
         .until(textToBe(By.cssSelector(LATEST_STATE_NAME_SELECTOR), expectedLatestStateName));
     String
         latestStateName =
