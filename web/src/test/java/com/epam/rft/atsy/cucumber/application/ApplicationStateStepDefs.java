@@ -1,17 +1,21 @@
 package com.epam.rft.atsy.cucumber.application;
 
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
-import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForAjax;
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForPageLoadAfter;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 import static org.openqa.selenium.support.ui.ExpectedConditions.textToBe;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfAllElementsLocatedBy;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 import com.epam.rft.atsy.cucumber.util.DriverProvider;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -28,10 +32,6 @@ public class ApplicationStateStepDefs {
       "#body > div.button-panel > form.form-inline  div.btn-group > a.btn-warning";
 
   private static final String
-      CANDIDATES_SELECTOR =
-      "#candidates tbody tr[data-index=\"2\"] .edit > i";
-
-  private static final String
       APPLICATIONS_SELECTOR =
       "#applications_table tbody tr[data-index=\"0\"] .edit > i";
 
@@ -43,8 +43,7 @@ public class ApplicationStateStepDefs {
 
   @Given("^a candidate with an application$")
   public void a_candidate_with_an_application() throws Throwable {
-    waitForAjax();
-    waitForPageLoadAfter(driver -> driver.findElement(By.cssSelector(CANDIDATES_SELECTOR)).click());
+    waitForPageLoadAfter(driver -> driver.get("http://localhost:8080/atsy/secure/candidate/3"));
   }
 
   @And("^the user is on the application page of the candidate$")
@@ -59,47 +58,39 @@ public class ApplicationStateStepDefs {
       getDriver().findElement(By.cssSelector("#body > div.button-panel"));
     } catch (NoSuchElementException e) {
       waitForPageLoadAfter(driver -> driver.get(getDriver().getCurrentUrl() + "&state=newstate"));
-      waitForPageLoadAfter(
-          driver -> driver.findElement(By.cssSelector(SAVE_BUTTON_SELECTOR))
-              .click());
+      waitUntilElementVisibleThenClick(By.cssSelector(SAVE_BUTTON_SELECTOR), getDriver());
     }
 
-    if (!getDriver()
-        .findElement(By.cssSelector(LATEST_STATE_NAME_SELECTOR))
-        .getText().equals(latestStateName)) {
+    if (!getDriver().findElement(By.cssSelector(LATEST_STATE_NAME_SELECTOR)).getText()
+        .equals(latestStateName)) {
 
-      if (!getDriver().findElements(By.cssSelector(BUTTON_SELECTOR)).stream()
-          .anyMatch(b -> b.getText().equals(latestStateName))) {
-        waitForPageLoadAfter(
-            driver -> driver.findElement(By.cssSelector(PAUSE_BUTTON_SELECTOR)).click());
-
-        waitForPageLoadAfter(
-            driver -> driver.findElement(By.cssSelector(SAVE_BUTTON_SELECTOR))
-                .click());
+      List<WebElement>
+          buttons =
+          DriverProvider.wait(getDriver())
+              .until(visibilityOfAllElementsLocatedBy(By.cssSelector(BUTTON_SELECTOR)));
+      if (!buttons.stream().anyMatch(b -> b.getText().equals(latestStateName))) {
+        waitUntilElementVisibleThenClick(By.cssSelector(PAUSE_BUTTON_SELECTOR), getDriver());
+        waitUntilElementVisibleThenClick(By.cssSelector(SAVE_BUTTON_SELECTOR), getDriver());
       }
 
       waitForPageLoadAfter(driver -> driver.findElements(By.cssSelector(
           BUTTON_SELECTOR)).stream().filter(t -> t.getText().equals(latestStateName)).findFirst()
           .ifPresent(x -> x.click()));
 
-      waitForPageLoadAfter(
-          driver -> driver.findElement(By.cssSelector(SAVE_BUTTON_SELECTOR))
-              .click());
+      waitUntilElementVisibleThenClick(By.cssSelector(SAVE_BUTTON_SELECTOR), getDriver());
     }
   }
 
   @When("^the user clicks on \"([^\"]*)\" button$")
   public void the_user_clicks_on_button(String buttonName) throws Throwable {
-    DriverProvider.wait(getDriver())
-        .until(presenceOfElementLocated(By.cssSelector(BUTTON_SELECTOR)));
-
-    waitForPageLoadAfter(driver -> driver.findElements(By.cssSelector(
-        BUTTON_SELECTOR)).stream().filter(t -> t.getText().equals(buttonName)).findFirst()
-        .ifPresent(x -> x.click()));
+    List<WebElement> elements = DriverProvider.wait(getDriver())
+        .until(visibilityOfAllElementsLocatedBy(By.cssSelector(BUTTON_SELECTOR)));
 
     waitForPageLoadAfter(
-        driver -> driver.findElement(By.cssSelector(SAVE_BUTTON_SELECTOR))
-            .click());
+        driver -> elements.stream().filter(t -> t.getText().equals(buttonName)).findFirst()
+            .ifPresent(x -> x.click()));
+
+    waitUntilElementVisibleThenClick(By.cssSelector(SAVE_BUTTON_SELECTOR), getDriver());
   }
 
   @Then("^the latest state became \"([^\"]*)\"$")
@@ -112,6 +103,12 @@ public class ApplicationStateStepDefs {
             .findElement(By.cssSelector(LATEST_STATE_NAME_SELECTOR))
             .getText();
     assertThat(latestStateName, is(expectedLatestStateName));
+  }
+
+  private void waitUntilElementVisibleThenClick(By by, WebDriver driver) {
+    WebDriverWait webDriverWait = DriverProvider.wait(driver);
+    WebElement element = webDriverWait.until(visibilityOfElementLocated(by));
+    waitForPageLoadAfter(e -> element.click());
   }
 
 }
