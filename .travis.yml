@@ -14,7 +14,7 @@ before_script:
   - "export DISPLAY=:99.0"
   - mysql -e 'create database atsy;'
 
-script: travis_wait 20 mvn clean verify -Pintegration
+script: travis_wait 30 mvn clean verify -Pintegration
 
 notifications:
   email:
