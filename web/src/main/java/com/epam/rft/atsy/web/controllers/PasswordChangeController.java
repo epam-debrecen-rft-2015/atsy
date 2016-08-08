@@ -5,7 +5,7 @@ import com.epam.rft.atsy.service.UserService;
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.domain.PasswordHistoryDTO;
 import com.epam.rft.atsy.service.domain.UserDTO;
-import com.epam.rft.atsy.service.exception.PasswordValidationException;
+import com.epam.rft.atsy.service.exception.passwordchange.PasswordValidationException;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
 import com.epam.rft.atsy.service.security.UserDetailsAdapter;
 import com.epam.rft.atsy.web.CurrentUser;
@@ -83,7 +83,7 @@ public class PasswordChangeController {
       } catch (PasswordValidationException e) {
         logger.error(e.getMessage(), e);
 
-        model.addObject(VALIDATION_ERROR_KEY, e.getMessageKey());
+       // model.addObject(VALIDATION_ERROR_KEY, e.getMessageKey());
       }
     }
     return model;

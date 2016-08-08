@@ -1,9 +1,8 @@
 package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
+import com.epam.rft.atsy.service.exception.passwordchange.PasswordLengthValidationException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,45 +22,37 @@ public class PasswordLengthValidationRuleTest {
     rule = new PasswordLengthValidationRule();
   }
 
-  @Test
-  public void isValidShouldNotBeValidUnderMinPasswordLength() {
+  @Test(expected = PasswordLengthValidationException.class)
+  public void isValidShouldNotBeValidUnderMinPasswordLength() throws PasswordLengthValidationException {
     //Given
     PasswordChangeDTO passwordChangeDtoUnderMinLength = PasswordChangeDTO.builder()
         .newPassword(PASSWORD_WITH_LENGTH_UNDER_MIN)
         .build();
 
     //When
-    boolean result = rule.isValid(passwordChangeDtoUnderMinLength);
-
-    //Then
-    assertFalse(result);
+    rule.validate(passwordChangeDtoUnderMinLength);
   }
 
   @Test
-  public void isValidShouldBeValidWithExactMinPasswordLength() {
+  public void isValidShouldBeValidWithExactMinPasswordLength() throws PasswordLengthValidationException {
     //Given
     PasswordChangeDTO passwordChangeDtoExactMinLength = PasswordChangeDTO.builder()
         .newPassword(PASSWORD_WITH_LENGTH_EQUAL_TO_MIN)
         .build();
-    //When
-    boolean result = rule.isValid(passwordChangeDtoExactMinLength);
 
-    //Then
-    assertTrue(result);
+    //When
+    rule.validate(passwordChangeDtoExactMinLength);
   }
 
   @Test
-  public void isValidShouldBeValidOverMinPasswordLength() {
+  public void isValidShouldBeValidOverMinPasswordLength() throws PasswordLengthValidationException {
     //Given
     PasswordChangeDTO passwordChangeDtoOverMinLength = PasswordChangeDTO.builder()
         .newPassword(PASSWORD_WITH_LENGTH_OVER_MIN)
         .build();
 
     //When
-    boolean result = rule.isValid(passwordChangeDtoOverMinLength);
-
-    //Then
-    assertTrue(result);
+    rule.validate(passwordChangeDtoOverMinLength);
   }
 
 }

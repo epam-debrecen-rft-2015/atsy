@@ -1,8 +1,8 @@
 package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
-import static org.junit.Assert.assertTrue;
-
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
+import com.epam.rft.atsy.service.exception.passwordchange.PasswordAllFieldFilledValidationException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +21,8 @@ public class PasswordAllFieldFilledRuleForValidInputsTest {
   }
 
   @Test
-  public void isValidShouldReturnTrueWhenAllFieldsFilled() {
+  public void validateShouldNotThrowPasswordAllFieldFilledValidationExceptionWhenAllFieldsFilled()
+      throws PasswordAllFieldFilledValidationException {
     //Given
     PasswordChangeDTO passwordChangeDTO = PasswordChangeDTO.builder()
         .newPassword(NOT_BLANK_PASSWORD)
@@ -30,9 +31,6 @@ public class PasswordAllFieldFilledRuleForValidInputsTest {
         .build();
 
     //When
-    boolean valid = rule.isValid(passwordChangeDTO);
-
-    //Then
-    assertTrue(valid);
+    rule.validate(passwordChangeDTO);
   }
 }
