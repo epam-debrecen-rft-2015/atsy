@@ -9,12 +9,19 @@ import java.util.List;
 
 public class ModelMapperConverterServiceImpl implements ConverterService {
 
-  private ModelMapper modelMapper = new ModelMapper();
+  private ModelMapper modelMapper;
 
-  public ModelMapperConverterServiceImpl(List<Converter>... converters) {
+  public ModelMapperConverterServiceImpl(ModelMapper modelMapper, List<Converter>... converters) {
+    this.modelMapper = modelMapper;
 
+    System.out.println("-------------------------" + modelMapper + "--------------");
     for (List<Converter> cList : converters) {
       for (Converter c : cList) {
+//        System.out
+//            .println("+++++++++++++++++++++ ModelMapper:" + modelMapper + "++++++++++++++++++++");
+//        System.out.println("+++++++++++++++++++++ Converter:" + c + "++++++++++++++++++++");
+//        Class[] typeArguments = TypeResolver.resolveArguments(c.getClass(), Converter.class);
+//        System.out.println(typeArguments);
         modelMapper.addConverter(c);
       }
     }
