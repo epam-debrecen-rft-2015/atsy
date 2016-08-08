@@ -23,7 +23,7 @@ import com.epam.rft.atsy.service.domain.UserDTO;
 import com.epam.rft.atsy.service.exception.PasswordValidationException;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
 import com.epam.rft.atsy.service.security.UserDetailsAdapter;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -33,9 +33,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -84,22 +82,8 @@ public class PasswordChangeControllerTest extends AbstractControllerTest {
     return new Object[]{passwordChangeController};
   }
 
-  @Override
-  public void setUp() {
-    objectMapper = new ObjectMapper();
-
-    mockMvc =
-        MockMvcBuilders.standaloneSetup(controllersUnderTest())
-            .setViewResolvers(viewResolver())
-            .setControllerAdvice(controllerAdvice())
-            .setHandlerExceptionResolvers(uncheckedExceptionResolver())
-            .setValidator(localValidatorFactoryBean())
-            .setCustomArgumentResolvers(new AuthenticationPrincipalArgumentResolver())
-            .alwaysExpect(status().isOk())
-            .alwaysExpect(view().name(VIEW_NAME))
-            .alwaysExpect(forwardedUrl(VIEW_PREFIX + VIEW_NAME + VIEW_SUFFIX))
-            .build();
-
+  @Before
+  public void setUpTestData() {
     passwordChangeDto =
         PasswordChangeDTO.builder().oldPassword(USER_PASSWORD).newPassword(USER_PASSWORD)
             .newPasswordConfirm(USER_PASSWORD).build();
@@ -113,8 +97,10 @@ public class PasswordChangeControllerTest extends AbstractControllerTest {
 
   @Test
   public void loadPageShouldRenderPasswordChangeView() throws Exception {
-    // please see the alwaysExpect expectation on the mockMvc object
     mockMvc.perform(get(REQUEST_URL))
+        .andExpect(status().isOk())
+        .andExpect(view().name(VIEW_NAME))
+        .andExpect(forwardedUrl(VIEW_PREFIX + VIEW_NAME + VIEW_SUFFIX))
         .andExpect(model().size(0));
   }
 
@@ -125,6 +111,9 @@ public class PasswordChangeControllerTest extends AbstractControllerTest {
         .willThrow(new PasswordValidationException(PASSWORD_VALIDATION_ERROR_MESSAGE_KEY));
 
     mockMvc.perform(buildPostRequest())
+        .andExpect(status().isOk())
+        .andExpect(view().name(VIEW_NAME))
+        .andExpect(forwardedUrl(VIEW_PREFIX + VIEW_NAME + VIEW_SUFFIX))
         .andExpect(model().attributeExists(VALIDATION_ERROR_KEY))
         .andExpect(model().attribute(VALIDATION_ERROR_KEY, PASSWORD_VALIDATION_ERROR_MESSAGE_KEY));
 
@@ -150,6 +139,9 @@ public class PasswordChangeControllerTest extends AbstractControllerTest {
 
     // When
     mockMvc.perform(buildPostRequest())
+        .andExpect(status().isOk())
+        .andExpect(view().name(VIEW_NAME))
+        .andExpect(forwardedUrl(VIEW_PREFIX + VIEW_NAME + VIEW_SUFFIX))
         .andExpect(model().attributeExists(VALIDATION_SUCCESS_KEY))
         .andExpect(model().attribute(VALIDATION_SUCCESS_KEY, PASSWORDCHANGE_VALIDATION_SUCCESS));
 
