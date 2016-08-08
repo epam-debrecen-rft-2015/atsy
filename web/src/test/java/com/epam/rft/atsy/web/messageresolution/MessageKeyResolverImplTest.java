@@ -27,7 +27,7 @@ public class MessageKeyResolverImplTest {
 
   private static final String NAME = "Snowball";
 
-  private static final String INTERPOLATED_BIRTHDAY_MESSAGE = "Happy Birthday, Snowball!";
+  private static final String INTERPOLATED_EXAMPLE_MESSAGE = "Happy Birthday, Snowball!";
 
   @Spy
   private StaticMessageSource messageSource = new StaticMessageSource();
@@ -80,7 +80,7 @@ public class MessageKeyResolverImplTest {
     String message = messageKeyResolver.resolveMessage(EXAMPLE_WITH_NAME_MESSAGE_KEY, NAME);
 
     // Then
-    assertThat(message, equalTo(INTERPOLATED_BIRTHDAY_MESSAGE));
+    assertThat(message, equalTo(INTERPOLATED_EXAMPLE_MESSAGE));
   }
 
   @Test
