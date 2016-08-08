@@ -13,10 +13,13 @@ import java.util.Collection;
 @RunWith(Parameterized.class)
 public class PasswordContainsWithUnCorrectParametersRuleTest {
   private final String newPassword;
+  private final boolean expectedIsValid;
   private final PasswordContainsRule passwordContainsRule;
 
-  public PasswordContainsWithUnCorrectParametersRuleTest(String newPassword) {
+  public PasswordContainsWithUnCorrectParametersRuleTest(String newPassword, boolean expectedIsValid) {
     this.newPassword = newPassword;
+
+    this.expectedIsValid = expectedIsValid;
 
     this.passwordContainsRule = new PasswordContainsRule();
   }
@@ -41,7 +44,7 @@ public class PasswordContainsWithUnCorrectParametersRuleTest {
   }
 
   @Test(expected = PasswordContainsValidationException.class)
-  public void validateWithUnCorrectParametersShouldNotThrowPasswordContainsValidationException()
+  public void validateWithUnCorrectParametersShouldThrowPasswordContainsValidationException()
       throws PasswordContainsValidationException {
     // Given
     PasswordChangeDTO passwordChangeDTO = passwordChangeDTOFromPassword(newPassword);
