@@ -23,10 +23,10 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 
 public class CandidateApplicationStepDefs {
+
   private static WebDriver webDriver = DriverProvider.getDriver();
-  private static final SimpleDateFormat
-      SIMPLE_DATE_FORMAT =
-      new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss");
+  private static final String CANDIDATE_PAGE_URL = "http://localhost:8080/atsy/secure/candidate/3";
+  private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss");
 
   private static final String APPLICATIONS_TABLE_ID = "applications_table";
   private static final String POSITION_NAME = "Fejlesztő";
@@ -42,27 +42,25 @@ public class CandidateApplicationStepDefs {
 
 
   @Given("^the user on an existing candidates page$")
-  public void the_user_on_an_existing_candidates_page() throws Throwable {
-    webDriver.get("http://localhost:8080/atsy/secure/candidate/3");
+  public void the_user_on_an_existing_candidates_page() {
+    webDriver.get(CANDIDATE_PAGE_URL);
   }
 
   @And("^there are more than one applications exist for the candidate$")
-  public void there_are_more_than_one_applications_exist_for_the_candidate() throws Throwable {
+  public void there_are_more_than_one_applications_exist_for_the_candidate() {
     Integer rowNumber = getNumberOfRowsInTableByTableId(APPLICATIONS_TABLE_ID);
     assertThat(rowNumber, greaterThan(1));
   }
 
-  @Then("^the Application list displays all the applications ordered by last modification date and time descending$")
-  public void the_application_list_displays_all_the_applications_ordered_by_last_modification_date_and_time_descending()
-      throws Throwable {
+  @Then("^the Application list displays and order by last modification date and time desc$")
+  public void the_application_list_displays_and_order_by_last_modification_date_and_time_desc() throws ParseException {
 
     isSortedCandidateApplicationDTOListByModificationDate(
         getCandidateApplicationDTOListFromTableByTableId(APPLICATIONS_TABLE_ID));
   }
 
-  @And("^each application has the values of creation date and time, last modification date and time, position, state$")
-  public void each_application_has_the_values_of_creation_date_and_time_last_modification_date_and_time_position_state()
-      throws Throwable {
+  @And("^each application has valid values$")
+  public void each_application_has_valid_values() throws ParseException {
 
     assertThat(getCandidateApplicationDTOListFromTableByTableId(APPLICATIONS_TABLE_ID),
         equalTo(getExpectedCandidateApplicationDTOList()));
