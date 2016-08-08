@@ -7,19 +7,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDetailsAdapter implements UserDetails {
 
   private Long userId;
-
   private String password;
-
   private String username;
-
-  public UserDetailsAdapter(Long userId, String password, String username) {
-    this.userId = userId;
-    this.password = password;
-    this.username = username;
-  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
