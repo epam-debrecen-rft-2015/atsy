@@ -2,7 +2,7 @@ package com.epam.rft.atsy.web.messageresolution;
 
 import java.util.Locale;
 
-public class MessageResolutionFailedException extends RuntimeException {
+public class MessageResolutionFailedException extends Exception {
   private final String messageKey;
 
   private final Locale locale;

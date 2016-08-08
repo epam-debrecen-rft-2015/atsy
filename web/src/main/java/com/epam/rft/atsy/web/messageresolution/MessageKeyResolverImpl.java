@@ -27,7 +27,8 @@ public class MessageKeyResolverImpl implements MessageKeyResolver, MessageSource
   }
 
   @Override
-  public String resolveMessage(String messageKey, Object... substitutions) {
+  public String resolveMessage(String messageKey, Object... substitutions)
+      throws MessageResolutionFailedException {
     Locale currentLocale = LocaleContextHolder.getLocale();
 
     try {
@@ -40,13 +41,14 @@ public class MessageKeyResolverImpl implements MessageKeyResolver, MessageSource
   }
 
   @Override
-  public String getMessage(String s, Object[] objects, String s1, Locale locale) {
-    return messageSource.getMessage(s, objects, s1, locale);
+  public String getMessage(String messageKey, Object[] substitutions, String defaultMessage,
+                           Locale locale) {
+    return messageSource.getMessage(messageKey, substitutions, defaultMessage, locale);
   }
 
   @Override
-  public String getMessage(String s, Object[] objects, Locale locale) {
-    return messageSource.getMessage(s, objects, locale);
+  public String getMessage(String messageKey, Object[] substitutions, Locale locale) {
+    return messageSource.getMessage(messageKey, substitutions, locale);
   }
 
   @Override

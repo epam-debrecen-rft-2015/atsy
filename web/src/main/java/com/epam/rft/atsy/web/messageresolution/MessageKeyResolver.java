@@ -8,9 +8,6 @@ public interface MessageKeyResolver {
   /**
    * Resolves the specified message key and interpolates the passed substitution objects into the
    * message.
-   *
-   * Note that although {@code MessageResolutionFailedException} is an unchecked exception, it is
-   * crucial to be aware of the fact that it will be thrown in case of a resolution failure.
    * @param messageKey the message key to resolve
    * @param substitutions the substitution objects to interpolate
    * @return the resolved message
