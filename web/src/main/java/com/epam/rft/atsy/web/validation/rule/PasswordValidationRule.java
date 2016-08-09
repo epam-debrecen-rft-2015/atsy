@@ -1,4 +1,4 @@
-package com.epam.rft.atsy.web.validation.messagekey;
+package com.epam.rft.atsy.web.validation.rule;
 
 
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordAllFieldFilledValidationException;
@@ -8,7 +8,7 @@ import com.epam.rft.atsy.service.exception.passwordchange.PasswordNewMatchValida
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordOldMatchValidationException;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordUniqueValidationException;
 
-public enum PasswordValidationMessageKey {
+public enum PasswordValidationRule {
 
   ALL_FIELD_FILLED_RULE("allfieldfilled", PasswordAllFieldFilledValidationException.class),
   CONTAINS_RULE("contains", PasswordContainsValidationException.class),
@@ -18,12 +18,12 @@ public enum PasswordValidationMessageKey {
   UNIQUE_RULE("unique", PasswordUniqueValidationException.class);
 
 
-  private static final String PASSWORD_CHANGE_VALIDATION = "passwordchange.validation.";
+  private static final String PASSWORD_CHANGE_VALIDATION_PREFIX = "passwordchange.validation.";
   private final String messageKey;
   private final Class exceptionClass;
 
-  PasswordValidationMessageKey(String messageKey, Class exceptionClass) {
-    this.messageKey = PASSWORD_CHANGE_VALIDATION + messageKey;
+  PasswordValidationRule(String messageKey, Class exceptionClass) {
+    this.messageKey = PASSWORD_CHANGE_VALIDATION_PREFIX + messageKey;
     this.exceptionClass = exceptionClass;
   }
 
