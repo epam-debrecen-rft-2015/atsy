@@ -21,12 +21,16 @@ Feature: candidate creation test
       | name  | A jelentkező nevét kötelező megadni!       |
       | email | A jelentkező email címét kötelező megadni! |
 
-  Scenario: user can't create new candidate because of duplication based on same email address
+  Scenario Outline: user can't create new candidate because of duplication based on same email address or phone number
 
-    Given other candidates data collected
+    Given there are existing candidates:
+      | name        | email                | phone        | positions |
+      | Candidate A | candidate.a@atsy.com | +36105555555 | -         |
+      | Candidate B | candidate.b@atsy.com | +36106666666 | -         |
+      | Candidate C | candidate.c@atsy.com | +36107777777 | -         |
     Given the user is on the Candidate creation page
     And the candidate details are empty
-    And another candidate's e-mail address is "candidate.c@atsy.com"
+    And another candidate's "<field>" address is "<message>"
     And the user enters name "other"
     And the user enters e-mail address "candidate.c@atsy.com"
     And the user enters phone number "+36301234568"
@@ -35,69 +39,33 @@ Feature: candidate creation test
     When the user clicks on the "Mentés" button
     Then a "Már létezik ilyen e-mail címmel vagy telefonszámmal jelentkező!" message is shown on the top of the page
 
-  Scenario: user can't create new candidate because of duplication based on same phone number
+    Examples:
+      | field | message              |
+      | email | candidate.c@atsy.com |
+      | phone | +36105555555         |
 
-    Given other candidates data collected
-    Given the user is on the Candidate creation page
-    And the candidate details are empty
-    And another candidate's phone number is "+36105555555"
-    And the user enters name "other"
-    And the user enters e-mail address "other@atsy.com"
-    And the user enters phone number "+36105555555"
-    And the user enters the place where the candidate has heard about the company "place"
-    And the user enters the language level "4"
-    When the user clicks on the "Mentés" button
-    Then a "Már létezik ilyen e-mail címmel vagy telefonszámmal jelentkező!" message is shown on the top of the page
-
-  Scenario: user can't create new candidate because of name is longer than 100 characters
+  Scenario Outline: user can't create new candidate because of input length violation
 
     Given the user is on the Candidate creation page
     And the candidate details are empty
-    And the user enters name longer than 100 characters
-    And the user enters e-mail address "email@atsy.com"
-    And the user enters phone number "+36301234567"
-    And the user enters the place where the candidate has heard about the company "place"
+    #these steps required because these fields are needed to be filled
+    And the user enters name "<name>"
+    And the user enters e-mail address "<email>"
+    And the user enters phone number "<phone>"
+    #this is where we violate the input length
+    And the user enters "<field>" longer than "<length>" characters
     And the user enters the language level "4"
     When the user clicks on the "Mentés" button
-    Then a "A megadott név túl hosszú!" message appears
+    Then a "<message>" message appears
+    Examples:
+      | field   | length | message                            | email          | name | phone        |
+      | name    | 100    | A megadott név túl hosszú!         | email@atsy.com |      | +36301234568 |
+      | email   | 255    | A megadott email cím túl hosszú!   |                | foo  | +36301234568 |
+      | phone   | 20     | A megadott telefonszám túl hosszú! | email@atsy.com | foo  |              |
+      | referer | 20     | A megadott hely túl hosszú!        | email@atsy.com | foo  | +36301234568 |
 
-  Scenario: user can't create new candidate because of email address is longer than 255 characters
-
-    Given the user is on the Candidate creation page
-    And the candidate details are empty
-    And the user enters name "name"
-    And the user enters e-mail address longer than 255 characters
-    And the user enters phone number "+36301234567"
-    And the user enters the place where the candidate has heard about the company "place"
-    And the user enters the language level "4"
-    When the user clicks on the "Mentés" button
-    Then a "A megadott email cím túl hosszú!" message appears
-
-  Scenario: user can't create new candidate because of phone number is longer than 20 characters
-
-    Given the user is on the Candidate creation page
-    And the candidate details are empty
-    And the user enters name "name"
-    And the user enters e-mail address "email@atsy.com"
-    And the user enters phone number longer than 20 characters
-    And the user enters the place where the candidate has heard about the company "place"
-    And the user enters the language level "4"
-    When the user clicks on the "Mentés" button
-    Then a "A megadott telefonszám túl hosszú!" message appears
-
-  Scenario: user can't create new candidate because of place is longer than 20 characters
-
-    Given the user is on the Candidate creation page
-    And the candidate details are empty
-    And the user enters name "name"
-    And the user enters e-mail address "email@atsy.com"
-    And the user enters phone number "+36301234567"
-    And the user enters the place where the candidate has heard about the company longer than 20 characters
-    And the user enters the language level "4"
-    When the user clicks on the "Mentés" button
-    Then a "A megadott hely túl hosszú!" message appears
-
-  Scenario Outline: user can't create new candidate because of email or phone number is malformed
+  Scenario Outline: user can't create new candidate because of email address
+  or phone number is malformed
 
     Given the user is on the Candidate creation page
     And the candidate details are empty
@@ -110,6 +78,6 @@ Feature: candidate creation test
     Then a "<message>" message is shown under the "<field>" field
 
     Examples:
-      | email          | phone         | message                                                                                    | field |
-      | email/atsy.com | +36301234567  | A jelentkező email címének megfelelő formában kell lennie, például kovacs.jozsef@email.hu! | email |
-      | email@atsy.com | +36a301234567 | A jelentkező telefonszáma egy plusz jellel kezdődhet és utánna számjegyekből állhat!       | phone |
+      | field | email          | phone         | message                                                                                    |
+      | email | email/atsy.com | +36301234567  | A jelentkező email címének megfelelő formában kell lennie, például kovacs.jozsef@email.hu! |
+      | phone | email@atsy.com | +36a301234567 | A jelentkező telefonszáma egy plusz jellel kezdődhet és utánna számjegyekből állhat!       |
