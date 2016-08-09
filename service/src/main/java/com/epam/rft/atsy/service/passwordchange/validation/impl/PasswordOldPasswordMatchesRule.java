@@ -10,6 +10,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.Assert;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class PasswordOldPasswordMatchesRule implements PasswordValidator {
   private AuthenticationService authenticationService;
   private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -25,11 +28,11 @@ public class PasswordOldPasswordMatchesRule implements PasswordValidator {
     Assert.notNull(passwordChangeDTO.getOldPassword());
 
     // Keep the original behaviour in catch block
-    UserDetails userDetails = null;
+    UserDetails userDetails;
     try {
       userDetails = authenticationService.getCurrentUserDetails();
     } catch (UserNotLoggedInException e) {
-      e.printStackTrace();
+      log.error("User is not logged in: ", e);
       throw new PasswordOldMatchValidationException();
     }
 

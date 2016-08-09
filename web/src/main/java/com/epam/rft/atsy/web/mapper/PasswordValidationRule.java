@@ -1,4 +1,4 @@
-package com.epam.rft.atsy.web.validation.rule;
+package com.epam.rft.atsy.web.mapper;
 
 
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordAllFieldFilledValidationException;
@@ -8,7 +8,7 @@ import com.epam.rft.atsy.service.exception.passwordchange.PasswordNewMatchValida
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordOldMatchValidationException;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordUniqueValidationException;
 
-public enum PasswordValidationRule {
+enum PasswordValidationRule {
 
   ALL_FIELD_FILLED_RULE("allfieldfilled", PasswordAllFieldFilledValidationException.class),
   CONTAINS_RULE("contains", PasswordContainsValidationException.class),

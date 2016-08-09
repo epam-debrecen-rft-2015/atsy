@@ -1,9 +1,7 @@
-package com.epam.rft.atsy.mapper;
+package com.epam.rft.atsy.web.mapper;
 
 
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordLengthValidationException;
-import com.epam.rft.atsy.web.mapper.PasswordValidationRuleMapper;
-import com.epam.rft.atsy.web.validation.rule.PasswordValidationRule;
 
 import org.junit.Before;
 import org.junit.Test;

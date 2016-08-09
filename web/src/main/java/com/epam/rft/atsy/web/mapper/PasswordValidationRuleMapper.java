@@ -1,8 +1,6 @@
 package com.epam.rft.atsy.web.mapper;
 
 
-import com.epam.rft.atsy.web.validation.rule.PasswordValidationRule;
-
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
