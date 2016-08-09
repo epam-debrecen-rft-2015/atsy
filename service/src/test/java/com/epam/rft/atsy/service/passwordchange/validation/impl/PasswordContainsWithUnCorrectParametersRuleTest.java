@@ -13,33 +13,29 @@ import java.util.Collection;
 @RunWith(Parameterized.class)
 public class PasswordContainsWithUnCorrectParametersRuleTest {
   private final String newPassword;
-  private final boolean expectedIsValid;
   private final PasswordContainsRule passwordContainsRule;
 
-  public PasswordContainsWithUnCorrectParametersRuleTest(String newPassword, boolean expectedIsValid) {
+  public PasswordContainsWithUnCorrectParametersRuleTest(String newPassword) {
     this.newPassword = newPassword;
-
-    this.expectedIsValid = expectedIsValid;
-
     this.passwordContainsRule = new PasswordContainsRule();
   }
 
-  @Parameterized.Parameters(name = "{index}: isValid(\"{0}\") should be {1}.")
+  @Parameterized.Parameters(name = "{index}: isValid(\"{0}\").")
   public static Collection<Object[]> data() {
     return Arrays.asList(new Object[][]{
-        {"", false},
-        {"abc", false},
-        {"aBc", false},
-        {"ABC", false},
-        {"!%@", false},
-        {"123", false},
-        {"a!b%", false},
-        {"A!b%", false},
-        {"A!B%", false},
-        {"a1b2", false},
-        {"A1b2C3", false},
-        {"A1B2C3", false},
-        {"1%2@", false},
+        {""},
+        {"abc"},
+        {"aBc"},
+        {"ABC"},
+        {"!%@"},
+        {"123"},
+        {"a!b%"},
+        {"A!b%"},
+        {"A!B%"},
+        {"a1b2"},
+        {"A1b2C3"},
+        {"A1B2C3"},
+        {"1%2@"},
     });
   }
 

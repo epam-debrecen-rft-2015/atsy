@@ -13,24 +13,20 @@ import java.util.Collection;
 @RunWith(Parameterized.class)
 public class PasswordContainsWithCorrectParametersRuleTest {
   private final String newPassword;
-  private final boolean expectedIsValid;
   private final PasswordContainsRule passwordContainsRule;
 
-  public PasswordContainsWithCorrectParametersRuleTest(String newPassword, boolean expectedIsValid) {
+  public PasswordContainsWithCorrectParametersRuleTest(String newPassword) {
     this.newPassword = newPassword;
-
-    this.expectedIsValid = expectedIsValid;
-
     this.passwordContainsRule = new PasswordContainsRule();
   }
 
-  @Parameterized.Parameters(name = "{index}: isValid(\"{0}\") should be {1}.")
+  @Parameterized.Parameters(name = "{index}: isValid(\"{0}\").")
   public static Collection<Object[]> data() {
     return Arrays.asList(new Object[][]{
-        {"a1b@", true},
-        {"aAbB%1", true},
-        {"1A@$2b3C!", true},
-        {"-A1B2C812$3$", true}
+        {"a1b@"},
+        {"aAbB%1"},
+        {"1A@$2b3C!"},
+        {"-A1B2C812$3$"}
     });
   }
 
