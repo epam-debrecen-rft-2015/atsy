@@ -1,7 +1,7 @@
 package com.epam.rft.atsy.service.impl;
 
 import com.epam.rft.atsy.service.ConverterService;
-import org.modelmapper.Converter;
+import com.epam.rft.atsy.service.converter.ConverterAdapter;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
@@ -9,21 +9,20 @@ import java.util.List;
 
 public class ModelMapperConverterServiceImpl implements ConverterService {
 
-  private ModelMapper modelMapper;
+  private ModelMapper modelMapper = new ModelMapper();
 
-  public ModelMapperConverterServiceImpl(ModelMapper modelMapper, List<Converter>... converters) {
-    this.modelMapper = modelMapper;
+  public ModelMapperConverterServiceImpl(List<ConverterAdapter> converterAdapters) {
 
     System.out.println("-------------------------" + modelMapper + "--------------");
-    for (List<Converter> cList : converters) {
-      for (Converter c : cList) {
-//        System.out
-//            .println("+++++++++++++++++++++ ModelMapper:" + modelMapper + "++++++++++++++++++++");
-//        System.out.println("+++++++++++++++++++++ Converter:" + c + "++++++++++++++++++++");
-//        Class[] typeArguments = TypeResolver.resolveArguments(c.getClass(), Converter.class);
-//        System.out.println(typeArguments);
-        modelMapper.addConverter(c);
-      }
+    for (ConverterAdapter c : converterAdapters) {
+//      System.out
+//          .println("+++++++++++++++++++++ ModelMapper:" + modelMapper + "++++++++++++++++++++");
+//      System.out.println("+++++++++++++++++++++ Converter:" + c + "++++++++++++++++++++");
+//      Class[] typeArguments = TypeResolver.resolveArguments(c.getClass(), Converter.class);
+//      System.out.println(typeArguments);
+
+      //modelMapper.addConverter(c);
+      modelMapper.createTypeMap(c.getEntityClass(), c.getDtoClass()).setConverter(c.getConverter());
     }
   }
 

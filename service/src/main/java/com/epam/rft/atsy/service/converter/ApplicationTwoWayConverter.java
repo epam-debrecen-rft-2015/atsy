@@ -5,19 +5,24 @@ import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class ApplicationTwoWayConverter
     extends AbstractTwoWayConverter<ApplicationEntity, ApplicationDTO> {
 
-  @Autowired
   private CandidateRepository candidateRepository;
 
-  @Autowired
   private PositionRepository positionRepository;
 
-  @Autowired
   private ChannelRepository channelRepository;
+
+  public ApplicationTwoWayConverter(
+      CandidateRepository candidateRepository,
+      PositionRepository positionRepository,
+      ChannelRepository channelRepository) {
+    this.candidateRepository = candidateRepository;
+    this.positionRepository = positionRepository;
+    this.channelRepository = channelRepository;
+  }
 
   @Override
   public ApplicationDTO entityToDto(ApplicationEntity source) {
