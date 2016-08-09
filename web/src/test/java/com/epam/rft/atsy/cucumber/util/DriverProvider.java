@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class DriverProvider {
+  private static final int TIME_OUT_IN_SECONDS = 60;
   private static WebDriver driver;
 
   public synchronized static WebDriver getDriver() {
@@ -58,7 +59,7 @@ public class DriverProvider {
   }
 
   public static WebDriverWait wait(WebDriver driver) {
-    return new WebDriverWait(driver, 10);
+    return new WebDriverWait(driver, TIME_OUT_IN_SECONDS);
   }
 
   private static class BrowserCleanup implements Runnable {
