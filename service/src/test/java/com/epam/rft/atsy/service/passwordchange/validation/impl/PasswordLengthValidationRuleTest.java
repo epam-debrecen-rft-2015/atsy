@@ -15,11 +15,11 @@ public class PasswordLengthValidationRuleTest {
   private static final String PASSWORD_WITH_LENGTH_EQUAL_TO_MIN = "foobar";
   private static final String PASSWORD_WITH_LENGTH_OVER_MIN = "foobarbuz";
 
-  private PasswordLengthValidationRule rule;
+  private PasswordLengthValidator rule;
 
   @Before
   public void setUp() {
-    rule = new PasswordLengthValidationRule();
+    rule = new PasswordLengthValidator();
   }
 
   @Test(expected = PasswordLengthValidationException.class)

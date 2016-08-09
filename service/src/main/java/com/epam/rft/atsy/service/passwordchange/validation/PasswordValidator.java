@@ -5,5 +5,5 @@ import com.epam.rft.atsy.service.exception.passwordchange.PasswordValidationExce
 
 public interface PasswordValidator {
 
-  boolean validate(PasswordChangeDTO passwordChangeDTO) throws PasswordValidationException;
+  void validate(PasswordChangeDTO passwordChangeDTO) throws PasswordValidationException;
 }

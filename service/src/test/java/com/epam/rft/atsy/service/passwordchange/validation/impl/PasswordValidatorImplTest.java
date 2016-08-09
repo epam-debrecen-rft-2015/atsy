@@ -2,7 +2,7 @@ package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordValidationException;
-import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
+import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,23 +24,23 @@ public class PasswordValidatorImplTest {
   private static final PasswordChangeDTO DUMMY_PASSWORD_CHANGE_DTO = null;
 
   @Mock
-  private PasswordValidationRule successfulRule;
+  private PasswordValidator successfulRule;
 
   @Mock
-  private PasswordValidationRule failingRule;
+  private PasswordValidator failingRule;
 
   @Mock
-  private PasswordValidationRule unreachedRule;
+  private PasswordValidator unreachedRule;
 
-  private Collection<PasswordValidationRule> passwordValidationRules;
+  private Collection<PasswordValidator> passwordValidators;
 
   private PasswordValidatorImpl passwordValidator;
 
   @Before
   public void setUp() {
-    passwordValidationRules = new ArrayList<>();
+    passwordValidators = new ArrayList<>();
 
-    passwordValidator = new PasswordValidatorImpl(passwordValidationRules);
+    passwordValidator = new PasswordValidatorImpl(passwordValidators);
     try {
       doThrow(new PasswordValidationException()).when(failingRule).validate(any(PasswordChangeDTO.class));
     } catch (PasswordValidationException e) {
@@ -49,24 +49,21 @@ public class PasswordValidatorImplTest {
   }
 
   @Test
-  public void validateShouldReturnTrueWhenAllRulesAreSatisfied()
-      throws PasswordValidationException {
+  public void validateShouldReturnTrueWhenAllRulesAreSatisfied() throws PasswordValidationException {
     // Given
-    passwordValidationRules.add(successfulRule);
+    passwordValidators.add(successfulRule);
 
     // When
-    boolean result = passwordValidator.validate(DUMMY_PASSWORD_CHANGE_DTO);
+    passwordValidator.validate(DUMMY_PASSWORD_CHANGE_DTO);
 
     // Then
-    assertTrue(result);
-
     then(successfulRule).should().validate(DUMMY_PASSWORD_CHANGE_DTO);
   }
 
   @Test(expected = PasswordValidationException.class)
   public void validateShouldThrowWhenARuleFails() throws PasswordValidationException {
     // Given
-    passwordValidationRules.add(failingRule);
+    passwordValidators.add(failingRule);
 
     // When
     passwordValidator.validate(DUMMY_PASSWORD_CHANGE_DTO);
@@ -75,9 +72,9 @@ public class PasswordValidatorImplTest {
   @Test
   public void validateShouldCallEachRulesIsValidMethodUntilTheFirstFailingRule() throws PasswordValidationException {
     // Given
-    passwordValidationRules.add(successfulRule);
-    passwordValidationRules.add(failingRule);
-    passwordValidationRules.add(unreachedRule);
+    passwordValidators.add(successfulRule);
+    passwordValidators.add(failingRule);
+    passwordValidators.add(unreachedRule);
 
     // When
     try {

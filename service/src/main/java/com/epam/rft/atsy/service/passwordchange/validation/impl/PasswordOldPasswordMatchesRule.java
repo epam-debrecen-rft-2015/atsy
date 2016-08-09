@@ -4,13 +4,13 @@ import com.epam.rft.atsy.service.AuthenticationService;
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.exception.UserNotLoggedInException;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordOldMatchValidationException;
-import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
+import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.Assert;
 
-public class PasswordOldPasswordMatchesRule implements PasswordValidationRule {
+public class PasswordOldPasswordMatchesRule implements PasswordValidator {
   private AuthenticationService authenticationService;
   private BCryptPasswordEncoder bCryptPasswordEncoder;
 

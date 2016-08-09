@@ -14,11 +14,11 @@ public class PasswordNewMatchValidationRuleTest {
   private static final String NEW_PASSWORD_CONFIRM_NOT_RIGHT = "Not a new password";
   private static final String NEW_PASSWORD_CONFIRM_UPPER_CASE_NOT_RIGHT = "NEW PASSWORD";
 
-  private PasswordNewMatchValidationRule passwordNewMatchValidationRule;
+  private PasswordNewMatchValidator passwordNewMatchValidationRule;
 
   @Before
   public void setUp() {
-    passwordNewMatchValidationRule = new PasswordNewMatchValidationRule();
+    passwordNewMatchValidationRule = new PasswordNewMatchValidator();
   }
 
   @Test(expected = IllegalArgumentException.class)

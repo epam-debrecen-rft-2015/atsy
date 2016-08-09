@@ -2,12 +2,11 @@ package com.epam.rft.atsy.service.configuration;
 
 import com.epam.rft.atsy.service.AuthenticationService;
 import com.epam.rft.atsy.service.PasswordChangeService;
-import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
 import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordAllFieldFilledRule;
 import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordContainsRule;
-import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordLengthValidationRule;
-import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordNewMatchValidationRule;
+import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordLengthValidator;
+import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordNewMatchValidator;
 import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordOldPasswordMatchesRule;
 import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordUniqueRule;
 import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordValidatorImpl;
@@ -29,9 +28,9 @@ public class PasswordValidatorConfiguration {
 
   @Bean
   public PasswordValidator passwordValidator() {
-    Collection<PasswordValidationRule> rules = Arrays.asList(
+    Collection<PasswordValidator> rules = Arrays.asList(
         new PasswordAllFieldFilledRule(), new PasswordContainsRule(),
-        new PasswordLengthValidationRule(), new PasswordNewMatchValidationRule(),
+        new PasswordLengthValidator(), new PasswordNewMatchValidator(),
         new PasswordOldPasswordMatchesRule(authenticationService),
         new PasswordUniqueRule(passwordChangeService, authenticationService)
     );

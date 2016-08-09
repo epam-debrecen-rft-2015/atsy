@@ -2,11 +2,11 @@ package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordAllFieldFilledValidationException;
-import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
+import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class PasswordAllFieldFilledRule implements PasswordValidationRule {
+public class PasswordAllFieldFilledRule implements PasswordValidator {
 
   @Override
   public void validate(PasswordChangeDTO passwordChangeDTO) throws PasswordAllFieldFilledValidationException {
