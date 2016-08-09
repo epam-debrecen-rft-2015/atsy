@@ -9,6 +9,8 @@ import com.epam.rft.atsy.service.exception.passwordchange.PasswordValidationExce
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
 import com.epam.rft.atsy.service.security.UserDetailsAdapter;
 import com.epam.rft.atsy.web.CurrentUser;
+import com.epam.rft.atsy.web.mapper.PasswordValidationMessageKeyMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Date;
+
 import javax.annotation.Resource;
 
 @Controller
@@ -42,6 +45,9 @@ public class PasswordChangeController {
   @Resource
   UserService userService;
 
+  @Resource
+  PasswordValidationMessageKeyMapper passwordValidationMessageKeyMapper;
+
   @Autowired
   PasswordValidator passwordValidator;
 
@@ -56,7 +62,6 @@ public class PasswordChangeController {
   public ModelAndView changePassword(@ModelAttribute PasswordChangeDTO passwordChangeDTO,
                                      BindingResult bindingResult,
                                      @CurrentUser UserDetailsAdapter userDetailsAdapter) {
-
 
     ModelAndView model = new ModelAndView(VIEW_NAME);
     if (bindingResult.hasErrors()) {
@@ -82,8 +87,7 @@ public class PasswordChangeController {
         model.addObject(VALIDATION_SUCCESS_KEY, PASSWORDCHANGE_VALIDATION_SUCCESS);
       } catch (PasswordValidationException e) {
         logger.error(e.getMessage(), e);
-
-       // model.addObject(VALIDATION_ERROR_KEY, e.getMessageKey());
+        model.addObject(VALIDATION_ERROR_KEY, passwordValidationMessageKeyMapper.getValueNameByException(e));
       }
     }
     return model;
