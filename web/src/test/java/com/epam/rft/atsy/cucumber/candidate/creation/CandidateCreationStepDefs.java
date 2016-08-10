@@ -37,7 +37,12 @@ public class CandidateCreationStepDefs {
   private static final String NAME_ERRORS_DIV_ID = "name-errors";
   private static final String EMAIL_ERRORS_DIV_ID = "email-errors";
   private static final String PHONE_ERRORS_DIV_ID = "phone-errors";
+
   private static final String FIRST_CHILD_OF_UNORDERED_LIST = "> ul > li:nth-child(1)";
+  private static final String PANEL_HEADING_SELECTOR = ".panel-heading";
+  private static final String FIELD_MESSAGES_SELECTOR = "#field-messages > li";
+
+  private static final String QUOTED_STRING_PATTERN = "\"([^\"]*)\"";
 
   private static final String EMAIL_SUFFIX = "@epam.com";
 
@@ -62,28 +67,31 @@ public class CandidateCreationStepDefs {
     assertTrue(descriptionElement.getText().isEmpty());
   }
 
-  @Given("^the user enters name \"([^\"]*)\"$")
+  @Given("^the user enters name " + QUOTED_STRING_PATTERN + "$")
   public void the_user_enters_name(String arg1) {
     WebElement element = getDriver().findElement(By.id(NAME_ID));
     element.clear();
     element.sendKeys(arg1);
   }
 
-  @Given("^the user enters e-mail address \"([^\"]*)\"$")
+  @Given("^the user enters e-mail address " + QUOTED_STRING_PATTERN + "$")
   public void the_user_enters_e_mail_address(String arg1) {
     WebElement element = getDriver().findElement(By.id(EMAIL_ID));
     element.clear();
     element.sendKeys(arg1);
   }
 
-  @Given("^the user enters phone number \"([^\"]*)\"$")
+  @Given("^the user enters phone number " + QUOTED_STRING_PATTERN + "$")
   public void the_user_enters_phone_number(String arg1) {
     WebElement element = getDriver().findElement(By.id(PHONE_ID));
     element.clear();
     element.sendKeys(arg1);
   }
 
-  @Given("^the user enters the place where the candidate has heard about the company \"([^\"]*)\"$")
+  @Given(
+      "^the user enters the place where the candidate has heard about the company "
+          + QUOTED_STRING_PATTERN
+          + "$")
   public void the_user_enters_the_place_where_the_candidate_has_heard_about_the_company(
       String arg1) {
     WebElement element = getDriver().findElement(By.id(REFERER_ID));
@@ -91,20 +99,21 @@ public class CandidateCreationStepDefs {
     element.sendKeys(arg1);
   }
 
-  @Given("^the user enters the language level \"([^\"]*)\"$")
+  @Given("^the user enters the language level " + QUOTED_STRING_PATTERN + "$")
   public void the_user_enters_the_language_level(String arg1) {
     Select select = new Select(getDriver().findElement(By.id(LANGUAGE_SKILL_ID)));
     select.selectByVisibleText(arg1);
   }
 
-  @When("^the user clicks on the \"([^\"]*)\" button$")
+  @When("^the user clicks on the " + QUOTED_STRING_PATTERN + " button$")
   public void the_user_clicks_on_the_button(String buttonText) {
     if (buttonText.equals("Mentés")) {
       getDriver().findElement(By.id(SAVE_BUTTON_ID)).click();
     }
   }
 
-  @Then("^a \"([^\"]*)\" message is shown under the \"([^\"]*)\" field$")
+  @Then("^a " + QUOTED_STRING_PATTERN + " message is shown under the " + QUOTED_STRING_PATTERN
+      + " field$")
   public void a_message_is_shown_under_the_field(String msg, String field) {
     WebDriverWait webDriverWait = new WebDriverWait(getDriver(), TIMEOUT);
     switch (field) {
@@ -126,7 +135,7 @@ public class CandidateCreationStepDefs {
     }
   }
 
-  @Given("^the user clears field \"([^\"]*)\"$")
+  @Given("^the user clears field " + QUOTED_STRING_PATTERN + "$")
   public void the_user_clears_field(String field) {
     WebElement element = null;
     switch (field) {
@@ -141,7 +150,8 @@ public class CandidateCreationStepDefs {
     assertTrue(element.getText().isEmpty());
   }
 
-  @Given("^another candidate's \"([^\"]*)\" address is \"([^\"]*)\"$")
+  @Given("^another candidate's " + QUOTED_STRING_PATTERN + " address is " + QUOTED_STRING_PATTERN
+      + "$")
   public void another_candidate_s_e_mail_address_is(String field, String actual) {
     if (field.equals("email")) {
       assertTrue(candidates.stream().anyMatch(c -> c.getEmail().equals(actual)));
@@ -150,7 +160,8 @@ public class CandidateCreationStepDefs {
     }
   }
 
-  @And("^the user enters \"([^\"]*)\" longer than \"([^\"]*)\" characters$")
+  @And("^the user enters " + QUOTED_STRING_PATTERN + " longer than " + QUOTED_STRING_PATTERN
+      + " characters$")
   public void the_user_enters_input_longer_than(String field, int length) {
     switch (field) {
       case "name":
@@ -176,22 +187,21 @@ public class CandidateCreationStepDefs {
     }
   }
 
-  @Then("a \"([^\"]*)\" message appears")
+  @Then("^a " + QUOTED_STRING_PATTERN + " message appears$")
   public void a_message_appears(String arg1) {
-    String selector = "#field-messages > li";
     WebDriverWait webDriverWait = new WebDriverWait(getDriver(), TIMEOUT);
     List<WebElement>
         listings =
-        webDriverWait.until(visibilityOfAllElementsLocatedBy(By.cssSelector(selector)));
+        webDriverWait
+            .until(visibilityOfAllElementsLocatedBy(By.cssSelector(FIELD_MESSAGES_SELECTOR)));
     assertTrue(listings.size() > 0);
     assertTrue(listings.stream().map(WebElement::getText).anyMatch(text -> text.equals(arg1)));
   }
 
-  @Then("^a \"([^\"]*)\" message is shown on the top of the page$")
+  @Then("^a " + QUOTED_STRING_PATTERN + " message is shown on the top of the page$")
   public void a_message_is_shown_on_the_top_of_the_page(String arg1) {
-    String selector = ".panel-heading";
     WebDriverWait webDriverWait = new WebDriverWait(getDriver(), TIMEOUT);
-    assertTrue(webDriverWait.until(textToBe(By.cssSelector(selector), arg1)));
+    assertTrue(webDriverWait.until(textToBe(By.cssSelector(PANEL_HEADING_SELECTOR), arg1)));
   }
 
   private void setMaxLengthAttribute(String id, int length, WebDriver driver) {
