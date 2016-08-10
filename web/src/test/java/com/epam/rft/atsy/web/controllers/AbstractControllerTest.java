@@ -8,11 +8,13 @@ import com.epam.rft.atsy.web.exceptionhandling.UncheckedExceptionResolver;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
+import org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
@@ -37,6 +39,7 @@ public abstract class AbstractControllerTest {
             .setControllerAdvice(controllerAdvice())
             .setHandlerExceptionResolvers(exceptionResolvers())
             .setValidator(localValidatorFactoryBean())
+            .setCustomArgumentResolvers(customArgumentResolvers())
             .build();
   }
 
@@ -50,8 +53,11 @@ public abstract class AbstractControllerTest {
   }
 
   protected HandlerExceptionResolver[] exceptionResolvers() {
-    HandlerExceptionResolver defaultHandlerExceptionResolver = new DefaultHandlerExceptionResolver();
-    return new HandlerExceptionResolver[] { uncheckedExceptionResolver(), defaultHandlerExceptionResolver };
+    HandlerExceptionResolver
+        defaultHandlerExceptionResolver =
+        new DefaultHandlerExceptionResolver();
+    return new HandlerExceptionResolver[]{uncheckedExceptionResolver(),
+        defaultHandlerExceptionResolver};
   }
 
   protected UncheckedExceptionResolver uncheckedExceptionResolver() {
@@ -68,6 +74,10 @@ public abstract class AbstractControllerTest {
 
   protected Object[] controllerAdvice() {
     return new Object[]{new GlobalControllerExceptionHandler()};
+  }
+
+  protected HandlerMethodArgumentResolver[] customArgumentResolvers() {
+    return new HandlerMethodArgumentResolver[]{new AuthenticationPrincipalArgumentResolver()};
   }
 
   /**
