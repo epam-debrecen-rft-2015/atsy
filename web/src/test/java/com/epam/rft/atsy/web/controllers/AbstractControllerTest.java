@@ -15,7 +15,9 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
@@ -35,7 +37,7 @@ public abstract class AbstractControllerTest {
         MockMvcBuilders.standaloneSetup(controllersUnderTest())
             .setViewResolvers(viewResolver())
             .setControllerAdvice(controllerAdvice())
-            .setHandlerExceptionResolvers(uncheckedExceptionResolver())
+            .setHandlerExceptionResolvers(exceptionResolvers())
             .setValidator(localValidatorFactoryBean())
             .setCustomArgumentResolvers(customArgumentResolvers())
             .build();
@@ -48,6 +50,14 @@ public abstract class AbstractControllerTest {
     viewResolver.setSuffix(VIEW_SUFFIX);
 
     return viewResolver;
+  }
+
+  protected HandlerExceptionResolver[] exceptionResolvers() {
+    HandlerExceptionResolver
+        defaultHandlerExceptionResolver =
+        new DefaultHandlerExceptionResolver();
+    return new HandlerExceptionResolver[]{uncheckedExceptionResolver(),
+        defaultHandlerExceptionResolver};
   }
 
   protected UncheckedExceptionResolver uncheckedExceptionResolver() {
