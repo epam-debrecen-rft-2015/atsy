@@ -23,9 +23,13 @@ import java.util.List;
 @Sql("classpath:sql/states/states.sql")
 public class StatesHistoryRepositoryIT extends AbstractRepositoryIT {
 
-  private static final String CANDIDATE_NAME_A = "Candidate D";
-  private static final String CANDIDATE_NAME_B = "Candidate E";
-  private static final String CANDIDATE_NAME_C = "Candidate F";
+  private static final String CANDIDATE_NAME_D = "Candidate D";
+  private static final String CANDIDATE_NAME_E = "Candidate E";
+  private static final String CANDIDATE_NAME_F = "Candidate F";
+
+  private static final String CANDIDATE_EMAIL_D = "candidate.d@atsy.com";
+  private static final String CANDIDATE_EMAIL_E = "candidate.e@atsy.com";
+  private static final String CANDIDATE_EMAIL_F = "candidate.f@atsy.com";
 
   private static final String CHANNEL_NAME_DIRECT = "direkt";
   private static final String CHANNEL_NAME_FACEBOOK = "facebook";
@@ -38,7 +42,6 @@ public class StatesHistoryRepositoryIT extends AbstractRepositoryIT {
   private static final long FIRST_ID = 1L;
   private static final long FOURTH_ID = 4L;
 
-  private static final String STATE_NAME_NEWSTATE = "newstate";
   private static final String STATE_NAME_CODING = "coding";
   private static final String STATE_NAME_FIRST_TEST = "firstTest";
   private static final String STATE_NAME_HR = "hr";
@@ -58,7 +61,7 @@ public class StatesHistoryRepositoryIT extends AbstractRepositoryIT {
   @Test
   public void findTopByApplicationEntityOrderByCreationDateDescShouldNotFindStateForApplicationWithoutStates() {
     // Given
-    ApplicationEntity applicationEntity = getApplicationByCandidateName(CANDIDATE_NAME_A);
+    ApplicationEntity applicationEntity = getApplicationByCandidateEmail(CANDIDATE_EMAIL_D);
 
     // When
     StatesHistoryEntity
@@ -73,7 +76,7 @@ public class StatesHistoryRepositoryIT extends AbstractRepositoryIT {
   @Test
   public void findByApplicationEntityOrderByCreationDateDescShouldNotFindStateForApplicationWithoutStates() {
     // Given
-    ApplicationEntity applicationEntity = getApplicationByCandidateName(CANDIDATE_NAME_A);
+    ApplicationEntity applicationEntity = getApplicationByCandidateEmail(CANDIDATE_EMAIL_D);
 
     // When
     List<StatesHistoryEntity>
@@ -89,7 +92,7 @@ public class StatesHistoryRepositoryIT extends AbstractRepositoryIT {
   @Test
   public void findTopByApplicationEntityOrderByCreationDateDescShouldFindSingleStateForApplicationWithSingleState() {
     // Given
-    ApplicationEntity applicationEntity = getApplicationByCandidateName(CANDIDATE_NAME_B);
+    ApplicationEntity applicationEntity = getApplicationByCandidateEmail(CANDIDATE_EMAIL_E);
     StatesHistoryEntity expectedStatesHistoryEntity = getExpectedStateEntityForSingleState();
 
     // When
@@ -105,7 +108,7 @@ public class StatesHistoryRepositoryIT extends AbstractRepositoryIT {
   @Test
   public void findByApplicationEntityOrderByCreationDateDescShouldFindSingleStateForApplicationWithSingleState() {
     // Given
-    ApplicationEntity applicationEntity = getApplicationByCandidateName(CANDIDATE_NAME_B);
+    ApplicationEntity applicationEntity = getApplicationByCandidateEmail(CANDIDATE_EMAIL_E);
     StatesHistoryEntity expectedStatesHistoryEntity = getExpectedStateEntityForSingleState();
 
     // When
@@ -124,7 +127,7 @@ public class StatesHistoryRepositoryIT extends AbstractRepositoryIT {
   @Test
   public void findTopByApplicationEntityOrderByCreationDateDescShouldFindNewestStateForApplicationWithThreeState() {
     // Given
-    ApplicationEntity applicationEntity = getApplicationByCandidateName(CANDIDATE_NAME_C);
+    ApplicationEntity applicationEntity = getApplicationByCandidateEmail(CANDIDATE_EMAIL_F);
     StatesHistoryEntity
         expectedStatesHistoryEntity =
         getExpectedSortingStateEntityListWithThreeElements().get(ZEROTH_ELEMENT);
@@ -142,7 +145,7 @@ public class StatesHistoryRepositoryIT extends AbstractRepositoryIT {
   @Test
   public void findByApplicationEntityOrderByCreationDateDescShouldFindThreeStateForApplicationWithThreeState() {
     // Given
-    ApplicationEntity applicationEntity = getApplicationByCandidateName(CANDIDATE_NAME_C);
+    ApplicationEntity applicationEntity = getApplicationByCandidateEmail(CANDIDATE_EMAIL_F);
 
     // When
     List<StatesHistoryEntity>
@@ -174,7 +177,7 @@ public class StatesHistoryRepositoryIT extends AbstractRepositoryIT {
   private StatesHistoryEntity getExpectedStateEntityForSingleState() {
     return StatesHistoryEntity.builder()
         .applicationEntity(
-            getExpectedApplicationEntity(CANDIDATE_NAME_B, FIRST_ID, CHANNEL_NAME_DIRECT, FIRST_ID,
+            getExpectedApplicationEntity(CANDIDATE_EMAIL_E, FIRST_ID, CHANNEL_NAME_DIRECT, FIRST_ID,
                 POSITION_NAME_DEVELOPER))
         .statesEntity(statesRepository.findByName(STATE_NAME_FIRST_TEST))
         .build();
@@ -184,19 +187,19 @@ public class StatesHistoryRepositoryIT extends AbstractRepositoryIT {
     List<StatesHistoryEntity> statesHistoryEntityList = Arrays.asList(
         StatesHistoryEntity.builder()
             .applicationEntity(
-                getExpectedApplicationEntity(CANDIDATE_NAME_C, FOURTH_ID, CHANNEL_NAME_FACEBOOK,
+                getExpectedApplicationEntity(CANDIDATE_EMAIL_F, FOURTH_ID, CHANNEL_NAME_FACEBOOK,
                     FIRST_ID, POSITION_NAME_DEVELOPER))
             .statesEntity(statesRepository.findByName(STATE_NAME_CODING))
             .build(),
         StatesHistoryEntity.builder()
             .applicationEntity(
-                getExpectedApplicationEntity(CANDIDATE_NAME_C, FOURTH_ID, CHANNEL_NAME_FACEBOOK,
+                getExpectedApplicationEntity(CANDIDATE_EMAIL_F, FOURTH_ID, CHANNEL_NAME_FACEBOOK,
                     FIRST_ID, POSITION_NAME_DEVELOPER))
             .statesEntity(statesRepository.findByName(STATE_NAME_HR))
             .build(),
         StatesHistoryEntity.builder()
             .applicationEntity(
-                getExpectedApplicationEntity(CANDIDATE_NAME_C, FOURTH_ID, CHANNEL_NAME_FACEBOOK,
+                getExpectedApplicationEntity(CANDIDATE_EMAIL_F, FOURTH_ID, CHANNEL_NAME_FACEBOOK,
                     FIRST_ID, POSITION_NAME_DEVELOPER))
             .statesEntity(statesRepository.findByName(STATE_NAME_FIRST_TEST))
             .build()
@@ -205,16 +208,16 @@ public class StatesHistoryRepositoryIT extends AbstractRepositoryIT {
     return statesHistoryEntityList;
   }
 
-  private ApplicationEntity getApplicationByCandidateName(String candidateName) {
-    // Given
-    CandidateEntity candidateEntity = this.candidateRepository.findByName(candidateName);
+  private ApplicationEntity getApplicationByCandidateEmail(String candidateEmail) {
+    CandidateEntity candidateEntity = this.candidateRepository.findByEmail(candidateEmail);
+
     return this.applicationsRepository.findByCandidateEntity(candidateEntity).get(ZEROTH_ELEMENT);
   }
 
-  private ApplicationEntity getExpectedApplicationEntity(String candidateName, Long channelId,
+  private ApplicationEntity getExpectedApplicationEntity(String candidateEmail, Long channelId,
                                                          String channelName, Long positionId,
                                                          String positionName) {
-    CandidateEntity candidateEntity = this.candidateRepository.findByName(candidateName);
+    CandidateEntity candidateEntity = this.candidateRepository.findByEmail(candidateEmail);
 
     ChannelEntity expectedChannelEntity = ChannelEntity.builder()
         .id(channelId)
