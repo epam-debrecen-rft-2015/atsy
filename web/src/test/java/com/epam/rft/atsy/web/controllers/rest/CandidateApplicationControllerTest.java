@@ -120,7 +120,7 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
     verifyZeroInteractions(messageSource);
   }
 
- // @Test
+  @Test
   public void loadApplicationsShouldRespondWithSingleElementArrayWhenThereIsOnlyOneApplication()
       throws Exception {
     given(statesHistoryService.getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID))
@@ -143,7 +143,7 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
             any(Locale.class));
   }
 
-  //@Test
+  @Test
   public void loadApplicationsShouldRespondWithTwoElementArrayWhenThereAreTwoApplications()
       throws Exception {
     given(statesHistoryService.getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID))
@@ -179,9 +179,9 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath(basePath + "applicationId",
                    equalTo(applicationDto.getApplicationId().intValue())))
         .andExpect(jsonPath(basePath + "positionName", equalTo(applicationDto.getPositionName())))
-        .andExpect(jsonPath(basePath + "creationDate", equalTo(applicationDto.getCreationDate())))
+        .andExpect(jsonPath(basePath + "creationDate", equalTo(applicationDto.getCreationDate().getTime())))
         .andExpect(jsonPath(basePath + "modificationDate",
-                   equalTo(applicationDto.getModificationDate())))
+                   equalTo(applicationDto.getModificationDate().getTime())))
         .andExpect(jsonPath(basePath + "stateType", equalTo(LOCALIZED_STATE_TYPE)));
   }
 

@@ -170,7 +170,7 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
     verifyZeroInteractions(messageSource);
   }
 
-  //@Test
+  @Test
   public void loadApplicationsShouldRespondWithSingleElementCollectionWhenThereIsOneApplication()
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(APPLICATION_ID))
@@ -197,7 +197,7 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
     verifyNoMoreInteractions(messageSource);
   }
 
-  //@Test
+  @Test
   public void loadApplicationsShouldRespondWithThreeElementCollectionWhenTherAreThreeApplications()
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(APPLICATION_ID))
@@ -261,7 +261,7 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
             equalTo(historyViewDto.getOfferedMoney().intValue())))
         .andExpect(jsonPath(basePath + "claim", equalTo(historyViewDto.getClaim().intValue())))
         .andExpect(jsonPath(basePath + "creationDate",
-            equalTo(historyViewDto.getCreationDate())))
+            equalTo(historyViewDto.getCreationDate().getTime())))
         .andExpect(jsonPath(basePath + "feedbackDate",
             equalTo(historyViewDto.getFeedbackDate().toInstant().toEpochMilli())))
         .andExpect(jsonPath(basePath + "dayOfStart",
