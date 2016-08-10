@@ -7,18 +7,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.Test;
 
-public class LoginControllerTest extends AbstractControllerTest {
-  private static final String VIEW_NAME = "login";
+public class ManagePositionsControllerTest extends AbstractControllerTest {
+  private static final String VIEW_NAME = "manage_positions";
 
-  private static final String REQUEST_URL = "/login";
+  private static final String REQUEST_URL = "/secure/positions/manage";
 
   @Override
   protected Object[] controllersUnderTest() {
-    return new Object[]{new LoginController()};
+    return new Object[]{new ManagePositionsController()};
   }
 
   @Test
-  public void pageLoadShouldRenderLoginView() throws Exception {
+  public void loadPageShouldRenderManagePositionsView() throws Exception {
     mockMvc.perform(get(REQUEST_URL))
         .andExpect(status().isOk())
         .andExpect(view().name(VIEW_NAME))

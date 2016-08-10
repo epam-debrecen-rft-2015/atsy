@@ -62,7 +62,7 @@
                   <div class="col-sm-8">
                       <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="creationDateP">${data.creationDate}</p>
                       <c:if test="${stat.first}">
-                          <input class="stateInput" type="text" name="creationDate" id="creationDateInput" style="display:none" value="${data.creationDate}">
+                          <input class="stateInput" type="text" name="creationDate" id="creationDateInput" style="display:none" value="${data.creationDate}" data-formatter="creationDateFormatter">
                       </c:if>
                   </div>
               </div>
