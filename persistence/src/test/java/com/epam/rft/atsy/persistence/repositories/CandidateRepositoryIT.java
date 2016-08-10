@@ -47,7 +47,9 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
   private static final Short CANDIDATE_B_LANGUAGE_SKILL = 2;
   private static final Short CANDIDATE_C_LANGUAGE_SKILL = 8;
 
-  private static final String EXISTING_CANDIDATE_NAME = CANDIDATE_A_NAME;
+  private static final String EXISTING_CANDIDATE_EMAIL = CANDIDATE_A_EMAIL;
+
+  private static final String NON_EXISTENT_CANDIDATE_EMAIL = "does@not.exist";
 
   private static final String NON_EXISTENT_CANDIDATE_NAME = "Candidate X";
 
@@ -317,21 +319,21 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-  public void findByNameShouldNotFindNonexistentCandidate() {
+  public void findByEmailShouldNotFindNonexistentCandidate() {
     //When
-    CandidateEntity candidate = this.candidateRepository.findByName(NON_EXISTENT_CANDIDATE_NAME);
+    CandidateEntity candidate = this.candidateRepository.findByEmail(NON_EXISTENT_CANDIDATE_EMAIL);
 
     //Then
     assertThat(candidate, nullValue());
   }
 
   @Test
-  public void findByNameShouldFindExistingCandidate() {
+  public void findByEmailShouldFindExistingCandidate() {
     //When
-    CandidateEntity candidate = this.candidateRepository.findByName(EXISTING_CANDIDATE_NAME);
+    CandidateEntity candidate = this.candidateRepository.findByEmail(EXISTING_CANDIDATE_EMAIL);
 
     //Then
     assertThat(candidate, notNullValue());
-    assertThat(candidate.getName(), is(EXISTING_CANDIDATE_NAME));
+    assertThat(candidate.getEmail(), is(EXISTING_CANDIDATE_EMAIL));
   }
 }

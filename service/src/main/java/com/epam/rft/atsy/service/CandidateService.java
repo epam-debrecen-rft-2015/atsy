@@ -30,6 +30,4 @@ public interface CandidateService {
    * @return the id of candidate
    */
   Long saveOrUpdate(CandidateDTO candidate);
-
-  CandidateDTO getCandidateByName(String name);
 }

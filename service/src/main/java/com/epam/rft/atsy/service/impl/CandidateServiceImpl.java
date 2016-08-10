@@ -52,7 +52,7 @@ public class CandidateServiceImpl implements CandidateService {
 
     Sort.Direction sortDirection = Sort.Direction.fromString(sortingRequest.getOrder().name());
 
-    Sort sort = new Sort(sortDirection, sortingRequest.getFieldName().toString());
+    Sort sort = new Sort(sortDirection, sortingRequest.getFieldName());
 
     Collection<CandidateEntity>
         candidateEntities =
@@ -93,12 +93,4 @@ public class CandidateServiceImpl implements CandidateService {
 
     Assert.notNull(searchOptions);
   }
-
-  @Transactional(readOnly = true)
-  @Override
-  public CandidateDTO getCandidateByName(String name) {
-    CandidateEntity candidateEntity = candidateRepository.findByName(name);
-    return modelMapper.map(candidateEntity, CandidateDTO.class);
-  }
-
 }

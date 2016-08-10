@@ -15,7 +15,7 @@ import java.util.List;
 
 @Sql("classpath:sql/stateflow/stateflow.sql")
 public class StateFlowRepositoryIT extends AbstractRepositoryIT {
-  
+
   private static final Long VALID_STATE_ID = 80L;
   private static final String VALID_FROM_STATE_NAME = "test";
   public static final long STATES_ENTITY_ACCEPT_ID = 12L;
@@ -40,15 +40,15 @@ public class StateFlowRepositoryIT extends AbstractRepositoryIT {
 
   private static final StateFlowEntity
       STATE_FLOW_ENTITY_ONE =
-      StateFlowEntity.builder().id(55L).fromStateEntity(FROM_STATES_ENTITY)
+      StateFlowEntity.builder().id(60L).fromStateEntity(FROM_STATES_ENTITY)
           .toStateEntity(TO_STATES_ENTITY_ACCEPT).build();
   private static final StateFlowEntity
       STATE_FLOW_ENTITY_TWO =
-      StateFlowEntity.builder().id(56L).fromStateEntity(FROM_STATES_ENTITY)
+      StateFlowEntity.builder().id(61L).fromStateEntity(FROM_STATES_ENTITY)
           .toStateEntity(TO_STATES_ENTITY_REJECT).build();
   private static final StateFlowEntity
       STATE_FLOW_ENTITY_THREE =
-      StateFlowEntity.builder().id(57L).fromStateEntity(FROM_STATES_ENTITY)
+      StateFlowEntity.builder().id(62L).fromStateEntity(FROM_STATES_ENTITY)
           .toStateEntity(TO_STATES_ENTITY_PAUSE).build();
   @Autowired
   private StateFlowRepository stateFlowRepository;
