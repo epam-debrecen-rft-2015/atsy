@@ -4,6 +4,7 @@ import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,8 +26,8 @@ public class StateHistoryViewRepresentation {
   private String result;
   private Long offeredMoney;
   private Long claim;
-  private String feedbackDate;
-  private String dayOfStart;
+  private Date feedbackDate;
+  private Date dayOfStart;
   private String stateFullName;
   private Long stateId;
   private String stateName;

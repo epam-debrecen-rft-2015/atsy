@@ -3,6 +3,8 @@ package com.epam.rft.atsy.web.controllers.rest;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +24,9 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(value = "/secure/candidate")
 public class SingleCandidateController {
+  private static final String TECHNICAL_ERROR_MESSAGE_KEY = "technical.error.message";
   private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
+  private static final Logger LOGGER = LoggerFactory.getLogger(SingleCandidateController.class);
 
   @Resource
   private CandidateService candidateService;
