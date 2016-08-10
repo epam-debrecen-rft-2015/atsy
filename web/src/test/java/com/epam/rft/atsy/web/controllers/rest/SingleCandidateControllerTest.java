@@ -190,7 +190,7 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.email").exists())
-        .andExpect(jsonPath("$.fields.email", equalTo(EMAIL_INCORRECT_ERROR_MESSAGE_KEY)));
+        .andExpect(jsonPath("$.fields.email", equalTo(EMAIL_LENGTH_ERROR_MESSAGE_KEY)));
 
     verifyZeroInteractions(candidateService);
   }

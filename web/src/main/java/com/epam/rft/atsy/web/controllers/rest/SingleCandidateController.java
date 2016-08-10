@@ -24,9 +24,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(value = "/secure/candidate")
 public class SingleCandidateController {
-  private static final String TECHNICAL_ERROR_MESSAGE_KEY = "technical.error.message";
   private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
-  private static final Logger LOGGER = LoggerFactory.getLogger(SingleCandidateController.class);
 
   @Resource
   private CandidateService candidateService;
