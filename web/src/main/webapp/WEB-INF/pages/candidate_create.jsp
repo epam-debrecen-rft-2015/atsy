@@ -45,7 +45,7 @@
                         <div class="panel panel-danger hidden" role="alert"  data-bind="css: { hidden: !showError() }">
                             <div class="panel-heading" data-bind="text: errorMessage"></div>
                             <div class="panel-body">
-                                <ul>
+                                <ul id="field-messages">
                                     <!-- ko foreach: fieldMessages -->
                                         <li data-bind="text: $data"></li>
                                     <!-- /ko -->
@@ -68,7 +68,7 @@
                                                code="candidate.error.name.empty"/>"
                                        required maxlength="100">
 
-                                <div class="help-block with-errors"></div>
+                                <div id="name-errors" class="help-block with-errors"></div>
                                 <p class="showValue form-control-static">${candidate.name}</p>
                             </div>
 
@@ -108,7 +108,7 @@
                                        data-pattern-error="<spring:message
                                     code="candidate.error.email.incorrect"/>"
                                        required maxlength="255">
-                                <span class="help-block with-errors"></span>
+                                <span id="email-errors" class="help-block with-errors"></span>
 
                                 <p class="showValue form-control-static">
                                     <a href="mailto:tesztelek01@te.com"><span class="glyphicon glyphicon-envelope"
@@ -153,7 +153,7 @@
                                     code="candidate.error.phone.incorrect"/>"
                                        pattern="^\+?[0-9]+" maxlength="20">
 
-                                <div class="help-block with-errors"></div>
+                                <div id="phone-errors" class="help-block with-errors"></div>
 
                                 <p class="showValue form-control-static">${candidate.phone}</p>
                             </div>
@@ -190,7 +190,7 @@
                                             code="cancel.button"/></a>
                                 </c:otherwise>
                             </c:choose>
-                            <button type="submit" class="btn btn-success">
+                            <button type="submit" id="save-button" class="btn btn-success">
                                 <spring:message code="save.button"/>
                             </button>
                         </div>
