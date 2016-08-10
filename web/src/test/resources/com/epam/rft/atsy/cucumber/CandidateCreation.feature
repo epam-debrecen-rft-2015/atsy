@@ -30,19 +30,19 @@ Feature: candidate creation test
       | Candidate C | candidate.c@atsy.com | +36107777777 | -         |
     Given the user is on the Candidate creation page
     And the candidate details are empty
-    And another candidate's "<field>" address is "<message>"
+    And another candidate's "<field>" is "<duplicate>"
     And the user enters name "other"
-    And the user enters e-mail address "candidate.c@atsy.com"
-    And the user enters phone number "+36301234568"
+    And the user enters e-mail address "<email>"
+    And the user enters phone number "<phone>"
     And the user enters the place where the candidate has heard about the company "place"
     And the user enters the language level "4"
     When the user clicks on the "Mentés" button
     Then a "Már létezik ilyen e-mail címmel vagy telefonszámmal jelentkező!" message is shown on the top of the page
 
     Examples:
-      | field | message              |
-      | email | candidate.c@atsy.com |
-      | phone | +36105555555         |
+      | field | duplicate            | phone        | email                |
+      | email | candidate.c@atsy.com | +36301234568 | candidate.c@atsy.com |
+      | phone | +36105555555         | +36105555555 | email@atsy.com       |
 
   Scenario Outline: user can't create new candidate because of input length violation
 

@@ -150,7 +150,7 @@ public class CandidateCreationStepDefs {
     assertTrue(element.getText().isEmpty());
   }
 
-  @Given("^another candidate's " + QUOTED_STRING_PATTERN + " address is " + QUOTED_STRING_PATTERN
+  @Given("^another candidate's " + QUOTED_STRING_PATTERN + " is " + QUOTED_STRING_PATTERN
       + "$")
   public void another_candidate_s_e_mail_address_is(String field, String actual) {
     if (field.equals("email")) {
