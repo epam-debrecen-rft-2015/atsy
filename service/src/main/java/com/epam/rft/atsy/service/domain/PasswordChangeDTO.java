@@ -6,7 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
+/**
+ * Represents a data transfer object for changing the users password from the old to a new one.
+ */
 @Builder
 @Data
 @NoArgsConstructor
