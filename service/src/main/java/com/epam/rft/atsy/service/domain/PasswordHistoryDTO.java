@@ -13,6 +13,10 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+/**
+ * DTO for PasswordHistoryEntity
+ * See {@link com.epam.rft.atsy.persistence.entities.PasswordHistoryEntity}.
+ */
 public class PasswordHistoryDTO implements Serializable {
 
 

@@ -13,7 +13,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-
+/**
+ * Represents information about the different states of an application, in the database.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -57,12 +59,12 @@ public class StatesHistoryEntity extends SuperEntity {
   private StatesEntity statesEntity;
 
 
-
-
   @Builder
   public StatesHistoryEntity(Long id, ApplicationEntity applicationEntity, Date creationDate,
-                             Short languageSkill, String description, String result, Long offeredMoney,
-                             Long claim, Date feedbackDate, Date dayOfStart, StatesEntity statesEntity) {
+                             Short languageSkill, String description, String result,
+                             Long offeredMoney,
+                             Long claim, Date feedbackDate, Date dayOfStart,
+                             StatesEntity statesEntity) {
     super(id);
     this.applicationEntity = applicationEntity;
     this.creationDate = creationDate;
