@@ -26,7 +26,7 @@ public class CandidateDTO {
 
   @NotNull
   @Pattern(regexp = "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}", message = "candidate.error.email.incorrect")
-  @Size(min = 1, max = 255, message = "candidate.error.email.long")
+  @Size(max = 255, message = "candidate.error.email.long")
   private String email;
 
   @Pattern(regexp = "^\\+?[0-9]+", message = "candidate.error.phone.incorrect")
