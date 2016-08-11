@@ -62,11 +62,8 @@ public class DriverProvider {
   }
 
   public static WebDriverWait wait(WebDriver driver) {
-<<<<<<<HEAD
     return new WebDriverWait(driver, TIMEOUT);
-=======
-    return new WebDriverWait(driver, TIME_OUT_IN_SECONDS);
->>>>>>>master
+
   }
 
   private static class BrowserCleanup implements Runnable {
