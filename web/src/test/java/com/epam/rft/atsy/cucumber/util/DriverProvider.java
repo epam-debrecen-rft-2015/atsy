@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 public class DriverProvider {
 
   private static final int TIMEOUT = 60;
-  private static final int IMPLICIT_TIMEOUT = 15;
+  private static final int IMPLICIT_TIMEOUT = 10;
 
   private static WebDriver driver;
 
