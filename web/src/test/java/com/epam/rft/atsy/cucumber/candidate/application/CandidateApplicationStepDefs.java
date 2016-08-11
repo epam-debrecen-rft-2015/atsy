@@ -1,4 +1,4 @@
-package com.epam.rft.atsy.cucumber.candidate;
+package com.epam.rft.atsy.cucumber.candidate.application;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
