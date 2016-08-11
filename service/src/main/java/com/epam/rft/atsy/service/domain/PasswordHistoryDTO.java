@@ -15,7 +15,7 @@ import lombok.ToString;
 @AllArgsConstructor
 /**
  * DTO for PasswordHistoryEntity
- * @see com.epam.rft.atsy.persistence.entities.PasswordHistoryEntity
+ * See {@link com.epam.rft.atsy.persistence.entities.PasswordHistoryEntity}.
  */
 public class PasswordHistoryDTO implements Serializable {
 

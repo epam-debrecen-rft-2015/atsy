@@ -13,7 +13,7 @@ import lombok.ToString;
 @Builder
 /**
  * DTO for StateFlowEntity
- * @see com.epam.rft.atsy.persistence.entities.StateFlowEntity
+ * See {@link com.epam.rft.atsy.persistence.entities.StateFlowEntity}.
  */
 public class StateFlowDTO {
 

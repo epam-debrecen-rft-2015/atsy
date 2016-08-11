@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 /**
  * DTO for PositionEntity
- * @see com.epam.rft.atsy.persistence.entities.PositionEntity
+ * See {@link com.epam.rft.atsy.persistence.entities.PositionEntity}.
  */
 public class PositionDTO implements Serializable {
 
