@@ -1,19 +1,27 @@
 package com.epam.rft.atsy.web.controllers;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import org.springframework.web.servlet.ModelAndView;
-import org.testng.annotations.Test;
+import org.junit.Test;
 
-public class OptionsControllerTest {
-  private OptionsController underTest = new OptionsController();
+public class OptionsControllerTest extends AbstractControllerTest {
+  private static final String VIEW_NAME = "settings";
+
+  private static final String REQUEST_URL = "/secure/settings";
+
+  @Override
+  protected Object[] controllersUnderTest() {
+    return new Object[] { new OptionsController() };
+  }
 
   @Test
-  public void shouldReturnViewModel() {
-    //when
-    ModelAndView model = underTest.loadPage();
-    //then
-    assertThat(model.getViewName(), is("settings"));
+  public void loadPageShouldRenderSettingsView() throws Exception {
+    mockMvc.perform(get(REQUEST_URL))
+        .andExpect(status().isOk())
+        .andExpect(view().name(VIEW_NAME))
+        .andExpect(forwardedUrl(VIEW_PREFIX + VIEW_NAME + VIEW_SUFFIX));
   }
 }

@@ -26,8 +26,8 @@ public class StateHistoryViewRepresentation {
   private String result;
   private Long offeredMoney;
   private Long claim;
-  private Date feedbackDate;
-  private Date dayOfStart;
+  private String feedbackDate;
+  private String dayOfStart;
   private String stateFullName;
   private Long stateId;
   private String stateName;

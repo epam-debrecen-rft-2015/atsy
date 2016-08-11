@@ -66,7 +66,8 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
     StatesHistoryEntity
         statesHistoryEntity =
         converterService.convert(state, StatesHistoryEntity.class);
-    statesHistoryEntity.setCreationDate(new Date());
+    statesHistoryEntity
+        .setCreationDate(state.getCreationDate() == null ? new Date() : state.getCreationDate());
     statesHistoryEntity.setApplicationEntity(applicationsRepository.findOne(applicationId));
 
     return statesHistoryRepository.save(statesHistoryEntity).getId();
@@ -84,4 +85,5 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
 
     return converterService.convert(statesHistoryEntities, StateHistoryViewDTO.class);
   }
+
 }
