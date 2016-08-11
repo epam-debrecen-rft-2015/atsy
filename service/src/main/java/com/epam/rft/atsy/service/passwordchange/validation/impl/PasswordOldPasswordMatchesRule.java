@@ -4,6 +4,7 @@ import com.epam.rft.atsy.service.AuthenticationService;
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.exception.UserNotLoggedInException;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordOldMatchValidationException;
+import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,7 +14,7 @@ import org.springframework.util.Assert;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class PasswordOldPasswordMatchesRule implements PasswordValidator {
+public class PasswordOldPasswordMatchesRule implements PasswordValidationRule {
   private AuthenticationService authenticationService;
   private BCryptPasswordEncoder bCryptPasswordEncoder;
 

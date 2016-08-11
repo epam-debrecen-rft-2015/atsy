@@ -2,9 +2,9 @@ package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordLengthValidationException;
-import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
+import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
 
-public class PasswordLengthValidator implements PasswordValidator {
+public class PasswordLengthValidator implements PasswordValidationRule {
   private static final int PASSWORD_MIN_LENGTH = 6;
 
   @Override

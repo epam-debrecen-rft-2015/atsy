@@ -2,11 +2,11 @@ package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordContainsValidationException;
-import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
+import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
 
 import java.util.regex.Pattern;
 
-public class PasswordContainsRule implements PasswordValidator {
+public class PasswordContainsRule implements PasswordValidationRule {
   private static final Pattern LETTER_PATTERN = Pattern.compile(".*[a-zA-Z]+.*");
 
   private static final Pattern NUMBER_PATTERN = Pattern.compile(".*[0-9]+.*");

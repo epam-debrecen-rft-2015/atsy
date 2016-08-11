@@ -2,6 +2,7 @@ package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordValidationException;
+import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
 
 import org.junit.Before;
@@ -24,23 +25,23 @@ public class PasswordValidatorImplTest {
   private static final PasswordChangeDTO DUMMY_PASSWORD_CHANGE_DTO = null;
 
   @Mock
-  private PasswordValidator successfulRule;
+  private PasswordValidationRule successfulRule;
 
   @Mock
-  private PasswordValidator failingRule;
+  private PasswordValidationRule failingRule;
 
   @Mock
-  private PasswordValidator unreachedRule;
+  private PasswordValidationRule unreachedRule;
 
-  private Collection<PasswordValidator> passwordValidators;
+  private Collection<PasswordValidationRule> passwordValidationRules;
 
   private PasswordValidatorImpl passwordValidator;
 
   @Before
   public void setUp() {
-    passwordValidators = new ArrayList<>();
+    passwordValidationRules = new ArrayList<>();
 
-    passwordValidator = new PasswordValidatorImpl(passwordValidators);
+    passwordValidator = new PasswordValidatorImpl(passwordValidationRules);
     try {
       doThrow(new PasswordValidationException()).when(failingRule).validate(any(PasswordChangeDTO.class));
     } catch (PasswordValidationException e) {
@@ -51,7 +52,7 @@ public class PasswordValidatorImplTest {
   @Test
   public void validateShouldReturnTrueWhenAllRulesAreSatisfied() throws PasswordValidationException {
     // Given
-    passwordValidators.add(successfulRule);
+    passwordValidationRules.add(successfulRule);
 
     // When
     passwordValidator.validate(DUMMY_PASSWORD_CHANGE_DTO);
@@ -63,7 +64,7 @@ public class PasswordValidatorImplTest {
   @Test(expected = PasswordValidationException.class)
   public void validateShouldThrowWhenARuleFails() throws PasswordValidationException {
     // Given
-    passwordValidators.add(failingRule);
+    passwordValidationRules.add(failingRule);
 
     // When
     passwordValidator.validate(DUMMY_PASSWORD_CHANGE_DTO);
@@ -72,9 +73,9 @@ public class PasswordValidatorImplTest {
   @Test
   public void validateShouldCallEachRulesIsValidMethodUntilTheFirstFailingRule() throws PasswordValidationException {
     // Given
-    passwordValidators.add(successfulRule);
-    passwordValidators.add(failingRule);
-    passwordValidators.add(unreachedRule);
+    passwordValidationRules.add(successfulRule);
+    passwordValidationRules.add(failingRule);
+    passwordValidationRules.add(unreachedRule);
 
     // When
     try {
