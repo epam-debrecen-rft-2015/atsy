@@ -11,6 +11,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @Builder
+/**
+ * DTO for StateFlowEntity
+ * @see com.epam.rft.atsy.persistence.entities.StateFlowEntity
+ */
 public class StateFlowDTO {
 
   private StateDTO fromStateDTO;
