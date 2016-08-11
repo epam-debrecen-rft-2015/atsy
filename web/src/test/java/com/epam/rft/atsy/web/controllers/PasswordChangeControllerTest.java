@@ -6,7 +6,6 @@ import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.domain.PasswordHistoryDTO;
 import com.epam.rft.atsy.service.domain.UserDTO;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordValidationException;
-import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
 import com.epam.rft.atsy.service.security.UserDetailsAdapter;
 
@@ -31,7 +30,6 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -109,24 +107,24 @@ public class PasswordChangeControllerTest extends AbstractControllerTest {
         .andExpect(model().size(0));
   }
 
-  //@Test
+  @Test
   public void changePasswordShouldRespondWithModelAndViewContainingErrorMessageWhenPasswordValidationFails()
       throws Exception {
 
-    doThrow(PasswordValidationException.class).when(passwordValidator).validate(passwordChangeDto);
+    try {
+      doThrow(PasswordValidationException.class).when(passwordValidator).validate(passwordChangeDto);
+    } catch (PasswordValidationException e) {
+      mockMvc.perform(buildPostRequest())
+          .andExpect(status().isOk())
+          .andExpect(view().name(VIEW_NAME))
+          .andExpect(forwardedUrl(VIEW_PREFIX + VIEW_NAME + VIEW_SUFFIX))
+          .andExpect(model().attributeExists(VALIDATION_ERROR_KEY))
+          .andExpect(model().attribute(VALIDATION_ERROR_KEY, PASSWORD_VALIDATION_ERROR_MESSAGE_KEY));
 
-    mockMvc.perform(buildPostRequest())
-        .andExpect(status().isOk())
-        .andExpect(view().name(VIEW_NAME))
-        .andExpect(forwardedUrl(VIEW_PREFIX + VIEW_NAME + VIEW_SUFFIX))
-        .andExpect(model().attributeExists(VALIDATION_ERROR_KEY))
-        .andExpect(model().attribute(VALIDATION_ERROR_KEY, PASSWORD_VALIDATION_ERROR_MESSAGE_KEY));
-
-    then(passwordValidator).should().validate(passwordChangeDto);
-
-    verifyZeroInteractions(passwordChangeService);
-
-    verifyZeroInteractions(userService);
+      then(passwordValidator).should().validate(passwordChangeDto);
+      verifyZeroInteractions(passwordChangeService);
+      verifyZeroInteractions(userService);
+    }
   }
 
   @Test
