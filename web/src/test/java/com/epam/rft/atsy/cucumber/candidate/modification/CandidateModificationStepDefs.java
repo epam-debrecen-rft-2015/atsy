@@ -153,7 +153,7 @@ public class CandidateModificationStepDefs {
             .until(visibilityOfAllElementsLocatedBy(By.cssSelector(FIELD_MESSAGES_SELECTOR)));
     assertTrue(listings.size() > 0);
     assertTrue(
-        listings.stream().map(li -> li.getText()).anyMatch(text -> text.equals(errorMessage)));
+        listings.stream().map(WebElement::getText).anyMatch(text -> text.equals(errorMessage)));
   }
 
   @Then("^a " + QUOTED_STRING_PATTERN + " message appears in the listing$")
