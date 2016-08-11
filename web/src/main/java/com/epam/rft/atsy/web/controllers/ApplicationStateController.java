@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -55,6 +56,12 @@ public class ApplicationStateController {
   @Resource
   private ModelMapper modelMapper;
 
+
+
+
+
+
+
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView loadPage(@RequestParam Long applicationId,
                                @RequestParam(required = false, name = "state") String clickedState,
@@ -62,13 +69,14 @@ public class ApplicationStateController {
     ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
     modelAndView.addObject("applicationId", applicationId);
 
-    List<StateHistoryViewRepresentation>
-        stateHistoryViewRepresentations =
+
+    List<StateHistoryViewRepresentation> stateHistoryViewRepresentations =
         modelMapper.map(statesHistoryService.getStateHistoriesByApplicationId(applicationId),
             STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE);
 
     if (clickedState != null) {
       StateDTO clickedStateDTO = stateService.getStateDtoByName(clickedState);
+      Assert.notNull(clickedStateDTO);
 
       stateHistoryViewRepresentations.add(0, StateHistoryViewRepresentation.builder()
           .stateId(clickedStateDTO.getId())
@@ -78,9 +86,7 @@ public class ApplicationStateController {
 
     for (StateHistoryViewRepresentation stateHistoryViewRepresentation : stateHistoryViewRepresentations) {
       String stateType = stateHistoryViewRepresentation.getStateName();
-      stateType =
-          messageSource
-              .getMessage(APPLICATION_STATE + stateHistoryViewRepresentation.getStateName(),
+      stateType = messageSource.getMessage(APPLICATION_STATE + stateHistoryViewRepresentation.getStateName(),
                   new Object[]{stateType}, locale);
       stateHistoryViewRepresentation.setStateFullName(stateType);
     }
@@ -91,6 +97,22 @@ public class ApplicationStateController {
     modelAndView.addObject(STATES_OBJECT_KEY, stateHistoryViewRepresentations);
     return modelAndView;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   @RequestMapping(method = RequestMethod.POST)
   public ModelAndView saveOrUpdate(@RequestParam Long applicationId,
