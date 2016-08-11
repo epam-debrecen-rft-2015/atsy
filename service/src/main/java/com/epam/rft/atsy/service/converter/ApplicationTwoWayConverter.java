@@ -5,6 +5,7 @@ import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
+import org.springframework.util.Assert;
 
 public class ApplicationTwoWayConverter
     extends AbstractTwoWayConverter<ApplicationEntity, ApplicationDTO> {
@@ -25,7 +26,8 @@ public class ApplicationTwoWayConverter
   }
 
   @Override
-  public ApplicationDTO entityToDto(ApplicationEntity source) {
+  public ApplicationDTO firstTypeToSecondType(ApplicationEntity source) {
+    Assert.notNull(source);
     return ApplicationDTO.builder()
         .id(source.getId())
         .creationDate(source.getCreationDate())
@@ -36,7 +38,8 @@ public class ApplicationTwoWayConverter
   }
 
   @Override
-  public ApplicationEntity dtoToEntity(ApplicationDTO source) {
+  public ApplicationEntity secondTypeToFirstType(ApplicationDTO source) {
+    Assert.notNull(source);
     return ApplicationEntity.builder()
         .id(source.getId())
         .creationDate(source.getCreationDate())

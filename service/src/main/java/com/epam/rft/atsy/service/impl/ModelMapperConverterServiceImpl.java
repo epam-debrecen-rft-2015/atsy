@@ -11,18 +11,15 @@ public class ModelMapperConverterServiceImpl implements ConverterService {
 
   private ModelMapper modelMapper = new ModelMapper();
 
-  public ModelMapperConverterServiceImpl(List<ConverterAdapter> converterAdapters) {
-
-    System.out.println("-------------------------" + modelMapper + "--------------");
+  /**
+   * Creates custom converters for {@code ModelMapper} using the {@code ConverterAdapters} given in
+   * the {@code converterAdapters} parameter.
+   * @param converterAdapters the list of ConverterAdapters
+   */
+  public void setupCustomConverters(List<ConverterAdapter> converterAdapters) {
     for (ConverterAdapter c : converterAdapters) {
-//      System.out
-//          .println("+++++++++++++++++++++ ModelMapper:" + modelMapper + "++++++++++++++++++++");
-//      System.out.println("+++++++++++++++++++++ Converter:" + c + "++++++++++++++++++++");
-//      Class[] typeArguments = TypeResolver.resolveArguments(c.getClass(), Converter.class);
-//      System.out.println(typeArguments);
-
-      //modelMapper.addConverter(c);
-      modelMapper.createTypeMap(c.getEntityClass(), c.getDtoClass()).setConverter(c.getConverter());
+      modelMapper.createTypeMap(c.getSourceClass(), c.getTargetClass())
+          .setConverter(context -> c.getConverter().convert(context.getSource()));
     }
   }
 
@@ -33,6 +30,7 @@ public class ModelMapperConverterServiceImpl implements ConverterService {
 
   @Override
   public <S, T> List<T> convert(List<S> sourceList, Class<T> targetType) {
+
     List<T> targetList = new ArrayList<>();
     for (S s : sourceList) {
       targetList.add(modelMapper.map(s, targetType));

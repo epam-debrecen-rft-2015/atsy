@@ -9,25 +9,31 @@ import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 
 public class StateHistoryViewTwoWayConverter
     extends AbstractTwoWayConverter<StatesHistoryEntity, StateHistoryViewDTO> {
 
-  @Autowired
   private ConverterService converterService;
 
+  public StateHistoryViewTwoWayConverter(ConverterService converterService) {
+    this.converterService = converterService;
+  }
+
   @Override
-  public StateHistoryViewDTO entityToDto(StatesHistoryEntity source) {
+  public StateHistoryViewDTO firstTypeToSecondType(StatesHistoryEntity source) {
+    Assert.notNull(source);
     return StateHistoryViewDTO.builder()
         .id(source.getId())
         .candidateId(source.getId())
-        .position(converterService.convert(source.getApplicationEntity().getPositionEntity(),
-            PositionDTO.class))
-        .channel(converterService.convert(source.getApplicationEntity().getChannelEntity(),
-            ChannelDTO.class))
-        .applicationDTO(
-            converterService.convert(source.getApplicationEntity(), ApplicationDTO.class))
+        .position(source.getApplicationEntity().getPositionEntity() != null ?
+            converterService.convert(source.getApplicationEntity().getPositionEntity(),
+                PositionDTO.class) : null)
+        .channel(source.getApplicationEntity().getChannelEntity() != null ?
+            converterService.convert(source.getApplicationEntity().getChannelEntity(),
+                ChannelDTO.class) : null)
+        .applicationDTO(source.getApplicationEntity() != null ?
+            converterService.convert(source.getApplicationEntity(), ApplicationDTO.class) : null)
         .languageSkill(source.getLanguageSkill())
         .description(source.getDescription())
         .result(source.getResult())
@@ -35,17 +41,19 @@ public class StateHistoryViewTwoWayConverter
         .claim(source.getClaim())
         .feedbackDate(source.getFeedbackDate())
         .dayOfStart(source.getDayOfStart())
-        .stateDTO(converterService.convert(source.getStatesEntity(), StateDTO.class))
+        .stateDTO(source.getStatesEntity() != null ?
+            converterService.convert(source.getStatesEntity(), StateDTO.class) : null)
         .creationDate(source.getCreationDate())
         .build();
   }
 
   @Override
-  public StatesHistoryEntity dtoToEntity(StateHistoryViewDTO source) {
+  public StatesHistoryEntity secondTypeToFirstType(StateHistoryViewDTO source) {
+    Assert.notNull(source);
     return StatesHistoryEntity.builder()
         .id(source.getId())
-        .applicationEntity(
-            converterService.convert(source.getApplicationDTO(), ApplicationEntity.class))
+        .applicationEntity(source.getApplicationDTO() != null ?
+            converterService.convert(source.getApplicationDTO(), ApplicationEntity.class) : null)
         .creationDate(source.getCreationDate())
         .languageSkill(source.getLanguageSkill())
         .description(source.getDescription())
@@ -54,7 +62,8 @@ public class StateHistoryViewTwoWayConverter
         .claim(source.getClaim())
         .feedbackDate(source.getFeedbackDate())
         .dayOfStart(source.getDayOfStart())
-        .statesEntity(converterService.convert(source.getStateDTO(), StatesEntity.class))
+        .statesEntity(source.getStateDTO() != null ?
+            converterService.convert(source.getStateDTO(), StatesEntity.class) : null)
         .build();
   }
 }

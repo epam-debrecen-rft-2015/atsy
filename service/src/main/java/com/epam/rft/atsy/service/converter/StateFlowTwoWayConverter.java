@@ -5,27 +5,36 @@ import com.epam.rft.atsy.persistence.entities.StatesEntity;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateFlowDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 
 public class StateFlowTwoWayConverter
     extends AbstractTwoWayConverter<StateFlowEntity, StateFlowDTO> {
 
-  @Autowired
   private ConverterService converterService;
 
+  public StateFlowTwoWayConverter(ConverterService converterService) {
+    this.converterService = converterService;
+  }
+
   @Override
-  public StateFlowDTO entityToDto(StateFlowEntity source) {
+  public StateFlowDTO firstTypeToSecondType(StateFlowEntity source) {
+    Assert.notNull(source);
     return StateFlowDTO.builder()
-        .fromStateDTO(converterService.convert(source.getFromStateEntity(), StateDTO.class))
-        .toStateDTO(converterService.convert(source.getToStateEntity(), StateDTO.class))
+        .fromStateDTO(source.getFromStateEntity() != null ? converterService
+            .convert(source.getFromStateEntity(), StateDTO.class) : null)
+        .toStateDTO(source.getToStateEntity() != null ? converterService
+            .convert(source.getToStateEntity(), StateDTO.class) : null)
         .build();
   }
 
   @Override
-  public StateFlowEntity dtoToEntity(StateFlowDTO source) {
+  public StateFlowEntity secondTypeToFirstType(StateFlowDTO source) {
+    Assert.notNull(source);
     return StateFlowEntity.builder()
-        .fromStateEntity(converterService.convert(source.getFromStateDTO(), StatesEntity.class))
-        .toStateEntity(converterService.convert(source.getToStateDTO(), StatesEntity.class))
+        .fromStateEntity(source.getFromStateDTO() != null ? converterService
+            .convert(source.getFromStateDTO(), StatesEntity.class) : null)
+        .toStateEntity(source.getToStateDTO() != null ? converterService
+            .convert(source.getToStateDTO(), StatesEntity.class) : null)
         .build();
   }
 }

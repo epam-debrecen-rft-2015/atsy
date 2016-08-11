@@ -17,23 +17,11 @@ import javax.annotation.Resource;
 @Service
 public class ApplicationsServiceImpl implements ApplicationsService {
 
-//  @Resource
-//  private ModelMapper modelMapper;
-
   @Resource
   private StatesHistoryService statesHistoryService;
 
   @Autowired
   private ApplicationsRepository applicationsRepository;
-
-//  @Autowired
-//  private CandidateRepository candidateRepository;
-//
-//  @Autowired
-//  private PositionRepository positionRepository;
-//
-//  @Autowired
-//  private ChannelRepository channelRepository;
 
   @Autowired
   private ConverterService converterService;
@@ -47,13 +35,6 @@ public class ApplicationsServiceImpl implements ApplicationsService {
     Assert.notNull(applicationDTO.getPositionId());
     Assert.notNull(applicationDTO.getChannelId());
 
-    /*
-    ApplicationEntity applicationEntity = modelMapper.map(applicationDTO, ApplicationEntity.class);
-    applicationEntity
-        .setCandidateEntity(candidateRepository.findOne(applicationDTO.getCandidateId()));
-    applicationEntity.setPositionEntity(positionRepository.findOne(applicationDTO.getPositionId()));
-    applicationEntity.setChannelEntity(channelRepository.findOne(applicationDTO.getChannelId()));
-    */
     ApplicationEntity
         applicationEntity =
         converterService.convert(applicationDTO, ApplicationEntity.class);

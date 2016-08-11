@@ -13,9 +13,9 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.DelegatingWebMvcConfiguration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -27,7 +27,7 @@ import java.util.Locale;
 @Configuration
 @ComponentScan("com.epam.rft.atsy.web")
 @Import({ServiceConfiguration.class})
-public class WebConfiguration extends WebMvcConfigurationSupport {
+public class WebConfiguration extends DelegatingWebMvcConfiguration {
 
   @Bean
   public ViewResolver viewResolver() {

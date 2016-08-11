@@ -1,11 +1,11 @@
 package com.epam.rft.atsy.web.controllers;
 
+import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StateFlowService;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Locale;
 import javax.annotation.Resource;
@@ -26,10 +25,10 @@ public class ApplicationStateController {
   private static final String APPLICATION_STATE = "candidate.table.state.";
   private static final String STATES_OBJECT_KEY = "states";
   private static final String STATE_FLOW_OBJECT_KEY = "stateflows";
-  private final static Type
-      STATEHISTORYVIEWREPRESENTATION_LIST_TYPE =
-      new TypeToken<List<StateHistoryViewRepresentation>>() {
-      }.getType();
+//  private final static Type
+//      STATEHISTORYVIEWREPRESENTATION_LIST_TYPE =
+//      new TypeToken<List<StateHistoryViewRepresentation>>() {
+//      }.getType();
   @Resource
   private StatesHistoryService statesHistoryService;
 
@@ -39,8 +38,11 @@ public class ApplicationStateController {
   @Resource
   private MessageSource messageSource;
 
-  @Resource
-  private ModelMapper modelMapper;
+//  @Resource
+//  private ModelMapper modelMapper;
+
+  @Autowired
+  private ConverterService converterService;
 
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView loadPage(@RequestParam Long applicationId, Locale locale) {
@@ -49,8 +51,8 @@ public class ApplicationStateController {
 
     List<StateHistoryViewRepresentation>
         stateHistoryViewRepresentations =
-        modelMapper.map(statesHistoryService.getStateHistoriesByApplicationId(applicationId),
-            STATEHISTORYVIEWREPRESENTATION_LIST_TYPE);
+        converterService.convert(statesHistoryService.getStateHistoriesByApplicationId(applicationId),
+            StateHistoryViewRepresentation.class);
 
     for (StateHistoryViewRepresentation stateHistoryViewRepresentation : stateHistoryViewRepresentations) {
       String stateType = stateHistoryViewRepresentation.getStateName();

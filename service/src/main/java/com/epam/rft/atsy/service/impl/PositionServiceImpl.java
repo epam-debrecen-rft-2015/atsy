@@ -2,35 +2,28 @@ package com.epam.rft.atsy.service.impl;
 
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
+import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.PositionService;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.exception.DuplicatePositionException;
-
 import org.hibernate.exception.ConstraintViolationException;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
-
-import javax.annotation.Resource;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 public class PositionServiceImpl implements PositionService {
 
-  private final static Type POSITIONDTO_LIST_TYPE = new TypeToken<List<PositionDTO>>() {
-  }.getType();
-  @Resource
-  private ModelMapper modelMapper;
+  @Autowired
+  private ConverterService converterService;
+
   @Autowired
   private PositionRepository positionRepository;
 
@@ -38,14 +31,14 @@ public class PositionServiceImpl implements PositionService {
   @Override
   public Collection<PositionDTO> getAllPositions() {
     List<PositionEntity> positionEntities = positionRepository.findAll();
-    return modelMapper.map(positionEntities, POSITIONDTO_LIST_TYPE);
+    return converterService.convert(positionEntities, PositionDTO.class);
   }
 
   @Transactional
   @Override
   public void saveOrUpdate(PositionDTO position) {
     Assert.notNull(position);
-    PositionEntity entity = modelMapper.map(position, PositionEntity.class);
+    PositionEntity entity = converterService.convert(position, PositionEntity.class);
     try {
       positionRepository.saveAndFlush(entity);
     } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
