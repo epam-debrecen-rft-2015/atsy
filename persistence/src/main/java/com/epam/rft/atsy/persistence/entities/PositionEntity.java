@@ -19,8 +19,10 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "positions", schema = "atsy", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+/**
+ * Represents the available positions int the database.
+ */
 public class PositionEntity extends SuperEntity implements java.io.Serializable {
-
 
   @Column(name = "name", nullable = false, length = 255, unique = true)
   private String name;

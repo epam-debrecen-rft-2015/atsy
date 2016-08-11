@@ -13,6 +13,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+/**
+ * DTO for PositionEntity
+ * See {@link com.epam.rft.atsy.persistence.entities.PositionEntity}.
+ */
 public class PositionDTO implements Serializable {
 
   private Long id;
