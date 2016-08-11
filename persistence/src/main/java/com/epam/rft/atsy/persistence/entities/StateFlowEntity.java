@@ -11,6 +11,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * Represents which state is available from the given state in the database.
+ * e.g.: You can switch a candidate's state from "agree" state to "accept" state.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,11 +22,6 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "state_flow", schema = "atsy")
-
-/**
- * Represents which state is available from the given state in the database.
- * e.g.: You can switch a candidate's state from "agree" state to "accept" state.
- */
 public class StateFlowEntity extends SuperEntity {
 
   @OneToOne

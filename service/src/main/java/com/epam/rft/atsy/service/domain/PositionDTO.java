@@ -8,15 +8,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-@Builder
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 /**
  * DTO for PositionEntity
  * See {@link com.epam.rft.atsy.persistence.entities.PositionEntity}.
  */
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PositionDTO implements Serializable {
 
   private Long id;

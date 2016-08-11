@@ -14,6 +14,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * Represents the password history of each user, in the database.
+ * (Which user changed his/her password to what and when.)
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,11 +25,6 @@ import lombok.ToString;
 @ToString(callSuper = true, exclude = "password")
 @Entity
 @Table(name = "password_history", schema = "atsy")
-
-/**
- * Represents the password history of each user, in the database.
- * (Which user changed his/her password to what and when.)
- */
 public class PasswordHistoryEntity extends SuperEntity implements Serializable {
 
 

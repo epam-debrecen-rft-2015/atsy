@@ -8,15 +8,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * DTO for PasswordHistoryEntity
+ * See {@link com.epam.rft.atsy.persistence.entities.PasswordHistoryEntity}.
+ */
 @Builder
 @ToString(exclude = "password")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-/**
- * DTO for PasswordHistoryEntity
- * See {@link com.epam.rft.atsy.persistence.entities.PasswordHistoryEntity}.
- */
 public class PasswordHistoryDTO implements Serializable {
 
 
