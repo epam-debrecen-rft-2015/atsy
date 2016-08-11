@@ -14,6 +14,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class DriverProvider {
+  private static final int TIMEOUT = 60;
+  private static final int IMPLICIT_TIMEOUT = 15;
+
   private static WebDriver driver;
 
   public synchronized static WebDriver getDriver() {
@@ -30,7 +33,7 @@ public class DriverProvider {
 
   private static WebDriver initiateDriver() {
     WebDriver firefoxDriver = new FirefoxDriver();
-    firefoxDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+    firefoxDriver.manage().timeouts().implicitlyWait(IMPLICIT_TIMEOUT, TimeUnit.SECONDS);
     return firefoxDriver;
   }
 
@@ -58,7 +61,7 @@ public class DriverProvider {
   }
 
   public static WebDriverWait wait(WebDriver driver) {
-    return new WebDriverWait(driver, 10);
+    return new WebDriverWait(driver, TIMEOUT);
   }
 
   private static class BrowserCleanup implements Runnable {
