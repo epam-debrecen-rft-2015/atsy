@@ -6,7 +6,6 @@ import com.epam.rft.atsy.persistence.entities.StatesHistoryEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.persistence.repositories.StatesHistoryRepository;
-import com.epam.rft.atsy.persistence.repositories.StatesRepository;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
@@ -37,9 +36,6 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
   @Autowired
   private CandidateRepository candidateRepository;
 
-  @Autowired
-  private StatesRepository statesReporitory;
-
   @Transactional(readOnly = true)
   @Override
   public Collection<CandidateApplicationDTO> getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(
@@ -51,25 +47,6 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
     List<ApplicationEntity>
         applicationList =
         applicationsRepository.findByCandidateEntity(candidateEntity);
-
-//    List<CandidateApplicationDTO> candidateApplicationDTOList = new LinkedList<>();
-//    for (ApplicationEntity applicationEntity : applicationList) {
-//      StatesHistoryEntity statesHistoryEntity =
-//          statesHistoryRepository
-//              .findTopByApplicationEntityOrderByCreationDateDesc(applicationEntity);
-//
-//      CandidateApplicationDTO candidateApplicationDTO = CandidateApplicationDTO.builder()
-//          .applicationId(applicationEntity.getId())
-//          .creationDate(applicationEntity.getCreationDate())
-//          .stateType(statesHistoryEntity.getStatesEntity().getName())
-//          .positionName(applicationEntity.getPositionEntity().getName())
-//          .lastStateId(statesHistoryEntity.getId())
-//          .modificationDate(statesHistoryEntity.getCreationDate()).build();
-//
-//
-//      candidateApplicationDTOList.add(candidateApplicationDTO);
-//
-//    }
 
     List<CandidateApplicationDTO>
         candidateApplicationDTOs =
@@ -89,7 +66,6 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
     StatesHistoryEntity
         statesHistoryEntity =
         converterService.convert(state, StatesHistoryEntity.class);
-    statesHistoryEntity.setStatesEntity(statesReporitory.findOne(state.getStateDTO().getId()));
     statesHistoryEntity.setCreationDate(new Date());
     statesHistoryEntity.setApplicationEntity(applicationsRepository.findOne(applicationId));
 
@@ -105,28 +81,7 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
     Assert.notNull(applicationEntity);
     List<StatesHistoryEntity> statesHistoryEntities =
         statesHistoryRepository.findByApplicationEntityOrderByCreationDateDesc(applicationEntity);
-//    List<StateHistoryViewDTO> stateHistoryViewDTOs =
-//        modelMapper.map(statesHistoryEntities, STATE_HISTORY_VIEW_DTO_LIST_TYPE);
-//
-//    Iterator<StateHistoryViewDTO> dtoIterator = stateHistoryViewDTOs.iterator();
-//    Iterator<StatesHistoryEntity> entityIterator = statesHistoryEntities.iterator();
-//    while (dtoIterator.hasNext()) {
-//      StateHistoryViewDTO stateHistoryViewDTO = dtoIterator.next();
-//      StatesHistoryEntity statesHistoryEntity = entityIterator.next();
-//
-//      stateHistoryViewDTO
-//          .setCreationDate(statesHistoryEntity.getCreationDate());
-//      stateHistoryViewDTO
-//          .setApplicationDTO(modelMapper.map(applicationEntity, ApplicationDTO.class));
-//      stateHistoryViewDTO.setPosition(modelMapper.map(applicationEntity.getPositionEntity(),
-//          PositionDTO.class));
-//      stateHistoryViewDTO
-//          .setChannel(modelMapper.map(applicationEntity.getChannelEntity(), ChannelDTO.class));
-//      stateHistoryViewDTO
-//          .setStateDTO(modelMapper.map(statesHistoryEntity.getStatesEntity(), StateDTO.class));
-//    }
-//
-//    return stateHistoryViewDTOs;
+
     return converterService.convert(statesHistoryEntities, StateHistoryViewDTO.class);
   }
 }

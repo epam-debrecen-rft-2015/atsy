@@ -45,15 +45,6 @@ public class StateFlowServiceImpl implements StateFlowService {
         stateFlowRepository.findByFromStateEntity(converterService.convert(statesDTO,
             StatesEntity.class));
 
-    /*List<StateFlowDTO> stateFlowDTOs = new ArrayList<>();
-    for (StateFlowEntity stateFlowEntity : stateFlowEntities) {
-      StateFlowDTO stateFlowDTO = new StateFlowDTO();
-      stateFlowDTO
-          .setFromStateDTO(modelMapper.map(stateFlowEntity.getFromStateEntity(), StateDTO.class));
-      stateFlowDTO
-          .setToStateDTO(modelMapper.map(stateFlowEntity.getToStateEntity(), StateDTO.class));
-      stateFlowDTOs.add(stateFlowDTO);
-    }*/
     return converterService.convert(stateFlowEntities, StateFlowDTO.class);
   }
 }

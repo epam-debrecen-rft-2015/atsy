@@ -25,7 +25,7 @@ import java.util.List;
  */
 public interface ConverterService {
   /**
-   * Converts the {@code source} to {@code targetType}.
+   * Converts the {@code source} to {@code targetType} class.
    * @param source the object to convert
    * @param targetType the type to convert to
    * @param <S> the source type
@@ -35,7 +35,7 @@ public interface ConverterService {
   <S, T> T convert(S source, Class<T> targetType);
 
   /**
-   * Converts the {@code sourceList} to a list of {@code targetType}.
+   * Converts the {@code sourceList} to a list of {@code targetType} class objects.
    * @param sourceList the list to convert
    * @param targetType the type to convert to
    * @param <S> the source type

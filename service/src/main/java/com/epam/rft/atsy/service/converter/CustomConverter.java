@@ -2,6 +2,7 @@ package com.epam.rft.atsy.service.converter;
 
 /**
  * Interface for custom converters encapsulated in {@link ConverterAdapter}s.
+ * This interface is used internally in the ConverterService.
  * @param <S> the source type
  * @param <T> the target type
  */

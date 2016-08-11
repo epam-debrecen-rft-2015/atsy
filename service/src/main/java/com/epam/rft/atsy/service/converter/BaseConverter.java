@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface BaseConverter {
   /**
-   * Generates a list of {@link ConverterAdapter}s using converting methods defined in successor
+   * Generates a list of {@link ConverterAdapter}s using converting methods defined in child
    * interfaces.
    * @return the list of ConverterAdapters
    */

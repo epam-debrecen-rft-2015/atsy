@@ -1,8 +1,7 @@
 package com.epam.rft.atsy.service.converter;
 
 /**
- * Adapter class for {@link CustomConverter} used for saving the types of the source and target
- * objects.
+ * Adapter class for {@link CustomConverter}, used for saving the source and target types.
  * @see AbstractOneWayConverter
  * @see AbstractTwoWayConverter
  */
@@ -19,9 +18,9 @@ public class ConverterAdapter {
    * @param targetClass the target type
    * @param converter the custom converter
    */
-  public ConverterAdapter(Class targetClass, Class sourceClass, CustomConverter converter) {
-    this.targetClass = targetClass;
+  public ConverterAdapter(Class sourceClass, Class targetClass, CustomConverter converter) {
     this.sourceClass = sourceClass;
+    this.targetClass = targetClass;
     this.converter = converter;
   }
 

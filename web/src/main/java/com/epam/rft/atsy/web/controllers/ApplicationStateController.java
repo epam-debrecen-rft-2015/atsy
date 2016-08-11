@@ -25,10 +25,7 @@ public class ApplicationStateController {
   private static final String APPLICATION_STATE = "candidate.table.state.";
   private static final String STATES_OBJECT_KEY = "states";
   private static final String STATE_FLOW_OBJECT_KEY = "stateflows";
-//  private final static Type
-//      STATEHISTORYVIEWREPRESENTATION_LIST_TYPE =
-//      new TypeToken<List<StateHistoryViewRepresentation>>() {
-//      }.getType();
+
   @Resource
   private StatesHistoryService statesHistoryService;
 
@@ -37,9 +34,6 @@ public class ApplicationStateController {
 
   @Resource
   private MessageSource messageSource;
-
-//  @Resource
-//  private ModelMapper modelMapper;
 
   @Autowired
   private ConverterService converterService;
