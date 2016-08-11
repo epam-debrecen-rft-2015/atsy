@@ -57,18 +57,12 @@ public class ApplicationStateController {
   private ModelMapper modelMapper;
 
 
-
-
-
-
-
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView loadPage(@RequestParam Long applicationId,
                                @RequestParam(required = false, name = "state") String clickedState,
                                Locale locale) {
     ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
     modelAndView.addObject("applicationId", applicationId);
-
 
     List<StateHistoryViewRepresentation> stateHistoryViewRepresentations =
         modelMapper.map(statesHistoryService.getStateHistoriesByApplicationId(applicationId),
@@ -86,8 +80,9 @@ public class ApplicationStateController {
 
     for (StateHistoryViewRepresentation stateHistoryViewRepresentation : stateHistoryViewRepresentations) {
       String stateType = stateHistoryViewRepresentation.getStateName();
-      stateType = messageSource.getMessage(APPLICATION_STATE + stateHistoryViewRepresentation.getStateName(),
-                  new Object[]{stateType}, locale);
+      stateType = messageSource
+          .getMessage(APPLICATION_STATE + stateHistoryViewRepresentation.getStateName(),
+              new Object[]{stateType}, locale);
       stateHistoryViewRepresentation.setStateFullName(stateType);
     }
 
@@ -97,21 +92,6 @@ public class ApplicationStateController {
     modelAndView.addObject(STATES_OBJECT_KEY, stateHistoryViewRepresentations);
     return modelAndView;
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   @RequestMapping(method = RequestMethod.POST)
