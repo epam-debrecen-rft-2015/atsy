@@ -29,7 +29,7 @@ public class CandidateApplicationController {
       @PathVariable(value = "candidateId") Long candidateId, Locale locale) {
     Collection<CandidateApplicationDTO>
         applicationStates =
-        statesHistoryService.getCandidateApplicationsByCandidateId(candidateId);
+        statesHistoryService.getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(candidateId);
 
     for (CandidateApplicationDTO candidateApplicationDTO : applicationStates) {
       String stateType = candidateApplicationDTO.getStateType();

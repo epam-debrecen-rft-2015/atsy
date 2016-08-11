@@ -17,7 +17,7 @@ public interface StatesHistoryService {
    * @param id the candidate's id
    * @return the collection of applications
    */
-  Collection<CandidateApplicationDTO> getCandidateApplicationsByCandidateId(Long id);
+  Collection<CandidateApplicationDTO> getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(Long id);
 
   /**
    * Saves a state of the given application and returns it's id.
@@ -33,6 +33,5 @@ public interface StatesHistoryService {
    * @return the list of states of the application
    */
   List<StateHistoryViewDTO> getStateHistoriesByApplicationId(Long applicationId);
-
 
 }

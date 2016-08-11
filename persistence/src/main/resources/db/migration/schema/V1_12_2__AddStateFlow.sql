@@ -45,9 +45,14 @@ INSERT INTO state_flow (from_id,to_id) VALUES (8,9);
 INSERT INTO state_flow (from_id,to_id) VALUES (8,13);
 INSERT INTO state_flow (from_id,to_id) VALUES (8,14);
 
+INSERT INTO state_flow (from_id,to_id) VALUES (9,10);
 INSERT INTO state_flow (from_id,to_id) VALUES (9,11);
 INSERT INTO state_flow (from_id,to_id) VALUES (9,13);
 INSERT INTO state_flow (from_id,to_id) VALUES (9,14);
+
+INSERT INTO state_flow (from_id,to_id) VALUES (10,9);
+INSERT INTO state_flow (from_id,to_id) VALUES (10,13);
+INSERT INTO state_flow (from_id,to_id) VALUES (10,14);
 
 INSERT INTO state_flow (from_id,to_id) VALUES (11,12);
 INSERT INTO state_flow (from_id,to_id) VALUES (11,14);
@@ -61,4 +66,5 @@ INSERT INTO state_flow (from_id,to_id) VALUES (14,6);
 INSERT INTO state_flow (from_id,to_id) VALUES (14,7);
 INSERT INTO state_flow (from_id,to_id) VALUES (14,8);
 INSERT INTO state_flow (from_id,to_id) VALUES (14,9);
+INSERT INTO state_flow (from_id,to_id) VALUES (14,10);
 INSERT INTO state_flow (from_id,to_id) VALUES (14,11);

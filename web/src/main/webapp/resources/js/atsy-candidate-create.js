@@ -1,5 +1,3 @@
-var savedModel;
-
 function actionFormatter(value, row, index) {
     return [
         '<a class="edit ml10" href="../application_state?applicationId=' + row.applicationId + '" title="Edit">',
@@ -9,6 +7,8 @@ function actionFormatter(value, row, index) {
 }
 
 function CandidateCreateModel(){
+    var self = this;
+
     ko.bindingHandlers.valueWithInit = {
         init: function(element, valueAccessor, allBindingsAccessor, data) {
             var property = valueAccessor(),
@@ -30,11 +30,6 @@ function CandidateCreateModel(){
             self.modify(true);
         }
     };
-
-
-    var self = this;
-    self.errorResponse = ko.observable(null);
-    self.showError = ko.observable(false);
 
     self.ajaxCall = function() {
         var form = $("#candidate-create-form");
@@ -61,6 +56,9 @@ function CandidateCreateModel(){
         });
     }
 
+    self.errorResponse = ko.observable(null);
+    self.showError = ko.observable(false);
+
     self.errorMessage = ko.pureComputed(function() {
       if (self.errorResponse() === null) {
         return ""
@@ -80,7 +78,8 @@ function CandidateCreateModel(){
     });
 
     self.modify = ko.observable(false);
-    modify_display_true = function() {
+
+    self.modify_display_true = function() {
         self.modify(true);
         self.showError(false);
         $("#candidate-create-form").validator('destroy');
@@ -92,22 +91,14 @@ function CandidateCreateModel(){
         candidateModel.phone(savedModel.phone);
         candidateModel.referer(savedModel.referer);
     };
-    modify_display_false = function() {
+
+    self.modify_display_false = function() {
         self.modify(false);
         savedModel = ko.toJS(candidateModel);
     };
-    save_button = function() {
-        self.ajaxCall();
-    };
-
-    self.cssclass = ko.computed(function() {
-        if (self.modify == true) {
-            return "display";
-        } else {
-            return "";
-        }
-    });
 }
+
+var savedModel;
 
 var candidateModel = new CandidateCreateModel();
 
@@ -121,3 +112,20 @@ $('#candidate-create-form').validator().on('submit', function (e) {
 });
 
 ko.applyBindings(candidateModel);
+
+
+
+function creationDateFormatter(value, row, index) {
+    var dateTime = new Date(row.creationDate);
+    return dateTimeFormatter(dateTime);
+}
+
+function modificationDateFormatter(value, row, index) {
+    var dateTime = new Date(row.modificationDate);
+    return dateTimeFormatter(dateTime);
+}
+
+function dateTimeFormatter(dateTime) {
+    var options = {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
+    return dateTime.toLocaleDateString('hu-HU', options);
+}
