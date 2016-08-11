@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collection;
 import java.util.Locale;
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/secure/positions")
@@ -36,7 +37,7 @@ public class PositionController {
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  public ResponseEntity<RestResponse> saveOrUpdate(@RequestBody PositionDTO positionDTO,
+  public ResponseEntity<RestResponse> saveOrUpdate(@RequestBody @Valid PositionDTO positionDTO,
                                                    BindingResult result, Locale locale) {
     if (!result.hasErrors()) {
       positionService.saveOrUpdate(positionDTO);

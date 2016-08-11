@@ -92,7 +92,8 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
 
     StatesHistoryEntity statesHistoryEntity = modelMapper.map(state, StatesHistoryEntity.class);
     statesHistoryEntity.setStatesEntity(statesReporitory.findOne(state.getStateDTO().getId()));
-    statesHistoryEntity.setCreationDate(new Date());
+    statesHistoryEntity
+        .setCreationDate(state.getCreationDate() == null ? new Date() : state.getCreationDate());
     statesHistoryEntity.setApplicationEntity(applicationsRepository.findOne(applicationId));
 
     return statesHistoryRepository.save(statesHistoryEntity).getId();
@@ -130,4 +131,5 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
 
     return stateHistoryViewDTOs;
   }
+
 }

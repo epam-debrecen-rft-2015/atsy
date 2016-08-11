@@ -2,6 +2,8 @@ package com.epam.rft.atsy.web.configuration;
 
 import com.epam.rft.atsy.service.configuration.ServiceConfiguration;
 import com.epam.rft.atsy.web.exceptionhandling.UncheckedExceptionResolver;
+import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
+import com.epam.rft.atsy.web.messageresolution.MessageKeyResolverImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -53,11 +55,14 @@ public class WebConfiguration extends WebMvcConfigurationSupport {
   }
 
   @Bean
-  public ReloadableResourceBundleMessageSource messageSource() {
+  public MessageKeyResolver messageSource() {
     ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
     source.setBasename("classpath:i18n/messages");
     source.setDefaultEncoding("UTF-8");
-    return source;
+
+    MessageKeyResolver messageKeyResolver = new MessageKeyResolverImpl(source);
+
+    return messageKeyResolver;
   }
 
   @Bean
