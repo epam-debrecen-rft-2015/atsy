@@ -3,8 +3,6 @@ package com.epam.rft.atsy.web.controllers.rest;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +19,9 @@ import java.util.Locale;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
+/**
+ * Controller for creating a new candidate.
+ */
 @RestController
 @RequestMapping(value = "/secure/candidate")
 public class SingleCandidateController {
@@ -32,6 +33,13 @@ public class SingleCandidateController {
   @Resource
   private MessageSource messageSource;
 
+  /**
+   * Saves or updates and existing candidate.
+   * @param candidateDTO an object which wraps the data of a candidate
+   * @param result an object used to check if any error occurs
+   * @param locale language of the response
+   * @return a ResponseEntity object, which contains HTTP status code and error message if it occurs
+   */
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity saveOrUpdate(@Valid @RequestBody CandidateDTO candidateDTO,
                                      BindingResult result, Locale locale) {

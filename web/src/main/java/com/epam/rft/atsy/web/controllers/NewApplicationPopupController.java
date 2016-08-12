@@ -28,7 +28,7 @@ public class NewApplicationPopupController {
 
   /**
    * Loads the popup window with the input fields to create a new application.
-   * @return a ModelAndView object which describes the page
+   * @return a ModelAndView object which contains the name of the page to be loaded
    */
   @RequestMapping(method = RequestMethod.GET, value = "/new_application_popup")
   public ModelAndView loadPage() {
@@ -38,7 +38,7 @@ public class NewApplicationPopupController {
   /**
    * Saves or updates and existing application and state.
    * @param stateHistoryDTO contains the user input
-   * @param result a BindingResult object used to check if the input is valid
+   * @param result an object used to check if any error occurs
    * @return a string which represents a path to be redirected
    */
   @RequestMapping(method = RequestMethod.POST, value = "/secure/new_application_popup")
