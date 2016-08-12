@@ -5,6 +5,7 @@ import com.epam.rft.atsy.service.StateService;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateFlowDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
 
@@ -32,6 +33,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -172,11 +174,9 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void loadPageShouldThrowIllegalArgumentExceptionWhenClickedStateIsNull() throws Exception {
-    this.mockMvc
-        .perform(get(REQUEST_URL).param(APPLICATION_ID, ID_FIRST).param(CLICKED_STATE, null));
+    this.mockMvc.perform(get(REQUEST_URL).param(APPLICATION_ID, ID_FIRST).param(CLICKED_STATE, null));
 
-    verifyZeroInteractions(statesHistoryService, stateFlowService, stateService, messageSource,
-        modelMapper);
+    verifyZeroInteractions(statesHistoryService, stateFlowService, stateService, messageSource, modelMapper);
   }
 
   @Test
@@ -217,8 +217,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
         .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
 
     then(statesHistoryService).should().getStateHistoriesByApplicationId(1L);
-    then(modelMapper).should()
-        .map(emptyStateHistoryViewDTOList, STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE);
+    then(modelMapper).should().map(emptyStateHistoryViewDTOList, STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE);
     then(stateService).should().getStateDtoByName(TEXT);
     verifyZeroInteractions(stateFlowService, messageSource);
   }
@@ -250,7 +249,8 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     then(statesHistoryService).should().getStateHistoriesByApplicationId(1L);
     then(modelMapper).should().map(emptyStateHistoryViewDTOList, STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE);
     then(stateService).should().getStateDtoByName(CLICKED_STATE_NAME_NEW_APPLY);
-    then(messageSource).should().getMessage(anyString(), any(Object[].class), any(Locale.class));
+    then(messageSource).should().getMessage(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_APPLY,
+        new Object[]{CLICKED_STATE_NAME_NEW_APPLY}, Locale.ENGLISH);
     then(stateFlowService).should().getStateFlowDTOByFromStateDTO(stateDTOWithStateNameNewApply);
   }
 
@@ -299,4 +299,34 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
         .getMessage(APPLICATION_STATE + CLICKED_STATE_NAME_CODING, new Object[]{CLICKED_STATE_NAME_CODING},
             Locale.ENGLISH);
   }
+
+
+  @Test(expected = IllegalArgumentException.class)
+  public void saveOrUpdateShouldThrowIllegalArgumentExceptionWhenApplicationIdIsNull() throws Exception {
+    this.mockMvc.perform(post(REQUEST_URL).param(APPLICATION_ID, null));
+  }
+
+  @Test
+  public void saveOrUpdateShouldRespondInternalServerErrorWhenApplicationIdIsAnEmptyString() throws Exception {
+    given(statesHistoryService.saveStateHistory(any(StateHistoryDTO.class), any(Long.class)))
+        .willThrow(IllegalArgumentException.class);
+
+    this.mockMvc.perform(post(REQUEST_URL).param(APPLICATION_ID, StringUtils.EMPTY))
+        .andExpect(status().isInternalServerError())
+        .andExpect(view().name(ERROR_VIEW_NAME))
+        .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
+
+    then(statesHistoryService).should().saveStateHistory(any(StateHistoryDTO.class), any(Long.class));
+  }
+
+  @Test
+  public void saveOrUpdateShouldRespondInternalServerErrorWhenApplicationIdIsAText() throws Exception {
+    this.mockMvc.perform(post(REQUEST_URL).param(APPLICATION_ID, TEXT))
+        .andExpect(status().isInternalServerError())
+        .andExpect(view().name(ERROR_VIEW_NAME))
+        .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
+
+    verifyZeroInteractions(statesHistoryService);
+  }
+  
 }
