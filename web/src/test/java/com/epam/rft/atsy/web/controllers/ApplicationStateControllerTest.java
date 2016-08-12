@@ -30,7 +30,7 @@ import java.util.Locale;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -48,8 +48,12 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   private static final String APPLICATION_STATE = "candidate.table.state.";
   private static final String ERROR_VIEW_NAME = "error";
 
-  private static final String APPLICATION_ID = "applicationId";
-  private static final String CLICKED_STATE = "state";
+  private static final String PARAM_APPLICATION_ID = "applicationId";
+  private static final String PARAM_ID = "id";
+  private static final String PARAM_STATE_ID = "stateId";
+  private static final String PARAM_CREATION_DATE = "creationDate";
+  private static final String PARAM_DESCRIPTION = "description";
+  private static final String PARAM_CLICKED_STATE = "state";
   private static final String TEXT = "text";
 
   private static final String ID_FIRST_MINUS = "-1";
@@ -61,6 +65,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   private static final String STATE_NAME_NEW_APPLY = "New apply";
   private static final String STATE_NAME_CV = "CV";
   private static final String STATE_NAME_CODING = "Coding";
+  private static final String CREATION_DATE_AS_STRING = "2016-08-12 15:00:00";
 
 
   private StateDTO stateDTOWithStateNameNewApply = StateDTO.builder().id(1L).name(CLICKED_STATE_NAME_NEW_APPLY).build();
@@ -126,18 +131,12 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     return new Object[]{applicationStateController};
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void loadPageShouldThrowIllegalArgumentExceptionWhenApplicationIdIsNull()
-      throws Exception {
-    this.mockMvc.perform(get(REQUEST_URL).param(APPLICATION_ID, null));
-  }
-
   @Test
-  public void loadPageShouldRespondInternalServerErrorWhenApplicationIdIsAnEmptyString()
+  public void loadPageShouldRespondInternalServerErrorWhenParamApplicationIdIsAnEmptyString()
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(null))
         .willThrow(IllegalArgumentException.class);
-    this.mockMvc.perform(get(REQUEST_URL).param(APPLICATION_ID, StringUtils.EMPTY))
+    this.mockMvc.perform(get(REQUEST_URL).param(PARAM_APPLICATION_ID, StringUtils.EMPTY))
         .andExpect(status().isInternalServerError())
         .andExpect(view().name(ERROR_VIEW_NAME))
         .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
@@ -147,8 +146,8 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void loadPageShouldRespondInternalServerErrorWhenApplicationIdIsAText() throws Exception {
-    this.mockMvc.perform(get(REQUEST_URL).param(APPLICATION_ID, TEXT))
+  public void loadPageShouldRespondInternalServerErrorWhenParamApplicationIdIsAText() throws Exception {
+    this.mockMvc.perform(get(REQUEST_URL).param(PARAM_APPLICATION_ID, TEXT))
         .andExpect(status().isInternalServerError())
         .andExpect(view().name(ERROR_VIEW_NAME))
         .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
@@ -158,12 +157,12 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void loadPageShouldRespondInternalServerErrorWhenApplicationIdIsANegativeNumber()
+  public void loadPageShouldRespondInternalServerErrorWhenParamApplicationIdIsANegativeNumber()
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(-1L))
         .willThrow(IllegalArgumentException.class);
 
-    this.mockMvc.perform(get(REQUEST_URL).param(APPLICATION_ID, ID_FIRST_MINUS))
+    this.mockMvc.perform(get(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST_MINUS))
         .andExpect(status().isInternalServerError())
         .andExpect(view().name(ERROR_VIEW_NAME))
         .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
@@ -172,15 +171,9 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     verifyZeroInteractions(stateFlowService, stateService, messageSource, modelMapper);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void loadPageShouldThrowIllegalArgumentExceptionWhenClickedStateIsNull() throws Exception {
-    this.mockMvc.perform(get(REQUEST_URL).param(APPLICATION_ID, ID_FIRST).param(CLICKED_STATE, null));
-
-    verifyZeroInteractions(statesHistoryService, stateFlowService, stateService, messageSource, modelMapper);
-  }
 
   @Test
-  public void loadPageShouldRespondInternalServerErrorWhenClickedStateIsAnEmptyString()
+  public void loadPageShouldRespondInternalServerErrorWhenParamClickedStateIsAnEmptyString()
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(1L))
         .willReturn(emptyStateHistoryViewDTOList);
@@ -189,7 +182,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     given(stateService.getStateDtoByName(StringUtils.EMPTY)).willReturn(null);
 
     this.mockMvc.perform(
-        get(REQUEST_URL).param(APPLICATION_ID, ID_FIRST).param(CLICKED_STATE, StringUtils.EMPTY))
+        get(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST).param(PARAM_CLICKED_STATE, StringUtils.EMPTY))
         .andExpect(status().isInternalServerError())
         .andExpect(view().name(ERROR_VIEW_NAME))
         .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
@@ -202,7 +195,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void pageLoadShouldRespondInternalServerErrorWhenClickedStateIsAWrongText()
+  public void pageLoadShouldRespondInternalServerErrorWhenParamClickedStateIsAWrongText()
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(1L))
         .willReturn(emptyStateHistoryViewDTOList);
@@ -211,7 +204,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     given(stateService.getStateDtoByName(TEXT)).willReturn(null);
 
     this.mockMvc
-        .perform(get(REQUEST_URL).param(APPLICATION_ID, ID_FIRST).param(CLICKED_STATE, TEXT))
+        .perform(get(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST).param(PARAM_CLICKED_STATE, TEXT))
         .andExpect(status().isInternalServerError())
         .andExpect(view().name(ERROR_VIEW_NAME))
         .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
@@ -223,7 +216,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void pageLoadShouldRespondModelAndViewWhenApplicationIdAndStateAreCorrectAndStateHistoryViewRepresentationListContainsSingleElement()
+  public void pageLoadShouldRespondModelAndViewWhenParamApplicationIdAndSParamClickedStateAreCorrectAndStateHistoryViewRepresentationListContainsSingleElement()
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(1L))
         .willReturn(emptyStateHistoryViewDTOList);
@@ -236,11 +229,11 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     given(stateFlowService.getStateFlowDTOByFromStateDTO(stateDTOWithStateNameNewApply))
         .willReturn(stateFlowDTOListWithSingleElement);
 
-    this.mockMvc.perform(get(REQUEST_URL).param(APPLICATION_ID, ID_FIRST)
-        .param(CLICKED_STATE, CLICKED_STATE_NAME_NEW_APPLY))
+    this.mockMvc.perform(get(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST)
+        .param(PARAM_CLICKED_STATE, CLICKED_STATE_NAME_NEW_APPLY))
         .andExpect(status().isOk())
-        .andExpect(model().attributeExists(APPLICATION_ID))
-        .andExpect(model().attribute(APPLICATION_ID, 1L))
+        .andExpect(model().attributeExists(PARAM_APPLICATION_ID))
+        .andExpect(model().attribute(PARAM_APPLICATION_ID, 1L))
         .andExpect(model().attributeExists(STATE_FLOW_OBJECT_KEY))
         .andExpect(model().attribute(STATE_FLOW_OBJECT_KEY, stateFlowDTOListWithSingleElement))
         .andExpect(model().attributeExists(STATES_OBJECT_KEY))
@@ -255,7 +248,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void pageLoadShouldRespondModelAndViewWhenApplicationIdAndStateAndStateAreCorrectAndStateHistoryViewRepresentationListContainsThreeElements()
+  public void pageLoadShouldRespondModelAndViewWhenParamApplicationIdAndParamClickedStateAreCorrectAndStateHistoryViewRepresentationListContainsThreeElements()
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(1L)).willReturn(stateHistoryViewDTOListWithTwoElements);
     given(modelMapper.map(stateHistoryViewDTOListWithTwoElements, STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE))
@@ -275,10 +268,11 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
             Locale.ENGLISH)).willReturn(STATE_NAME_CODING);
 
     this.mockMvc
-        .perform(get(REQUEST_URL).param(APPLICATION_ID, ID_FIRST).param(CLICKED_STATE, CLICKED_STATE_NAME_CODING))
+        .perform(get(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST)
+            .param(PARAM_CLICKED_STATE, CLICKED_STATE_NAME_CODING))
         .andExpect(status().isOk())
-        .andExpect(model().attributeExists(APPLICATION_ID))
-        .andExpect(model().attribute(APPLICATION_ID, 1L))
+        .andExpect(model().attributeExists(PARAM_APPLICATION_ID))
+        .andExpect(model().attribute(PARAM_APPLICATION_ID, 1L))
         .andExpect(model().attributeExists(STATE_FLOW_OBJECT_KEY))
         .andExpect(model().attribute(STATE_FLOW_OBJECT_KEY, stateFlowDTOListWithSingleElement))
         .andExpect(model().attributeExists(STATES_OBJECT_KEY))
@@ -300,33 +294,55 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
             Locale.ENGLISH);
   }
 
-
-  @Test(expected = IllegalArgumentException.class)
-  public void saveOrUpdateShouldThrowIllegalArgumentExceptionWhenApplicationIdIsNull() throws Exception {
-    this.mockMvc.perform(post(REQUEST_URL).param(APPLICATION_ID, null));
-  }
-
   @Test
-  public void saveOrUpdateShouldRespondInternalServerErrorWhenApplicationIdIsAnEmptyString() throws Exception {
-    given(statesHistoryService.saveStateHistory(any(StateHistoryDTO.class), any(Long.class)))
+  public void saveOrUpdateShouldRespondInternalServerErrorWhenParamApplicationIdIsAnEmptyString() throws Exception {
+    given(statesHistoryService.saveStateHistory(any(StateHistoryDTO.class), eq(null)))
         .willThrow(IllegalArgumentException.class);
 
-    this.mockMvc.perform(post(REQUEST_URL).param(APPLICATION_ID, StringUtils.EMPTY))
+    this.mockMvc.perform(post(REQUEST_URL).param(PARAM_APPLICATION_ID, StringUtils.EMPTY))
         .andExpect(status().isInternalServerError())
         .andExpect(view().name(ERROR_VIEW_NAME))
         .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
 
-    then(statesHistoryService).should().saveStateHistory(any(StateHistoryDTO.class), any(Long.class));
+    then(statesHistoryService).should().saveStateHistory(any(StateHistoryDTO.class), eq(null));
   }
 
   @Test
-  public void saveOrUpdateShouldRespondInternalServerErrorWhenApplicationIdIsAText() throws Exception {
-    this.mockMvc.perform(post(REQUEST_URL).param(APPLICATION_ID, TEXT))
+  public void saveOrUpdateShouldRespondInternalServerErrorWhenParamApplicationIdIsAText() throws Exception {
+    this.mockMvc.perform(post(REQUEST_URL).param(PARAM_APPLICATION_ID, TEXT))
         .andExpect(status().isInternalServerError())
         .andExpect(view().name(ERROR_VIEW_NAME))
         .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
 
     verifyZeroInteractions(statesHistoryService);
   }
-  
+
+  @Test
+  public void saveOrUpdateShouldRespondInternalServerErrorWhenParamApplicationIdIsANegativeNumber() throws Exception {
+    given(statesHistoryService.saveStateHistory(any(StateHistoryDTO.class), eq(-1L)))
+        .willThrow(IllegalArgumentException.class);
+
+    this.mockMvc.perform(post(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST_MINUS))
+        .andExpect(status().isInternalServerError())
+        .andExpect(view().name(ERROR_VIEW_NAME))
+        .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
+
+    then(statesHistoryService).should().saveStateHistory(any(StateHistoryDTO.class), eq(-1L));
+  }
+
+
+  @Test
+  public void saveOrUpdateShouldRespondInternalServerErrorWhenParamStateIdIsAnEmptyString() throws Exception {
+    given(statesHistoryService.saveStateHistory(any(StateHistoryDTO.class), eq(1L)))
+        .willThrow(IllegalArgumentException.class);
+
+    this.mockMvc.perform(post(REQUEST_URL)
+        .param(PARAM_APPLICATION_ID, ID_FIRST)
+        .param(PARAM_STATE_ID, StringUtils.EMPTY))
+        .andExpect(status().isInternalServerError())
+        .andExpect(view().name(ERROR_VIEW_NAME))
+        .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
+
+    then(statesHistoryService).should().saveStateHistory(any(StateHistoryDTO.class), eq(1L));
+  }
 }

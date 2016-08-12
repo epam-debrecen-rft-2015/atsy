@@ -27,6 +27,9 @@ import java.util.Locale;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 @RequestMapping(value = "/secure/application_state")
 public class ApplicationStateController {
@@ -100,9 +103,7 @@ public class ApplicationStateController {
   public ModelAndView saveOrUpdate(@RequestParam Long applicationId,
                                    @Valid @ModelAttribute StateHistoryViewRepresentation stateHistoryViewRepresentation) {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
-
-    StateHistoryDTO
-        stateHistoryDTO = null;
+    StateHistoryDTO stateHistoryDTO = null;
 
     try {
       stateHistoryDTO = StateHistoryDTO.builder()
@@ -126,7 +127,7 @@ public class ApplicationStateController {
           .build();
 
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(ApplicationStateController.class.getName(), e);
     }
 
     statesHistoryService.saveStateHistory(stateHistoryDTO, applicationId);

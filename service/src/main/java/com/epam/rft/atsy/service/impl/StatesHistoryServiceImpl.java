@@ -2,6 +2,7 @@ package com.epam.rft.atsy.service.impl;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
+import com.epam.rft.atsy.persistence.entities.StatesEntity;
 import com.epam.rft.atsy.persistence.entities.StatesHistoryEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
@@ -89,12 +90,21 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
   public Long saveStateHistory(StateHistoryDTO state, Long applicationId) {
     Assert.notNull(state);
     Assert.notNull(applicationId);
+    Assert.notNull(state.getStateDTO());
+    Assert.notNull(state.getStateDTO().getId());
+
+    ApplicationEntity applicationEntity = applicationsRepository.findOne(applicationId);
+    Assert.notNull(applicationEntity);
+
+    Long stateId = state.getStateDTO().getId();
+    StatesEntity statesEntity = statesReporitory.findOne(stateId);
+    Assert.notNull(statesEntity);
 
     StatesHistoryEntity statesHistoryEntity = modelMapper.map(state, StatesHistoryEntity.class);
-    statesHistoryEntity.setStatesEntity(statesReporitory.findOne(state.getStateDTO().getId()));
+    statesHistoryEntity.setStatesEntity(statesEntity);
     statesHistoryEntity
         .setCreationDate(state.getCreationDate() == null ? new Date() : state.getCreationDate());
-    statesHistoryEntity.setApplicationEntity(applicationsRepository.findOne(applicationId));
+    statesHistoryEntity.setApplicationEntity(applicationEntity);
 
     return statesHistoryRepository.save(statesHistoryEntity).getId();
   }
