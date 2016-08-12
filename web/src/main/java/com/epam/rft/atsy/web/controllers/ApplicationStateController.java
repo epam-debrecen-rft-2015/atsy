@@ -6,6 +6,7 @@ import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.context.MessageSource;
@@ -22,6 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
