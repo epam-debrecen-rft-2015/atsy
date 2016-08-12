@@ -64,7 +64,7 @@ public class ApplicationStateController {
    * Creates the application state page and fills it with all the state information of the given
    * application.
    * @param applicationId determines which application is viewed on the page
-   * @param clickedState fsdfsdfdffdfa
+   * @param clickedState indicates which state button was pushed
    * @param locale used to determine which language should be used on the page
    * @return a ModelAndView object which contains all the state information of the given application
    * and the name of the page that manages the application states
