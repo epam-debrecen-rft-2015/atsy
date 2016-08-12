@@ -1,5 +1,19 @@
 package com.epam.rft.atsy.web.controllers;
 
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 import com.epam.rft.atsy.service.StateFlowService;
 import com.epam.rft.atsy.service.StateService;
 import com.epam.rft.atsy.service.StatesHistoryService;
@@ -8,7 +22,6 @@ import com.epam.rft.atsy.service.domain.states.StateFlowDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
-
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,32 +40,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationStateControllerTest extends AbstractControllerTest {
 
   private static final String REQUEST_URL = "/secure/application_state";
+  private static final String REDIRECT_URL = "/secure/application_state?applicationId=1";
   private static final String STATE_FLOW_OBJECT_KEY = "stateflows";
   private static final String STATES_OBJECT_KEY = "states";
   private static final String APPLICATION_STATE = "candidate.table.state.";
   private static final String ERROR_VIEW_NAME = "error";
 
   private static final String PARAM_APPLICATION_ID = "applicationId";
-  private static final String PARAM_ID = "id";
   private static final String PARAM_STATE_ID = "stateId";
   private static final String PARAM_CREATION_DATE = "creationDate";
-  private static final String PARAM_DESCRIPTION = "description";
   private static final String PARAM_CLICKED_STATE = "state";
   private static final String TEXT = "text";
 
@@ -68,18 +68,27 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   private static final String CREATION_DATE_AS_STRING = "2016-08-12 15:00:00";
 
 
-  private StateDTO stateDTOWithStateNameNewApply = StateDTO.builder().id(1L).name(CLICKED_STATE_NAME_NEW_APPLY).build();
-  private StateDTO stateDTOWithStateNameCoding = StateDTO.builder().id(3L).name(CLICKED_STATE_NAME_CODING).build();
+  private StateDTO
+      stateDTOWithStateNameNewApply =
+      StateDTO.builder().id(1L).name(CLICKED_STATE_NAME_NEW_APPLY).build();
+  private StateDTO
+      stateDTOWithStateNameCoding =
+      StateDTO.builder().id(3L).name(CLICKED_STATE_NAME_CODING).build();
 
   private StateHistoryViewRepresentation actualFirstStateHistoryViewRepresentation =
-      StateHistoryViewRepresentation.builder().stateId(1L).stateName(CLICKED_STATE_NAME_NEW_APPLY).build();
+      StateHistoryViewRepresentation.builder().stateId(1L).stateName(CLICKED_STATE_NAME_NEW_APPLY)
+          .build();
   private StateHistoryViewRepresentation actualSecondStateHistoryViewRepresentation =
       StateHistoryViewRepresentation.builder().stateId(2L).stateName(CLICKED_STATE_NAME_CV).build();
 
 
   private List<StateHistoryViewDTO> emptyStateHistoryViewDTOList = Collections.emptyList();
-  private List<StateHistoryViewRepresentation> emptyStateHistoryViewRepresentationList = new LinkedList<>();
-  private List<StateFlowDTO> stateFlowDTOListWithSingleElement = Collections.singletonList(new StateFlowDTO());
+  private List<StateHistoryViewRepresentation>
+      emptyStateHistoryViewRepresentationList =
+      new LinkedList<>();
+  private List<StateFlowDTO>
+      stateFlowDTOListWithSingleElement =
+      Collections.singletonList(new StateFlowDTO());
   private List<StateHistoryViewDTO> stateHistoryViewDTOListWithTwoElements =
       Collections.nCopies(2, new StateHistoryViewDTO());
 
@@ -95,16 +104,21 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
           .stateFullName(STATE_NAME_CODING).build();
 
 
-  private List<StateHistoryViewRepresentation> actualStateHistoryViewRepresentationListWithTwoElements =
+  private List<StateHistoryViewRepresentation>
+      actualStateHistoryViewRepresentationListWithTwoElements =
       new ArrayList<>(Arrays
-          .asList(actualSecondStateHistoryViewRepresentation, actualFirstStateHistoryViewRepresentation));
+          .asList(actualSecondStateHistoryViewRepresentation,
+              actualFirstStateHistoryViewRepresentation));
 
-  private List<StateHistoryViewRepresentation> expectedStateHistoryViewRepresentationListWithSingleElement =
+  private List<StateHistoryViewRepresentation>
+      expectedStateHistoryViewRepresentationListWithSingleElement =
       new LinkedList<>(Arrays.asList(expectedFirstStateHistoryViewRepresentation));
 
-  private List<StateHistoryViewRepresentation> expectedStateHistoryViewRepresentationListWithThreeElements =
+  private List<StateHistoryViewRepresentation>
+      expectedStateHistoryViewRepresentationListWithThreeElements =
       new LinkedList<>(Arrays.asList(expectedThirdStateHistoryViewRepresentation,
-          expectedSecondStateHistoryViewRepresentation, expectedFirstStateHistoryViewRepresentation));
+          expectedSecondStateHistoryViewRepresentation,
+          expectedFirstStateHistoryViewRepresentation));
 
 
   private final static Type STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE =
@@ -146,17 +160,6 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void loadPageShouldRespondInternalServerErrorWhenParamApplicationIdIsAText() throws Exception {
-    this.mockMvc.perform(get(REQUEST_URL).param(PARAM_APPLICATION_ID, TEXT))
-        .andExpect(status().isInternalServerError())
-        .andExpect(view().name(ERROR_VIEW_NAME))
-        .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
-
-    verifyZeroInteractions(statesHistoryService, stateFlowService, stateService, messageSource,
-        modelMapper);
-  }
-
-  @Test
   public void loadPageShouldRespondInternalServerErrorWhenParamApplicationIdIsANegativeNumber()
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(-1L))
@@ -177,12 +180,14 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(1L))
         .willReturn(emptyStateHistoryViewDTOList);
-    given(modelMapper.map(emptyStateHistoryViewDTOList, STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE))
+    given(
+        modelMapper.map(emptyStateHistoryViewDTOList, STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE))
         .willReturn(emptyStateHistoryViewRepresentationList);
     given(stateService.getStateDtoByName(StringUtils.EMPTY)).willReturn(null);
 
     this.mockMvc.perform(
-        get(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST).param(PARAM_CLICKED_STATE, StringUtils.EMPTY))
+        get(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST)
+            .param(PARAM_CLICKED_STATE, StringUtils.EMPTY))
         .andExpect(status().isInternalServerError())
         .andExpect(view().name(ERROR_VIEW_NAME))
         .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
@@ -199,18 +204,21 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(1L))
         .willReturn(emptyStateHistoryViewDTOList);
-    given(modelMapper.map(emptyStateHistoryViewDTOList, STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE))
+    given(
+        modelMapper.map(emptyStateHistoryViewDTOList, STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE))
         .willReturn(emptyStateHistoryViewRepresentationList);
     given(stateService.getStateDtoByName(TEXT)).willReturn(null);
 
     this.mockMvc
-        .perform(get(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST).param(PARAM_CLICKED_STATE, TEXT))
+        .perform(
+            get(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST).param(PARAM_CLICKED_STATE, TEXT))
         .andExpect(status().isInternalServerError())
         .andExpect(view().name(ERROR_VIEW_NAME))
         .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
 
     then(statesHistoryService).should().getStateHistoriesByApplicationId(1L);
-    then(modelMapper).should().map(emptyStateHistoryViewDTOList, STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE);
+    then(modelMapper).should()
+        .map(emptyStateHistoryViewDTOList, STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE);
     then(stateService).should().getStateDtoByName(TEXT);
     verifyZeroInteractions(stateFlowService, messageSource);
   }
@@ -220,11 +228,14 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(1L))
         .willReturn(emptyStateHistoryViewDTOList);
-    given(modelMapper.map(emptyStateHistoryViewDTOList, STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE))
+    given(
+        modelMapper.map(emptyStateHistoryViewDTOList, STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE))
         .willReturn(emptyStateHistoryViewRepresentationList);
-    given(stateService.getStateDtoByName(CLICKED_STATE_NAME_NEW_APPLY)).willReturn(stateDTOWithStateNameNewApply);
+    given(stateService.getStateDtoByName(CLICKED_STATE_NAME_NEW_APPLY))
+        .willReturn(stateDTOWithStateNameNewApply);
     given(messageSource
-        .getMessage(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_APPLY, new Object[]{CLICKED_STATE_NAME_NEW_APPLY},
+        .getMessage(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_APPLY,
+            new Object[]{CLICKED_STATE_NAME_NEW_APPLY},
             Locale.ENGLISH)).willReturn(STATE_NAME_NEW_APPLY);
     given(stateFlowService.getStateFlowDTOByFromStateDTO(stateDTOWithStateNameNewApply))
         .willReturn(stateFlowDTOListWithSingleElement);
@@ -237,10 +248,12 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
         .andExpect(model().attributeExists(STATE_FLOW_OBJECT_KEY))
         .andExpect(model().attribute(STATE_FLOW_OBJECT_KEY, stateFlowDTOListWithSingleElement))
         .andExpect(model().attributeExists(STATES_OBJECT_KEY))
-        .andExpect(model().attribute(STATES_OBJECT_KEY, expectedStateHistoryViewRepresentationListWithSingleElement));
+        .andExpect(model().attribute(STATES_OBJECT_KEY,
+            expectedStateHistoryViewRepresentationListWithSingleElement));
 
     then(statesHistoryService).should().getStateHistoriesByApplicationId(1L);
-    then(modelMapper).should().map(emptyStateHistoryViewDTOList, STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE);
+    then(modelMapper).should()
+        .map(emptyStateHistoryViewDTOList, STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE);
     then(stateService).should().getStateDtoByName(CLICKED_STATE_NAME_NEW_APPLY);
     then(messageSource).should().getMessage(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_APPLY,
         new Object[]{CLICKED_STATE_NAME_NEW_APPLY}, Locale.ENGLISH);
@@ -250,21 +263,26 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   @Test
   public void pageLoadShouldRespondModelAndViewWhenParamApplicationIdAndParamClickedStateAreCorrectAndStateHistoryViewRepresentationListContainsThreeElements()
       throws Exception {
-    given(statesHistoryService.getStateHistoriesByApplicationId(1L)).willReturn(stateHistoryViewDTOListWithTwoElements);
-    given(modelMapper.map(stateHistoryViewDTOListWithTwoElements, STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE))
+    given(statesHistoryService.getStateHistoriesByApplicationId(1L))
+        .willReturn(stateHistoryViewDTOListWithTwoElements);
+    given(modelMapper
+        .map(stateHistoryViewDTOListWithTwoElements, STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE))
         .willReturn(actualStateHistoryViewRepresentationListWithTwoElements);
-    given(stateService.getStateDtoByName(CLICKED_STATE_NAME_CODING)).willReturn(stateDTOWithStateNameCoding);
+    given(stateService.getStateDtoByName(CLICKED_STATE_NAME_CODING))
+        .willReturn(stateDTOWithStateNameCoding);
     given(stateFlowService.getStateFlowDTOByFromStateDTO(stateDTOWithStateNameCoding))
         .willReturn(stateFlowDTOListWithSingleElement);
 
     given(messageSource
-        .getMessage(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_APPLY, new Object[]{CLICKED_STATE_NAME_NEW_APPLY},
+        .getMessage(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_APPLY,
+            new Object[]{CLICKED_STATE_NAME_NEW_APPLY},
             Locale.ENGLISH)).willReturn(STATE_NAME_NEW_APPLY);
     given(messageSource
         .getMessage(APPLICATION_STATE + CLICKED_STATE_NAME_CV, new Object[]{CLICKED_STATE_NAME_CV},
             Locale.ENGLISH)).willReturn(STATE_NAME_CV);
     given(messageSource
-        .getMessage(APPLICATION_STATE + CLICKED_STATE_NAME_CODING, new Object[]{CLICKED_STATE_NAME_CODING},
+        .getMessage(APPLICATION_STATE + CLICKED_STATE_NAME_CODING,
+            new Object[]{CLICKED_STATE_NAME_CODING},
             Locale.ENGLISH)).willReturn(STATE_NAME_CODING);
 
     this.mockMvc
@@ -276,26 +294,31 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
         .andExpect(model().attributeExists(STATE_FLOW_OBJECT_KEY))
         .andExpect(model().attribute(STATE_FLOW_OBJECT_KEY, stateFlowDTOListWithSingleElement))
         .andExpect(model().attributeExists(STATES_OBJECT_KEY))
-        .andExpect(model().attribute(STATES_OBJECT_KEY, expectedStateHistoryViewRepresentationListWithThreeElements));
+        .andExpect(model().attribute(STATES_OBJECT_KEY,
+            expectedStateHistoryViewRepresentationListWithThreeElements));
 
     then(statesHistoryService).should().getStateHistoriesByApplicationId(1L);
-    then(modelMapper).should().map(stateHistoryViewDTOListWithTwoElements, STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE);
+    then(modelMapper).should()
+        .map(stateHistoryViewDTOListWithTwoElements, STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE);
     then(stateService).should().getStateDtoByName(CLICKED_STATE_NAME_CODING);
     then(stateFlowService).should().getStateFlowDTOByFromStateDTO(stateDTOWithStateNameCoding);
 
     then(messageSource).should()
-        .getMessage(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_APPLY, new Object[]{CLICKED_STATE_NAME_NEW_APPLY},
+        .getMessage(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_APPLY,
+            new Object[]{CLICKED_STATE_NAME_NEW_APPLY},
             Locale.ENGLISH);
     then(messageSource).should()
         .getMessage(APPLICATION_STATE + CLICKED_STATE_NAME_CV, new Object[]{CLICKED_STATE_NAME_CV},
             Locale.ENGLISH);
     then(messageSource).should()
-        .getMessage(APPLICATION_STATE + CLICKED_STATE_NAME_CODING, new Object[]{CLICKED_STATE_NAME_CODING},
+        .getMessage(APPLICATION_STATE + CLICKED_STATE_NAME_CODING,
+            new Object[]{CLICKED_STATE_NAME_CODING},
             Locale.ENGLISH);
   }
 
   @Test
-  public void saveOrUpdateShouldRespondInternalServerErrorWhenParamApplicationIdIsAnEmptyString() throws Exception {
+  public void saveOrUpdateShouldRespondInternalServerErrorWhenParamApplicationIdIsAnEmptyString()
+      throws Exception {
     given(statesHistoryService.saveStateHistory(any(StateHistoryDTO.class), eq(null)))
         .willThrow(IllegalArgumentException.class);
 
@@ -307,18 +330,10 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     then(statesHistoryService).should().saveStateHistory(any(StateHistoryDTO.class), eq(null));
   }
 
-  @Test
-  public void saveOrUpdateShouldRespondInternalServerErrorWhenParamApplicationIdIsAText() throws Exception {
-    this.mockMvc.perform(post(REQUEST_URL).param(PARAM_APPLICATION_ID, TEXT))
-        .andExpect(status().isInternalServerError())
-        .andExpect(view().name(ERROR_VIEW_NAME))
-        .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
-
-    verifyZeroInteractions(statesHistoryService);
-  }
 
   @Test
-  public void saveOrUpdateShouldRespondInternalServerErrorWhenParamApplicationIdIsANegativeNumber() throws Exception {
+  public void saveOrUpdateShouldRespondInternalServerErrorWhenParamApplicationIdIsANegativeNumber()
+      throws Exception {
     given(statesHistoryService.saveStateHistory(any(StateHistoryDTO.class), eq(-1L)))
         .willThrow(IllegalArgumentException.class);
 
@@ -332,7 +347,8 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
 
 
   @Test
-  public void saveOrUpdateShouldRespondInternalServerErrorWhenParamStateIdIsAnEmptyString() throws Exception {
+  public void saveOrUpdateShouldRespondInternalServerErrorWhenParamStateIdIsAnEmptyString()
+      throws Exception {
     given(statesHistoryService.saveStateHistory(any(StateHistoryDTO.class), eq(1L)))
         .willThrow(IllegalArgumentException.class);
 
@@ -344,5 +360,51 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
         .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
 
     then(statesHistoryService).should().saveStateHistory(any(StateHistoryDTO.class), eq(1L));
+  }
+
+  @Test
+  public void saveOrUpdateShouldRespondInternalServerErrorWhenParamStateIdIsANegativeNumber()
+      throws Exception {
+    given(statesHistoryService.saveStateHistory(any(StateHistoryDTO.class), eq(1L)))
+        .willThrow(IllegalArgumentException.class);
+
+    this.mockMvc.perform(post(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST)
+        .param(PARAM_STATE_ID, ID_FIRST_MINUS))
+        .andExpect(status().isInternalServerError())
+        .andExpect(view().name(ERROR_VIEW_NAME))
+        .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
+
+    then(statesHistoryService).should().saveStateHistory(any(StateHistoryDTO.class), eq(1L));
+  }
+
+  @Test
+  public void saveOrUpdateShouldRespondInternalServerErrorWhenCreationDateIsNotInValidFormat()
+      throws Exception {
+
+    given(statesHistoryService.saveStateHistory(null, 1L))
+        .willThrow(IllegalArgumentException.class);
+
+    this.mockMvc.perform(
+        post(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST).param(PARAM_STATE_ID, ID_FIRST)
+            .param(PARAM_CREATION_DATE, TEXT))
+        .andExpect(status().isInternalServerError())
+        .andExpect(view().name(ERROR_VIEW_NAME))
+        .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
+
+    then(statesHistoryService).should().saveStateHistory(null, 1L);
+  }
+
+  @Test
+  public void saveOrUpdateShouldRespondRedirectWhenAllParamIsCorrect() throws Exception {
+    given(statesHistoryService.saveStateHistory(null, 1L))
+        .willThrow(IllegalArgumentException.class);
+
+    this.mockMvc.perform(
+        post(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST).param(PARAM_STATE_ID, ID_FIRST)
+            .param(PARAM_CREATION_DATE, CREATION_DATE_AS_STRING))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl(REDIRECT_URL));
+
+    then(statesHistoryService).should(times(0)).saveStateHistory(null, 1L);
   }
 }
