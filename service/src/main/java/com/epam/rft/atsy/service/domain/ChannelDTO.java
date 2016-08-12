@@ -9,6 +9,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+/**
+ * Data transfer class that is used to transfer the data of a channel between the service and web
+ * layers. See {@link com.epam.rft.atsy.persistence.entities.ChannelEntity ChannelEntity}.
+ */
 @Builder
 @Data
 @NoArgsConstructor

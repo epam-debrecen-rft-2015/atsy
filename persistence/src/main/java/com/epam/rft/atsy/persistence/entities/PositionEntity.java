@@ -11,7 +11,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-
+/**
+ * Represents the available positions int the database.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,7 +22,6 @@ import lombok.ToString;
 @Entity
 @Table(name = "positions", schema = "atsy", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class PositionEntity extends SuperEntity implements java.io.Serializable {
-
 
   @Column(name = "name", nullable = false, length = 255, unique = true)
   private String name;
