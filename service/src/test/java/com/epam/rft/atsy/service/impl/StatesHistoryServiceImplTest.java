@@ -41,6 +41,7 @@ import static org.mockito.BDDMockito.then;
 @RunWith(MockitoJUnitRunner.class)
 public class StatesHistoryServiceImplTest {
 
+  private static final Long MINUS_FIRST_ID = -1L;
   private static final Long FIRST_ID = 1L;
   private static final Long SECOND_ID = 2L;
   private static final Long THIRD_ID = 3L;
@@ -301,6 +302,38 @@ public class StatesHistoryServiceImplTest {
 
     // Then
   }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void saveStateShouldThrowIllegalArgumentExceptionWhenStateDtoIsNull() {
+    StateHistoryDTO stateHistoryDTO = StateHistoryDTO.builder().stateDTO(null).build();
+
+    statesHistoryService.saveStateHistory(stateHistoryDTO, FIRST_ID);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void saveStateShouldThrowIllegalArgumentExceptionWhenStateDtoIdIsNull() {
+    StateDTO stateDTO = StateDTO.builder().id(null).build();
+    StateHistoryDTO stateHistoryDTO = StateHistoryDTO.builder().stateDTO(stateDTO).build();
+
+    statesHistoryService.saveStateHistory(stateHistoryDTO, FIRST_ID);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void saveStateShouldThrowIllegalArgumentExceptionWhenApplicationIdIsANegativeNumber() {
+    given(applicationsRepository.findOne(MINUS_FIRST_ID)).willReturn(null);
+
+    statesHistoryService.saveStateHistory(stateHistoryDTO, MINUS_FIRST_ID);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void saveStateShouldThrowIllegalArgumentExceptionWhenStateDtoIdIsANegativeNumber() {
+    StateDTO stateDTO = StateDTO.builder().id(MINUS_FIRST_ID).build();
+    StateHistoryDTO stateHistoryDTO = StateHistoryDTO.builder().stateDTO(stateDTO).build();
+    given(statesRepository.findOne(MINUS_FIRST_ID)).willReturn(null);
+
+    statesHistoryService.saveStateHistory(stateHistoryDTO, FIRST_ID);
+  }
+
 
   @Test
   public void saveStateShouldBeSuccessSaving() {
