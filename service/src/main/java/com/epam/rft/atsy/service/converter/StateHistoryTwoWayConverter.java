@@ -25,7 +25,7 @@ public class StateHistoryTwoWayConverter
     Assert.notNull(source);
     return StateHistoryDTO.builder()
         .id(source.getId())
-        .candidateId(source.getId())
+        .candidateId(source.getApplicationEntity().getCandidateEntity().getId())
         .position(source.getApplicationEntity().getPositionEntity() != null ?
             converterService.convert(source.getApplicationEntity().getPositionEntity(),
                 PositionDTO.class) : null)

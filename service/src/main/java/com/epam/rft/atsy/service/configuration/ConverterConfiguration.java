@@ -6,13 +6,14 @@ import com.epam.rft.atsy.persistence.repositories.PositionRepository;
 import com.epam.rft.atsy.persistence.repositories.StatesHistoryRepository;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.converter.ApplicationTwoWayConverter;
+import com.epam.rft.atsy.service.converter.BaseConverter;
 import com.epam.rft.atsy.service.converter.CandidateApplicationOneWayConverter;
 import com.epam.rft.atsy.service.converter.ConverterAdapter;
-import com.epam.rft.atsy.service.converter.BaseConverter;
 import com.epam.rft.atsy.service.converter.StateFlowTwoWayConverter;
 import com.epam.rft.atsy.service.converter.StateHistoryTwoWayConverter;
 import com.epam.rft.atsy.service.converter.StateHistoryViewTwoWayConverter;
 import com.epam.rft.atsy.service.impl.ModelMapperConverterServiceImpl;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,7 +41,7 @@ public class ConverterConfiguration {
   public ConverterService converterService() {
     ModelMapperConverterServiceImpl
         modelMapperConverterService =
-        new ModelMapperConverterServiceImpl();
+        new ModelMapperConverterServiceImpl(new ModelMapper());
     modelMapperConverterService
         .setupCustomConverters(converterAdapters(modelMapperConverterService));
     return modelMapperConverterService;
