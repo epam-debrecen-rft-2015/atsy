@@ -19,6 +19,9 @@ import java.util.Locale;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
+/**
+ * REST controller used to retrieve or modify information about the stored channels
+ */
 @RestController
 @RequestMapping(value = "/secure/channels")
 public class ChannelController {
@@ -31,11 +34,24 @@ public class ChannelController {
   @Resource
   private MessageSource messageSource;
 
+
+  /**
+   * Returns all stored channels in JSON format
+   * @return a collection of ChannelDTO objects
+   */
   @RequestMapping(method = RequestMethod.GET)
   public Collection<ChannelDTO> getChannels() {
     return channelService.getAllChannels();
   }
 
+  /**
+   * This method is used to modify an existing channel, or add a new one to the database.
+   * @param channelDTO a valid channelDTO object which stores information about the new channelDTO
+   * @param result an object used to handle errors
+   * @param locale a local object which sets the language of the error message (if any occurs)
+   * @return a ResponseEntity object, which contains HTTP status code and error message if any
+   * occurs
+   */
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity<RestResponse> saveOrUpdate(@RequestBody @Valid ChannelDTO channelDTO,
                                                    BindingResult result, Locale locale) {
