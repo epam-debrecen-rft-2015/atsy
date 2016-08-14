@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CandidateDTO {
 
-
   private Long id;
 
   @NotNull

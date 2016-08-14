@@ -4,7 +4,9 @@ import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 
-import java.util.Date;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,20 +17,42 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StateHistoryViewRepresentation {
+
   private Long id;
+
   private Long candidateId;
+
   private PositionDTO position;
+
   private ChannelDTO channel;
+
   private ApplicationDTO applicationDTO;
+
+  @Pattern(regexp = "yyyy-MM-dd HH:mm:ss", message = "statehistory.error.parse.date")
   private String creationDate;
-  private Short languageSkill;
-  private String description;
-  private String result;
-  private Long offeredMoney;
-  private Long claim;
+
+  @Pattern(regexp = "yyyy-MM-dd HH:mm:ss", message = "statehistory.error.parse.date")
   private String feedbackDate;
+
+  @Min(value = 0, message = "candidate.error.language.incorrect")
+  @Max(value = 10, message = "candidate.error.language.incorrect")
+  private Short languageSkill;
+
+  private String description;
+
+  private String result;
+
+  @Min(value = 0, message = "statehistory.error.claim.negative")
+  private Long offeredMoney;
+
+  @Min(value = 0, message = "statehistory.error.offeredMoney.negative")
+  private Long claim;
+
   private String dayOfStart;
+
   private String stateFullName;
+
   private Long stateId;
+
   private String stateName;
 }

@@ -8,6 +8,9 @@
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
         <script src="<c:url value="/resources/js/atsy-statehistory.js" />"></script>
+        <script src="<c:url value="/resources/js/atsy-statehistory-create.js" />"></script>
+        <script src="<c:url value="/resources/thirdparty/bootstrap-validator/validator.js" />"
+                        type="text/javascript"></script>
     </jsp:attribute>
   <jsp:body>
       <div class="page-header">
@@ -51,9 +54,11 @@
               <h4 class="glyphicon glyphicon-edit pull-right" id="latestStateEditButton" onclick="editLatestStateOnClick()"></h4>
               </c:if>
           </div>
-          <form class="form form-horizontal" role="form" method="POST" action="#">
+          <form class="form form-horizontal" role="form" method="POST" id="create-state-form" action="#">
 
+              <!-- TODO: This can be removed according to Petya -->
               <input type="hidden" name="applicationId" value="${applicationId}" />
+
               <input type="hidden" name="id" value="${data.id}"/>
               <input type="hidden" name="stateId" value="${data.stateId}"/>
 
