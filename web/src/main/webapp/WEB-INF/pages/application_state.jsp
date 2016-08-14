@@ -54,7 +54,7 @@
               <h4 class="glyphicon glyphicon-edit pull-right" id="latestStateEditButton" onclick="editLatestStateOnClick()"></h4>
               </c:if>
           </div>
-          <form class="form form-horizontal" role="form" method="POST" id="create-state-form" action="#">
+          <form data-toggle="validator" class="form form-horizontal" role="form" method="POST" id="create-state-form" action="#">
 
               <!-- TODO: This can be removed according to Petya -->
               <input type="hidden" name="applicationId" value="${applicationId}" />
@@ -67,9 +67,13 @@
                   <div class="col-sm-8">
                       <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="creationDateP">${data.creationDate}</p>
                       <c:if test="${stat.first}">
-                          <input class="stateInput" type="text" name="creationDate" id="creationDateInput" style="display:none" value="${data.creationDate}" data-formatter="creationDateFormatter">
+                          <input class="stateInput" type="text" name="creationDate" id="creationDateInput" style="display:none" value="${data.creationDate}"
+                            data-formatter="creationDateFormatter"
+                            data-error="<spring:message code="statehistory.error.parse.date"/>"
+                            pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$">
                       </c:if>
                   </div>
+                  <div class="help-block with-errors"></div>
               </div>
               <div class="form-group">
                   <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.description"/></label>
@@ -115,9 +119,12 @@
                           <div class="col-sm-8">
                               <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="languageSkillP">${data.languageSkill}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="languageSkill" id="languageSkillInput" style="display:none" value="${data.languageSkill}">
+                                  <input class="stateInput" type="number" name="languageSkill" id="languageSkillInput" style="display:none" value="${data.languageSkill}"
+                                  data-error="<spring:message code="candidate.error.language.incorrect"/>"
+                                  max="10" min="0">
                               </c:if>
                           </div>
+                          <div class="help-block with-errors"></div>
                       </div>
                   </c:when>
                   <c:when test="${data.stateName == 'firstTest'}">
@@ -137,27 +144,36 @@
                           <div class="col-sm-8">
                               <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="offeredMoneyP">${data.offeredMoney}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="offeredMoney" id="offeredMoneyInput" style="display:none" value="${data.offeredMoney}">
+                                  <input class="stateInput" type="number" name="offeredMoney" id="offeredMoneyInput" style="display:none" value="${data.offeredMoney}"
+                                  data-error="<spring:message code="statehistory.error.offeredMoney.negative"/>"
+                                  min="0">
                               </c:if>
                           </div>
+                          <div class="help-block with-errors"></div>
                       </div>
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.claim"/></label>
                           <div class="col-sm-8">
                               <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="claimP">${data.claim}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="claim" id="claimInput" style="display:none" value="${data.claim}">
+                                  <input class="stateInput" type="number" name="claim" id="claimInput" style="display:none" value="${data.claim}"
+                                  data-error="<spring:message code="statehistory.error.claim.negative"/>"
+                                  min="0">
                               </c:if>
                           </div>
+                          <div class="help-block with-errors"></div>
                       </div>
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.feedbackDate"/></label>
                           <div class="col-sm-8">
                               <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="feedbackDateP">${data.feedbackDate}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="feedbackDate" id="feedbackDateInput" style="display:none" value="${data.feedbackDate}">
+                                  <input class="stateInput" type="text" name="feedbackDate" id="feedbackDateInput" style="display:none" value="${data.feedbackDate}"
+                                  data-error="<spring:message code="statehistory.error.parse.date"/>"
+                                  pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$">
                               </c:if>
                           </div>
+                          <div class="help-block with-errors"></div>
                       </div>
                   </c:when>
                   <c:when test="${data.stateName == 'agree'}">
