@@ -16,7 +16,7 @@ import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
-import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Date;
 
 @RunWith(MockitoJUnitRunner.class)
-public class StateHistoryTwoWayConverterTest {
+public class StateHistoryViewTwoWayConverterTest {
 
   private static final Long STATE_ID = 1L;
   private static final String STATE_NAME = "state";
@@ -124,7 +124,7 @@ public class StateHistoryTwoWayConverterTest {
       .name(STATE_NAME)
       .build();
 
-  private StateHistoryDTO stateHistoryDTO = StateHistoryDTO.builder()
+  private StateHistoryViewDTO stateHistoryViewDTO = StateHistoryViewDTO.builder()
       .id(STATE_HISTORY_ID)
       .candidateId(CANDIDATE_ID)
       .position(positionDTO)
@@ -144,11 +144,11 @@ public class StateHistoryTwoWayConverterTest {
   @Mock
   private ConverterService converterService;
 
-  private StateHistoryTwoWayConverter stateHistoryTwoWayConverter;
+  private StateHistoryViewTwoWayConverter stateHistoryViewTwoWayConverter;
 
   @Before
   public void setUp() {
-    stateHistoryTwoWayConverter = new StateHistoryTwoWayConverter(converterService);
+    stateHistoryViewTwoWayConverter = new StateHistoryViewTwoWayConverter(converterService);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -156,13 +156,13 @@ public class StateHistoryTwoWayConverterTest {
     //Given
 
     //When
-    stateHistoryTwoWayConverter.secondTypeToFirstType(null);
+    stateHistoryViewTwoWayConverter.firstTypeToSecondType(null);
 
     //Then
   }
 
   @Test
-  public void firstTypeToSecondTypeShouldReturnCorrectStateHistoryDTO() {
+  public void firstTypeToSecondTypeShouldReturnCorrectStateHistoryViewDTO() {
     //Given
     given(converterService.convert(positionEntity, PositionDTO.class)).willReturn(positionDTO);
     given(converterService.convert(channelEntity, ChannelDTO.class)).willReturn(channelDTO);
@@ -171,11 +171,13 @@ public class StateHistoryTwoWayConverterTest {
     given(converterService.convert(statesEntity, StateDTO.class)).willReturn(stateDTO);
 
     //When
-    StateHistoryDTO result = stateHistoryTwoWayConverter.firstTypeToSecondType(statesHistoryEntity);
+    StateHistoryViewDTO
+        result =
+        stateHistoryViewTwoWayConverter.firstTypeToSecondType(statesHistoryEntity);
 
     //Then
     assertThat(result, notNullValue());
-    assertThat(result, is(stateHistoryDTO));
+    assertThat(result, is(stateHistoryViewDTO));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -183,20 +185,22 @@ public class StateHistoryTwoWayConverterTest {
     //Given
 
     //When
-    stateHistoryTwoWayConverter.secondTypeToFirstType(null);
+    stateHistoryViewTwoWayConverter.secondTypeToFirstType(null);
 
     //Then
   }
 
   @Test
-  public void secondTypeToFirstTypeShouldReturnCorrectStatesHistoryEntity() {
+  public void secondTypeToFirstTypeShouldReturnCorrectStateHistoryEntity() {
     //Given
     given(converterService.convert(applicationDTO, ApplicationEntity.class))
         .willReturn(applicationEntity);
     given(converterService.convert(stateDTO, StatesEntity.class)).willReturn(statesEntity);
 
     //When
-    StatesHistoryEntity result = stateHistoryTwoWayConverter.secondTypeToFirstType(stateHistoryDTO);
+    StatesHistoryEntity
+        result =
+        stateHistoryViewTwoWayConverter.secondTypeToFirstType(stateHistoryViewDTO);
 
     //Then
     assertThat(result, notNullValue());
