@@ -41,8 +41,6 @@ public class StateHistoryController {
                                      @Valid @RequestBody StateHistoryViewRepresentation stateHistoryViewRepresentation,
                                      BindingResult bindingResult, Locale locale) {
 
-    System.out.println(stateHistoryViewRepresentation);
-
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
     StateHistoryDTO stateHistoryDTO = null;
@@ -64,6 +62,7 @@ public class StateHistoryController {
       try {
         stateHistoryDTO = StateHistoryDTO.builder()
             .id(stateHistoryViewRepresentation.getId())
+            .candidateId(stateHistoryViewRepresentation.getCandidateId())
             .languageSkill(stateHistoryViewRepresentation.getLanguageSkill())
             .description(stateHistoryViewRepresentation.getDescription())
             .result(stateHistoryViewRepresentation.getResult())

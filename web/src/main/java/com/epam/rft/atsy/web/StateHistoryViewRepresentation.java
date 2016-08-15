@@ -42,10 +42,10 @@ public class StateHistoryViewRepresentation {
 
   private String result;
 
-  @Min(value = 0, message = "statehistory.error.claim.negative")
+  @Min(value = 0, message = "statehistory.error.offeredMoney.negative")
   private Long offeredMoney;
 
-  @Min(value = 0, message = "statehistory.error.offeredMoney.negative")
+  @Min(value = 0, message = "statehistory.error.claim.negative")
   private Long claim;
 
   private String dayOfStart;
