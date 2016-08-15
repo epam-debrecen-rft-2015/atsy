@@ -28,10 +28,10 @@ public class StateHistoryViewRepresentation {
 
   private ApplicationDTO applicationDTO;
 
-  @Pattern(regexp = "yyyy-MM-dd HH:mm:ss", message = "statehistory.error.parse.date")
+  @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$", message = "statehistory.error.parse.date")
   private String creationDate;
 
-  @Pattern(regexp = "yyyy-MM-dd HH:mm:ss", message = "statehistory.error.parse.date")
+  @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$", message = "statehistory.error.parse.date")
   private String feedbackDate;
 
   @Min(value = 0, message = "candidate.error.language.incorrect")

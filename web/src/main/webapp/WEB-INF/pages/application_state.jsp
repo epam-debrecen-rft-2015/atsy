@@ -46,6 +46,17 @@
         </div>
       </c:if>
 
+      <div class="panel panel-danger hidden" role="alert"  data-bind="css: { hidden: !showError() }">
+          <div class="panel-heading" data-bind="text: errorMessage"></div>
+          <div class="panel-body">
+              <ul id="field-messages">
+                  <!-- ko foreach: fieldMessages -->
+                      <li data-bind="text: $data"></li>
+                  <!-- /ko -->
+              </ul>
+          </div>
+      </div>
+
       <div id="stateList">
       <c:forEach var="data" items="${states}" varStatus="stat">
           <div class="page-header">
@@ -55,12 +66,10 @@
               </c:if>
           </div>
           <form data-toggle="validator" class="form form-horizontal" role="form" method="POST" id="create-state-form" action="#">
-
-              <!-- TODO: This can be removed according to Petya -->
-              <input type="hidden" name="applicationId" value="${applicationId}" />
-
-              <input type="hidden" name="id" value="${data.id}"/>
-              <input type="hidden" name="stateId" value="${data.stateId}"/>
+              <c:if test="${stat.first}">
+                <input type="hidden" name="id" value="${data.id}" data-bind="valueWithInit: 'id'"/>
+                <input type="hidden" name="stateId" value="${data.stateId}" data-bind="valueWithInit: 'stateId'"/>
+              </c:if>
 
               <div class="form-group col-sm-12 col-md-12 col-lg-12">
                   <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.date"/></label>
@@ -68,6 +77,7 @@
                       <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="creationDateP">${data.creationDate}</p>
                       <c:if test="${stat.first}">
                           <input class="stateInput" type="text" name="creationDate" id="creationDateInput" style="display:none" value="${data.creationDate}"
+                            data-bind="valueWithInit: 'creationDate'"
                             data-formatter="creationDateFormatter"
                             data-error="<spring:message code="statehistory.error.parse.date"/>"
                             pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$">
@@ -80,7 +90,8 @@
                   <div class="col-sm-8">
                       <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="descriptionP">${data.description}</p>
                       <c:if test="${stat.first}">
-                          <input class="stateInput" type="text" name="description" id="descriptionInput" style="display:none" value="${data.description}">
+                          <input class="stateInput" type="text" name="description" id="descriptionInput" style="display:none" value="${data.description}"
+                            data-bind="valueWithInit: 'description'">
                       </c:if>
                   </div>
               </div>
@@ -91,7 +102,8 @@
                           <div class="col-sm-8">
                               <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="positionNameP">${data.position.name}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="position.name" id="positionNameInput" style="display:none" value="${data.position.name}">
+                                  <input class="stateInput" type="text" name="position.name" id="positionNameInput" style="display:none" value="${data.position.name}"
+                                    data-bind="valueWithInit: 'name'">
                               </c:if>
                           </div>
                       </div>
@@ -100,7 +112,8 @@
                           <div class="col-sm-8">
                               <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="channelNameP">${data.channel.name}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="channel.name" id="channelNameInput" style="display:none" value="${data.channel.name}">
+                                  <input class="stateInput" type="text" name="channel.name" id="channelNameInput" style="display:none" value="${data.channel.name}"
+                                    data-bind="valueWithInit: 'channelName'">
                               </c:if>
                           </div>
                       </div>
@@ -121,6 +134,7 @@
                               <c:if test="${stat.first}">
                                   <input class="stateInput" type="number" name="languageSkill" id="languageSkillInput" style="display:none" value="${data.languageSkill}"
                                   data-error="<spring:message code="candidate.error.language.incorrect"/>"
+                                  data-bind="valueWithInit: 'languageSkill'"
                                   max="10" min="0">
                               </c:if>
                           </div>
@@ -133,7 +147,8 @@
                           <div class="col-sm-8">
                               <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="resultP" >${data.result}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="result" id="resultInput" style="display:none" value="${data.result}">
+                                  <input class="stateInput" type="text" name="result" id="resultInput" style="display:none" value="${data.result}"
+                                    data-bind="valueWithInit: 'result'">
                               </c:if>
                           </div>
                       </div>
@@ -146,6 +161,7 @@
                               <c:if test="${stat.first}">
                                   <input class="stateInput" type="number" name="offeredMoney" id="offeredMoneyInput" style="display:none" value="${data.offeredMoney}"
                                   data-error="<spring:message code="statehistory.error.offeredMoney.negative"/>"
+                                  data-bind="valueWithInit: 'offeredMoney'"
                                   min="0">
                               </c:if>
                           </div>
@@ -158,6 +174,7 @@
                               <c:if test="${stat.first}">
                                   <input class="stateInput" type="number" name="claim" id="claimInput" style="display:none" value="${data.claim}"
                                   data-error="<spring:message code="statehistory.error.claim.negative"/>"
+                                  data-bind="valueWithInit: 'claim'"
                                   min="0">
                               </c:if>
                           </div>
@@ -170,6 +187,7 @@
                               <c:if test="${stat.first}">
                                   <input class="stateInput" type="text" name="feedbackDate" id="feedbackDateInput" style="display:none" value="${data.feedbackDate}"
                                   data-error="<spring:message code="statehistory.error.parse.date"/>"
+                                  data-bind="valueWithInit: 'feedbackDate'"
                                   pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$">
                               </c:if>
                           </div>
@@ -182,7 +200,8 @@
                           <div class="col-sm-8">
                               <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="dayOfStartP">${data.dayOfStart}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="dayOfStart" id="dayOfStartInput" style="display:none" value="${data.dayOfStart}">
+                                  <input class="stateInput" type="text" name="dayOfStart" id="dayOfStartInput" style="display:none" value="${data.dayOfStart}"
+                                  data-bind="valueWithInit: 'dayOfStart'">
                               </c:if>
                           </div>
                       </div>

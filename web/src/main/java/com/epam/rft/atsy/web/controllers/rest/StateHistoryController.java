@@ -9,10 +9,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
@@ -37,9 +37,11 @@ public class StateHistoryController {
   private MessageSource messageSource;
 
   @RequestMapping(method = RequestMethod.POST)
-  public ResponseEntity saveOrUpdate(@RequestBody Long applicationId,
-                                     @Valid @ModelAttribute StateHistoryViewRepresentation stateHistoryViewRepresentation,
+  public ResponseEntity saveOrUpdate(@RequestParam Long applicationId,
+                                     @Valid @RequestBody StateHistoryViewRepresentation stateHistoryViewRepresentation,
                                      BindingResult bindingResult, Locale locale) {
+
+    System.out.println(stateHistoryViewRepresentation);
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
@@ -84,9 +86,6 @@ public class StateHistoryController {
         //TODO: what should we do about this?
         e.printStackTrace();
       }
-
-      //TODO: remove this, once done
-      System.out.println(stateHistoryDTO);
 
       statesHistoryService.saveStateHistory(stateHistoryDTO, applicationId);
 
