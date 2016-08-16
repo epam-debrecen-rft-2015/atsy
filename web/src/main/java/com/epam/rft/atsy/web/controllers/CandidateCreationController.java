@@ -4,6 +4,7 @@ import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.model.FileStatus;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +31,7 @@ public class CandidateCreationController {
     modelAndView.addObject(CANDIDATE_OBJECT_KEY, candidateService.getCandidate(candidateId));
 
     String cvPath = candidateService.getCVPathByCandidateId(candidateId);
-    if (cvPath == null) {
+    if (cvPath == null || !FileUploadController.cvPath.equals(StringUtils.EMPTY)) {
       modelAndView.addObject(FILE_STATUS, FileStatus.FILE_IS_NOT_EXIST.getStatus());
     } else {
       modelAndView.addObject(FILE_STATUS, FileStatus.FILE_IS_ALREADY_EXIST.getStatus());

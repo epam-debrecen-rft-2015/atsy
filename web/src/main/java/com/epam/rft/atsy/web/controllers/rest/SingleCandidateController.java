@@ -53,6 +53,7 @@ public class SingleCandidateController {
         candidateDTO.setCvPath(candidateService.getCVPathByCandidateId(candidateDTO.getId()));
       }
       Long candidateId = candidateService.saveOrUpdate(candidateDTO);
+      FileUploadController.cvPath = StringUtils.EMPTY;
 
       return new ResponseEntity<>(Collections.singletonMap("id", candidateId), HttpStatus.OK);
     } else {

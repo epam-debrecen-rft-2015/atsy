@@ -200,6 +200,34 @@
             </div>
         </div>
 
+
+        <c:if test="${not empty candidateId}">
+        <form:form method="POST" action="${fileUpload}/${candidateId}" enctype="multipart/form-data">
+
+                            <c:if test="${cv_file_status_monitor eq false}">
+                        		Upload your file please:
+                        		<input type="file" name="file" />
+                        		<input type="submit" value="upload" />
+                            </c:if>
+
+                     	 <c:if test="${not empty validationSuccessKey}">
+                                  <div id="globalMessage" class="alert alert-success" role="alert">
+                                      <span class="glyphicon glyphicon-ok" aria-hidden="false"></span>
+                                       <spring:message code="${validationSuccessKey}"/>
+                                       </div>
+                              </c:if>
+
+                              <c:if test="${not empty validationErrorKey}">
+                                   <div id="globalMessage" class="alert alert-danger" role="alert">
+                                       <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
+                                             <spring:message code="${validationErrorKey}"/>
+                                        </div>
+                              </c:if>
+                               <a href="<c:url value='/secure/candidate/download/${candidateId}' />">Download This File (located inside project)</a>
+        </form:form>
+        </c:if>
+
+        <c:if test="${empty candidateId}">
         <form:form method="POST" action="${fileUpload}" enctype="multipart/form-data">
 
                     <c:if test="${cv_file_status_monitor eq false}">
@@ -221,7 +249,9 @@
                                      <spring:message code="${validationErrorKey}"/>
                                 </div>
                       </c:if>
+                       <a href="<c:url value='/secure/candidate/download/${candidateId}' />">Download This File (located inside project)</a>
         </form:form>
+        </c:if>
 
 
 
