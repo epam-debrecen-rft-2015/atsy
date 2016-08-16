@@ -11,6 +11,7 @@
 <spring:url value="/secure/welcome" var="welcome"/>
 <spring:url value="/secure/candidate" var="candidateURL"/>
 <spring:url value="/secure/application" var="application"/>
+<spring:url value="/secure/candidate/fileUpload" var="fileUpload"/>
 
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
@@ -198,6 +199,30 @@
                 </div>
             </div>
         </div>
+
+        <form:form method="POST" action="${fileUpload}" enctype="multipart/form-data">
+
+                		Upload your file please:
+                		<input type="file" name="file" />
+                		<input type="submit" value="upload" />
+
+             	 <c:if test="${not empty validationSuccessKey}">
+                          <div id="globalMessage" class="alert alert-success" role="alert">
+                              <span class="glyphicon glyphicon-ok" aria-hidden="false"></span>
+                               <spring:message code="${validationSuccessKey}"/>
+                               </div>
+                      </c:if>
+
+                      <c:if test="${not empty validationErrorKey}">
+                           <div id="globalMessage" class="alert alert-danger" role="alert">
+                               <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
+                                     <spring:message code="${validationErrorKey}"/>
+                                </div>
+                      </c:if>
+        </form:form>
+
+
+
         <c:choose>
             <c:when test="${not empty candidate.id}">
                 <div id="new_application" class="text-right">
