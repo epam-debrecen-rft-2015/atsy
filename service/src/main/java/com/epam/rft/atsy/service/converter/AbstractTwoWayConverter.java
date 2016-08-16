@@ -1,8 +1,5 @@
 package com.epam.rft.atsy.service.converter;
 
-import org.springframework.core.GenericTypeResolver;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,37 +11,27 @@ import java.util.List;
  * @param <F> the first type
  * @param <S> the second type
  */
-public abstract class AbstractTwoWayConverter<F, S> implements TwoWayConverter<F, S> {
+public abstract class AbstractTwoWayConverter<F, S>
+    extends AbstractOneWayConverter<F, S> implements TwoWayConverter<F, S> {
+
+  public AbstractTwoWayConverter() {
+    super();
+  }
 
   @Override
   public List<ConverterAdapter> generate() {
 
-    Class[]
-        parameterTypeClasses =
-        GenericTypeResolver.resolveTypeArguments(this.getClass(), AbstractTwoWayConverter.class);
+    List<ConverterAdapter> converterAdapterList = super.generate();
 
-    Class entityClass = parameterTypeClasses[0];
-    Class dtoClass = parameterTypeClasses[1];
-
-    List<ConverterAdapter> converterAdapterList = new ArrayList<>();
-
-    converterAdapterList.add(new ConverterAdapter(entityClass, dtoClass,
-        new CustomConverter<F, S>() {
-          @Override
-          public S convert(F source) {
-            return firstTypeToSecondType(source);
-          }
-        })
-    );
-
-    converterAdapterList.add(new ConverterAdapter(dtoClass, entityClass,
-        new CustomConverter<S, F>() {
-          @Override
-          public F convert(S source) {
-            return secondTypeToFirstType(source);
-          }
-        })
-    );
+    converterAdapterList
+        .add(new ConverterAdapter(parameterizedTypeClass[1], parameterizedTypeClass[0],
+            new CustomConverter<S, F>() {
+              @Override
+              public F convert(S source) {
+                return secondTypeToFirstType(source);
+              }
+            })
+        );
 
     return converterAdapterList;
   }

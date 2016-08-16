@@ -12,6 +12,7 @@ import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.entities.StatesEntity;
 import com.epam.rft.atsy.persistence.entities.StatesHistoryEntity;
 import com.epam.rft.atsy.persistence.repositories.StatesHistoryRepository;
+import com.epam.rft.atsy.service.converter.impl.CandidateApplicationOneWayConverter;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import org.junit.Before;
 import org.junit.Test;
@@ -113,7 +114,7 @@ public class CandidateApplicationOneWayConverterTest {
     //Given
 
     //When
-    candidateApplicationOneWayConverter.sourceTypeToTargetType(null);
+    candidateApplicationOneWayConverter.firstTypeToSecondType(null);
 
     //Then
   }
@@ -128,7 +129,7 @@ public class CandidateApplicationOneWayConverterTest {
     //When
     CandidateApplicationDTO
         result =
-        candidateApplicationOneWayConverter.sourceTypeToTargetType(applicationEntity);
+        candidateApplicationOneWayConverter.firstTypeToSecondType(applicationEntity);
 
     //Then
     assertThat(result, notNullValue());

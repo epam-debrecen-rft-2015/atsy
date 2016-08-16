@@ -1,8 +1,9 @@
-package com.epam.rft.atsy.service.converter;
+package com.epam.rft.atsy.service.converter.impl;
 
 import com.epam.rft.atsy.persistence.entities.StateFlowEntity;
 import com.epam.rft.atsy.persistence.entities.StatesEntity;
 import com.epam.rft.atsy.service.ConverterService;
+import com.epam.rft.atsy.service.converter.AbstractTwoWayConverter;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateFlowDTO;
 import org.springframework.util.Assert;
@@ -13,6 +14,7 @@ public class StateFlowTwoWayConverter
   private ConverterService converterService;
 
   public StateFlowTwoWayConverter(ConverterService converterService) {
+    super();
     this.converterService = converterService;
   }
 

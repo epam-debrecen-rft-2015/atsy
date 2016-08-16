@@ -1,9 +1,10 @@
-package com.epam.rft.atsy.service.converter;
+package com.epam.rft.atsy.service.converter.impl;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
+import com.epam.rft.atsy.service.converter.AbstractTwoWayConverter;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import org.springframework.util.Assert;
 
@@ -20,6 +21,7 @@ public class ApplicationTwoWayConverter
       CandidateRepository candidateRepository,
       PositionRepository positionRepository,
       ChannelRepository channelRepository) {
+    super();
     this.candidateRepository = candidateRepository;
     this.positionRepository = positionRepository;
     this.channelRepository = channelRepository;

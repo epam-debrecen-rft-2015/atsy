@@ -11,30 +11,32 @@ import java.util.List;
  * {@link BaseConverter#generate()} method.
  *
  * If you need to create a new OneWayConverter, extend this class.
- * @param <S> the source type
- * @param <T> the target type
+ * @param <F> the first type
+ * @param <S> the second type
  */
-public abstract class AbstractOneWayConverter<S, T> implements OneWayConverter<S, T> {
+public abstract class AbstractOneWayConverter<F, S> implements OneWayConverter<F, S> {
+
+  protected Class[] parameterizedTypeClass;
+
+  public AbstractOneWayConverter() {
+    parameterizedTypeClass =
+        GenericTypeResolver.resolveTypeArguments(this.getClass(), AbstractOneWayConverter.class);
+  }
 
   @Override
   public List<ConverterAdapter> generate() {
-    Class[]
-        parameterizedTypeClasses =
-        GenericTypeResolver.resolveTypeArguments(this.getClass(), AbstractOneWayConverter.class);
-
-    Class entityClass = parameterizedTypeClasses[0];
-    Class dtoClass = parameterizedTypeClasses[1];
 
     List<ConverterAdapter> converterAdapterList = new ArrayList<>();
 
-    converterAdapterList.add(new ConverterAdapter(entityClass, dtoClass,
-        new CustomConverter<S, T>() {
-          @Override
-          public T convert(S source) {
-            return sourceTypeToTargetType(source);
-          }
-        })
-    );
+    converterAdapterList
+        .add(new ConverterAdapter(parameterizedTypeClass[0], parameterizedTypeClass[1],
+            new CustomConverter<F, S>() {
+              @Override
+              public S convert(F source) {
+                return firstTypeToSecondType(source);
+              }
+            })
+        );
 
     return converterAdapterList;
   }

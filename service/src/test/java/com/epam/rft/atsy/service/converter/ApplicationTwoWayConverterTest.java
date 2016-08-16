@@ -12,6 +12,7 @@ import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
+import com.epam.rft.atsy.service.converter.impl.ApplicationTwoWayConverter;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import org.junit.Before;
 import org.junit.Test;

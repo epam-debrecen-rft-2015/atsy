@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.given;
 import com.epam.rft.atsy.persistence.entities.StateFlowEntity;
 import com.epam.rft.atsy.persistence.entities.StatesEntity;
 import com.epam.rft.atsy.service.ConverterService;
+import com.epam.rft.atsy.service.converter.impl.StateFlowTwoWayConverter;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateFlowDTO;
 import org.junit.Before;

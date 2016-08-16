@@ -10,13 +10,7 @@ import com.epam.rft.atsy.service.ConverterService;
  * @param <F> the first type
  * @param <S> the second type
  */
-public interface TwoWayConverter<F, S> extends BaseConverter {
-  /**
-   * Converts the {@code source} with {@code F} type to a {@code S} type object.
-   * @param source the object to convert
-   * @return the converted object
-   */
-  S firstTypeToSecondType(F source);
+public interface TwoWayConverter<F, S> extends OneWayConverter<F, S> {
 
   /**
    * Converts the {@code source} with {@code S} type to a {@code F} type object.

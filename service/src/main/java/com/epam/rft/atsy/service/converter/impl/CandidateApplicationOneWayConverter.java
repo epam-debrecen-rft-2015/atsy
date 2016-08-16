@@ -1,8 +1,9 @@
-package com.epam.rft.atsy.service.converter;
+package com.epam.rft.atsy.service.converter.impl;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.StatesHistoryEntity;
 import com.epam.rft.atsy.persistence.repositories.StatesHistoryRepository;
+import com.epam.rft.atsy.service.converter.AbstractOneWayConverter;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import org.springframework.util.Assert;
 
@@ -13,11 +14,12 @@ public class CandidateApplicationOneWayConverter
 
   public CandidateApplicationOneWayConverter(
       StatesHistoryRepository statesHistoryRepository) {
+    super();
     this.statesHistoryRepository = statesHistoryRepository;
   }
 
   @Override
-  public CandidateApplicationDTO sourceTypeToTargetType(ApplicationEntity source) {
+  public CandidateApplicationDTO firstTypeToSecondType(ApplicationEntity source) {
     Assert.notNull(source);
     StatesHistoryEntity statesHistoryEntity =
         statesHistoryRepository

@@ -1,29 +1,31 @@
-package com.epam.rft.atsy.service.converter;
+package com.epam.rft.atsy.service.converter.impl;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.StatesEntity;
 import com.epam.rft.atsy.persistence.entities.StatesHistoryEntity;
 import com.epam.rft.atsy.service.ConverterService;
+import com.epam.rft.atsy.service.converter.AbstractTwoWayConverter;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
-import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
 import org.springframework.util.Assert;
 
-public class StateHistoryTwoWayConverter
-    extends AbstractTwoWayConverter<StatesHistoryEntity, StateHistoryDTO> {
+public class StateHistoryViewTwoWayConverter
+    extends AbstractTwoWayConverter<StatesHistoryEntity, StateHistoryViewDTO> {
 
   private ConverterService converterService;
 
-  public StateHistoryTwoWayConverter(ConverterService converterService) {
+  public StateHistoryViewTwoWayConverter(ConverterService converterService) {
+    super();
     this.converterService = converterService;
   }
 
   @Override
-  public StateHistoryDTO firstTypeToSecondType(StatesHistoryEntity source) {
+  public StateHistoryViewDTO firstTypeToSecondType(StatesHistoryEntity source) {
     Assert.notNull(source);
-    return StateHistoryDTO.builder()
+    return StateHistoryViewDTO.builder()
         .id(source.getId())
         .candidateId(source.getApplicationEntity().getCandidateEntity().getId())
         .position(source.getApplicationEntity().getPositionEntity() != null ?
@@ -48,7 +50,7 @@ public class StateHistoryTwoWayConverter
   }
 
   @Override
-  public StatesHistoryEntity secondTypeToFirstType(StateHistoryDTO source) {
+  public StatesHistoryEntity secondTypeToFirstType(StateHistoryViewDTO source) {
     Assert.notNull(source);
     return StatesHistoryEntity.builder()
         .id(source.getId())
