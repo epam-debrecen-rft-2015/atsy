@@ -23,4 +23,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
    */
   UserEntity findByUserName(String userName);
 
+  String findCvPathByUserName(String userName);
+
 }

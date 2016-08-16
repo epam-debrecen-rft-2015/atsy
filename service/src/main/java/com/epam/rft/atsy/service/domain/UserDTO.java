@@ -23,4 +23,6 @@ public class UserDTO implements Serializable {
   @NotNull
   private String password;
 
+  private String cvPath;
+
 }

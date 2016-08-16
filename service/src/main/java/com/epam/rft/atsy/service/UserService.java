@@ -29,4 +29,6 @@ public interface UserService {
    * @return the id of user
    */
   Long saveOrUpdate(UserDTO userDTO);
+
+  String findCvPathByUserName(String userName);
 }

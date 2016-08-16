@@ -27,12 +27,15 @@ public class UserEntity extends SuperEntity implements java.io.Serializable {
   @Column(name = "user_pwd", nullable = false, length = 255, table = "users")
   private String userPassword;
 
+  @Column(name = "cv_path", unique = true, table = "users")
+  private String cvPath;
 
   @Builder
-  public UserEntity(Long id, String userName, String userPassword) {
+  public UserEntity(Long id, String userName, String userPassword, String cvPath) {
     super(id);
     this.userName = userName;
     this.userPassword = userPassword;
+    this.cvPath = cvPath;
   }
 
 }
