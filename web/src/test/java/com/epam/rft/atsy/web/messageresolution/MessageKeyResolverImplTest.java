@@ -106,12 +106,12 @@ public class MessageKeyResolverImplTest {
   }
 
   @Test
-  public void resolveMessageOrDefaultShouldReturnDefaultMessageWhenMessageKeyDoesNotExist() {
+  public void resolveMessageOrDefaultShouldReturnMessageKeyWhenMessageResolutionFails() {
     // When
     String message =
         messageKeyResolver.resolveMessageOrDefault(NON_EXISTENT_MESSAGE_KEY, DEFAULT_MESSAGE);
 
     // Then
-    assertThat(message, equalTo(DEFAULT_MESSAGE));
+    assertThat(message, equalTo("[ ! " + NON_EXISTENT_MESSAGE_KEY + " ! ]"));
   }
 }

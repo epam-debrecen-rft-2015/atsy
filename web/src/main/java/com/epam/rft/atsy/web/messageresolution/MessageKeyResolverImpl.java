@@ -41,12 +41,11 @@ public class MessageKeyResolverImpl implements MessageKeyResolver, MessageSource
   }
 
   @Override
-  public String resolveMessageOrDefault(String messageKey, String defaultMessage,
-                                        Object... substitutions) {
+  public String resolveMessageOrDefault(String messageKey,  Object... substitutions) {
     try {
       return resolveMessage(messageKey, substitutions);
     } catch (MessageResolutionFailedException e) {
-      return defaultMessage;
+      return "[ ! " + messageKey + " ! ]";
     }
   }
 
