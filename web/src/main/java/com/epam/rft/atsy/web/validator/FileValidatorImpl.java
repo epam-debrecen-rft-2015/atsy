@@ -32,9 +32,9 @@ public class FileValidatorImpl implements FileValidator {
     if (isGreaterFileSizeThanTheMaximumFileSize(file)) {
       throw new FileIsTooLargeValidationException();
     }
-    if (isUnCorrectFileExtension(file)) {
+    /*if (isUnCorrectFileExtension(file)) {
       throw new FileIsInWrongExtensionValidationException();
-    }
+    }*/
   }
 
 
