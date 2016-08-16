@@ -38,6 +38,8 @@ public class SingleCandidateController {
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity saveOrUpdate(@Valid @RequestBody CandidateDTO candidateDTO,
                                      BindingResult result, Locale locale) {
+
+
     if (!result.hasErrors()) {
       if (!FileUploadController.cvPath.equals(StringUtils.EMPTY)) {
         if (candidateDTO.getId() == null) {
@@ -47,11 +49,10 @@ public class SingleCandidateController {
         } else if (candidateDTO.getId() != null) {
           candidateDTO.setCvPath(candidateService.getCVPathByCandidateId(candidateDTO.getId()));
         }
-      } else {
+      } else if(candidateDTO.getId() != null) {
         candidateDTO.setCvPath(candidateService.getCVPathByCandidateId(candidateDTO.getId()));
       }
       Long candidateId = candidateService.saveOrUpdate(candidateDTO);
-
 
       return new ResponseEntity<>(Collections.singletonMap("id", candidateId), HttpStatus.OK);
     } else {
