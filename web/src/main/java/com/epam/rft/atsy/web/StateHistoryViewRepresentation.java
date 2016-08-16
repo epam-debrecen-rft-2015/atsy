@@ -6,7 +6,9 @@ import com.epam.rft.atsy.service.domain.PositionDTO;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,7 +30,8 @@ public class StateHistoryViewRepresentation {
 
   private ApplicationDTO applicationDTO;
 
-  @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$", message = "statehistory.error.parse.date")
+  @NotNull
+  @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}", message = "statehistory.error.parse.date")
   private String creationDate;
 
   @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$", message = "statehistory.error.parse.date")
@@ -38,9 +41,12 @@ public class StateHistoryViewRepresentation {
   @Max(value = 10, message = "candidate.error.language.incorrect")
   private Short languageSkill;
 
+  @Size(max = 2000, message = "statehistory.error.description.length")
   private String description;
 
-  private String result;
+  @Min(value = 0, message = "candidate.error.result.range")
+  @Max(value = 100, message = "candidate.error.result.range")
+  private Short result;
 
   @Min(value = 0, message = "statehistory.error.offeredMoney.negative")
   private Long offeredMoney;

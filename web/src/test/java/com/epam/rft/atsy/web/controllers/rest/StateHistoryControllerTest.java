@@ -50,7 +50,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   private static final String OFFERED_MONEY_NEGATIVE_MESSAGE_KEY =
       "statehistory.error.offeredMoney.negative";
 
-  private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
+  private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm";
 
   private static final String MALFORMED_DATE = "malformed";
 
@@ -71,17 +71,23 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
   private static final Long ID = 1L;
 
-  private static final String CREATION_DATE_STRING = "2016-08-15 14:00:00";
+  private static final String CREATION_DATE_STRING = "2016-08-15 14:00";
 
-  private static final Date CREATION_DATE = new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
+  private static final Date
+      CREATION_DATE =
+      new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
 
   private static final String FEEDBACK_DATE_STRING = "2016-08-15 14:00:00";
 
-  private static final Date FEEDBACK_DATE = new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
+  private static final Date
+      FEEDBACK_DATE =
+      new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
 
   private static final String DAY_OF_START_STRING = "2016-08-15 14:00:00";
 
-  private static final Date DAY_OF_START = new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
+  private static final Date
+      DAY_OF_START =
+      new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
 
   private static final Short LANGUAGE_SKILL = 10;
 
@@ -244,7 +250,8 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
     ArgumentCaptor<StateHistoryDTO> historyCaptor = ArgumentCaptor.forClass(StateHistoryDTO.class);
 
-    then(statesHistoryService).should().saveStateHistory(historyCaptor.capture(), eq(APPLICATION_ID));
+    then(statesHistoryService).should()
+        .saveStateHistory(historyCaptor.capture(), eq(APPLICATION_ID));
 
     assertThat(historyCaptor.getValue(), equalTo(dummyStateHistoryDto));
   }

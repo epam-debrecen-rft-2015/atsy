@@ -3,6 +3,7 @@
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html;charset=UTF-8" %>
 <spring:url value="/secure/application_state" var="application_state"/>
 <atsy:secure_page>
@@ -59,6 +60,7 @@
 
       <div id="stateList">
       <c:forEach var="data" items="${states}" varStatus="stat">
+          <fmt:parseDate pattern="yyyy-MM-dd HH:mm:ss" value="${data.creationDate}" var="parsedCreationDate" />
           <div class="page-header">
               <h4 class="col-sm-6 col-md-6 col-lg-6">${data.stateFullName}</h4>
               <c:if test="${stat.first}">
@@ -74,13 +76,13 @@
               <div class="form-group col-sm-12 col-md-12 col-lg-12">
                   <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.date"/></label>
                   <div class="col-sm-8">
-                      <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="creationDateP">${data.creationDate}</p>
+                      <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="creationDateP"><fmt:formatDate value='${parsedCreationDate}' pattern='yyyy-MM-dd HH:mm'/></p>
                       <c:if test="${stat.first}">
-                          <input class="stateInput" type="text" name="creationDate" id="creationDateInput" style="display:none" value="${data.creationDate}"
+                          <input class="stateInput" readOnly="true" type="text" name="creationDate" id="creationDateInput" style="display:none"
+                            value="<fmt:formatDate value='${parsedCreationDate}' pattern='yyyy-MM-dd HH:mm'/>"
                             data-bind="valueWithInit: 'creationDate'"
-                            data-formatter="creationDateFormatter"
                             data-error="<spring:message code="statehistory.error.parse.date"/>"
-                            pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$">
+                            pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$"/>
                       </c:if>
                   </div>
                   <div class="help-block with-errors"></div>
@@ -90,10 +92,14 @@
                   <div class="col-sm-8">
                       <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="descriptionP">${data.description}</p>
                       <c:if test="${stat.first}">
-                          <input class="stateInput" type="text" name="description" id="descriptionInput" style="display:none" value="${data.description}"
-                            data-bind="valueWithInit: 'description'">
+                          <textarea class="stateInput" wrap="soft" name="description" id="descriptionInput" style="display:none; resize: both;"
+                            data-bind="valueWithInit: 'description'"
+                            maxlength="2000">
+                              ${data.description}
+                            </textarea>
                       </c:if>
                   </div>
+                  <div class="help-block with-errors"></div>
               </div>
               <c:choose>
                   <c:when test="${data.stateName == 'newstate'}">
@@ -145,12 +151,15 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.result"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="resultP" >${data.result}</p>
+                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="resultP" >${data.result}%</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="result" id="resultInput" style="display:none" value="${data.result}"
-                                    data-bind="valueWithInit: 'result'">
+                                  <input class="stateInput" type="number" name="result" id="resultInput" style="display:none;" value="${data.result}"
+                                    data-bind="valueWithInit: 'result'"
+                                    max="100" min="0"
+                                    data-error="<spring:message code="statehistory.error.result.range"/>">
                               </c:if>
                           </div>
+                          <div class="help-block with-errors"></div>
                       </div>
                   </c:when>
                   <c:when test="${data.stateName == 'wageOffer'}">

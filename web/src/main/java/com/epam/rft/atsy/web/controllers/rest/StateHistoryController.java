@@ -26,7 +26,7 @@ import javax.validation.Valid;
 @RequestMapping(value = "/secure/application_state")
 public class StateHistoryController {
 
-  private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
+  private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm";
 
   private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
 
@@ -74,9 +74,7 @@ public class StateHistoryController {
             .dayOfStart(stateHistoryViewRepresentation.getDayOfStart() != null
                 && !stateHistoryViewRepresentation.getDayOfStart().isEmpty() ? simpleDateFormat
                 .parse(stateHistoryViewRepresentation.getDayOfStart()) : null)
-            .creationDate(stateHistoryViewRepresentation.getCreationDate() != null
-                && !stateHistoryViewRepresentation.getCreationDate().isEmpty() ? simpleDateFormat
-                .parse(stateHistoryViewRepresentation.getCreationDate()) : null)
+            .creationDate(null)
             .stateDTO(StateDTO.builder().id(stateHistoryViewRepresentation.getStateId())
                 .name(stateHistoryViewRepresentation.getStateName()).build())
             .build();

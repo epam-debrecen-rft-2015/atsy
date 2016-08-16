@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import javax.annotation.Resource;
@@ -61,9 +63,12 @@ public class ApplicationStateController {
             STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE);
 
     if (clickedState != null) {
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
       StateDTO clickedStateDTO = stateService.getStateDtoByName(clickedState);
 
       stateHistoryViewRepresentations.add(0, StateHistoryViewRepresentation.builder()
+          .creationDate(simpleDateFormat.format(new Date()))
           .stateId(clickedStateDTO.getId())
           .stateName(clickedStateDTO.getName())
           .build());

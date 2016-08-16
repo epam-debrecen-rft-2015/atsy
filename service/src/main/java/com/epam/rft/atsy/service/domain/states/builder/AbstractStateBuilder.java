@@ -9,11 +9,6 @@ import com.epam.rft.atsy.service.domain.states.StateDTO;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 
-/**
- * Created by Gabor_Ivanyi-Nagy on 7/6/2016.
- */
-
-
 @AllArgsConstructor
 public abstract class AbstractStateBuilder<B extends AbstractStateBuilder<B, T>, T extends AbstractStateHistoryDTO>
     implements Builder<T> {
@@ -57,7 +52,7 @@ public abstract class AbstractStateBuilder<B extends AbstractStateBuilder<B, T>,
     return (B) this;
   }
 
-  public B result(String result) {
+  public B result(Short result) {
     object.setResult(result);
     return (B) this;
   }
