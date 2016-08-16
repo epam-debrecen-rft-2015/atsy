@@ -6,11 +6,11 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.times;
 
 import com.epam.rft.atsy.persistence.entities.StateFlowEntity;
 import com.epam.rft.atsy.persistence.entities.StatesEntity;
 import com.epam.rft.atsy.persistence.repositories.StateFlowRepository;
+import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateFlowDTO;
 import org.junit.Test;
@@ -18,7 +18,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.modelmapper.ModelMapper;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -48,7 +47,7 @@ public class StateFlowServiceImplTest {
   private StateFlowRepository stateFlowRepository;
 
   @Mock
-  private ModelMapper modelMapper;
+  private ConverterService converterService;
 
   @InjectMocks
   private StateFlowServiceImpl stateFlowService;
@@ -96,7 +95,8 @@ public class StateFlowServiceImplTest {
         invalidStatesEntity =
         StatesEntity.builder().id(INVALID_STATE_ID).name(INVALID_STATE_NAME).build();
 
-    given(modelMapper.map(invalidStateDTO, StatesEntity.class)).willReturn(invalidStatesEntity);
+    given(converterService.convert(invalidStateDTO, StatesEntity.class))
+        .willReturn(invalidStatesEntity);
     given(stateFlowRepository.findByFromStateEntity(invalidStatesEntity))
         .willReturn(EMPTY_STATE_FLOW_ENTITY_LIST);
 
@@ -109,7 +109,7 @@ public class StateFlowServiceImplTest {
     assertThat(result, notNullValue());
     assertThat(result, empty());
 
-    then(modelMapper).should().map(invalidStateDTO, StatesEntity.class);
+    then(converterService).should().convert(invalidStateDTO, StatesEntity.class);
     then(stateFlowRepository).should().findByFromStateEntity(invalidStatesEntity);
   }
 
@@ -143,18 +143,13 @@ public class StateFlowServiceImplTest {
             .build()
     );
 
-    given(modelMapper.map(stateDTO, StatesEntity.class)).willReturn(statesEntity);
+    given(converterService.convert(stateDTO, StatesEntity.class)).willReturn(statesEntity);
 
     given(stateFlowRepository.findByFromStateEntity(statesEntity))
         .willReturn(singleElementStateFlowEntityList);
 
-    given(modelMapper
-        .map(singleElementStateFlowEntityList.get(0).getFromStateEntity(), StateDTO.class))
-        .willReturn(stateDTO);
-
-    given(modelMapper
-        .map(singleElementStateFlowEntityList.get(0).getToStateEntity(), StateDTO.class))
-        .willReturn(stateDTOInStateFlowDTOList);
+    given(converterService.convert(singleElementStateFlowEntityList, StateFlowDTO.class))
+        .willReturn(expectedSingleElementStateFlowDtoList);
 
     //When
     Collection<StateFlowDTO> result = stateFlowService.getStateFlowDTOByFromStateDTO(stateDTO);
@@ -163,12 +158,9 @@ public class StateFlowServiceImplTest {
     assertThat(result, notNullValue());
     assertThat(result, is(expectedSingleElementStateFlowDtoList));
 
-    then(modelMapper).should().map(stateDTO, StatesEntity.class);
+    then(converterService).should().convert(stateDTO, StatesEntity.class);
     then(stateFlowRepository).should().findByFromStateEntity(statesEntity);
-    then(modelMapper).should()
-        .map(singleElementStateFlowEntityList.get(0).getFromStateEntity(), StateDTO.class);
-    then(modelMapper).should()
-        .map(singleElementStateFlowEntityList.get(0).getToStateEntity(), StateDTO.class);
+    then(converterService).should().convert(singleElementStateFlowEntityList, StateFlowDTO.class);
   }
 
   @Test
@@ -215,20 +207,17 @@ public class StateFlowServiceImplTest {
             .toStateDTO(stateDTOsInStateFlowDTOsList.get(2)).build()
     );
 
-    given(modelMapper.map(stateDTO, StatesEntity.class)).willReturn(statesEntity);
+    given(converterService.convert(stateDTO, StatesEntity.class)).willReturn(statesEntity);
 
     given(stateFlowRepository.findByFromStateEntity(statesEntity))
         .willReturn(threeElementStateFlowEntityList);
 
-    given(modelMapper
-        .map(statesEntity, StateDTO.class))
+    given(converterService
+        .convert(statesEntity, StateDTO.class))
         .willReturn(stateDTO);
 
-    for (int i = 0; i < 3; ++i) {
-      given(modelMapper
-          .map(threeElementStateFlowEntityList.get(i).getToStateEntity(), StateDTO.class))
-          .willReturn(stateDTOsInStateFlowDTOsList.get(i));
-    }
+    given(converterService.convert(threeElementStateFlowEntityList, StateFlowDTO.class))
+        .willReturn(expectedThreeElementStateFlowDtoList);
 
     //When
     Collection<StateFlowDTO> result = stateFlowService.getStateFlowDTOByFromStateDTO(stateDTO);
@@ -237,14 +226,9 @@ public class StateFlowServiceImplTest {
     assertThat(result, notNullValue());
     assertThat(result, is(expectedThreeElementStateFlowDtoList));
 
-    then(modelMapper).should().map(stateDTO, StatesEntity.class);
+    then(converterService).should().convert(stateDTO, StatesEntity.class);
     then(stateFlowRepository).should().findByFromStateEntity(statesEntity);
-    then(modelMapper).should(times(3)).map(statesEntity, StateDTO.class);
-    
-    for (int i = 0; i < 3; ++i) {
-      then(modelMapper).should()
-          .map(threeElementStateFlowEntityList.get(i).getToStateEntity(), StateDTO.class);
-    }
+    then(converterService).should().convert(threeElementStateFlowEntityList, StateFlowDTO.class);
   }
 
 }
