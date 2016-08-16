@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
@@ -96,5 +97,10 @@ public class WebConfiguration extends DelegatingWebMvcConfiguration {
 
     // The index is 1, in order to add it after the ExceptionHandlerExceptionResolver
     exceptionResolvers.add(1, new UncheckedExceptionResolver(mappingJackson2JsonView()));
+  }
+
+  @Bean(name = "multipartResolver")
+  public CommonsMultipartResolver multipartResolver() {
+    return new CommonsMultipartResolver();
   }
 }
