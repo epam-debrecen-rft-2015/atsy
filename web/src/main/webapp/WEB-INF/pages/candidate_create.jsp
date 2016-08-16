@@ -202,9 +202,11 @@
 
         <form:form method="POST" action="${fileUpload}" enctype="multipart/form-data">
 
+                    <c:if test="${cv_file_status_monitor eq false}">
                 		Upload your file please:
                 		<input type="file" name="file" />
                 		<input type="submit" value="upload" />
+                    </c:if>
 
              	 <c:if test="${not empty validationSuccessKey}">
                           <div id="globalMessage" class="alert alert-success" role="alert">

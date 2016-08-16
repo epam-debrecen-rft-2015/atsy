@@ -2,7 +2,10 @@ package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
+import com.epam.rft.atsy.web.controllers.FileUploadController;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -36,7 +39,19 @@ public class SingleCandidateController {
   public ResponseEntity saveOrUpdate(@Valid @RequestBody CandidateDTO candidateDTO,
                                      BindingResult result, Locale locale) {
     if (!result.hasErrors()) {
+      if (!FileUploadController.cvPath.equals(StringUtils.EMPTY)) {
+        if (candidateDTO.getId() == null) {
+          candidateDTO.setCvPath(FileUploadController.cvPath);
+        } else if(candidateService.getCVPathByCandidateId(candidateDTO.getId()) == null) {
+          candidateDTO.setCvPath(FileUploadController.cvPath);
+        } else if (candidateDTO.getId() != null) {
+          candidateDTO.setCvPath(candidateService.getCVPathByCandidateId(candidateDTO.getId()));
+        }
+      } else {
+        candidateDTO.setCvPath(candidateService.getCVPathByCandidateId(candidateDTO.getId()));
+      }
       Long candidateId = candidateService.saveOrUpdate(candidateDTO);
+
 
       return new ResponseEntity<>(Collections.singletonMap("id", candidateId), HttpStatus.OK);
     } else {
