@@ -15,4 +15,15 @@ public interface MessageKeyResolver {
    */
   String resolveMessage(String messageKey, Object... substitutions)
       throws MessageResolutionFailedException;
+
+  /**
+   * Resolves the specified message the same way as {@link #resolveMessage(String, Object...)} but
+   * instead of throwing {@code MessageResolutionFailedException} upon failure, returns a default
+   * message.
+   * @param messageKey the message key to resolve
+   * @param defaultMessage the default message to return upon failure
+   * @param substitutions the substitution objects to interpolate
+   * @return the resolved message
+   */
+  String resolveMessageOrDefault(String messageKey, String defaultMessage, Object... substitutions);
 }

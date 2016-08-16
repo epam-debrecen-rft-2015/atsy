@@ -41,6 +41,16 @@ public class MessageKeyResolverImpl implements MessageKeyResolver, MessageSource
   }
 
   @Override
+  public String resolveMessageOrDefault(String messageKey, String defaultMessage,
+                                        Object... substitutions) {
+    try {
+      return resolveMessage(messageKey, substitutions);
+    } catch (MessageResolutionFailedException e) {
+      return defaultMessage;
+    }
+  }
+
+  @Override
   public String getMessage(String messageKey, Object[] substitutions, String defaultMessage,
                            Locale locale) {
     return messageSource.getMessage(messageKey, substitutions, defaultMessage, locale);

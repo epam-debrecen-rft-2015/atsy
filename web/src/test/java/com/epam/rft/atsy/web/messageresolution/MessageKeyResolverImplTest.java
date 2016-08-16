@@ -29,6 +29,8 @@ public class MessageKeyResolverImplTest {
 
   private static final String INTERPOLATED_EXAMPLE_MESSAGE = "Happy Birthday, Snowball!";
 
+  private static final String DEFAULT_MESSAGE = "default message";
+
   @Spy
   private StaticMessageSource messageSource = new StaticMessageSource();
 
@@ -91,5 +93,25 @@ public class MessageKeyResolverImplTest {
 
     // Then
     assertThat(message, equalTo(EXAMPLE_WITH_NAME_MESSAGE));
+  }
+
+  @Test
+  public void resolveMessageOrDefaultShouldReturnMessageWhenMessageKeyExists() {
+    // When
+    String message =
+        messageKeyResolver.resolveMessageOrDefault(EXAMPLE_MESSAGE_KEY, DEFAULT_MESSAGE);
+
+    // Then
+    assertThat(message, equalTo(EXAMPLE_MESSAGE));
+  }
+
+  @Test
+  public void resolveMessageOrDefaultShouldReturnDefaultMessageWhenMessageKeyDoesNotExist() {
+    // When
+    String message =
+        messageKeyResolver.resolveMessageOrDefault(NON_EXISTENT_MESSAGE_KEY, DEFAULT_MESSAGE);
+
+    // Then
+    assertThat(message, equalTo(DEFAULT_MESSAGE));
   }
 }
