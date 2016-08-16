@@ -78,6 +78,13 @@ public class CandidateServiceImpl implements CandidateService {
     }
   }
 
+  @Override
+  public String getCVPathByCandidateId(Long candidateId) {
+    CandidateDTO candidateDTO = this.getCandidate(candidateId);
+    Assert.notNull(candidateDTO);
+    return candidateDTO.getCvPath();
+  }
+
   /**
    * Validates the fields of the passed filter request. Performs nullness-checks.
    * @param filterRequest the object to validate

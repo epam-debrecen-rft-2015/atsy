@@ -5,5 +5,6 @@ CREATE TABLE candidates(
   phone VARCHAR(12),
   description LONGTEXT,
   referer VARCHAR(255),
-  language_skill TINYINT unsigned
+  language_skill TINYINT unsigned,
+  cv_path VARCHAR(255) UNIQUE
 );

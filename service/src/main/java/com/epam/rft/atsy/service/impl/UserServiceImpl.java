@@ -73,12 +73,6 @@ public class UserServiceImpl implements UserService {
     }
   }
 
-  @Override
-  public String findCvPathByUserName(String userName) {
-    Assert.notNull(userName);
-    return userRepository.findCvPathByUserName(userName);
-  }
-
   @Transactional(readOnly = true)
   @Override
   public UserDTO findUserByName(String username) {

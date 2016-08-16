@@ -30,4 +30,6 @@ public interface CandidateService {
    * @return the id of candidate
    */
   Long saveOrUpdate(CandidateDTO candidate);
+
+  String getCVPathByCandidateId(Long candidateId);
 }
