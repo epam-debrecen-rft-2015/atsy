@@ -2,9 +2,8 @@ package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
+import com.epam.rft.atsy.web.FileUploadingProperties;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
-import com.epam.rft.atsy.web.model.file.FileUploadingProperties;
-
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -40,23 +38,22 @@ public class SingleCandidateController {
 
     if (!result.hasErrors()) {
 
-      String cvPath =
-          session.getAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH) == null ? null : session.getAttribute(
-              FileUploadingProperties.SESSION_PARAM_CV_PATH).toString();
+      String cvPath = session.getAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH) == null ?
+          null : session.getAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH).toString();
 
+      String candidateCvPath = candidateDTO.getId() == null ?
+          null : candidateService.getCVPathByCandidateId(candidateDTO.getId());
 
       if (cvPath != null) {
         if (candidateDTO.getId() == null) {
           candidateDTO.setCvPath(cvPath);
-        } else if(candidateService.getCVPathByCandidateId(candidateDTO.getId()) != null) {
-          candidateDTO.setCvPath(candidateService.getCVPathByCandidateId(candidateDTO.getId()));
-        } else if(candidateService.getCVPathByCandidateId(candidateDTO.getId()) == null) {
+        } else if (candidateCvPath == null) {
           candidateDTO.setCvPath(cvPath);
-        } else if (candidateDTO.getId() != null) {
-          candidateDTO.setCvPath(candidateService.getCVPathByCandidateId(candidateDTO.getId()));
+        } else if (candidateCvPath != null) {
+          candidateDTO.setCvPath(candidateCvPath);
         }
       } else if (candidateDTO.getId() != null) {
-        candidateDTO.setCvPath(candidateService.getCVPathByCandidateId(candidateDTO.getId()));
+        candidateDTO.setCvPath(candidateCvPath);
       }
       Long candidateId = candidateService.saveOrUpdate(candidateDTO);
       session.removeAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH);

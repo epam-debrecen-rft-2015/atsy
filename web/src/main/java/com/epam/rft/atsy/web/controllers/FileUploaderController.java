@@ -2,10 +2,10 @@ package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.exception.file.FileIsAlreadyExistValidationException;
 import com.epam.rft.atsy.service.exception.file.FileValidationException;
+import com.epam.rft.atsy.web.FileUploadingProperties;
 import com.epam.rft.atsy.web.mapper.FileValidationRuleMapper;
 import com.epam.rft.atsy.web.model.file.FileBucket;
 import com.epam.rft.atsy.web.model.file.FileStatus;
-import com.epam.rft.atsy.web.model.file.FileUploadingProperties;
 import com.epam.rft.atsy.web.validator.FileValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -110,8 +110,7 @@ public class FileUploaderController {
       session.removeAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH);
       redirectAttributes
           .addFlashAttribute(FileStatus.CV_STATUS, FileStatus.FILE_IS_NOT_EXIST.getValue());
-      redirectAttributes
-          .addFlashAttribute(VALIDATION_ERROR_KEY,
+      redirectAttributes.addFlashAttribute(VALIDATION_ERROR_KEY,
               fileUploadValidationRuleMapper.getMessageKeyByException(e));
     }
 
