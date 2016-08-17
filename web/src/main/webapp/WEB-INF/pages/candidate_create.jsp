@@ -3,6 +3,7 @@
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
 <%@page contentType="text/html;charset=UTF-8" %>
@@ -20,6 +21,7 @@
         <script src="<c:url value="/resources/js/atsy-candidate-create.js" />"></script>
     </jsp:attribute>
     <jsp:body>
+
         <div id="candidate_creation" data-bind="<c:if test="${not empty candidate.id}">initDisplay: value</c:if>, css: { display: modify() == true }">
             <h1 class="page-header">
                 <c:choose>
@@ -204,8 +206,14 @@
         </div>
 
         <c:if test="${cv_status eq true}">
-         <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right">
-        CV : <a href="<c:url value='/secure/candidate/fileDownload/${candidateId}' />"><spring:message code="open.or.download"/></a>
+        <c:set var="candidateCvPath" value="${candidate.cvPath}" />
+        <c:set var="cvPathArray" value="${fn:split(candidateCvPath, '\\\\')}" />
+        <c:set var="cvName" value="${cvPathArray[fn:length(cvPathArray)-1]}" />
+        <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right">
+          CV : <a href="<c:url value='/secure/candidate/fileDownload/${candidateId}' />">
+          <c:out value="${cvName}">
+        </c:out>
+        </a>
         </label>
         </c:if>
 

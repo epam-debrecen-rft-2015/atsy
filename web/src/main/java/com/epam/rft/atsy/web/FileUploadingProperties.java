@@ -1,4 +1,4 @@
-package com.epam.rft.atsy.web.model.file;
+package com.epam.rft.atsy.web;
 
 
 import java.io.File;
