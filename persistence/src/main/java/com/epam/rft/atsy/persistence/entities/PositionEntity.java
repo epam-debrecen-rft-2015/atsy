@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * Represents the available positions int the database.
+ * Represents the available positions in the database.
  */
 @Data
 @NoArgsConstructor
