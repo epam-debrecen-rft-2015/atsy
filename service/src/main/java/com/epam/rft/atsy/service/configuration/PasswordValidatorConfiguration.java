@@ -6,11 +6,12 @@ import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRul
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
 import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordAllFieldFilledRule;
 import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordContainsRule;
-import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordLengthValidationRule;
-import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordNewMatchValidationRule;
+import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordLengthValidator;
+import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordNewMatchValidator;
 import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordOldPasswordMatchesRule;
 import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordUniqueRule;
 import com.epam.rft.atsy.service.passwordchange.validation.impl.PasswordValidatorImpl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +32,7 @@ public class PasswordValidatorConfiguration {
   public PasswordValidator passwordValidator() {
     Collection<PasswordValidationRule> rules = Arrays.asList(
         new PasswordAllFieldFilledRule(), new PasswordContainsRule(),
-        new PasswordLengthValidationRule(), new PasswordNewMatchValidationRule(),
+        new PasswordLengthValidator(), new PasswordNewMatchValidator(),
         new PasswordOldPasswordMatchesRule(authenticationService),
         new PasswordUniqueRule(passwordChangeService, authenticationService)
     );
