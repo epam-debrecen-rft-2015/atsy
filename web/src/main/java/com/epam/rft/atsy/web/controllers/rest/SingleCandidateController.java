@@ -2,12 +2,10 @@ package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
-import com.epam.rft.atsy.web.controllers.FileUploadController;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
+import com.epam.rft.atsy.web.model.file.CVStatusMonitor;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/secure/candidate")
 public class SingleCandidateController {
+  private CVStatusMonitor cvStatusMonitor = CVStatusMonitor.getInstance();
   private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
 
   @Resource
@@ -39,23 +39,25 @@ public class SingleCandidateController {
   public ResponseEntity saveOrUpdate(@Valid @RequestBody CandidateDTO candidateDTO,
                                      BindingResult result, Locale locale) {
 
-
     if (!result.hasErrors()) {
-      if (!FileUploadController.cvPath.equals(StringUtils.EMPTY)) {
+
+      if (!cvStatusMonitor.isActualCVPathEmpty()) {
         if (candidateDTO.getId() == null) {
-          candidateDTO.setCvPath(FileUploadController.cvPath);
+          candidateDTO.setCvPath(cvStatusMonitor.getActualCVPath());
+        } else if(candidateService.getCVPathByCandidateId(candidateDTO.getId()) != null) {
+          candidateDTO.setCvPath(candidateService.getCVPathByCandidateId(candidateDTO.getId()));
         } else if(candidateService.getCVPathByCandidateId(candidateDTO.getId()) == null) {
-          candidateDTO.setCvPath(FileUploadController.cvPath);
+          candidateDTO.setCvPath(cvStatusMonitor.getActualCVPath());
         } else if (candidateDTO.getId() != null) {
           candidateDTO.setCvPath(candidateService.getCVPathByCandidateId(candidateDTO.getId()));
         }
-      } else if(candidateDTO.getId() != null) {
+      } else if (candidateDTO.getId() != null) {
         candidateDTO.setCvPath(candidateService.getCVPathByCandidateId(candidateDTO.getId()));
       }
       Long candidateId = candidateService.saveOrUpdate(candidateDTO);
-      FileUploadController.cvPath = StringUtils.EMPTY;
-
+      cvStatusMonitor.restoreActualCVPathToEmpty();
       return new ResponseEntity<>(Collections.singletonMap("id", candidateId), HttpStatus.OK);
+
     } else {
       RestResponse restResponse = parseValidationErrors(result.getFieldErrors(), locale);
 

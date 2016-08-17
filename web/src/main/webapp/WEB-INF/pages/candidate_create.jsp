@@ -138,6 +138,8 @@
                                 <p class="showValue form-control-static">${candidate.languageSkill}</p>
                             </div>
                         </div>
+
+
                         <div class="error col-lg-12 col-md-12 col-sm-12">
                         </div>
                         <div class="form-group"
@@ -176,6 +178,7 @@
                                 <p class="showValue form-control-static">${candidate.description}</p>
                             </div>
                         </div>
+
                         <div class="text-right col-lg-12 col-md-12 col-sm-12">
                             <a class="btn btn-default showValue" href="${welcome}" id="cancelButton"><spring:message
                                     code="back.button"/></a>
@@ -200,59 +203,62 @@
             </div>
         </div>
 
+        <c:if test="${cv_status eq true}">
+         <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right">
+        CV : <a href="<c:url value='/secure/candidate/fileDownload/${candidateId}' />"><spring:message code="open.or.download"/></a>
+        </label>
+        </c:if>
 
         <c:if test="${not empty candidateId}">
         <form:form method="POST" action="${fileUpload}/${candidateId}" enctype="multipart/form-data">
 
-                            <c:if test="${cv_file_status_monitor eq false}">
-                        		Upload your file please:
+                            <c:if test="${cv_status eq false}">
+                        		 <h4><spring:message code="please.upload.cv"/></h4>
                         		<input type="file" name="file" />
-                        		<input type="submit" value="upload" />
+                        		<button type="submit" class="btn btn-primary"><spring:message code="upload.button"/></button>
                             </c:if>
 
                      	 <c:if test="${not empty validationSuccessKey}">
-                                  <div id="globalMessage" class="alert alert-success" role="alert">
-                                      <span class="glyphicon glyphicon-ok" aria-hidden="false"></span>
-                                       <spring:message code="${validationSuccessKey}"/>
-                                       </div>
-                              </c:if>
+                             <div id="globalMessage" class="alert alert-success" role="alert">
+                                 <span class="glyphicon glyphicon-ok" aria-hidden="false"></span>
+                                    <spring:message code="${validationSuccessKey}"/>
+                             </div>
+                         </c:if>
 
-                              <c:if test="${not empty validationErrorKey}">
-                                   <div id="globalMessage" class="alert alert-danger" role="alert">
-                                       <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
-                                             <spring:message code="${validationErrorKey}"/>
-                                        </div>
-                              </c:if>
-                               <a href="<c:url value='/secure/candidate/download/${candidateId}' />">Download This File (located inside project)</a>
+                         <c:if test="${not empty validationErrorKey}">
+                            <div id="globalMessage" class="alert alert-danger" role="alert">
+                                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
+                                    <spring:message code="${validationErrorKey}"/>
+                            </div>
+                         </c:if>
         </form:form>
         </c:if>
 
         <c:if test="${empty candidateId}">
         <form:form method="POST" action="${fileUpload}" enctype="multipart/form-data">
 
-                    <c:if test="${cv_file_status_monitor eq false}">
-                		Upload your file please:
-                		<input type="file" name="file" />
-                		<input type="submit" value="upload" />
+                    <c:if test="${cv_status eq false}">
+                		 <h4><spring:message code="please.upload.cv"/></h4>
+                		<input type="file" name="file"/>
+                		<button type="submit" class="btn btn-primary"><spring:message code="upload.button"/></button>
                     </c:if>
 
              	 <c:if test="${not empty validationSuccessKey}">
                           <div id="globalMessage" class="alert alert-success" role="alert">
                               <span class="glyphicon glyphicon-ok" aria-hidden="false"></span>
                                <spring:message code="${validationSuccessKey}"/>
-                               </div>
-                      </c:if>
+                           </div>
+                 </c:if>
 
                       <c:if test="${not empty validationErrorKey}">
                            <div id="globalMessage" class="alert alert-danger" role="alert">
                                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
-                                     <spring:message code="${validationErrorKey}"/>
-                                </div>
+                                    <spring:message code="${validationErrorKey}"/>
+                           </div>
                       </c:if>
-                       <a href="<c:url value='/secure/candidate/download/${candidateId}' />">Download This File (located inside project)</a>
+
         </form:form>
         </c:if>
-
 
 
         <c:choose>
