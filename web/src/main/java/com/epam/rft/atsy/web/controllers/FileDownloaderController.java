@@ -1,6 +1,7 @@
 package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.CandidateService;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,41 +13,34 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-public class FileDownloadController {
+public class FileDownloaderController {
+  private static final String CONTENT_DISPOSITION = "Content-Disposition";
+  private static final String MIME_TYPE = "application/octet-stream";
+  private static final String INLINE_FORMAT = "inline; filename=\"";
 
   @Resource
   private CandidateService candidateService;
 
-  @RequestMapping(value = "/secure/candidate/download/{candidateId}", method = RequestMethod.GET)
-  public void downloadFile(HttpServletResponse response,
-                           @PathVariable("candidateId") Long candidateId) throws IOException {
+  @RequestMapping(value = "/secure/candidate/fileDownload/{candidateId}", method = RequestMethod.GET)
+  public void downloadFile(@PathVariable("candidateId") Long candidateId,
+                           HttpServletResponse response) throws IOException {
 
     String path = candidateService.getCVPathByCandidateId(candidateId);
     File file = new File(path);
 
-    if (!file.exists()) {
-      String errorMessage = "Sorry. The file you are looking for does not exist";
-      OutputStream outputStream = response.getOutputStream();
-      outputStream.write(errorMessage.getBytes(Charset.forName("UTF-8")));
-      outputStream.close();
-      return;
-    }
-
     String mimeType = URLConnection.guessContentTypeFromName(file.getName());
     if (mimeType == null) {
-      mimeType = "application/octet-stream";
+      mimeType = MIME_TYPE;
     }
 
     response.setContentType(mimeType);
-    response.setHeader("Content-Disposition",
-        String.format("inline; filename=\"" + file.getName() + "\""));
+    response.setHeader(CONTENT_DISPOSITION, String.format(INLINE_FORMAT + file.getName() + "\""));
 
     response.setContentLength((int) file.length());
     InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
