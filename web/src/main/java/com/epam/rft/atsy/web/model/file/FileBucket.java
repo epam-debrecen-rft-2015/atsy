@@ -1,4 +1,4 @@
-package com.epam.rft.atsy.web.model;
+package com.epam.rft.atsy.web.model.file;
 
 import org.springframework.web.multipart.MultipartFile;
 
