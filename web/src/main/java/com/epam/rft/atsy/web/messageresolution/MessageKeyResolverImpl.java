@@ -15,6 +15,10 @@ import java.util.Locale;
  * interface to the underlying concrete {@code MessageSource} object.
  */
 public class MessageKeyResolverImpl implements MessageKeyResolver, MessageSource {
+  public static final String DEFAULT_MESSAGE_PREFIX = "[ ! ";
+
+  public static final String DEFAULT_MESSAGE_POSTFIX = " ! ]";
+
   private MessageSource messageSource;
 
   /**
@@ -45,7 +49,7 @@ public class MessageKeyResolverImpl implements MessageKeyResolver, MessageSource
     try {
       return resolveMessage(messageKey, substitutions);
     } catch (MessageResolutionFailedException e) {
-      return "[ ! " + messageKey + " ! ]";
+      return DEFAULT_MESSAGE_PREFIX + messageKey + DEFAULT_MESSAGE_POSTFIX;
     }
   }
 
