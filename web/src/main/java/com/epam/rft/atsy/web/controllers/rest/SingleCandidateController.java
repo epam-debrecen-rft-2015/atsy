@@ -3,9 +3,8 @@ package com.epam.rft.atsy.web.controllers.rest;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
-import com.epam.rft.atsy.web.model.file.CVStatusMonitor;
+import com.epam.rft.atsy.web.model.file.FileUploadingProperties;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +26,6 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(value = "/secure/candidate")
 public class SingleCandidateController {
-  private CVStatusMonitor cvStatusMonitor = CVStatusMonitor.getInstance();
   private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
 
   @Resource
@@ -43,7 +41,8 @@ public class SingleCandidateController {
     if (!result.hasErrors()) {
 
       String cvPath =
-          session.getAttribute("CVPATH") == null ? null : session.getAttribute("CVPATH").toString();
+          session.getAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH) == null ? null : session.getAttribute(
+              FileUploadingProperties.SESSION_PARAM_CV_PATH).toString();
 
 
       if (cvPath != null) {
@@ -60,7 +59,7 @@ public class SingleCandidateController {
         candidateDTO.setCvPath(candidateService.getCVPathByCandidateId(candidateDTO.getId()));
       }
       Long candidateId = candidateService.saveOrUpdate(candidateDTO);
-      session.removeAttribute("CVPATH");
+      session.removeAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH);
       return new ResponseEntity<>(Collections.singletonMap("id", candidateId), HttpStatus.OK);
 
     } else {

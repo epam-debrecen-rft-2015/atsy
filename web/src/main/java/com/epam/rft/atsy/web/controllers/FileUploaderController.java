@@ -3,9 +3,9 @@ package com.epam.rft.atsy.web.controllers;
 import com.epam.rft.atsy.service.exception.file.FileIsAlreadyExistValidationException;
 import com.epam.rft.atsy.service.exception.file.FileValidationException;
 import com.epam.rft.atsy.web.mapper.FileValidationRuleMapper;
-import com.epam.rft.atsy.web.model.file.CVStatusMonitor;
 import com.epam.rft.atsy.web.model.file.FileBucket;
 import com.epam.rft.atsy.web.model.file.FileStatus;
+import com.epam.rft.atsy.web.model.file.FileUploadingProperties;
 import com.epam.rft.atsy.web.validator.FileValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,10 +36,6 @@ public class FileUploaderController {
   private static final String VALIDATION_ERROR_KEY = "validationErrorKey";
   private static final String VALIDATION_FILE_SUCCESS = "file.validation.success";
   private static final String FILE = "file";
-  private static final String UPLOAD_LOCATION = "catalina.base";
-  private static final String CV = "cv";
-  private static final File folder =
-      new File(System.getProperty(UPLOAD_LOCATION) + File.separator + CV);
 
   @Autowired
   private FileValidator fileValidator;
@@ -49,8 +45,8 @@ public class FileUploaderController {
 
   @PostConstruct
   public void init() {
-    if (!folder.exists()) {
-      folder.mkdir();
+    if (!FileUploadingProperties.FOLDER_CV.exists()) {
+      FileUploadingProperties.FOLDER_CV.mkdir();
     }
   }
 
@@ -72,14 +68,14 @@ public class FileUploaderController {
       File file = createFile(fileName);
 
       FileCopyUtils.copy(fileBucket.getFile().getBytes(), file);
-      session.setAttribute("CVPATH", file.getPath());
+      session.setAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH, file.getPath());
       modelAndView.addObject(FILE, fileName);
       modelAndView.addObject(VALIDATION_SUCCESS_KEY, VALIDATION_FILE_SUCCESS);
 
     } catch (FileValidationException e) {
       log.error(FileUploaderController.class.getName(), e);
-      session.removeAttribute("CVPATH");
-      modelAndView.addObject(CVStatusMonitor.CV_STATUS, FileStatus.FILE_IS_NOT_EXIST.getValue());
+      session.removeAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH);
+      modelAndView.addObject(FileStatus.CV_STATUS, FileStatus.FILE_IS_NOT_EXIST.getValue());
       modelAndView.addObject(VALIDATION_ERROR_KEY,
           fileUploadValidationRuleMapper.getMessageKeyByException(e));
     }
@@ -103,17 +99,17 @@ public class FileUploaderController {
       File file = createFile(fileName);
 
       FileCopyUtils.copy(fileBucket.getFile().getBytes(), file);
-      session.setAttribute("CVPATH", file.getPath());
+      session.setAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH, file.getPath());
       redirectAttributes.addFlashAttribute(FILE, fileName);
       redirectAttributes.addFlashAttribute(VALIDATION_SUCCESS_KEY, VALIDATION_FILE_SUCCESS);
-      redirectAttributes.addFlashAttribute(CVStatusMonitor.CV_STATUS,
+      redirectAttributes.addFlashAttribute(FileStatus.CV_STATUS,
           FileStatus.FILE_IS_ALREADY_EXIST.getValue());
 
     } catch (FileValidationException e) {
       log.error(FileUploaderController.class.getName(), e);
-      session.removeAttribute("CVPATH");
+      session.removeAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH);
       redirectAttributes
-          .addFlashAttribute(CVStatusMonitor.CV_STATUS, FileStatus.FILE_IS_NOT_EXIST.getValue());
+          .addFlashAttribute(FileStatus.CV_STATUS, FileStatus.FILE_IS_NOT_EXIST.getValue());
       redirectAttributes
           .addFlashAttribute(VALIDATION_ERROR_KEY,
               fileUploadValidationRuleMapper.getMessageKeyByException(e));
@@ -123,7 +119,7 @@ public class FileUploaderController {
   }
 
   private File createFile(String fileName) throws FileIsAlreadyExistValidationException {
-    String fileNameWithFullPath = folder + File.separator + fileName;
+    String fileNameWithFullPath = FileUploadingProperties.FOLDER_CV + File.separator + fileName;
     File file = new File(fileNameWithFullPath);
     if (file.exists()) {
       throw new FileIsAlreadyExistValidationException();
