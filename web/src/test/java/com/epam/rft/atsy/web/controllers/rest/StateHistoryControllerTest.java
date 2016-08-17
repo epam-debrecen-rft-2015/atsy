@@ -24,7 +24,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
 
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -50,8 +49,6 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   private static final String OFFERED_MONEY_NEGATIVE_MESSAGE_KEY =
       "statehistory.error.offeredMoney.negative";
 
-  private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm";
-
   private static final String MALFORMED_DATE = "malformed";
 
   private static final Short LOWER_LANGUAGE_SKILL = -1;
@@ -62,20 +59,17 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
   private static final Long NEGATIVE_OFFERED_MONEY = -1L;
 
+  private static final int RECOMMENDATION_YES_INTEGER = 1;
+
+  private static final boolean RECOMMENDATION_YES_BOOL = true;
+
   private StateHistoryViewRepresentation dummyStateHistory;
 
   private StateHistoryDTO dummyStateHistoryDto;
 
-  private static final DateTimeFormatter DATE_FORMATTER =
-      DateTimeFormatter.ofPattern(DATE_FORMAT_CONSTANT);
-
   private static final Long ID = 1L;
 
   private static final String CREATION_DATE_STRING = "2016-08-15 14:00";
-
-  private static final Date
-      CREATION_DATE =
-      new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
 
   private static final String FEEDBACK_DATE_STRING = "2016-08-15 14:00:00";
 
@@ -93,7 +87,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
   private static final String DESCRIPTION = "description";
 
-  private static final String RESULT = "result";
+  private static final Short RESULT = 45;
 
   private static final Long OFFERED_MONEY = 1L;
 
@@ -142,6 +136,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .stateFullName(STATE_FULL_NAME)
         .stateId(STATE_ID)
         .stateName(STATE_NAME)
+        .recommendation(RECOMMENDATION_YES_INTEGER)
         .build();
 
     StateDTO dummyStateDto = StateDTO.builder()
@@ -152,7 +147,6 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
     dummyStateHistoryDto = StateHistoryDTO.builder()
         .id(ID)
         .candidateId(CANDIDATE_ID)
-        .creationDate(CREATION_DATE)
         .feedbackDate(FEEDBACK_DATE)
         .languageSkill(LANGUAGE_SKILL)
         .description(DESCRIPTION)
@@ -161,6 +155,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .claim(CLAIM)
         .dayOfStart(DAY_OF_START)
         .stateDTO(dummyStateDto)
+        .recommendation(RECOMMENDATION_YES_BOOL)
         .build();
   }
 

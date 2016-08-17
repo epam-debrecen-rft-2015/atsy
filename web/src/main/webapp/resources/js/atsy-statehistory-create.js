@@ -71,6 +71,12 @@ function StateHistoryModel() {
              }
      });
    }
+
+   self.canSave = ko.pureComputed(function() {
+    var newValue = self.recommendation();
+
+    return (newValue == "0") || (newValue == "1");
+   });
 }
 
 StateHistoryModel.prototype.redirectWithoutState = function() {
@@ -81,4 +87,4 @@ StateHistoryModel.prototype.redirectWithoutState = function() {
 
 var stateHistoryModel = new StateHistoryModel();
 
-ko.applyBindings(stateHistoryModel)
+ko.applyBindings(stateHistoryModel);

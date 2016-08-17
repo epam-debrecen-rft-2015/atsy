@@ -29,5 +29,6 @@ public abstract class AbstractStateHistoryDTO implements Serializable {
   private Date feedbackDate;
   private Date dayOfStart;
   private StateDTO stateDTO;
+  private Boolean recommendation;
 
 }

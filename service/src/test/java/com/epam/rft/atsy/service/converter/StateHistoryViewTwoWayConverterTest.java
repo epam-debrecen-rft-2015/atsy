@@ -35,7 +35,7 @@ public class StateHistoryViewTwoWayConverterTest {
   private static final String STATE_HISTORY_DESCRIPTION = "ok";
   private static final Long STATE_HISTORY_OFFERED_MONEY = 5555L;
   private static final Long STATE_HISTORY_CLAIM = 5555L;
-  private static final String STATE_HISTORY_RESULT = "ok";
+  private static final Short STATE_HISTORY_RESULT = 89;
   private static final Long STATE_HISTORY_ID = 2L;
 
   private static final Long APPLICATION_ID = 1L;

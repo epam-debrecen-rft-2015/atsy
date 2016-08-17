@@ -61,4 +61,8 @@ public class StateHistoryViewRepresentation {
   private Long stateId;
 
   private String stateName;
+
+  @Min(value = 0)
+  @Max(value = 1)
+  private Integer recommendation;
 }

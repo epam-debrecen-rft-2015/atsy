@@ -77,6 +77,8 @@ public class StateHistoryController {
             .creationDate(null)
             .stateDTO(StateDTO.builder().id(stateHistoryViewRepresentation.getStateId())
                 .name(stateHistoryViewRepresentation.getStateName()).build())
+            .recommendation(stateHistoryViewRepresentation.getRecommendation() != null ?
+                stateHistoryViewRepresentation.getRecommendation() == 1 : null)
             .build();
 
       } catch (ParseException e) {

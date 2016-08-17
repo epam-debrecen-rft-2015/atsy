@@ -73,7 +73,7 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
   private static final Date STATE_HISTORY_CREATION_DATE = Date.from(Instant.now(TEST_CLOCK));
   private static final Short LANGUAGE_SKILL = 5;
   private static final String DESCRIPTION = "description";
-  private static final String RESULT = "result";
+  private static final Short RESULT = 67;
   private static final Long OFFERED_MONEY = 0L;
   private static final Long CLAIM = 10L;
   private static final Date DAY_OF_START = Date.from(Instant.now(TEST_CLOCK));
@@ -256,7 +256,7 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath(basePath + "languageSkill",
             equalTo(historyViewDto.getLanguageSkill().intValue())))
         .andExpect(jsonPath(basePath + "description", equalTo(historyViewDto.getDescription())))
-        .andExpect(jsonPath(basePath + "result", equalTo(historyViewDto.getResult())))
+        .andExpect(jsonPath(basePath + "result", equalTo(historyViewDto.getResult().intValue())))
         .andExpect(jsonPath(basePath + "offeredMoney",
             equalTo(historyViewDto.getOfferedMoney().intValue())))
         .andExpect(jsonPath(basePath + "claim", equalTo(historyViewDto.getClaim().intValue())))

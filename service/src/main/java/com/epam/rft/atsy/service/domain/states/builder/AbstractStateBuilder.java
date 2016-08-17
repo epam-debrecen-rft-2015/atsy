@@ -82,6 +82,11 @@ public abstract class AbstractStateBuilder<B extends AbstractStateBuilder<B, T>,
     return (B) this;
   }
 
+  public B recommendation(Boolean recommendation) {
+    object.setRecommendation(recommendation);
+    return (B) this;
+  }
+
   @Override
   public T build() {
     return object;

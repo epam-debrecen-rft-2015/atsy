@@ -38,7 +38,7 @@ public class StatesHistoryEntity extends SuperEntity {
   private String description;
 
   @Column(name = "first_test_result")
-  private String result;
+  private Short result;
 
   @Column(name = "offered_money")
   private Long offeredMoney;
@@ -52,17 +52,21 @@ public class StatesHistoryEntity extends SuperEntity {
   @Column(name = "day_of_start")
   private Date dayOfStart;
 
+  @Column(name = "recommendation")
+  private Boolean recommendation;
+
   @OneToOne
   @JoinColumn(name = "state_id")
   private StatesEntity statesEntity;
 
 
-
-
   @Builder
   public StatesHistoryEntity(Long id, ApplicationEntity applicationEntity, Date creationDate,
-                             Short languageSkill, String description, String result, Long offeredMoney,
-                             Long claim, Date feedbackDate, Date dayOfStart, StatesEntity statesEntity) {
+                             Short languageSkill, String description, Short result,
+                             Long offeredMoney,
+                             Long claim, Date feedbackDate, Date dayOfStart,
+                             Boolean recommendation,
+                             StatesEntity statesEntity) {
     super(id);
     this.applicationEntity = applicationEntity;
     this.creationDate = creationDate;
@@ -73,6 +77,7 @@ public class StatesHistoryEntity extends SuperEntity {
     this.claim = claim;
     this.feedbackDate = feedbackDate;
     this.dayOfStart = dayOfStart;
+    this.recommendation = recommendation;
     this.statesEntity = statesEntity;
   }
 }

@@ -87,6 +87,7 @@
                   </div>
                   <div class="help-block with-errors"></div>
               </div>
+
               <div class="form-group">
                   <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.description"/></label>
                   <div class="col-sm-8">
@@ -94,13 +95,12 @@
                       <c:if test="${stat.first}">
                           <textarea class="stateInput" wrap="soft" name="description" id="descriptionInput" style="display:none; resize: both;"
                             data-bind="valueWithInit: 'description'"
-                            maxlength="2000">
-                              ${data.description}
-                            </textarea>
+                            maxlength="2000">${data.description}</textarea>
                       </c:if>
                   </div>
                   <div class="help-block with-errors"></div>
               </div>
+
               <c:choose>
                   <c:when test="${data.stateName == 'newstate'}">
                       <div class="form-group">
@@ -153,13 +153,37 @@
                           <div class="col-sm-8">
                               <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="resultP" >${data.result}%</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="number" name="result" id="resultInput" style="display:none;" value="${data.result}"
+                                  <input required class="stateInput" type="number" name="result" id="resultInput" style="display:none;" value="${data.result}"
                                     data-bind="valueWithInit: 'result'"
                                     max="100" min="0"
                                     data-error="<spring:message code="statehistory.error.result.range"/>">
                               </c:if>
                           </div>
                           <div class="help-block with-errors"></div>
+                      </div>
+                      <div class="form-group">
+                        <label for="recommendation" class="control-label col-sm-4"><spring:message code="statehistory.field.recommendation"/></label>
+                        <div class="col-sm-8">
+                          <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="recommendationP">
+                            <c:choose>
+                              <c:when test="${data.recommendation == 1}">
+                                <spring:message code="common.yes"/>
+                              </c:when>
+                              <c:when test="${data.recommendation == 0}">
+                                <spring:message code="common.no"/>
+                              </c:when>
+                            </c:choose>
+                          </p>
+                          <c:if test="${stat.first}">
+                            <select required class="stateInput" id="recommendationInput" style="display:none;"
+                              data-bind="valueWithInit: 'recommendation'">
+                              <option disabled ${data.recommendation != 1 && data.recommendation != 0 ? 'selected' : ''}><spring:message code="common.pleaseChoose"/></option>
+                              <option value="1" ${data.recommendation == 1 ? 'selected' : ''}><spring:message code="common.yes"/></option>
+                              <option value="0" ${data.recommendation == 0 ? 'selected' : ''}><spring:message code="common.no"/></option>
+                            </select>
+                          </c:if>
+                        </div>
+                        <div class="help-block with-errors"></div>
                       </div>
                   </c:when>
                   <c:when test="${data.stateName == 'wageOffer'}">
@@ -217,7 +241,7 @@
                   </c:when>
               </c:choose>
               <c:if test="${stat.first}">
-                  <button type="submit" class="btn btn-success stateInput" style="display:none">
+                  <button type="submit" class="btn btn-success stateInput" style="display:none" data-bind="enable: canSave">
                       <spring:message code="save.button"/>
                   </button>
                   <button type="reset" class="btn btn-danger stateInput" style="display:none" onclick="cancelButtonOnClick()">

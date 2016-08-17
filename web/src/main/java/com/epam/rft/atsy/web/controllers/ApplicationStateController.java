@@ -60,7 +60,7 @@ public class ApplicationStateController {
                 StateHistoryViewRepresentation.class);
 
     if (clickedState != null) {
-      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
       StateDTO clickedStateDTO = stateService.getStateDtoByName(clickedState);
 
