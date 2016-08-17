@@ -15,6 +15,7 @@ import com.epam.rft.atsy.persistence.entities.PasswordHistoryEntity;
 import com.epam.rft.atsy.persistence.entities.UserEntity;
 import com.epam.rft.atsy.persistence.repositories.PasswordHistoryRepository;
 import com.epam.rft.atsy.persistence.repositories.UserRepository;
+import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.PasswordHistoryDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import org.hibernate.exception.ConstraintViolationException;
@@ -24,7 +25,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -36,7 +36,7 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class PasswordChangeServiceImplTest {
 
-  public static final String PASSWORD_PREFIX = "password";
+  private static final String PASSWORD_PREFIX = "password";
   private static final int PASSWORD_HISTORY_LIMIT = 5;
   private static final Long USER_ID = 1L;
   private static final UserEntity NULL_USER_ENTITY = null;
@@ -46,14 +46,19 @@ public class PasswordChangeServiceImplTest {
   private static final PasswordHistoryEntity
       EMPTY_PASSWORD_HISTORY_ENTITY =
       new PasswordHistoryEntity();
+
   @Mock
-  private ModelMapper modelMapper;
+  private ConverterService converterService;
+
   @Mock
   private PasswordHistoryRepository passwordHistoryRepository;
+
   @Mock
   private UserRepository userRepository;
+
   @InjectMocks
   private PasswordChangeServiceImpl passwordChangeService;
+
   private PasswordHistoryDTO passwordHistoryDtoWithUserId;
   private PasswordHistoryEntity passwordHistoryEntityWithUserEntity;
   private UserEntity userEntityWithId;
@@ -72,7 +77,7 @@ public class PasswordChangeServiceImplTest {
         .id(USER_ID)
         .build();
 
-    given(this.modelMapper.map(passwordHistoryDtoWithUserId, PasswordHistoryEntity.class))
+    given(converterService.convert(passwordHistoryDtoWithUserId, PasswordHistoryEntity.class))
         .willReturn(passwordHistoryEntityWithUserEntity);
   }
 

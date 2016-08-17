@@ -111,7 +111,7 @@
                                 <span id="email-errors" class="help-block with-errors"></span>
 
                                 <p class="showValue form-control-static">
-                                    <a href="mailto:tesztelek01@te.com"><span class="glyphicon glyphicon-envelope"
+                                    <a href="mailto:${candidate.email}"><span class="glyphicon glyphicon-envelope"
                                                                               title="E-mail küldése"></span></a>
                                         ${candidate.email}</p>
                             </div>

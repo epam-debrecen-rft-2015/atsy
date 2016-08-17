@@ -10,6 +10,7 @@ import static org.mockito.Mockito.times;
 
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
+import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.exception.DuplicatePositionException;
 import org.hamcrest.CoreMatchers;
@@ -23,11 +24,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,24 +33,28 @@ import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PositionServiceImplTest {
-  private static final Type POSITIONDTO_LIST_TYPE = new TypeToken<List<PositionDTO>>() {
-  }.getType();
+
   private static final Long DEVELOPER_ID = 1L;
   private static final String DEVELOPER_NAME = "Developer";
   private static final List<PositionEntity> EMPTY_POSITION_ENTITY_LIST = Collections.emptyList();
-  private static final Collection<PositionDTO> EMPTY_POSITION_DTO_LIST = Collections.emptyList();
+  private static final List<PositionDTO> EMPTY_POSITION_DTO_LIST = Collections.emptyList();
+
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
+
   @Mock
-  private ModelMapper modelMapper;
+  private ConverterService converterService;
+
   @Mock
   private PositionRepository positionRepository;
+
   @InjectMocks
   private PositionServiceImpl positionService;
+
   private PositionEntity developerEntity;
   private PositionDTO developerDto;
   private List<PositionEntity> expectedPositionEntityList;
-  private Collection<PositionDTO> expectedPositionDtoList;
+  private List<PositionDTO> expectedPositionDtoList;
 
   @Before
   public void setUp() {
@@ -69,7 +71,7 @@ public class PositionServiceImplTest {
   public void getAllPositionsShouldReturnEmptyListWhenThereAreNoPositions() {
     // Given
     given(positionRepository.findAll()).willReturn(EMPTY_POSITION_ENTITY_LIST);
-    given(modelMapper.map(EMPTY_POSITION_ENTITY_LIST, POSITIONDTO_LIST_TYPE))
+    given(converterService.convert(EMPTY_POSITION_ENTITY_LIST, PositionDTO.class))
         .willReturn(EMPTY_POSITION_DTO_LIST);
 
     // When
@@ -87,10 +89,10 @@ public class PositionServiceImplTest {
     // Given
     List<PositionEntity> positions = Arrays.asList(developerEntity);
 
-    Collection<PositionDTO> expected = Arrays.asList(developerDto);
+    List<PositionDTO> expected = Arrays.asList(developerDto);
 
     given(positionRepository.findAll()).willReturn(positions);
-    given(modelMapper.map(positions, POSITIONDTO_LIST_TYPE)).willReturn(expected);
+    given(converterService.convert(positions, PositionDTO.class)).willReturn(expected);
 
     // When
     Collection<PositionDTO> result = positionService.getAllPositions();
@@ -105,7 +107,7 @@ public class PositionServiceImplTest {
   public void getAllPositionsShouldReturnThreeElementListWhenThereAreThreePositions() {
     // Given
     given(positionRepository.findAll()).willReturn(expectedPositionEntityList);
-    given(modelMapper.map(expectedPositionEntityList, POSITIONDTO_LIST_TYPE))
+    given(converterService.convert(expectedPositionEntityList, PositionDTO.class))
         .willReturn(expectedPositionDtoList);
 
     // When
@@ -127,7 +129,7 @@ public class PositionServiceImplTest {
   public void saveOrUpdateShouldThrowDREAfterCatchingConstraintViolationException()
       throws DuplicatePositionException {
     // Given
-    given(modelMapper.map(developerDto, PositionEntity.class)).willReturn(developerEntity);
+    given(converterService.convert(developerDto, PositionEntity.class)).willReturn(developerEntity);
 
     given(positionRepository.saveAndFlush(developerEntity))
         .willThrow(ConstraintViolationException.class);
@@ -144,7 +146,7 @@ public class PositionServiceImplTest {
   public void saveOrUpdateShouldThrowDREAfterCatchingDataIntegrityViolationException()
       throws DuplicatePositionException {
     // Given
-    given(modelMapper.map(developerDto, PositionEntity.class)).willReturn(developerEntity);
+    given(converterService.convert(developerDto, PositionEntity.class)).willReturn(developerEntity);
 
     given(positionRepository.saveAndFlush(developerEntity))
         .willThrow(DataIntegrityViolationException.class);
@@ -160,7 +162,7 @@ public class PositionServiceImplTest {
   @Test
   public void saveOrUpdateShouldSaveAProperPositionDTO() {
     // Given
-    given(modelMapper.map(developerDto, PositionEntity.class)).willReturn(developerEntity);
+    given(converterService.convert(developerDto, PositionEntity.class)).willReturn(developerEntity);
 
     given(positionRepository.saveAndFlush(developerEntity)).willReturn(developerEntity);
 
