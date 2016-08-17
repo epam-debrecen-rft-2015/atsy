@@ -3,13 +3,12 @@ package com.epam.rft.atsy.service.impl;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.service.CandidateService;
+import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.DuplicateCandidateException;
 import com.epam.rft.atsy.service.request.FilterRequest;
 import com.epam.rft.atsy.service.request.SearchOptions;
 import org.hibernate.exception.ConstraintViolationException;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
@@ -17,22 +16,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
-import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 public class CandidateServiceImpl implements CandidateService {
 
-  private final static Type CANDIDATEDTO_LIST_TYPE = new TypeToken<List<CandidateDTO>>() {
-  }.getType();
-  @Resource
-  private ModelMapper modelMapper;
   @Autowired
   private CandidateRepository candidateRepository;
+
+  @Autowired
+  private ConverterService converterService;
 
   @Transactional(readOnly = true)
   @Override
@@ -40,7 +36,7 @@ public class CandidateServiceImpl implements CandidateService {
     Assert.notNull(id);
 
     CandidateEntity candidateEntity = candidateRepository.findOne(id);
-    return modelMapper.map(candidateEntity, CandidateDTO.class);
+    return converterService.convert(candidateEntity, CandidateDTO.class);
   }
 
   @Transactional(readOnly = true)
@@ -54,19 +50,19 @@ public class CandidateServiceImpl implements CandidateService {
 
     Sort sort = new Sort(sortDirection, sortingRequest.getFieldName().toString());
 
-    Collection<CandidateEntity>
+    List<CandidateEntity>
         candidateEntities =
         candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(
             searchOptions.getName(), searchOptions.getEmail(), searchOptions.getPhone(), sort);
 
-    return modelMapper.map(candidateEntities, CANDIDATEDTO_LIST_TYPE);
+    return converterService.convert(candidateEntities, CandidateDTO.class);
   }
 
   @Transactional
   @Override
   public Long saveOrUpdate(CandidateDTO candidate) {
     Assert.notNull(candidate);
-    CandidateEntity entity = modelMapper.map(candidate, CandidateEntity.class);
+    CandidateEntity entity = converterService.convert(candidate, CandidateEntity.class);
     try {
       return candidateRepository.saveAndFlush(entity).getId();
     } catch (ConstraintViolationException | DataIntegrityViolationException ex) {

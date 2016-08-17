@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
+import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.DuplicateCandidateException;
 import com.epam.rft.atsy.service.request.FilterRequest;
@@ -27,7 +28,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 
@@ -45,14 +45,19 @@ public class CandidateServiceImplTest {
   private static final SortingRequest.Field SORT_FIELD = SortingRequest.Field.NAME;
   private static final CandidateEntity NOT_FOUND_CANDIDATE_ENTITY = null;
   private static final CandidateDTO NOT_FOUND_CANDIDATE_DTO = null;
+
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
+
   @Mock
-  private ModelMapper modelMapper;
+  private ConverterService converterService;
+
   @Mock
   private CandidateRepository candidateRepository;
+
   @InjectMocks
   private CandidateServiceImpl candidateService;
+
   private CandidateEntity dummyCandidateEntity;
   private CandidateDTO dummyCandidateDto;
   private FilterRequest ascendingFilterRequest;
@@ -90,7 +95,7 @@ public class CandidateServiceImplTest {
   public void getCandidateShouldReturnNullWhenIdNotFound() {
     // Given
     given(candidateRepository.findOne(ID)).willReturn(NOT_FOUND_CANDIDATE_ENTITY);
-    given(modelMapper.map(NOT_FOUND_CANDIDATE_ENTITY, CandidateDTO.class))
+    given(converterService.convert(NOT_FOUND_CANDIDATE_ENTITY, CandidateDTO.class))
         .willReturn(NOT_FOUND_CANDIDATE_DTO);
 
     // When
@@ -104,7 +109,8 @@ public class CandidateServiceImplTest {
   public void getCandidateShouldReturnProperDtoWhenIdExists() {
     // Given
     given(candidateRepository.findOne(ID)).willReturn(dummyCandidateEntity);
-    given(modelMapper.map(dummyCandidateEntity, CandidateDTO.class)).willReturn(dummyCandidateDto);
+    given(converterService.convert(dummyCandidateEntity, CandidateDTO.class))
+        .willReturn(dummyCandidateDto);
 
     // When
     CandidateDTO candidate = candidateService.getCandidate(ID);
@@ -235,7 +241,7 @@ public class CandidateServiceImplTest {
   public void saveOrUpdateShouldThrowDREAfterCatchingConstraintViolationException()
       throws DuplicateCandidateException {
     // Given
-    given(modelMapper.map(dummyCandidateDto, CandidateEntity.class))
+    given(converterService.convert(dummyCandidateDto, CandidateEntity.class))
         .willReturn(dummyCandidateEntity);
 
     given(candidateRepository.saveAndFlush(dummyCandidateEntity))
@@ -253,7 +259,7 @@ public class CandidateServiceImplTest {
   public void saveOrUpdateShouldThrowDREAfterCatchingDataIntegrityViolationException()
       throws DuplicateCandidateException {
     // Given
-    given(modelMapper.map(dummyCandidateDto, CandidateEntity.class))
+    given(converterService.convert(dummyCandidateDto, CandidateEntity.class))
         .willReturn(dummyCandidateEntity);
 
     given(candidateRepository.saveAndFlush(dummyCandidateEntity))
@@ -270,7 +276,7 @@ public class CandidateServiceImplTest {
   @Test
   public void saveOrUpdateShouldSaveAProperCandidateDTO() {
     // Given
-    given(modelMapper.map(dummyCandidateDto, CandidateEntity.class))
+    given(converterService.convert(dummyCandidateDto, CandidateEntity.class))
         .willReturn(dummyCandidateEntity);
 
     given(candidateRepository.saveAndFlush(dummyCandidateEntity)).willReturn(dummyCandidateEntity);

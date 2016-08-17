@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.given;
 
 import com.epam.rft.atsy.persistence.entities.StatesEntity;
 import com.epam.rft.atsy.persistence.repositories.StatesRepository;
+import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +16,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.modelmapper.ModelMapper;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StateServiceImplTest {
@@ -29,7 +29,7 @@ public class StateServiceImplTest {
   private StateDTO validStateDTO;
 
   @Mock
-  private ModelMapper modelMapper;
+  private ConverterService converterService;
 
   @Mock
   private StatesRepository statesRepository;
@@ -48,7 +48,7 @@ public class StateServiceImplTest {
   public void getStateDtoByIdShouldReturnStateDtoWhenValidIdIsGiven() {
     //Given
     given(statesRepository.findOne(VALID_STATE_ID)).willReturn(validStatesEntity);
-    given(modelMapper.map(validStatesEntity, StateDTO.class)).willReturn(validStateDTO);
+    given(converterService.convert(validStatesEntity, StateDTO.class)).willReturn(validStateDTO);
 
     StateDTO
         expectedStateDTO =
@@ -88,7 +88,7 @@ public class StateServiceImplTest {
   public void getStateDtoByNameShouldReturnStateDtoWhenValidNameIsGiven() {
     //Given
     given(statesRepository.findByName(VALID_STATE_NAME)).willReturn(validStatesEntity);
-    given(modelMapper.map(validStatesEntity, StateDTO.class)).willReturn(validStateDTO);
+    given(converterService.convert(validStatesEntity, StateDTO.class)).willReturn(validStateDTO);
 
     StateDTO
         expectedStateDTO =
