@@ -5,6 +5,10 @@ import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRul
 
 import java.util.regex.Pattern;
 
+/**
+ * Represent the validation rule which demands the new password to contain at least one letter, one
+ * number and one special character.
+ */
 public class PasswordContainsRule implements PasswordValidationRule {
   private static final String MESSAGE_KEY = "passwordchange.validation.contains";
 
@@ -14,6 +18,11 @@ public class PasswordContainsRule implements PasswordValidationRule {
 
   private static final Pattern SPECIAL_CHARACTER_PATTERN = Pattern.compile(".*[!@#$%^&_.,;:-]+.*");
 
+  /**
+   * Checks whether the given object satisfies this validation rule.
+   * @param passwordChangeDTO the object to be validated
+   * @return true if the new password contains at least one letter, number and special character
+   */
   @Override
   public boolean isValid(PasswordChangeDTO passwordChangeDTO) {
     String newPassword = passwordChangeDTO.getNewPassword();
