@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * This controller handles the non-interactive application page. There is no working logic, the
- * application page only shows information about
+ * This controller handles the non-interactive application page which is only used to show
+ * information about about an application.
  */
 @Controller
 @RequestMapping(value = "/secure/application")
@@ -19,7 +19,8 @@ public class ApplicationController {
   /**
    * Creates the application page that shows the application information of the given candidate.
    * @param candidateId identifier of the given candidate
-   * @return the requested application page
+   * @return a ModelAndView object which contains the name of the application view and identifier of
+   * the candidate whose application will be displayed
    */
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView loadPage(@RequestParam Long candidateId) {
