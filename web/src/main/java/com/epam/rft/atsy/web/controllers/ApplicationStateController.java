@@ -1,5 +1,6 @@
 package com.epam.rft.atsy.web.controllers;
 
+import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StateFlowService;
 import com.epam.rft.atsy.service.StateService;
 import com.epam.rft.atsy.service.StatesHistoryService;
@@ -7,8 +8,7 @@ import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -35,11 +34,6 @@ public class ApplicationStateController {
 
   private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
 
-  private final static Type
-      STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE =
-      new TypeToken<List<StateHistoryViewRepresentation>>() {
-      }.getType();
-
   @Resource
   private StatesHistoryService statesHistoryService;
 
@@ -52,8 +46,8 @@ public class ApplicationStateController {
   @Resource
   private MessageKeyResolver messageKeyResolver;
 
-  @Resource
-  private ModelMapper modelMapper;
+  @Autowired
+  private ConverterService converterService;
 
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView loadPage(@RequestParam Long applicationId,
@@ -64,8 +58,9 @@ public class ApplicationStateController {
 
     List<StateHistoryViewRepresentation>
         stateHistoryViewRepresentations =
-        modelMapper.map(statesHistoryService.getStateHistoriesByApplicationId(applicationId),
-            STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE);
+        converterService
+            .convert(statesHistoryService.getStateHistoriesByApplicationId(applicationId),
+                StateHistoryViewRepresentation.class);
 
     if (clickedState != null) {
       StateDTO clickedStateDTO = stateService.getStateDtoByName(clickedState);

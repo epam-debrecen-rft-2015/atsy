@@ -2,13 +2,13 @@ package com.epam.rft.atsy.service.impl;
 
 import com.epam.rft.atsy.persistence.entities.UserEntity;
 import com.epam.rft.atsy.persistence.repositories.UserRepository;
+import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.UserService;
 import com.epam.rft.atsy.service.domain.UserDTO;
 import com.epam.rft.atsy.service.exception.BackendException;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import com.epam.rft.atsy.service.exception.UserNotFoundException;
 import org.hibernate.exception.ConstraintViolationException;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import javax.annotation.Resource;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import lombok.extern.slf4j.Slf4j;
@@ -24,10 +23,12 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
+
   @Autowired
   private UserRepository userRepository;
-  @Resource
-  private ModelMapper modelMapper;
+
+  @Autowired
+  private ConverterService converterService;
 
   @Transactional(readOnly = true)
   public UserDTO login(UserDTO user) throws UserNotFoundException {
@@ -37,7 +38,8 @@ public class UserServiceImpl implements UserService {
 
     UserEntity userEntity;
     try {
-      userEntity = userRepository.findByUserNameAndUserPassword(user.getName(), user.getPassword());
+      userEntity =
+          userRepository.findByUserNameAndUserPassword(user.getName(), user.getPassword());
       if (userEntity == null) {
         throw new UserNotFoundException();
       }
@@ -51,7 +53,7 @@ public class UserServiceImpl implements UserService {
       throw new BackendException(e);
     }
 
-    UserDTO userDTO = modelMapper.map(userEntity, UserDTO.class);
+    UserDTO userDTO = converterService.convert(userEntity, UserDTO.class);
 
     return userDTO;
   }
@@ -60,7 +62,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public Long saveOrUpdate(UserDTO userDTO) {
     Assert.notNull(userDTO);
-    UserEntity entity = modelMapper.map(userDTO, UserEntity.class);
+    UserEntity entity = converterService.convert(userDTO, UserEntity.class);
     try {
       return userRepository.saveAndFlush(entity).getId();
     } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
@@ -78,7 +80,7 @@ public class UserServiceImpl implements UserService {
   public UserDTO findUserByName(String username) {
     Assert.notNull(username);
     UserEntity user = userRepository.findByUserName(username);
-    return (user != null) ? modelMapper.map(user, UserDTO.class) : null;
+    return (user != null) ? converterService.convert(user, UserDTO.class) : null;
   }
 
 }
