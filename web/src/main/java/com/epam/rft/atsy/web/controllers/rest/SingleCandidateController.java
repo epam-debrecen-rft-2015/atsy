@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @RestController
@@ -37,17 +38,21 @@ public class SingleCandidateController {
 
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity saveOrUpdate(@Valid @RequestBody CandidateDTO candidateDTO,
-                                     BindingResult result, Locale locale) {
+                                     BindingResult result, Locale locale, HttpSession session) {
 
     if (!result.hasErrors()) {
 
-      if (!cvStatusMonitor.isActualCVPathEmpty()) {
+      String cvPath =
+          session.getAttribute("CVPATH") == null ? null : session.getAttribute("CVPATH").toString();
+
+
+      if (cvPath != null) {
         if (candidateDTO.getId() == null) {
-          candidateDTO.setCvPath(cvStatusMonitor.getActualCVPath());
+          candidateDTO.setCvPath(cvPath);
         } else if(candidateService.getCVPathByCandidateId(candidateDTO.getId()) != null) {
           candidateDTO.setCvPath(candidateService.getCVPathByCandidateId(candidateDTO.getId()));
         } else if(candidateService.getCVPathByCandidateId(candidateDTO.getId()) == null) {
-          candidateDTO.setCvPath(cvStatusMonitor.getActualCVPath());
+          candidateDTO.setCvPath(cvPath);
         } else if (candidateDTO.getId() != null) {
           candidateDTO.setCvPath(candidateService.getCVPathByCandidateId(candidateDTO.getId()));
         }
@@ -55,7 +60,7 @@ public class SingleCandidateController {
         candidateDTO.setCvPath(candidateService.getCVPathByCandidateId(candidateDTO.getId()));
       }
       Long candidateId = candidateService.saveOrUpdate(candidateDTO);
-      cvStatusMonitor.restoreActualCVPathToEmpty();
+      session.removeAttribute("CVPATH");
       return new ResponseEntity<>(Collections.singletonMap("id", candidateId), HttpStatus.OK);
 
     } else {
