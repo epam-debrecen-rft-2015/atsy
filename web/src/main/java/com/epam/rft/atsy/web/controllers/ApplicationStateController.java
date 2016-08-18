@@ -7,8 +7,8 @@ import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
+import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +44,7 @@ public class ApplicationStateController {
   private StateService stateService;
 
   @Resource
-  private MessageSource messageSource;
+  private MessageKeyResolver messageKeyResolver;
 
   @Autowired
   private ConverterService converterService;
@@ -74,9 +74,10 @@ public class ApplicationStateController {
     for (StateHistoryViewRepresentation stateHistoryViewRepresentation : stateHistoryViewRepresentations) {
       String stateType = stateHistoryViewRepresentation.getStateName();
       stateType =
-          messageSource
-              .getMessage(APPLICATION_STATE + stateHistoryViewRepresentation.getStateName(),
-                  new Object[]{stateType}, locale);
+          messageKeyResolver
+              .resolveMessageOrDefault(
+                  APPLICATION_STATE + stateHistoryViewRepresentation.getStateName(),
+                  stateType);
       stateHistoryViewRepresentation.setStateFullName(stateType);
     }
 

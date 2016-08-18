@@ -3,9 +3,7 @@ package com.epam.rft.atsy.web.controllers.rest;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.MessageSource;
+import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -30,7 +28,7 @@ public class SingleCandidateController {
   private CandidateService candidateService;
 
   @Resource
-  private MessageSource messageSource;
+  private MessageKeyResolver messageKeyResolver;
 
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity saveOrUpdate(@Valid @RequestBody CandidateDTO candidateDTO,
@@ -47,13 +45,14 @@ public class SingleCandidateController {
   }
 
   private RestResponse parseValidationErrors(List<FieldError> fieldErrors, Locale locale) {
-    String errorMessage = messageSource.getMessage(COMMON_INVALID_INPUT_MESSAGE_KEY, null, locale);
+    String errorMessage =
+        messageKeyResolver.resolveMessageOrDefault(COMMON_INVALID_INPUT_MESSAGE_KEY);
 
     RestResponse restResponse = new RestResponse(errorMessage);
 
     for (FieldError fieldError : fieldErrors) {
       restResponse.addField(fieldError.getField(),
-          messageSource.getMessage(fieldError.getDefaultMessage(), new Object[0], locale));
+          messageKeyResolver.resolveMessageOrDefault(fieldError.getDefaultMessage()));
     }
 
     return restResponse;

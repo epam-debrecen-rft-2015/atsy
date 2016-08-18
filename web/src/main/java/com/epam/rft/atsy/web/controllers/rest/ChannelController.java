@@ -3,9 +3,9 @@ package com.epam.rft.atsy.web.controllers.rest;
 import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
+import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -29,7 +29,7 @@ public class ChannelController {
   @Resource
   private ChannelService channelService;
   @Resource
-  private MessageSource messageSource;
+  private MessageKeyResolver messageKeyResolver;
 
   @RequestMapping(method = RequestMethod.GET)
   public Collection<ChannelDTO> getChannels() {
@@ -44,8 +44,8 @@ public class ChannelController {
 
       return new ResponseEntity<>(RestResponse.NO_ERROR, HttpStatus.OK);
     } else {
-      String errorMessage = messageSource.getMessage(EMPTY_POSITION_NAME_MESSAGE_KEY,
-          null, locale);
+      String errorMessage =
+          messageKeyResolver.resolveMessageOrDefault(EMPTY_POSITION_NAME_MESSAGE_KEY);
 
       RestResponse restResponse = new RestResponse(errorMessage);
 

@@ -3,7 +3,7 @@ package com.epam.rft.atsy.web.controllers.rest;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
-import org.springframework.context.MessageSource;
+import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,7 +23,7 @@ public class ApplicationStatesController {
   private StatesHistoryService statesHistoryService;
 
   @Resource
-  private MessageSource messageSource;
+  private MessageKeyResolver messageKeyResolver;
 
   @RequestMapping(method = RequestMethod.GET)
   public Collection<StateHistoryViewDTO> loadApplications(
@@ -35,7 +35,7 @@ public class ApplicationStatesController {
     for (StateHistoryViewDTO stateHistoryViewDTO : applicationStates) {
       String stateType = stateHistoryViewDTO.getStateDTO().getName();
       stateType =
-          messageSource.getMessage(APPLICATION_STATE + stateType, new Object[]{stateType}, locale);
+          messageKeyResolver.resolveMessageOrDefault(APPLICATION_STATE + stateType, stateType);
       stateHistoryViewDTO
           .setStateDTO(new StateDTO(stateHistoryViewDTO.getStateDTO().getId(),stateType));
     }

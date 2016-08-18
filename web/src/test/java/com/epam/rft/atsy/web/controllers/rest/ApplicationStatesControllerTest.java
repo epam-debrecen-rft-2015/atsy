@@ -3,7 +3,7 @@ package com.epam.rft.atsy.web.controllers.rest;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -18,13 +18,13 @@ import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
 import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
+import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.context.MessageSource;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.Clock;
@@ -35,7 +35,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationStatesControllerTest extends AbstractControllerTest {
@@ -81,7 +80,7 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
 
 
   @Mock
-  private MessageSource messageSource;
+  private MessageKeyResolver messageKeyResolver;
 
   @Mock
   private StatesHistoryService statesHistoryService;
@@ -167,7 +166,7 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
 
     then(statesHistoryService).should().getStateHistoriesByApplicationId(APPLICATION_ID);
 
-    verifyZeroInteractions(messageSource);
+    verifyZeroInteractions(messageKeyResolver);
   }
 
   @Test
@@ -176,8 +175,10 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
     given(statesHistoryService.getStateHistoriesByApplicationId(APPLICATION_ID))
         .willReturn(Collections.singletonList(dummyStateHistoryViewDto));
 
-    given(messageSource.getMessage(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoA.getName()),
-        any(Object[].class), any(Locale.class))).willReturn(STATE_A_LOCALIZED_NAME);
+    given(messageKeyResolver
+        .resolveMessageOrDefault(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoA.getName()),
+            anyString()))
+        .willReturn(STATE_A_LOCALIZED_NAME);
 
     ResultActions resultActions = mockMvc.perform(get(REQUEST_URL + APPLICATION_ID.toString()))
         .andExpect(status().isOk())
@@ -190,11 +191,11 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
 
     then(statesHistoryService).should().getStateHistoriesByApplicationId(APPLICATION_ID);
 
-    then(messageSource).should()
-        .getMessage(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoA.getName()),
-            any(Object[].class), any(Locale.class));
+    then(messageKeyResolver).should()
+        .resolveMessageOrDefault(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoA.getName()),
+            anyString());
 
-    verifyNoMoreInteractions(messageSource);
+    verifyNoMoreInteractions(messageKeyResolver);
   }
 
   @Test
@@ -203,14 +204,20 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
     given(statesHistoryService.getStateHistoriesByApplicationId(APPLICATION_ID))
         .willReturn(dummyStateHistoryViewList);
 
-    given(messageSource.getMessage(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoA.getName()),
-        any(Object[].class), any(Locale.class))).willReturn(STATE_A_LOCALIZED_NAME);
+    given(messageKeyResolver
+        .resolveMessageOrDefault(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoA.getName()),
+            anyString()))
+        .willReturn(STATE_A_LOCALIZED_NAME);
 
-    given(messageSource.getMessage(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoB.getName()),
-        any(Object[].class), any(Locale.class))).willReturn(STATE_B_LOCALIZED_NAME);
+    given(messageKeyResolver
+        .resolveMessageOrDefault(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoB.getName()),
+            anyString()))
+        .willReturn(STATE_B_LOCALIZED_NAME);
 
-    given(messageSource.getMessage(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoC.getName()),
-        any(Object[].class), any(Locale.class))).willReturn(STATE_C_LOCALIZED_NAME);
+    given(messageKeyResolver
+        .resolveMessageOrDefault(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoC.getName()),
+            anyString()))
+        .willReturn(STATE_C_LOCALIZED_NAME);
 
     ResultActions resultActions = mockMvc.perform(get(REQUEST_URL + APPLICATION_ID.toString()))
         .andExpect(status().isOk())
@@ -231,19 +238,19 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
 
     then(statesHistoryService).should().getStateHistoriesByApplicationId(APPLICATION_ID);
 
-    then(messageSource).should()
-        .getMessage(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoA.getName()),
-            any(Object[].class), any(Locale.class));
+    then(messageKeyResolver).should()
+        .resolveMessageOrDefault(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoA.getName()),
+            anyString());
 
-    then(messageSource).should()
-        .getMessage(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoB.getName()),
-            any(Object[].class), any(Locale.class));
+    then(messageKeyResolver).should()
+        .resolveMessageOrDefault(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoB.getName()),
+            anyString());
 
-    then(messageSource).should()
-        .getMessage(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoC.getName()),
-            any(Object[].class), any(Locale.class));
+    then(messageKeyResolver).should()
+        .resolveMessageOrDefault(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoC.getName()),
+            anyString());
 
-    verifyNoMoreInteractions(messageSource);
+    verifyNoMoreInteractions(messageKeyResolver);
   }
 
   private void assertStateHistoryViewResponse(ResultActions resultActions, int index,
