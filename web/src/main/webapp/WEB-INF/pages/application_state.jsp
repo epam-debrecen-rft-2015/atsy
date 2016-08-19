@@ -136,15 +136,8 @@
                       <div class="form-group">
                           <label for="languageSkillInput" class="control-label col-sm-4"><spring:message code="statehistory.field.languageSkill"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="languageSkillP">${data.languageSkill}</p>
-                              <c:if test="${stat.first}">
-                                  <input class="stateInput" type="number" name="languageSkill" id="languageSkillInput" style="display:none" value="${data.languageSkill}"
-                                  data-error="<spring:message code="candidate.error.language.incorrect"/>"
-                                  data-bind="valueWithInit: 'languageSkill'"
-                                  max="10" min="0">
-                              </c:if>
+                              <p class="form-control-static" id="languageSkillP">${data.languageSkill}</p>
                           </div>
-                          <div class="help-block with-errors"></div>
                       </div>
                   </c:when>
                   <c:when test="${data.stateName == 'firstTest'}">

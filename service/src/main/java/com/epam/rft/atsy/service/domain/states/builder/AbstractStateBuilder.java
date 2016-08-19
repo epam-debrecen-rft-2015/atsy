@@ -42,11 +42,6 @@ public abstract class AbstractStateBuilder<B extends AbstractStateBuilder<B, T>,
     return (B) this;
   }
 
-  public B languageSkill(Short languageSkill) {
-    object.setLanguageSkill(languageSkill);
-    return (B) this;
-  }
-
   public B description(String description) {
     object.setDescription(description);
     return (B) this;

@@ -37,8 +37,6 @@ public class StateHistoryViewRepresentation {
   @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$", message = "statehistory.error.parse.date")
   private String feedbackDate;
 
-  @Min(value = 0, message = "candidate.error.language.incorrect")
-  @Max(value = 10, message = "candidate.error.language.incorrect")
   private Short languageSkill;
 
   @Size(max = 2000, message = "statehistory.error.description.length")

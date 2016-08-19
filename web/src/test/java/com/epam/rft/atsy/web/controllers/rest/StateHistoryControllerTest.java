@@ -148,7 +148,6 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .id(ID)
         .candidateId(CANDIDATE_ID)
         .feedbackDate(FEEDBACK_DATE)
-        .languageSkill(LANGUAGE_SKILL)
         .description(DESCRIPTION)
         .result(RESULT)
         .offeredMoney(OFFERED_MONEY)
@@ -181,32 +180,6 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage").value(COMMON_INVALID_INPUT_MESSAGE_KEY))
         .andExpect(jsonPath("$.fields.feedbackDate").value(DATE_PARSE_ERROR_MESSAGE_KEY));
-
-    verifyZeroInteractions(statesHistoryService);
-  }
-
-  @Test
-  public void saveOrUpdateShouldRespondWithErrorJSONWhenLanguageSkillIsLower() throws Exception {
-    StateHistoryViewRepresentation stateHistoryViewRepresentation =
-        StateHistoryViewRepresentation.builder().languageSkill(LOWER_LANGUAGE_SKILL).build();
-
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.errorMessage").value(COMMON_INVALID_INPUT_MESSAGE_KEY))
-        .andExpect(jsonPath("$.fields.languageSkill").value(LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
-
-    verifyZeroInteractions(statesHistoryService);
-  }
-
-  @Test
-  public void saveOrUpdateShouldRespondWithErrorJSONWhenLanguageSkillIsHigher() throws Exception {
-    StateHistoryViewRepresentation stateHistoryViewRepresentation =
-        StateHistoryViewRepresentation.builder().languageSkill(HIGHER_LANGUAGE_SKILL).build();
-
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.errorMessage").value(COMMON_INVALID_INPUT_MESSAGE_KEY))
-        .andExpect(jsonPath("$.fields.languageSkill").value(LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
 
     verifyZeroInteractions(statesHistoryService);
   }

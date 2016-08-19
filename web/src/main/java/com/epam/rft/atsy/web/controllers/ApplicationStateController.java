@@ -1,9 +1,13 @@
 package com.epam.rft.atsy.web.controllers;
 
+import com.epam.rft.atsy.service.ApplicationsService;
+import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StateFlowService;
 import com.epam.rft.atsy.service.StateService;
 import com.epam.rft.atsy.service.StatesHistoryService;
+import com.epam.rft.atsy.service.domain.ApplicationDTO;
+import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +40,12 @@ public class ApplicationStateController {
 
   @Resource
   private StateFlowService stateFlowService;
+
+  @Resource
+  private ApplicationsService applicationsService;
+
+  @Resource
+  private CandidateService candidateService;
 
   @Resource
   private StateService stateService;
@@ -71,7 +81,12 @@ public class ApplicationStateController {
           .build());
     }
 
+    ApplicationDTO applicationDTO = applicationsService.getApplication(applicationId);
+
+    CandidateDTO candidateDTO = candidateService.getCandidate(applicationDTO.getCandidateId());
+
     for (StateHistoryViewRepresentation stateHistoryViewRepresentation : stateHistoryViewRepresentations) {
+      stateHistoryViewRepresentation.setLanguageSkill(candidateDTO.getLanguageSkill());
       String stateType = stateHistoryViewRepresentation.getStateName();
       stateType =
           messageSource

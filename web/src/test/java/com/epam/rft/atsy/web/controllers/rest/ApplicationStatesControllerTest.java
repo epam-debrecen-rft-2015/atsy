@@ -137,7 +137,6 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
         .position(dummyPositionDto)
         .channel(dummyChannelDto)
         .applicationDTO(dummyApplicationDto)
-        .languageSkill(LANGUAGE_SKILL)
         .description(DESCRIPTION)
         .result(RESULT)
         .offeredMoney(OFFERED_MONEY)
@@ -253,8 +252,6 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
 
     resultActions
         .andExpect(jsonPath(basePath + "id", equalTo(historyViewDto.getId().intValue())))
-        .andExpect(jsonPath(basePath + "languageSkill",
-            equalTo(historyViewDto.getLanguageSkill().intValue())))
         .andExpect(jsonPath(basePath + "description", equalTo(historyViewDto.getDescription())))
         .andExpect(jsonPath(basePath + "result", equalTo(historyViewDto.getResult().intValue())))
         .andExpect(jsonPath(basePath + "offeredMoney",
