@@ -2,6 +2,7 @@ package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.CandidateService;
 
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class FileDownloaderController {
   private static final String CONTENT_DISPOSITION = "Content-Disposition";
-  private static final String MIME_TYPE = "application/octet-stream";
   private static final String INLINE_FORMAT = "inline; filename=\"";
 
   @Resource
@@ -36,7 +36,7 @@ public class FileDownloaderController {
 
     String mimeType = URLConnection.guessContentTypeFromName(file.getName());
     if (mimeType == null) {
-      mimeType = MIME_TYPE;
+      mimeType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
     }
 
     response.setContentType(mimeType);
