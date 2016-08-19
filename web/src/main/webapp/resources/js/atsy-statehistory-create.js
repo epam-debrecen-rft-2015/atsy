@@ -73,9 +73,9 @@ function StateHistoryModel() {
    }
 
    self.canSave = ko.pureComputed(function() {
-    var newValue = self.recommendation();
-
-    return (newValue == "0") || (newValue == "1");
+    var recomm = self.recommendation();
+    var pos = self.recommendedPositionLevel();
+    return ((recomm == "0") || (recomm == "1")) && (pos >= "0" && pos <= "5");
    });
 }
 

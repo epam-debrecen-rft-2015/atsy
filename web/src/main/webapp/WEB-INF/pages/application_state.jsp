@@ -177,7 +177,7 @@
                           <c:if test="${stat.first}">
                             <select required class="stateInput" id="recommendationInput" style="display:none;"
                               data-bind="valueWithInit: 'recommendation'">
-                              <option disabled ${data.recommendation != 1 && data.recommendation != 0 ? 'selected' : ''}><spring:message code="common.pleaseChoose"/></option>
+                              <option disabled ${data.recommendation == null ? 'selected' : ''}><spring:message code="common.pleaseChoose"/></option>
                               <option value="1" ${data.recommendation == 1 ? 'selected' : ''}><spring:message code="common.yes"/></option>
                               <option value="0" ${data.recommendation == 0 ? 'selected' : ''}><spring:message code="common.no"/></option>
                             </select>
@@ -203,10 +203,18 @@
                         <div class="col-sm-8">
                           <p class="form-control-static <c:if test='${stat.first}'>stateData</c:if>" id="reviewerNameP">L${data.recommendedPositionLevel}</p>
                           <c:if test="${stat.first}">
-                            <input type="number" class="stateInput" id="recommendedPositionLevelInput" style="display:none" value="${data.recommendedPositionLevel}"
-                              data-bind="valueWithInit: 'recommendedPositionLevel'"
-                              data-error="<spring:message code='statehistory.error.recommendedPositionLevel.range'/>"
-                              min="0" max="5" required />
+                              <select required class="stateInput" id="recommendedPositionLevelInput"
+                                data-bind="valueWithInit: 'recommendedPositionLevel'"
+                                data-error="<spring:message code='statehistory.error.recommendedPositionLevel.range'/>"
+                                style="display:none;">
+                                  <option disabled <c:if test="${data.recommendedPositionLevel eq null}"> selected="selected" </c:if>>
+                                                                          <spring:message code="common.pleaseChoose"/></option>
+                                  <c:forEach begin="0" end="5" step="1" var="index">
+                                      <option value="${index}" <c:if
+                                              test="${index eq data.recommendedPositionLevel}"> selected="selected" </c:if>>${index}</option>
+                                  </c:forEach>
+                              </select>
+                              </select>
                           </c:if>
                         </div>
                         <div class="help-block with-errors"></div>
