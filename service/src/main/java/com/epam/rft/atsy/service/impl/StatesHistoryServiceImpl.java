@@ -85,5 +85,4 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
 
     return converterService.convert(statesHistoryEntities, StateHistoryViewDTO.class);
   }
-
 }

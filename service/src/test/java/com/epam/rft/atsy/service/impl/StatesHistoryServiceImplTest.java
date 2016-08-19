@@ -40,7 +40,6 @@ public class StatesHistoryServiceImplTest {
   private static final Long FIRST_ID = 1L;
   private static final Long SECOND_ID = 2L;
   private static final Long THIRD_ID = 3L;
-//  private static final Type STATE_HISTORY_VIEW_DTO_LIST_TYPE = new TypeToken<List<StateHistoryViewDTO>>() {}.getType();
 
   private static final String FIRST_POSITION_ENTITY_NAME = "First position";
   private static final String SECOND_POSITION_ENTITY_NAME = "Second position";
@@ -252,9 +251,8 @@ public class StatesHistoryServiceImplTest {
     given(statesHistoryRepository
         .findByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity))
         .willReturn(statesHistoryEntityListWithSingleElement);
-    given(
-        converterService
-            .convert(statesHistoryEntityListWithSingleElement, StateHistoryViewDTO.class))
+    given(converterService
+        .convert(statesHistoryEntityListWithSingleElement, StateHistoryViewDTO.class))
         .willReturn(stateViewHistoryDTOListWithSingleElement);
 
     // When
@@ -279,9 +277,8 @@ public class StatesHistoryServiceImplTest {
     given(statesHistoryRepository
         .findByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity))
         .willReturn(statesHistoryEntityListWithThreeElements);
-    given(
-        converterService
-            .convert(statesHistoryEntityListWithThreeElements, StateHistoryViewDTO.class))
+    given(converterService
+        .convert(statesHistoryEntityListWithThreeElements, StateHistoryViewDTO.class))
         .willReturn(stateViewHistoryDTOListWithThreeElements);
 
     // When
