@@ -4,6 +4,7 @@ import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.FileUploadingProperties;
 import com.epam.rft.atsy.web.model.file.FileStatus;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,11 +36,11 @@ public class CandidateCreationController {
 
     String candidateCvPath = candidateService.getCVPathByCandidateId(candidateId);
     if (candidateCvPath == null && cvPath == null) {
-      modelAndView.addObject(FileStatus.CV_STATUS, FileStatus.FILE_NOT_EXISTS.getValue());
+      modelAndView.addObject(FileStatus.CV_STATUS_MODEL_ATTR_NAME, FileStatus.FILE_NOT_EXISTS);
     } else if (candidateCvPath == null && cvPath != null) {
-      modelAndView.addObject(FileStatus.CV_STATUS, FileStatus.FILE_IS_IN_PROGRESS.getValue());
+      modelAndView.addObject(FileStatus.CV_STATUS_MODEL_ATTR_NAME, FileStatus.FILE_IS_IN_PROGRESS);
     } else if (candidateCvPath != null) {
-      modelAndView.addObject(FileStatus.CV_STATUS, FileStatus.FILE_ALREADY_EXISTS.getValue());
+      modelAndView.addObject(FileStatus.CV_STATUS_MODEL_ATTR_NAME, FileStatus.FILE_ALREADY_EXISTS);
     }
     return modelAndView;
   }
@@ -49,7 +50,7 @@ public class CandidateCreationController {
     ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
 
     modelAndView.addObject(CANDIDATE_OBJECT_KEY, new CandidateDTO());
-    modelAndView.addObject(FileStatus.CV_STATUS, FileStatus.FILE_NOT_EXISTS.getValue());
+    modelAndView.addObject(FileStatus.CV_STATUS_MODEL_ATTR_NAME, FileStatus.FILE_NOT_EXISTS);
     return modelAndView;
   }
 }

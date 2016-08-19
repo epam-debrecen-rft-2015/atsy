@@ -7,6 +7,7 @@ import com.epam.rft.atsy.web.mapper.FileValidationRuleMapper;
 import com.epam.rft.atsy.web.model.file.FileBucket;
 import com.epam.rft.atsy.web.model.file.FileStatus;
 import com.epam.rft.atsy.web.validator.FileValidator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
@@ -20,9 +21,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -75,7 +78,7 @@ public class FileUploaderController {
     } catch (FileValidationException e) {
       log.error(FileUploaderController.class.getName(), e);
       session.removeAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH);
-      modelAndView.addObject(FileStatus.CV_STATUS, FileStatus.FILE_NOT_EXISTS.getValue());
+      modelAndView.addObject(FileStatus.CV_STATUS_MODEL_ATTR_NAME, FileStatus.FILE_NOT_EXISTS);
       modelAndView.addObject(VALIDATION_ERROR_KEY,
           fileUploadValidationRuleMapper.getMessageKeyByException(e));
     }
@@ -102,16 +105,16 @@ public class FileUploaderController {
       session.setAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH, file.getPath());
       redirectAttributes.addFlashAttribute(FILE, fileName);
       redirectAttributes.addFlashAttribute(VALIDATION_SUCCESS_KEY, VALIDATION_FILE_SUCCESS);
-      redirectAttributes.addFlashAttribute(FileStatus.CV_STATUS,
-          FileStatus.FILE_ALREADY_EXISTS.getValue());
+      redirectAttributes.addFlashAttribute(FileStatus.CV_STATUS_MODEL_ATTR_NAME,
+          FileStatus.FILE_ALREADY_EXISTS);
 
     } catch (FileValidationException e) {
       log.error(FileUploaderController.class.getName(), e);
       session.removeAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH);
       redirectAttributes
-          .addFlashAttribute(FileStatus.CV_STATUS, FileStatus.FILE_NOT_EXISTS.getValue());
+          .addFlashAttribute(FileStatus.CV_STATUS_MODEL_ATTR_NAME, FileStatus.FILE_NOT_EXISTS);
       redirectAttributes.addFlashAttribute(VALIDATION_ERROR_KEY,
-              fileUploadValidationRuleMapper.getMessageKeyByException(e));
+          fileUploadValidationRuleMapper.getMessageKeyByException(e));
     }
 
     return modelAndView;

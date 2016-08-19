@@ -205,7 +205,7 @@
             </div>
         </div>
 
-        <c:if test="${cv_status eq true}">
+        <c:if test="${cv_status == 'FILE_ALREADY_EXISTS'}">
         <c:set var="candidateCvPath" value="${candidate.cvPath}" />
         <c:set var="cvPathArray" value="${fn:split(candidateCvPath, '\\\\')}" />
         <c:set var="cvName" value="${cvPathArray[fn:length(cvPathArray)-1]}" />
@@ -220,7 +220,7 @@
         <c:if test="${not empty candidateId}">
         <form:form method="POST" action="${fileUpload}/${candidateId}" enctype="multipart/form-data">
 
-                            <c:if test="${cv_status eq false}">
+                            <c:if test="${cv_status == 'FILE_NOT_EXISTS'}">
                         		 <h4><spring:message code="please.upload.cv"/></h4>
                         		<input type="file" name="file" />
                         		<button type="submit" class="btn btn-primary"><spring:message code="upload.button"/></button>
@@ -245,7 +245,7 @@
         <c:if test="${empty candidateId}">
         <form:form method="POST" action="${fileUpload}" enctype="multipart/form-data">
 
-                    <c:if test="${cv_status eq false}">
+                    <c:if test="${cv_status eq 'FILE_NOT_EXISTS'}">
                 		 <h4><spring:message code="please.upload.cv"/></h4>
                 		<input type="file" name="file"/>
                 		<button type="submit" class="btn btn-primary"><spring:message code="upload.button"/></button>
