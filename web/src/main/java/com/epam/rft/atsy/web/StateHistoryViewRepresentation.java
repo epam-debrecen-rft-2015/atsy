@@ -62,7 +62,14 @@ public class StateHistoryViewRepresentation {
 
   private String stateName;
 
-  @Min(value = 0)
-  @Max(value = 1)
+  @Min(value = 0, message = "statehistory.error.recommendation.range")
+  @Max(value = 1, message = "statehistory.error.recommendation.range")
   private Integer recommendation;
+
+  @Size(max = 100, min = 3, message = "statehistory.error.reviewerName.length")
+  private String reviewerName;
+
+  @Min(value = 0, message = "statehistory.error.recommendedPositionLevel.range")
+  @Max(value = 5, message = "statehistory.error.recommendedPositionLevel.range")
+  private Short recommendedPositionLevel;
 }

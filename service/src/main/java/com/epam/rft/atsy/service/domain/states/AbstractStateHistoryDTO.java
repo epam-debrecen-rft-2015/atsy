@@ -30,5 +30,7 @@ public abstract class AbstractStateHistoryDTO implements Serializable {
   private Date dayOfStart;
   private StateDTO stateDTO;
   private Boolean recommendation;
+  private String reviewerName;
+  private Short recommendedPositionLevel;
 
 }

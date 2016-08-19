@@ -87,6 +87,16 @@ public abstract class AbstractStateBuilder<B extends AbstractStateBuilder<B, T>,
     return (B) this;
   }
 
+  public B reviewerName(String reviewerName) {
+    object.setReviewerName(reviewerName);
+    return (B) this;
+  }
+
+  public B recommendedPositionLevel(Short recommendedPositonLevel) {
+    object.setRecommendedPositionLevel(recommendedPositonLevel);
+    return (B) this;
+  }
+
   @Override
   public T build() {
     return object;

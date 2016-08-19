@@ -74,9 +74,9 @@
               </c:if>
 
               <div class="form-group col-sm-12 col-md-12 col-lg-12">
-                  <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.date"/></label>
+                  <label for="creationDateInput" class="control-label col-sm-4"><spring:message code="statehistory.field.date"/></label>
                   <div class="col-sm-8">
-                      <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="creationDateP"><fmt:formatDate value='${parsedCreationDate}' pattern='yyyy-MM-dd HH:mm'/></p>
+                      <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="creationDateP"><fmt:formatDate value='${parsedCreationDate}' pattern='yyyy-MM-dd HH:mm'/></p>
                       <c:if test="${stat.first}">
                           <input class="stateInput" readOnly="true" type="text" name="creationDate" id="creationDateInput" style="display:none"
                             value="<fmt:formatDate value='${parsedCreationDate}' pattern='yyyy-MM-dd HH:mm'/>"
@@ -89,9 +89,9 @@
               </div>
 
               <div class="form-group">
-                  <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.description"/></label>
+                  <label for="descriptionInput" class="control-label col-sm-4"><spring:message code="statehistory.field.description"/></label>
                   <div class="col-sm-8">
-                      <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="descriptionP">${data.description}</p>
+                      <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="descriptionP">${data.description}</p>
                       <c:if test="${stat.first}">
                           <textarea class="stateInput" wrap="soft" name="description" id="descriptionInput" style="display:none; resize: both;"
                             data-bind="valueWithInit: 'description'"
@@ -104,9 +104,9 @@
               <c:choose>
                   <c:when test="${data.stateName == 'newstate'}">
                       <div class="form-group">
-                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.position"/></label>
+                          <label for="positionNameInput" class="control-label col-sm-4"><spring:message code="statehistory.field.position"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="positionNameP">${data.position.name}</p>
+                              <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="positionNameP">${data.position.name}</p>
                               <c:if test="${stat.first}">
                                   <input class="stateInput" type="text" name="position.name" id="positionNameInput" style="display:none" value="${data.position.name}"
                                     data-bind="valueWithInit: 'name'">
@@ -114,9 +114,9 @@
                           </div>
                       </div>
                       <div class="form-group">
-                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.channel"/></label>
+                          <label for="channelNameInput" class="control-label col-sm-4"><spring:message code="statehistory.field.channel"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="channelNameP">${data.channel.name}</p>
+                              <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="channelNameP">${data.channel.name}</p>
                               <c:if test="${stat.first}">
                                   <input class="stateInput" type="text" name="channel.name" id="channelNameInput" style="display:none" value="${data.channel.name}"
                                     data-bind="valueWithInit: 'channelName'">
@@ -134,9 +134,9 @@
                   </c:when>
                   <c:when test="${data.stateName == 'hr'}">
                       <div class="form-group">
-                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.languageSkill"/></label>
+                          <label for="languageSkillInput" class="control-label col-sm-4"><spring:message code="statehistory.field.languageSkill"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="languageSkillP">${data.languageSkill}</p>
+                              <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="languageSkillP">${data.languageSkill}</p>
                               <c:if test="${stat.first}">
                                   <input class="stateInput" type="number" name="languageSkill" id="languageSkillInput" style="display:none" value="${data.languageSkill}"
                                   data-error="<spring:message code="candidate.error.language.incorrect"/>"
@@ -149,22 +149,22 @@
                   </c:when>
                   <c:when test="${data.stateName == 'firstTest'}">
                       <div class="form-group">
-                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.result"/></label>
+                          <label for="resultInput" class="control-label col-sm-4"><spring:message code="statehistory.field.result"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="resultP" >${data.result}%</p>
+                              <p class="form-control-static <c:if test='${stat.first}'>stateData</c:if>" id="resultP" >${data.result}%</p>
                               <c:if test="${stat.first}">
                                   <input required class="stateInput" type="number" name="result" id="resultInput" style="display:none;" value="${data.result}"
                                     data-bind="valueWithInit: 'result'"
                                     max="100" min="0"
-                                    data-error="<spring:message code="statehistory.error.result.range"/>">
+                                    data-error="<spring:message code='statehistory.error.result.range'/>" />
                               </c:if>
                           </div>
                           <div class="help-block with-errors"></div>
                       </div>
                       <div class="form-group">
-                        <label for="recommendation" class="control-label col-sm-4"><spring:message code="statehistory.field.recommendation"/></label>
+                        <label for="recommendationInput" class="control-label col-sm-4"><spring:message code="statehistory.field.recommendation"/></label>
                         <div class="col-sm-8">
-                          <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="recommendationP">
+                          <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="recommendationP">
                             <c:choose>
                               <c:when test="${data.recommendation == 1}">
                                 <spring:message code="common.yes"/>
@@ -181,6 +181,32 @@
                               <option value="1" ${data.recommendation == 1 ? 'selected' : ''}><spring:message code="common.yes"/></option>
                               <option value="0" ${data.recommendation == 0 ? 'selected' : ''}><spring:message code="common.no"/></option>
                             </select>
+                          </c:if>
+                        </div>
+                        <div class="help-block with-errors"></div>
+                      </div>
+                      <div class="form-group">
+                        <label for="reviewerNameInput"  class="control-label col-sm-4"><spring:message code="statehistory.field.reviewerName"/></label>
+                        <div class="col-sm-8">
+                          <p class="form-control-static <c:if test='${stat.first}'>stateData</c:if>" id="reviewerNameP">${data.reviewerName}</p>
+                          <c:if test="${stat.first}">
+                            <input type="text" class="stateInput" id="reviwerNameInput" style="display:none" value="${data.reviewerName}"
+                              data-bind="valueWithInit: 'reviewerName'"
+                              data-error="<spring:message code='statehistory.error.reviewerName.length'/>"
+                              pattern="^.{3,100}$" required />
+                          </c:if>
+                        </div>
+                        <div class="help-block with-errors"></div>
+                      </div>
+                      <div class="form-group">
+                        <label for="recommendedPositionLevelInput"  class="control-label col-sm-4"><spring:message code="statehistory.field.recommendedPositionLevel"/></label>
+                        <div class="col-sm-8">
+                          <p class="form-control-static <c:if test='${stat.first}'>stateData</c:if>" id="reviewerNameP">L${data.recommendedPositionLevel}</p>
+                          <c:if test="${stat.first}">
+                            <input type="number" class="stateInput" id="recommendedPositionLevelInput" style="display:none" value="${data.recommendedPositionLevel}"
+                              data-bind="valueWithInit: 'recommendedPositionLevel'"
+                              data-error="<spring:message code='statehistory.error.recommendedPositionLevel.range'/>"
+                              min="0" max="5" required />
                           </c:if>
                         </div>
                         <div class="help-block with-errors"></div>

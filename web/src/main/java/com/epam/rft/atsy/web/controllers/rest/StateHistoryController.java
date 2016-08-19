@@ -79,6 +79,8 @@ public class StateHistoryController {
                 .name(stateHistoryViewRepresentation.getStateName()).build())
             .recommendation(stateHistoryViewRepresentation.getRecommendation() != null ?
                 stateHistoryViewRepresentation.getRecommendation() == 1 : null)
+            .reviewerName(stateHistoryViewRepresentation.getReviewerName())
+            .recommendedPositionLevel(stateHistoryViewRepresentation.getRecommendedPositionLevel())
             .build();
 
       } catch (ParseException e) {

@@ -55,6 +55,12 @@ public class StatesHistoryEntity extends SuperEntity {
   @Column(name = "recommendation")
   private Boolean recommendation;
 
+  @Column(name = "reviewer_name")
+  private String reviewerName;
+
+  @Column(name = "recommended_position_level")
+  private Short recommendedPositionLevel;
+
   @OneToOne
   @JoinColumn(name = "state_id")
   private StatesEntity statesEntity;
@@ -66,6 +72,8 @@ public class StatesHistoryEntity extends SuperEntity {
                              Long offeredMoney,
                              Long claim, Date feedbackDate, Date dayOfStart,
                              Boolean recommendation,
+                             String reviewerName,
+                             Short recommendedPositionLevel,
                              StatesEntity statesEntity) {
     super(id);
     this.applicationEntity = applicationEntity;
@@ -78,6 +86,8 @@ public class StatesHistoryEntity extends SuperEntity {
     this.feedbackDate = feedbackDate;
     this.dayOfStart = dayOfStart;
     this.recommendation = recommendation;
+    this.reviewerName = reviewerName;
+    this.recommendedPositionLevel = recommendedPositionLevel;
     this.statesEntity = statesEntity;
   }
 }
