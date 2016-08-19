@@ -3,9 +3,9 @@ package com.epam.rft.atsy.web.controllers.rest;
 import com.epam.rft.atsy.service.PositionService;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
+import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -32,7 +32,7 @@ public class PositionController {
   @Resource
   private PositionService positionService;
   @Resource
-  private MessageSource messageSource;
+  private MessageKeyResolver messageKeyResolver;
 
   /**
    * Get all the available positions.
@@ -58,8 +58,8 @@ public class PositionController {
 
       return new ResponseEntity<>(RestResponse.NO_ERROR, HttpStatus.OK);
     } else {
-      String errorMessage = messageSource.getMessage(EMPTY_POSITION_NAME_MESSAGE_KEY,
-          null, locale);
+      String errorMessage =
+          messageKeyResolver.resolveMessageOrDefault(EMPTY_POSITION_NAME_MESSAGE_KEY);
 
       RestResponse restResponse = new RestResponse(errorMessage);
 
