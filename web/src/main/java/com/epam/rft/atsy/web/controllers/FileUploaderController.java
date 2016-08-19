@@ -75,7 +75,7 @@ public class FileUploaderController {
     } catch (FileValidationException e) {
       log.error(FileUploaderController.class.getName(), e);
       session.removeAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH);
-      modelAndView.addObject(FileStatus.CV_STATUS, FileStatus.FILE_IS_NOT_EXIST.getValue());
+      modelAndView.addObject(FileStatus.CV_STATUS, FileStatus.FILE_NOT_EXISTS.getValue());
       modelAndView.addObject(VALIDATION_ERROR_KEY,
           fileUploadValidationRuleMapper.getMessageKeyByException(e));
     }
@@ -103,13 +103,13 @@ public class FileUploaderController {
       redirectAttributes.addFlashAttribute(FILE, fileName);
       redirectAttributes.addFlashAttribute(VALIDATION_SUCCESS_KEY, VALIDATION_FILE_SUCCESS);
       redirectAttributes.addFlashAttribute(FileStatus.CV_STATUS,
-          FileStatus.FILE_IS_ALREADY_EXIST.getValue());
+          FileStatus.FILE_ALREADY_EXISTS.getValue());
 
     } catch (FileValidationException e) {
       log.error(FileUploaderController.class.getName(), e);
       session.removeAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH);
       redirectAttributes
-          .addFlashAttribute(FileStatus.CV_STATUS, FileStatus.FILE_IS_NOT_EXIST.getValue());
+          .addFlashAttribute(FileStatus.CV_STATUS, FileStatus.FILE_NOT_EXISTS.getValue());
       redirectAttributes.addFlashAttribute(VALIDATION_ERROR_KEY,
               fileUploadValidationRuleMapper.getMessageKeyByException(e));
     }

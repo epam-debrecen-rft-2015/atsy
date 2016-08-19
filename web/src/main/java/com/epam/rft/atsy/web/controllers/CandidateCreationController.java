@@ -35,11 +35,11 @@ public class CandidateCreationController {
 
     String candidateCvPath = candidateService.getCVPathByCandidateId(candidateId);
     if (candidateCvPath == null && cvPath == null) {
-      modelAndView.addObject(FileStatus.CV_STATUS, FileStatus.FILE_IS_NOT_EXIST.getValue());
+      modelAndView.addObject(FileStatus.CV_STATUS, FileStatus.FILE_NOT_EXISTS.getValue());
     } else if (candidateCvPath == null && cvPath != null) {
       modelAndView.addObject(FileStatus.CV_STATUS, FileStatus.FILE_IS_IN_PROGRESS.getValue());
     } else if (candidateCvPath != null) {
-      modelAndView.addObject(FileStatus.CV_STATUS, FileStatus.FILE_IS_ALREADY_EXIST.getValue());
+      modelAndView.addObject(FileStatus.CV_STATUS, FileStatus.FILE_ALREADY_EXISTS.getValue());
     }
     return modelAndView;
   }
@@ -49,7 +49,7 @@ public class CandidateCreationController {
     ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
 
     modelAndView.addObject(CANDIDATE_OBJECT_KEY, new CandidateDTO());
-    modelAndView.addObject(FileStatus.CV_STATUS, FileStatus.FILE_IS_NOT_EXIST.getValue());
+    modelAndView.addObject(FileStatus.CV_STATUS, FileStatus.FILE_NOT_EXISTS.getValue());
     return modelAndView;
   }
 }

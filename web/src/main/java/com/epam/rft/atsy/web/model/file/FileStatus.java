@@ -5,9 +5,9 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum FileStatus {
 
-  FILE_IS_NOT_EXIST(false),
+  FILE_NOT_EXISTS(false),
   FILE_IS_IN_PROGRESS(null),
-  FILE_IS_ALREADY_EXIST(true);
+  FILE_ALREADY_EXISTS(true);
 
   public static final String CV_STATUS = "cv_status";
   private Boolean value;
