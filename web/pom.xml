@@ -107,29 +107,6 @@
             <build>
                 <plugins>
                     <plugin>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>copy-resources</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>
-                                        ${project.build.directory}/docker
-                                    </outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${basedir}/src/docker</directory>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
                         <executions>
@@ -175,7 +152,6 @@
                                     <goal>build</goal>
                                 </goals>
                             </execution>
-
                         </executions>
                     </plugin>
 
