@@ -1,5 +1,7 @@
 package com.epam.rft.atsy.web.controllers;
 
+import com.epam.rft.atsy.service.CandidateService;
+import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.file.FileIsAlreadyExistValidationException;
 import com.epam.rft.atsy.service.exception.file.FileValidationException;
 import com.epam.rft.atsy.web.FileUploadingProperties;
@@ -7,7 +9,6 @@ import com.epam.rft.atsy.web.mapper.FileValidationRuleMapper;
 import com.epam.rft.atsy.web.model.file.FileBucket;
 import com.epam.rft.atsy.web.model.file.FileStatus;
 import com.epam.rft.atsy.web.validator.FileValidator;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
@@ -21,11 +22,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -33,7 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(value = "/secure/candidate/fileUpload")
 public class FileUploaderController {
 
-  private static final String VIEW_NAME = "candidate_create";
   private static final String REDIRECT_URL_CANDIDATE_PAGE = "redirect:/secure/candidate";
   private static final String VALIDATION_SUCCESS_KEY = "validationSuccessKey";
   private static final String VALIDATION_ERROR_KEY = "validationErrorKey";
@@ -43,8 +41,11 @@ public class FileUploaderController {
   @Autowired
   private FileValidator fileValidator;
 
-  @Resource
+  @Autowired
   private FileValidationRuleMapper fileUploadValidationRuleMapper;
+
+  @Autowired
+  private CandidateService candidateService;
 
   @PostConstruct
   public void init() {
@@ -53,44 +54,10 @@ public class FileUploaderController {
     }
   }
 
-  @RequestMapping(method = RequestMethod.GET)
-  public ModelAndView uploadFile() {
-    return new ModelAndView(REDIRECT_URL_CANDIDATE_PAGE);
-  }
-
-  @RequestMapping(method = RequestMethod.POST)
-  public ModelAndView uploadFile(@Validated FileBucket fileBucket, HttpSession session)
-      throws IOException {
-
-    ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
-    MultipartFile multipartFile = fileBucket.getFile();
-    String fileName = multipartFile.getOriginalFilename();
-
-    try {
-      fileValidator.validate(multipartFile);
-      File file = createFile(fileName);
-
-      FileCopyUtils.copy(fileBucket.getFile().getBytes(), file);
-      session.setAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH, file.getPath());
-      modelAndView.addObject(FILE, fileName);
-      modelAndView.addObject(VALIDATION_SUCCESS_KEY, VALIDATION_FILE_SUCCESS);
-
-    } catch (FileValidationException e) {
-      log.error(FileUploaderController.class.getName(), e);
-      session.removeAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH);
-      modelAndView.addObject(FileStatus.CV_STATUS_MODEL_ATTR_NAME, FileStatus.FILE_NOT_EXISTS);
-      modelAndView.addObject(VALIDATION_ERROR_KEY,
-          fileUploadValidationRuleMapper.getMessageKeyByException(e));
-    }
-
-    return modelAndView;
-  }
-
   @RequestMapping(path = "/{candidateId}", method = RequestMethod.POST)
   public ModelAndView uploadFileByCandidateId(@Validated FileBucket fileBucket,
                                               @PathVariable("candidateId") Long candidateId,
-                                              RedirectAttributes redirectAttributes,
-                                              HttpSession session)
+                                              RedirectAttributes redirectAttributes)
       throws IOException {
 
     ModelAndView modelAndView = new ModelAndView(REDIRECT_URL_CANDIDATE_PAGE + "/" + candidateId);
@@ -102,15 +69,17 @@ public class FileUploaderController {
       File file = createFile(fileName);
 
       FileCopyUtils.copy(fileBucket.getFile().getBytes(), file);
-      session.setAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH, file.getPath());
       redirectAttributes.addFlashAttribute(FILE, fileName);
       redirectAttributes.addFlashAttribute(VALIDATION_SUCCESS_KEY, VALIDATION_FILE_SUCCESS);
       redirectAttributes.addFlashAttribute(FileStatus.CV_STATUS_MODEL_ATTR_NAME,
           FileStatus.FILE_ALREADY_EXISTS);
 
+      CandidateDTO candidateDTO = candidateService.getCandidate(candidateId);
+      candidateDTO.setCvPath(file.getPath());
+      candidateService.saveOrUpdate(candidateDTO);
+
     } catch (FileValidationException e) {
       log.error(FileUploaderController.class.getName(), e);
-      session.removeAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH);
       redirectAttributes
           .addFlashAttribute(FileStatus.CV_STATUS_MODEL_ATTR_NAME, FileStatus.FILE_NOT_EXISTS);
       redirectAttributes.addFlashAttribute(VALIDATION_ERROR_KEY,

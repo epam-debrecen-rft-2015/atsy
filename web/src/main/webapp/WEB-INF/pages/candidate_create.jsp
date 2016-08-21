@@ -218,56 +218,29 @@
         </c:if>
 
         <c:if test="${not empty candidateId}">
-        <form:form method="POST" action="${fileUpload}/${candidateId}" enctype="multipart/form-data">
+            <form:form method="POST" action="${fileUpload}/${candidateId}" enctype="multipart/form-data">
 
-                            <c:if test="${cv_status == 'FILE_NOT_EXISTS'}">
-                        		 <h4><spring:message code="please.upload.cv"/></h4>
-                        		<input type="file" name="file" />
-                        		<button type="submit" class="btn btn-primary"><spring:message code="upload.button"/></button>
-                            </c:if>
+                <c:if test="${cv_status == 'FILE_NOT_EXISTS'}">
+                    <h4><spring:message code="please.upload.cv"/></h4>
+                    <input type="file" name="file" />
+                    <button type="submit" class="btn btn-primary"><spring:message code="upload.button"/></button>
+                </c:if>
 
-                     	 <c:if test="${not empty validationSuccessKey}">
-                             <div id="globalMessage" class="alert alert-success" role="alert">
-                                 <span class="glyphicon glyphicon-ok" aria-hidden="false"></span>
-                                    <spring:message code="${validationSuccessKey}"/>
-                             </div>
-                         </c:if>
+                <c:if test="${not empty validationSuccessKey}">
+                    <div id="globalMessage" class="alert alert-success" role="alert">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="false"></span>
+                        <spring:message code="${validationSuccessKey}"/>
+                    </div>
+                </c:if>
 
-                         <c:if test="${not empty validationErrorKey}">
-                            <div id="globalMessage" class="alert alert-danger" role="alert">
-                                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
-                                    <spring:message code="${validationErrorKey}"/>
-                            </div>
-                         </c:if>
-        </form:form>
+                <c:if test="${not empty validationErrorKey}">
+                    <div id="globalMessage" class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
+                        <spring:message code="${validationErrorKey}"/>
+                    </div>
+                </c:if>
+            </form:form>
         </c:if>
-
-        <c:if test="${empty candidateId}">
-        <form:form method="POST" action="${fileUpload}" enctype="multipart/form-data">
-
-                    <c:if test="${cv_status eq 'FILE_NOT_EXISTS'}">
-                		 <h4><spring:message code="please.upload.cv"/></h4>
-                		<input type="file" name="file"/>
-                		<button type="submit" class="btn btn-primary"><spring:message code="upload.button"/></button>
-                    </c:if>
-
-             	 <c:if test="${not empty validationSuccessKey}">
-                          <div id="globalMessage" class="alert alert-success" role="alert">
-                              <span class="glyphicon glyphicon-ok" aria-hidden="false"></span>
-                               <spring:message code="${validationSuccessKey}"/>
-                           </div>
-                 </c:if>
-
-                      <c:if test="${not empty validationErrorKey}">
-                           <div id="globalMessage" class="alert alert-danger" role="alert">
-                               <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
-                                    <spring:message code="${validationErrorKey}"/>
-                           </div>
-                      </c:if>
-
-        </form:form>
-        </c:if>
-
 
         <c:choose>
             <c:when test="${not empty candidate.id}">

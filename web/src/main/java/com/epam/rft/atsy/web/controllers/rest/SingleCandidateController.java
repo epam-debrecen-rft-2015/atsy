@@ -2,7 +2,6 @@ package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
-import com.epam.rft.atsy.web.FileUploadingProperties;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @RestController
@@ -34,29 +32,20 @@ public class SingleCandidateController {
 
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity saveOrUpdate(@Valid @RequestBody CandidateDTO candidateDTO,
-                                     BindingResult result, Locale locale, HttpSession session) {
+                                     BindingResult result, Locale locale) {
 
     if (!result.hasErrors()) {
 
-      String cvPath = session.getAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH) == null ?
-          null : session.getAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH).toString();
+      String candidateCvPath = null;
+      if (candidateDTO.getId() != null) {
+        candidateCvPath = candidateService.getCVPathByCandidateId(candidateDTO.getId());
+      }
 
-      String candidateCvPath = candidateDTO.getId() == null ?
-          null : candidateService.getCVPathByCandidateId(candidateDTO.getId());
-
-      if (cvPath != null) {
-        if (candidateDTO.getId() == null) {
-          candidateDTO.setCvPath(cvPath);
-        } else if (candidateCvPath == null) {
-          candidateDTO.setCvPath(cvPath);
-        } else if (candidateCvPath != null) {
-          candidateDTO.setCvPath(candidateCvPath);
-        }
-      } else if (candidateDTO.getId() != null) {
+      if (candidateCvPath != null) {
         candidateDTO.setCvPath(candidateCvPath);
       }
+
       Long candidateId = candidateService.saveOrUpdate(candidateDTO);
-      session.removeAttribute(FileUploadingProperties.SESSION_PARAM_CV_PATH);
       return new ResponseEntity<>(Collections.singletonMap("id", candidateId), HttpStatus.OK);
 
     } else {
