@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
-<%@page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <spring:url value="/secure/positions" var="positions"/>
 <spring:url value="/secure/channels" var="channels"/>
 <spring:url value="/secure/welcome" var="welcome"/>
@@ -205,42 +204,43 @@
             </div>
         </div>
 
-        <c:if test="${cv_status == 'FILE_ALREADY_EXISTS'}">
-        <c:set var="candidateCvPath" value="${candidate.cvPath}" />
-        <c:set var="cvPathArray" value="${fn:split(candidateCvPath, '\\\\')}" />
-        <c:set var="cvName" value="${cvPathArray[fn:length(cvPathArray)-1]}" />
-        <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right">
-          CV : <a href="<c:url value='/secure/candidate/fileDownload/${candidateId}' />">
-          <c:out value="${cvName}">
-        </c:out>
-        </a>
-        </label>
-        </c:if>
+        <div class="form-group">
+            <c:if test="${cv_status == 'FILE_ALREADY_EXISTS'}">
+                <label class="control-label col-lg-2 col-md-4 col-sm-4 text-right" for="name">
+                    <spring:message code="cv"/>
+                </label>
 
-        <c:if test="${not empty candidateId}">
-            <form:form method="POST" action="${fileUpload}/${candidateId}" enctype="multipart/form-data">
+                <label class="control-label col-lg-2 col-md-4 col-sm-4 text-left" for="name">
+                    <a href="<c:url value='/secure/candidate/fileDownload/${candidateId}' />">
+                        <c:out value="${cvName}"/>
+                    </a>
+                </label>
+            </c:if>
 
-                <c:if test="${cv_status == 'FILE_NOT_EXISTS'}">
-                    <h4><spring:message code="please.upload.cv"/></h4>
-                    <input type="file" name="file" />
-                    <button type="submit" class="btn btn-primary"><spring:message code="upload.button"/></button>
-                </c:if>
+            <c:if test="${not empty candidateId}">
+                <form:form method="POST" action="${fileUpload}/${candidateId}" enctype="multipart/form-data">
+                    <c:if test="${cv_status == 'FILE_NOT_EXISTS'}">
+                        <h4><spring:message code="please.upload.cv"/></h4>
+                        <input type="file" name="file" />
+                        <button type="submit" class="btn btn-primary"><spring:message code="upload.button"/></button>
+                    </c:if>
 
-                <c:if test="${not empty validationSuccessKey}">
-                    <div id="globalMessage" class="alert alert-success" role="alert">
-                        <span class="glyphicon glyphicon-ok" aria-hidden="false"></span>
-                        <spring:message code="${validationSuccessKey}"/>
-                    </div>
-                </c:if>
+                    <c:if test="${not empty validationSuccessKey}">
+                        <div id="globalMessage" class="alert alert-success" role="alert">
+                            <span class="glyphicon glyphicon-ok" aria-hidden="false"></span>
+                            <spring:message code="${validationSuccessKey}"/>
+                        </div>
+                    </c:if>
 
-                <c:if test="${not empty validationErrorKey}">
-                    <div id="globalMessage" class="alert alert-danger" role="alert">
-                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
-                        <spring:message code="${validationErrorKey}"/>
-                    </div>
-                </c:if>
-            </form:form>
-        </c:if>
+                    <c:if test="${not empty validationErrorKey}">
+                        <div id="globalMessage" class="alert alert-danger" role="alert">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
+                            <spring:message code="${validationErrorKey}"/>
+                        </div>
+                    </c:if>
+                </form:form>
+            </c:if>
+        </div>
 
         <c:choose>
             <c:when test="${not empty candidate.id}">

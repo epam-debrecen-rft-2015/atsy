@@ -4,7 +4,7 @@ import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.file.FileIsAlreadyExistValidationException;
 import com.epam.rft.atsy.service.exception.file.FileValidationException;
-import com.epam.rft.atsy.web.FileUploadingProperties;
+import com.epam.rft.atsy.web.util.FileUploadingUtil;
 import com.epam.rft.atsy.web.mapper.FileValidationRuleMapper;
 import com.epam.rft.atsy.web.model.file.FileBucket;
 import com.epam.rft.atsy.web.model.file.FileStatus;
@@ -23,8 +23,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.File;
 import java.io.IOException;
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -49,8 +47,8 @@ public class FileUploaderController {
 
   @PostConstruct
   public void init() {
-    if (!FileUploadingProperties.FOLDER_CV.exists()) {
-      FileUploadingProperties.FOLDER_CV.mkdir();
+    if (!FileUploadingUtil.FOLDER_CV.exists()) {
+      FileUploadingUtil.FOLDER_CV.mkdir();
     }
   }
 
@@ -90,7 +88,7 @@ public class FileUploaderController {
   }
 
   private File createFile(String fileName) throws FileIsAlreadyExistValidationException {
-    String fileNameWithFullPath = FileUploadingProperties.FOLDER_CV + File.separator + fileName;
+    String fileNameWithFullPath = FileUploadingUtil.FOLDER_CV + File.separator + fileName;
     File file = new File(fileNameWithFullPath);
     if (file.exists()) {
       throw new FileIsAlreadyExistValidationException();
