@@ -220,7 +220,10 @@
             <c:if test="${not empty candidateId}">
                 <form:form method="POST" action="${fileUpload}/${candidateId}" enctype="multipart/form-data">
                     <c:if test="${cv_status == 'FILE_NOT_EXISTS'}">
-                        <h4><spring:message code="please.upload.cv"/></h4>
+                        <label class="control-label col-lg-2 col-md-4 col-sm-4 text-right" for="name">
+                            <spring:message code="cv"/>
+                        </label>
+
                         <input type="file" name="file" />
                         <button type="submit" class="btn btn-primary"><spring:message code="upload.button"/></button>
                     </c:if>

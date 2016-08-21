@@ -2,7 +2,7 @@ package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
-import com.epam.rft.atsy.service.exception.file.FileIsAlreadyExistValidationException;
+import com.epam.rft.atsy.service.exception.file.FileAlreadyExistsValidationException;
 import com.epam.rft.atsy.service.exception.file.FileValidationException;
 import com.epam.rft.atsy.web.util.FileUploadingUtil;
 import com.epam.rft.atsy.web.mapper.FileValidationRuleMapper;
@@ -87,11 +87,11 @@ public class FileUploaderController {
     return modelAndView;
   }
 
-  private File createFile(String fileName) throws FileIsAlreadyExistValidationException {
+  private File createFile(String fileName) throws FileAlreadyExistsValidationException {
     String fileNameWithFullPath = FileUploadingUtil.FOLDER_CV + File.separator + fileName;
     File file = new File(fileNameWithFullPath);
     if (file.exists()) {
-      throw new FileIsAlreadyExistValidationException();
+      throw new FileAlreadyExistsValidationException();
     }
     return file;
   }
