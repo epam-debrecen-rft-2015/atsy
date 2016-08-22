@@ -8,6 +8,7 @@
 <spring:url value="/secure/application_state" var="application_state"/>
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
+        <script src="<c:url value="/resources/js/atsy-application.js" />"></script>
         <script src="<c:url value="/resources/js/atsy-statehistory.js" />"></script>
         <script src="<c:url value="/resources/js/atsy-statehistory-create.js" />"></script>
         <script src="<c:url value="/resources/thirdparty/bootstrap-validator/validator.js" />"
@@ -123,6 +124,35 @@
                               </c:if>
                           </div>
                       </div>
+
+
+                      <div class="form-group" id="positionDiv">
+                          <label id="positionLabel" class="control-label col-lg-4 col-md-4 col-sm-4 text-right" for="source">
+                              <spring:message code="statehistory.field.position"/>
+                          </label>
+
+                          <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="dropSource">
+                              <select class="input form-control" name="channel.id" id="position">
+                                  <option selected disabled>${data.position.name}</option>
+                              </select>
+                              <span style="color: red" id="application_source_error"/>
+                          </div>
+                      </div>
+
+                      <div class="form-group" id="sourceDiv">
+                          <label id="sourceLabel" class="control-label col-lg-4 col-md-4 col-sm-4 text-right" for="source">
+                              <spring:message code="statehistory.field.channel"/>
+                          </label>
+
+                          <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="dropSource">
+                              <select class="input form-control" name="channel.id" id="channel">
+                                  <option selected disabled>${data.channel.name}</option>
+                              </select>
+                              <span style="color: red" id="application_source_error"/>
+                          </div>
+                      </div>
+
+
                   </c:when>
                   <c:when test="${data.stateName == 'cv'}">
                       <div class="form-group">
