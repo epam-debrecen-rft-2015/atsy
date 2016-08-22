@@ -12,7 +12,7 @@
   <jsp:body>
       <div class="page-header">
           <h1><spring:message code="application.state.title"/>
-              <small id="positionName">${states[0].position.name}</small>
+              <small id="positionName"><c:out value = "${states[0].position.name}"/></small>
           </h1>
       </div>
 
