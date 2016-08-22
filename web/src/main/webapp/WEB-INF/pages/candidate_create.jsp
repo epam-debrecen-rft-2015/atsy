@@ -24,13 +24,17 @@
                 <c:choose>
                     <c:when test="${not empty candidate.id}">
                         <p class="showValue">
-                            <spring:message code="candidate.show.title" arguments="<small>${candidate.name}</small>"
-                                            htmlEscape="false"/>
+                            <spring:message code="candidate.show.title"/>
+                            <small>
+                              <c:out value="${candidate.name}"/>
+                            </small>
                         </p>
 
                         <p class="edit">
-                            <spring:message code="candidate.edit.title" arguments="<small>${candidate.name}</small>"
-                                            htmlEscape="false"/>
+                            <spring:message code="candidate.edit.title"/>
+                            <small>
+                              <c:out value="${candidate.name}"/>
+                             </small>
                         </p>
                     </c:when>
                     <c:otherwise>
@@ -62,14 +66,14 @@
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
                                 <input type="text" class="input form-control " name="name" id="name" data-bind="valueWithInit: 'name'"
-                                       value="${candidate.name}"
+                                       value="<c:out value="${candidate.name}"/>"
                                        placeholder="${i18nname}"
                                        data-error="<spring:message
                                                code="candidate.error.name.empty"/>"
                                        required maxlength="100">
 
                                 <div id="name-errors" class="help-block with-errors"></div>
-                                <p class="showValue form-control-static">${candidate.name}</p>
+                                <p class="showValue form-control-static"><c:out value="${candidate.name}"/></p>
                             </div>
 
                         </div>
@@ -207,7 +211,7 @@
                 <%--table--%>
                 <div id="application_table">
                         <table class="table table-hover" id="applications_table"  data-toggle="table" data-url="../applications/${candidate.id}" data-height="500"
-                               data-sort-name="name">
+                               data-sort-name="name" data-escape="true">
                             <thead>
                             <tr>
                                 <th data-field="positionName" data-align="left"><spring:message
