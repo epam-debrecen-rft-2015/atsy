@@ -37,5 +37,5 @@ def determinePortMapping(branchName) {
     script: "docker port ${branchName}_app_1 | cut -d ':' -f2",
     returnStdout: true
   )
-  existingPort != null && !existingPort.trim().isEmpty() ? existingPort + ":8080" : "8080"
+  existingPort != null && !existingPort.trim().isEmpty() ? existingPort.trim() + ":8080" : "8080"
 }
