@@ -32,7 +32,7 @@ def profileFor(branchName) {
 }
 
 @NonCPS
-def determinePort(branchName) {
+def determinePortMapping(branchName) {
   def existingPort = sh (
     script: "docker port ${branchName}_app_1 | cut -d ':' -f2",
     returnStdout: true
