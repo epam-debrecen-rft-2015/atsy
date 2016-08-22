@@ -1,6 +1,7 @@
 package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.CandidateService;
+import com.epam.rft.atsy.web.util.FileUploadingUtil;
 
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -40,16 +41,16 @@ public class FileDownloadController {
   public Object download(@PathVariable("candidateId") Long candidateId, RedirectAttributes redirectAttrs)
       throws Exception {
 
-    String path = candidateService.getCVPathByCandidateId(candidateId);
-    if (path != null) {
+    String fileName = candidateService.getCVPathByCandidateId(candidateId);
+    if (fileName != null) {
 
       try {
-        File file = new File(path);
+        File file = new File(FileUploadingUtil.UPLOAD_LOCATION + File.separator + fileName);
         InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
         InputStreamResource inputStreamResource = new InputStreamResource(inputStream);
 
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(CONTENT_DISPOSITION, String.format(INLINE_FORMAT + file.getName() + "\""));
+        responseHeaders.set(CONTENT_DISPOSITION, String.format(INLINE_FORMAT + fileName + "\""));
         responseHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         responseHeaders.setContentLength(file.length());
 

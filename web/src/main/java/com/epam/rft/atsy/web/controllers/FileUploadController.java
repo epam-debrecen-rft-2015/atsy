@@ -4,11 +4,12 @@ import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.file.FileAlreadyExistsValidationException;
 import com.epam.rft.atsy.service.exception.file.FileValidationException;
-import com.epam.rft.atsy.web.util.FileUploadingUtil;
 import com.epam.rft.atsy.web.mapper.FileValidationRuleMapper;
 import com.epam.rft.atsy.web.model.file.FileBucket;
 import com.epam.rft.atsy.web.model.file.FileStatus;
+import com.epam.rft.atsy.web.util.FileUploadingUtil;
 import com.epam.rft.atsy.web.validator.FileValidator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
@@ -22,7 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
-import javax.annotation.PostConstruct;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -45,17 +46,11 @@ public class FileUploadController {
   @Autowired
   private CandidateService candidateService;
 
-  @PostConstruct
-  public void init() {
-    if (!FileUploadingUtil.FOLDER_CV.exists()) {
-      FileUploadingUtil.FOLDER_CV.mkdir();
-    }
-  }
 
   @RequestMapping(path = "/{candidateId}", method = RequestMethod.POST)
   public ModelAndView upload(@Validated FileBucket fileBucket,
-                                              @PathVariable("candidateId") Long candidateId,
-                                              RedirectAttributes redirectAttributes)
+                             @PathVariable("candidateId") Long candidateId,
+                             RedirectAttributes redirectAttributes)
       throws IOException {
 
     ModelAndView modelAndView = new ModelAndView(REDIRECT_URL_CANDIDATE_PAGE + "/" + candidateId);
@@ -73,7 +68,7 @@ public class FileUploadController {
           FileStatus.FILE_ALREADY_EXISTS);
 
       CandidateDTO candidateDTO = candidateService.getCandidate(candidateId);
-      candidateDTO.setCvPath(file.getPath());
+      candidateDTO.setCvPath(fileName);
       candidateService.saveOrUpdate(candidateDTO);
 
     } catch (FileValidationException e) {
@@ -88,7 +83,7 @@ public class FileUploadController {
   }
 
   private File createFile(String fileName) throws FileAlreadyExistsValidationException {
-    String fileNameWithFullPath = FileUploadingUtil.FOLDER_CV + File.separator + fileName;
+    String fileNameWithFullPath = FileUploadingUtil.UPLOAD_LOCATION + File.separator + fileName;
     File file = new File(fileNameWithFullPath);
     if (file.exists()) {
       throw new FileAlreadyExistsValidationException();

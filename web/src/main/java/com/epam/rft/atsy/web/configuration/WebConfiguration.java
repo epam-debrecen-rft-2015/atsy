@@ -5,10 +5,14 @@ import com.epam.rft.atsy.web.exceptionhandling.UncheckedExceptionResolver;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolverImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -24,13 +28,30 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import java.io.File;
 import java.util.List;
 import java.util.Locale;
 
+import javax.annotation.PostConstruct;
+
 @Configuration
 @ComponentScan("com.epam.rft.atsy.web")
+@PropertySource("classpath:file_storage.properties")
 @Import({ServiceConfiguration.class})
 public class WebConfiguration extends DelegatingWebMvcConfiguration {
+
+  @Value("${upload_location_cv}")
+  private String uploadLocationValue;
+  public static String UPLOAD_LOCATION;
+
+  @PostConstruct
+  public void init() {
+    UPLOAD_LOCATION = uploadLocationValue;
+    File folder = new File(UPLOAD_LOCATION);
+    if (!folder.exists()) {
+      folder.mkdir();
+    }
+  }
 
   @Bean
   public ViewResolver viewResolver() {
@@ -102,5 +123,11 @@ public class WebConfiguration extends DelegatingWebMvcConfiguration {
   @Bean(name = "multipartResolver")
   public CommonsMultipartResolver multipartResolver() {
     return new CommonsMultipartResolver();
+  }
+
+  //To resolve ${} in @Value
+  @Bean
+  public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
+    return new PropertySourcesPlaceholderConfigurer();
   }
 }
