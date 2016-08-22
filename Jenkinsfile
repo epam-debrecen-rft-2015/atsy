@@ -17,7 +17,11 @@ node {
 
   echo "Selected profile is ${profile}"
 
-  sh 'PORT_MAPPING="8080" PROFILE="' + profile + '" docker-compose up -d'
+  def portMapping = determinePortMapping(env.BRANCH_NAME)
+
+  echo "Selected port mapping is ${portMapping}"
+
+  sh 'PORT_MAPPING="' + portMapping + '" PROFILE="' + profile + '" docker-compose up -d'
 
   sh "docker port ${env.BRANCH_NAME}_app_1"
 }
@@ -25,4 +29,13 @@ node {
 @NonCPS
 def profileFor(branchName) {
   branchName ==~ /^master$/ ? 'production' : 'integration'
+}
+
+@NonCPS
+def determinePort(branchName) {
+  def existingPort = sh (
+    script: "docker port ${branchName}_app_1 | cut -d ':' -f2",
+    returnStdout: true
+  )
+  existingPort != null && !existingPort.trim().isEmpty() ? existingPort + ":8080" : "8080"
 }
