@@ -86,10 +86,10 @@
 
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <input type="text" class="input form-control" name="referer" id="referer" data-bind="valueWithInit: 'referer'"
-                                       value="${candidate.referer}"
+                                       value="<c:out value="${candidate.referer}"/>"
                                        placeholder="${i18nplace}" maxlength="20">
 
-                                <p class="showValue form-control-static">${candidate.referer}</p>
+                                <p class="showValue form-control-static"><c:out value = "${candidate.referer}"/></p>
                             </div>
 
                         </div>
@@ -117,7 +117,7 @@
                                 <p class="showValue form-control-static">
                                     <a href="mailto:${candidate.email}"><span class="glyphicon glyphicon-envelope"
                                                                               title="E-mail küldése"></span></a>
-                                        ${candidate.email}</p>
+                                        <c:out value = "${candidate.email}"/></p>
                             </div>
 
                         </div>
@@ -138,7 +138,7 @@
                                     </c:forEach>
                                 </select>
 
-                                <p class="showValue form-control-static">${candidate.languageSkill}</p>
+                                <p class="showValue form-control-static"><c:out value = "${candidate.languageSkill}"/></p>
                             </div>
                         </div>
                         <div class="error col-lg-12 col-md-12 col-sm-12">
@@ -159,7 +159,7 @@
 
                                 <div id="phone-errors" class="help-block with-errors"></div>
 
-                                <p class="showValue form-control-static">${candidate.phone}</p>
+                                <p class="showValue form-control-static"><c:out value ="${candidate.phone}"/></p>
                             </div>
 
                         </div>
@@ -174,9 +174,9 @@
 
                             <div class="col-lg-10 col-md-10 col-sm-10">
                                 <textarea rows="4" cols="4" class="input form-control" id="description" data-bind="valueWithInit: 'description'"
-                                          placeholder="${i18ndescription}">${candidate.description}</textarea>
+                                          placeholder="${i18ndescription}"><c:out value = "${candidate.description}"/></textarea>
 
-                                <p class="showValue form-control-static">${candidate.description}</p>
+                                <p class="showValue form-control-static"><c:out value = "${candidate.description}"/></p>
                             </div>
                         </div>
                         <div class="text-right col-lg-12 col-md-12 col-sm-12">
