@@ -1,7 +1,10 @@
 package com.epam.rft.atsy.service.impl;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -10,9 +13,11 @@ import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.entities.ChannelEntity;
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
+import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
+import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
@@ -23,7 +28,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationsServiceImplTest {
@@ -32,6 +40,7 @@ public class ApplicationsServiceImplTest {
   private static final Date APPLICATION_CREATION_DATE = new Date();
 
   private static final Long CANDIDATE_ID = 1L;
+  private static final Long NON_EXISTENT_CANDIDATE_ID = 1L;
   private static final String CANDIDATE_NAME = "Candidate A";
   private static final String CANDIDATE_EMAIL = "candidate.a@atsy.com";
   private static final String CANDIDATE_PHONE = "+36105555555";
@@ -69,7 +78,6 @@ public class ApplicationsServiceImplTest {
   private final StateHistoryDTO
       stateHistoryDTO = StateHistoryDTO.builder().stateDTO(new StateDTO(1L, "newstate")).build();
 
-
   @Mock
   private ConverterService converterService;
 
@@ -79,12 +87,101 @@ public class ApplicationsServiceImplTest {
   @Mock
   private ApplicationsRepository applicationsRepository;
 
+  @Mock
+  private CandidateRepository candidateRepository;
+
   @InjectMocks
   private ApplicationsServiceImpl applicationsService;
 
+  @Test(expected = IllegalArgumentException.class)
+  public void getApplicationsByCandidateDTOShouldThrowIllegalArgumentExceptionWhenCandidateDTOIsNull() {
+    // Given
+
+    // When
+    List<ApplicationDTO> applicationDTOs = applicationsService.getApplicationsByCandidateDTO(null);
+
+    // Then
+
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getApplicationsByCandidateDTOShouldThrowIllegalArgumentExceptionWhenCandidateDTOsIdIsNull() {
+    // Given
+    CandidateDTO candidateDTO = CandidateDTO.builder().id(null).build();
+
+    // When
+    List<ApplicationDTO>
+        applicationDTOs =
+        applicationsService.getApplicationsByCandidateDTO(candidateDTO);
+
+    // Then
+
+  }
+
+  @Test
+  public void getApplicationByCandidateDTOShouldReturnEmptyListWhenCandidateIdIsNotFound() {
+    // Given
+    CandidateDTO candidateDTO = CandidateDTO.builder().id(NON_EXISTENT_CANDIDATE_ID).build();
+    given(candidateRepository.findOne(NON_EXISTENT_CANDIDATE_ID)).willReturn(null);
+    given(applicationsRepository.findByCandidateEntity(null)).willReturn(Collections.emptyList());
+
+    // When
+    List<ApplicationDTO> result = applicationsService.getApplicationsByCandidateDTO(candidateDTO);
+
+    // Then
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  public void getApplicationByCandidateDTOShouldReturnOneElementListOfApplicationDTOWhenCandidateIdExists() {
+
+    // Given
+    CandidateDTO candidateDTO = CandidateDTO.builder().id(CANDIDATE_ID).build();
+    List<ApplicationEntity> applicationEntities = Collections.singletonList(applicationEntity);
+    List<ApplicationDTO> applicationDTOs = Collections.singletonList(applicationDTO);
+
+    given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
+    given(applicationsRepository.findByCandidateEntity(candidateEntity))
+        .willReturn(applicationEntities);
+    given(converterService.convert(applicationEntities, ApplicationDTO.class))
+        .willReturn(applicationDTOs);
+
+    // When
+    List<ApplicationDTO> result = applicationsService.getApplicationsByCandidateDTO(candidateDTO);
+
+    // Then
+    assertThat(result, equalTo(applicationDTOs));
+
+  }
+
+  @Test
+  public void getApplicationByCandidateDTOShouldReturnThreeElementListOfApplicationDTOWhenCandidateIdExists() {
+
+    // Given
+    CandidateDTO candidateDTO = CandidateDTO.builder().id(CANDIDATE_ID).build();
+    List<ApplicationEntity>
+        applicationEntities =
+        Arrays.asList(applicationEntity, applicationEntity, applicationEntity);
+    List<ApplicationDTO>
+        applicationDTOs =
+        Arrays.asList(applicationDTO, applicationDTO, applicationDTO);
+
+    given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
+    given(applicationsRepository.findByCandidateEntity(candidateEntity))
+        .willReturn(applicationEntities);
+    given(converterService.convert(applicationEntities, ApplicationDTO.class))
+        .willReturn(applicationDTOs);
+
+    // When
+    List<ApplicationDTO> result = applicationsService.getApplicationsByCandidateDTO(candidateDTO);
+
+    // Then
+    assertThat(result, equalTo(applicationDTOs));
+
+  }
+
   @Test
   public void saveOrUpdateShouldSaveAProperApplicationDTO() {
-
     // Given
     given(converterService.convert(applicationDTO, ApplicationEntity.class))
         .willReturn(applicationEntity);
