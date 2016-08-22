@@ -34,8 +34,9 @@ def profileFor(branchName) {
 @NonCPS
 def determinePortMapping(branchName) {
   def existingPort = sh (
-    script: "docker port ${branchName}_app_1 | cut -d ':' -f2",
+    script: "docker port ${branchName}_app_1 | cut -d: -f2",
     returnStdout: true
   )
-  existingPort != null && !existingPort.trim().isEmpty() ? existingPort.trim() + ":8080" : "8080"
+  echo "Existing port detection: ${existingPort}"
+  return existingPort != null && !existingPort.trim().isEmpty() ? existingPort.trim() + ':8080' : '8080'
 }
