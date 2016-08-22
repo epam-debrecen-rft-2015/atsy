@@ -18,6 +18,8 @@ node {
   echo "Selected profile is ${profile}"
 
   sh 'PORT_MAPPING="8080" PROFILE="' + profile + '" docker-compose up -d'
+
+  sh "docker port ${env.BRANCH_NAME}_app_1"
 }
 
 @NonCPS
