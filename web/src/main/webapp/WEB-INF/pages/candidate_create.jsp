@@ -220,6 +220,13 @@
                     </div>
                 </c:if>
 
+                <c:if test="${not empty fileErrorMessage}">
+                    <div id="globalMessage" class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
+                        <spring:message code="${fileErrorMessage}"/>
+                    </div>
+                </c:if>
+
                 <c:if test="${cv_status == 'FILE_NOT_EXISTS'}">
                     <label class="control-label col-lg-2 col-md-4 col-sm-4 text-right" for="name">
                         <spring:message code="cv"/>

@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 @RequestMapping(value = "/secure/candidate/fileUpload")
-public class FileUploaderController {
+public class FileUploadController {
 
   private static final String REDIRECT_URL_CANDIDATE_PAGE = "redirect:/secure/candidate";
   private static final String VALIDATION_SUCCESS_KEY = "validationSuccessKey";
@@ -53,7 +53,7 @@ public class FileUploaderController {
   }
 
   @RequestMapping(path = "/{candidateId}", method = RequestMethod.POST)
-  public ModelAndView uploadFileByCandidateId(@Validated FileBucket fileBucket,
+  public ModelAndView upload(@Validated FileBucket fileBucket,
                                               @PathVariable("candidateId") Long candidateId,
                                               RedirectAttributes redirectAttributes)
       throws IOException {
@@ -77,7 +77,7 @@ public class FileUploaderController {
       candidateService.saveOrUpdate(candidateDTO);
 
     } catch (FileValidationException e) {
-      log.error(FileUploaderController.class.getName(), e);
+      log.error(FileUploadController.class.getName(), e);
       redirectAttributes
           .addFlashAttribute(FileStatus.CV_STATUS_MODEL_ATTR_NAME, FileStatus.FILE_NOT_EXISTS);
       redirectAttributes.addFlashAttribute(VALIDATION_ERROR_KEY,
