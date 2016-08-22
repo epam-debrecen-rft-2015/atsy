@@ -5,6 +5,10 @@ import com.epam.rft.atsy.service.exception.passwordchange.PasswordNewMatchValida
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
 import org.springframework.util.Assert;
 
+/**
+ * Represent the validation rule which demands the new password and the conformation of that
+ * password to match with each other.
+ */
 public class PasswordNewMatchValidator implements PasswordValidationRule {
 
   /**
@@ -12,7 +16,8 @@ public class PasswordNewMatchValidator implements PasswordValidationRule {
    * @param passwordChangeDTO the object to be validated
    */
   @Override
-  public void validate(PasswordChangeDTO passwordChangeDTO) throws PasswordNewMatchValidationException {
+  public void validate(PasswordChangeDTO passwordChangeDTO)
+      throws PasswordNewMatchValidationException {
     Assert.notNull(passwordChangeDTO);
     Assert.notNull(passwordChangeDTO.getNewPassword());
     Assert.notNull(passwordChangeDTO.getNewPasswordConfirm());
