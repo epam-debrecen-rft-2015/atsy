@@ -204,46 +204,49 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <c:if test="${cv_status == 'FILE_ALREADY_EXISTS'}">
-                <label class="control-label col-lg-2 col-md-4 col-sm-4 text-right" for="name">
-                    <spring:message code="cv"/>
-                </label>
+        <c:if test="${not empty candidateId}">
+            <form:form method="POST" action="${fileUpload}/${candidateId}" enctype="multipart/form-data">
+                <c:if test="${not empty validationSuccessKey}">
+                    <div id="globalMessage" class="alert alert-success" role="alert">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="false"></span>
+                        <spring:message code="${validationSuccessKey}"/>
+                    </div>
+                </c:if>
 
-                <label class="control-label col-lg-2 col-md-4 col-sm-4 text-left" for="name">
-                    <a href="<c:url value='/secure/candidate/fileDownload/${candidateId}' />">
-                        <c:out value="${cvName}"/>
-                    </a>
-                </label>
-            </c:if>
+                <c:if test="${not empty validationErrorKey}">
+                    <div id="globalMessage" class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
+                        <spring:message code="${validationErrorKey}"/>
+                    </div>
+                </c:if>
 
-            <c:if test="${not empty candidateId}">
-                <form:form method="POST" action="${fileUpload}/${candidateId}" enctype="multipart/form-data">
-                    <c:if test="${cv_status == 'FILE_NOT_EXISTS'}">
-                        <label class="control-label col-lg-2 col-md-4 col-sm-4 text-right" for="name">
-                            <spring:message code="cv"/>
-                        </label>
+                <c:if test="${cv_status == 'FILE_NOT_EXISTS'}">
+                    <label class="control-label col-lg-2 col-md-4 col-sm-4 text-right" for="name">
+                        <spring:message code="cv"/>
+                    </label>
 
+                    <div class="form-group">
                         <input type="file" name="file" />
-                        <button type="submit" class="btn btn-primary"><spring:message code="upload.button"/></button>
-                    </c:if>
+                        <button type="submit" class="btn btn-link"><spring:message code="upload.button"/></button>
+                    </div>
+                </c:if>
 
-                    <c:if test="${not empty validationSuccessKey}">
-                        <div id="globalMessage" class="alert alert-success" role="alert">
-                            <span class="glyphicon glyphicon-ok" aria-hidden="false"></span>
-                            <spring:message code="${validationSuccessKey}"/>
-                        </div>
-                    </c:if>
+                <c:if test="${cv_status == 'FILE_ALREADY_EXISTS'}">
+                    <label class="control-label col-lg-2 col-md-4 col-sm-4 text-right" for="name">
+                        <spring:message code="cv"/>
+                    </label>
 
-                    <c:if test="${not empty validationErrorKey}">
-                        <div id="globalMessage" class="alert alert-danger" role="alert">
-                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
-                            <spring:message code="${validationErrorKey}"/>
-                        </div>
-                    </c:if>
-                </form:form>
-            </c:if>
-        </div>
+                    <label class="control-label col-lg-2 col-md-4 col-sm-4 text-left" for="name">
+                        <a href="<c:url value='/secure/candidate/fileDownload/${candidateId}' />">
+                            <c:out value="${cvName}"/>
+                        </a>
+                    </label>
+                </c:if>
+
+
+            </form:form>
+        </c:if>
+
 
         <c:choose>
             <c:when test="${not empty candidate.id}">
