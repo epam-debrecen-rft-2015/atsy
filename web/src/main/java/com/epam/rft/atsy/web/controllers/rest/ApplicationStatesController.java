@@ -13,6 +13,10 @@ import java.util.Collection;
 import java.util.Locale;
 import javax.annotation.Resource;
 
+/**
+ * A REST controller that is responsible for providing all the state information of the candidate
+ * applications.
+ */
 @RestController
 @RequestMapping(value = "/secure/applications_states/{applicationId}")
 public class ApplicationStatesController {
@@ -25,6 +29,13 @@ public class ApplicationStatesController {
   @Resource
   private MessageKeyResolver messageKeyResolver;
 
+  /**
+   * Returns a collections that contains all the state histories of the given application, using the
+   * specified language.
+   * @param applicationId the identifier of the application whose state history will be given back
+   * @param locale specifies the language to use
+   * @return all the state histories of the given application
+   */
   @RequestMapping(method = RequestMethod.GET)
   public Collection<StateHistoryViewDTO> loadApplications(
       @PathVariable(value = "applicationId") Long applicationId, Locale locale) {
@@ -37,7 +48,7 @@ public class ApplicationStatesController {
       stateType =
           messageKeyResolver.resolveMessageOrDefault(APPLICATION_STATE + stateType, stateType);
       stateHistoryViewDTO
-          .setStateDTO(new StateDTO(stateHistoryViewDTO.getStateDTO().getId(),stateType));
+          .setStateDTO(new StateDTO(stateHistoryViewDTO.getStateDTO().getId(), stateType));
     }
 
     return applicationStates;
