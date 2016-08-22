@@ -8,6 +8,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * Represents a user, who can log in to the site and manage candidates.
+ * See: {@link com.epam.rft.atsy.persistence.entities.UserEntity}.
+ */
 @Builder
 @ToString(exclude = "password")
 @Data

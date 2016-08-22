@@ -14,6 +14,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * Represents the password history of each user, in the database.
+ * (Which user changed his/her password to what and when.)
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

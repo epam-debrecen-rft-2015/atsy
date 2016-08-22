@@ -23,6 +23,10 @@ import java.util.Locale;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
+/**
+ * Manages the page which shows the state history of a certain application of a certain candidate
+ * and allows the user to put the application into a new state.
+ */
 @Controller
 @RequestMapping(value = "/secure/application_state")
 public class ApplicationStateController {
@@ -49,6 +53,16 @@ public class ApplicationStateController {
   @Autowired
   private ConverterService converterService;
 
+
+  /**
+   * Creates the application state page and fills it with all the state information of the given
+   * application.
+   * @param applicationId determines which application is viewed on the page
+   * @param clickedState indicates which state button was pushed
+   * @param locale used to determine which language should be used on the page
+   * @return a ModelAndView object which contains all the state information of the given application
+   * and the name of the page that manages the application states
+   */
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView loadPage(@RequestParam Long applicationId,
                                @RequestParam(required = false, name = "state") String clickedState,
@@ -88,6 +102,14 @@ public class ApplicationStateController {
     return modelAndView;
   }
 
+  /**
+   * This method is used to save new states or update the information of the latest state.
+   * @param applicationId identifier of the application whose states are viewed and edited
+   * @param stateHistoryViewRepresentation this attribute contains all the state information of the
+   * given application
+   * @return a ModelAndView object filled with the data to stay on the same page and view the states
+   * of the same application, but including the latest modification
+   */
   @RequestMapping(method = RequestMethod.POST)
   public ModelAndView saveOrUpdate(@RequestParam Long applicationId,
                                    @Valid @ModelAttribute StateHistoryViewRepresentation stateHistoryViewRepresentation) {
