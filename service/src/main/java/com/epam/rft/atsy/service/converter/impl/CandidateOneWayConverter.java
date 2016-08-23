@@ -7,7 +7,6 @@ import com.epam.rft.atsy.service.converter.AbstractOneWayConverter;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 import java.util.HashSet;
@@ -20,11 +19,15 @@ import java.util.Set;
 public class CandidateOneWayConverter
     extends AbstractOneWayConverter<CandidateEntity, CandidateDTO> {
 
-  @Autowired
-  private ApplicationsService applicationsService;
+  private final ApplicationsService applicationsService;
 
-  @Autowired
-  private PositionService positionService;
+  private final PositionService positionService;
+
+  public CandidateOneWayConverter(ApplicationsService applicationsService,
+                                  PositionService positionService) {
+    this.applicationsService = applicationsService;
+    this.positionService = positionService;
+  }
 
   @Override
   public CandidateDTO firstTypeToSecondType(CandidateEntity source) {
