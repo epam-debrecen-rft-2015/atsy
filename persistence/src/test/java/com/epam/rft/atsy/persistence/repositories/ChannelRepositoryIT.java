@@ -15,14 +15,13 @@ public class ChannelRepositoryIT extends AbstractRepositoryIT {
 
   private static final String CHANNEL_NAME_EXISTING = "facebook";
   private static final String CHANNEL_NAME_NON_EXISTENT = "Olympiad";
-  private static final String CHANNEL_NAME_EXISTING_UPPER_CASE = CHANNEL_NAME_EXISTING.toUpperCase();
 
   @Autowired
   private ChannelRepository channelRepository;
 
 
   @Test
-  public void findByNameShouldReturnNullChannelWhenChannelNameNotExisting() {
+  public void findByNameShouldReturnNullChannelEntityWhenChannelNameIsNonExistent() {
     // Given
 
     // When
@@ -33,19 +32,7 @@ public class ChannelRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-  public void findByNameShouldReturnExistingChannelWhenUpperCaseChannelNameExisting() {
-    // Given
-
-    // When
-    ChannelEntity channelEntity = channelRepository.findByName(CHANNEL_NAME_EXISTING_UPPER_CASE);
-
-    // Then
-    assertThat(channelEntity, notNullValue());
-    assertThat(channelEntity.getName(), equalTo(CHANNEL_NAME_EXISTING));
-  }
-
-  @Test
-  public void findByNameShouldReturnExistingChannelWhenChannelNameExisting() {
+  public void findByNameShouldReturnExistingChannelEntityWhenChannelNameIsExisting() {
     // Given
 
     // When
