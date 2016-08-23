@@ -17,7 +17,7 @@
   <jsp:body>
       <div class="page-header">
           <h1><spring:message code="application.state.title"/>
-              <small id="positionName">${states[0].position.name}</small>
+              <small id="positionName">${states[0].positionName}</small>
           </h1>
       </div>
 
@@ -107,24 +107,23 @@
                       <div class="form-group">
                           <label for="positionNameInput" class="control-label col-sm-4"><spring:message code="statehistory.field.position"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="positionNameP">${data.position.name}</p>
+                              <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="positionNameP">${data.positionName}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="position.name" id="positionNameInput" style="display:none" value="${data.position.name}"
-                                    data-bind="valueWithInit: 'name'">
+                                  <input class="stateInput" type="text" name="positionName" id="positionNameInput" style="display:none" value="${data.positionName}"
+                                    data-bind="valueWithInit: 'positionName'">
                               </c:if>
                           </div>
                       </div>
                       <div class="form-group">
                           <label for="channelNameInput" class="control-label col-sm-4"><spring:message code="statehistory.field.channel"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="channelNameP">${data.channel.name}</p>
+                              <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="channelNameP">${data.channelName}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="channel.name" id="channelNameInput" style="display:none" value="${data.channel.name}"
+                                  <input class="stateInput" type="text" name="channelName" id="channelNameInput" style="display:none" value="${data.channelName}"
                                     data-bind="valueWithInit: 'channelName'">
                               </c:if>
                           </div>
                       </div>
-
 
                       <div class="form-group" id="positionDiv">
                           <label id="positionLabel" class="control-label col-lg-4 col-md-4 col-sm-4 text-right" for="source">
@@ -132,10 +131,10 @@
                           </label>
 
                           <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="dropSource">
-                              <select class="input form-control" name="channel.id" id="position">
-                                  <option selected disabled>${data.position.name}</option>
+                              <select class="input form-control" name="position" id="position">
+                                  <option selected disabled>${data.positionName}</option>
                               </select>
-                              <span style="color: red" id="application_source_error"/>
+
                           </div>
                       </div>
 
@@ -145,15 +144,13 @@
                           </label>
 
                           <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="dropSource">
-                              <select class="input form-control" name="channel.id" id="channel">
-                                  <option selected disabled>${data.channel.name}</option>
+                              <select class="input form-control" name="channel" id="channel">
+                                  <option selected disabled>${data.channelName}</option>
                               </select>
-                              <span style="color: red" id="application_source_error"/>
                           </div>
                       </div>
-
-
                   </c:when>
+
                   <c:when test="${data.stateName == 'cv'}">
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.cv"/></label>
