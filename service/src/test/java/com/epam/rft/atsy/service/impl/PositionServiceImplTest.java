@@ -1,7 +1,9 @@
 package com.epam.rft.atsy.service.impl;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -36,6 +38,7 @@ public class PositionServiceImplTest {
 
   private static final Long DEVELOPER_ID = 1L;
   private static final String DEVELOPER_NAME = "Developer";
+  private static final Long NON_EXISTENT_ID = 2L;
   private static final List<PositionEntity> EMPTY_POSITION_ENTITY_LIST = Collections.emptyList();
   private static final List<PositionDTO> EMPTY_POSITION_DTO_LIST = Collections.emptyList();
 
@@ -65,6 +68,47 @@ public class PositionServiceImplTest {
     expectedPositionEntityList = Arrays.asList(developerEntity, developerEntity, developerEntity);
 
     expectedPositionDtoList = Arrays.asList(developerDto, developerDto, developerDto);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getPositionByIdShouldThrowIllegalArgumentExceptionWhenIdIsNull() {
+
+    // Given
+
+    // When
+    PositionDTO positionDTO = positionService.getPositionById(null);
+
+    // Then
+
+  }
+
+  @Test
+  public void getPositionByIdShouldReturnNullWhenPositionIdIsNotFound() {
+
+    // Given
+    given(positionRepository.findOne(NON_EXISTENT_ID)).willReturn(null);
+
+    // When
+    PositionDTO positionDTO = positionService.getPositionById(NON_EXISTENT_ID);
+
+    // Then
+    assertThat(positionDTO, nullValue());
+
+  }
+
+  @Test
+  public void getPositionByIdShouldReturnPositionDTOWhenThereIsAPositionWithTheGivenId() {
+
+    // Given
+    given(positionRepository.findOne(DEVELOPER_ID)).willReturn(developerEntity);
+    given(converterService.convert(developerEntity, PositionDTO.class)).willReturn(developerDto);
+
+    // When
+    PositionDTO positionDTO = positionService.getPositionById(DEVELOPER_ID);
+
+    // Then
+    assertThat(positionDTO, equalTo(developerDto));
+
   }
 
   @Test

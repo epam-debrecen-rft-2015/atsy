@@ -10,6 +10,13 @@ import java.util.Collection;
 public interface PositionService {
 
   /**
+   * Returns the position with the specified id.
+   * @param id the id of the searched position
+   * @return the position
+   */
+  PositionDTO getPositionById(Long id);
+
+  /**
    * Returns a collection of positions.
    * @return the collection of positions
    */

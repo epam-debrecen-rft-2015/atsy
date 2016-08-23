@@ -29,6 +29,16 @@ public class PositionServiceImpl implements PositionService {
 
   @Transactional(readOnly = true)
   @Override
+  public PositionDTO getPositionById(Long id) {
+
+    Assert.notNull(id);
+
+    return converterService.convert(positionRepository.findOne(id), PositionDTO.class);
+
+  }
+
+  @Transactional(readOnly = true)
+  @Override
   public Collection<PositionDTO> getAllPositions() {
     List<PositionEntity> positionEntities = positionRepository.findAll();
     return converterService.convert(positionEntities, PositionDTO.class);
