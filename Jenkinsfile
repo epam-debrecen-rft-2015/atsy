@@ -37,5 +37,5 @@ def determinePortMapping(branchName) {
     returnStdout: true
   )
   echo "Existing port detection: ${existingPort}"
-  return (existingPort != null && !existingPort.trim().isEmpty()) ? (existingPort.trim() + ':8080') : '8080'
+  return existingPort?.trim() ? '8080' : (existingPort.trim() + ':8080')
 }
