@@ -15,6 +15,8 @@ public interface ChannelService {
    */
   Collection<ChannelDTO> getAllChannels();
 
+  ChannelDTO getChannelDtoByName(String channelName);
+
   /**
    * Saves a channel to the database.
    * @param channel the channel

@@ -34,6 +34,17 @@ public class ChannelServiceImpl implements ChannelService {
     return converterService.convert(ChannelEntities, ChannelDTO.class);
   }
 
+  @Override
+  public ChannelDTO getChannelDtoByName(String channelName) {
+    Assert.notNull(channelName);
+    ChannelEntity channelEntity = channelRepository.findByName(channelName);
+
+    if (channelEntity != null) {
+      return converterService.convert(channelEntity, ChannelDTO.class);
+    }
+    return null;
+  }
+
   @Transactional
   @Override
   public void saveOrUpdate(ChannelDTO channel) {
