@@ -32,3 +32,15 @@ function cancelButtonOnClick() {
     $('div.button-panel > form.form-inline div.btn-group > a').removeClass("disabled");
     $('#create-state-form').validator('destroy');
 }
+
+$.getJSON('/atsy/secure/positions', { get_param: 'value' }, function(data) {
+    $.each(data, function(index, element) {
+        $('#position').append($('<option value="'+element.name+'">'+element.name+'</option>'));
+    });
+});
+
+$.getJSON('/atsy/secure/channels', { get_param: 'value' }, function(data) {
+    $.each(data, function(index, element) {
+        $('#channel').append($('<option value="'+element.name+'">'+element.name+'</option>'));
+    });
+});

@@ -8,7 +8,6 @@
 <spring:url value="/secure/application_state" var="application_state"/>
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
-        <script src="<c:url value="/resources/js/atsy-application.js" />"></script>
         <script src="<c:url value="/resources/js/atsy-statehistory.js" />"></script>
         <script src="<c:url value="/resources/js/atsy-statehistory-create.js" />"></script>
         <script src="<c:url value="/resources/thirdparty/bootstrap-validator/validator.js" />"
@@ -105,47 +104,28 @@
               <c:choose>
                   <c:when test="${data.stateName == 'newstate'}">
                       <div class="form-group">
-                          <label for="positionNameInput" class="control-label col-sm-4"><spring:message code="statehistory.field.position"/></label>
-                          <div class="col-sm-8">
-                              <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="positionNameP">${data.positionName}</p>
-                              <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="positionName" id="positionNameInput" style="display:none" value="${data.positionName}"
-                                    data-bind="valueWithInit: 'positionName'">
-                              </c:if>
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          <label for="channelNameInput" class="control-label col-sm-4"><spring:message code="statehistory.field.channel"/></label>
-                          <div class="col-sm-8">
-                              <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="channelNameP">${data.channelName}</p>
-                              <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="channelName" id="channelNameInput" style="display:none" value="${data.channelName}"
-                                    data-bind="valueWithInit: 'channelName'">
-                              </c:if>
-                          </div>
-                      </div>
-
-                      <div class="form-group" id="positionDiv">
-                          <label id="positionLabel" class="control-label col-lg-4 col-md-4 col-sm-4 text-right" for="source">
+                          <label id="positionLabel" class="control-label col-lg-4 col-md-4 col-sm-4 text-right">
                               <spring:message code="statehistory.field.position"/>
                           </label>
-
                           <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="dropSource">
-                              <select class="input form-control" name="position" id="position">
-                                  <option selected disabled>${data.positionName}</option>
+                              <select class="input form-control" name="position" id="position" data-bind="valueWithInit: 'positionName'">
+                                  <option value="${data.positionName}" selected disabled>
+                                      <c:out value="${data.positionName}"/>
+                                  </option>
                               </select>
-
                           </div>
                       </div>
 
-                      <div class="form-group" id="sourceDiv">
-                          <label id="sourceLabel" class="control-label col-lg-4 col-md-4 col-sm-4 text-right" for="source">
+                      <div class="form-group">
+                          <label id="sourceLabel" class="control-label col-lg-4 col-md-4 col-sm-4 text-right">
                               <spring:message code="statehistory.field.channel"/>
                           </label>
 
                           <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="dropSource">
-                              <select class="input form-control" name="channel" id="channel">
-                                  <option selected disabled>${data.channelName}</option>
+                              <select class="input form-control" name="channel" id="channel" data-bind="valueWithInit: 'channelName'">
+                                  <option value="${data.channelName}" selected disabled>
+                                      <c:out value="${data.channelName}"/>
+                                  </option>
                               </select>
                           </div>
                       </div>
