@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Repository that allows operations with channels in database.
  */
 public interface ChannelRepository extends JpaRepository<ChannelEntity, Long> {
+
+  ChannelEntity findByName(String channelName);
 }
