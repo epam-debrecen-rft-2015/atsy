@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.then;
 
 import com.epam.rft.atsy.persistence.entities.UserEntity;
 import com.epam.rft.atsy.persistence.repositories.UserRepository;
+import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.UserDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import com.epam.rft.atsy.service.exception.UserNotFoundException;
@@ -18,7 +19,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 
@@ -46,7 +46,7 @@ public class UserServiceImplTest {
   private UserRepository userRepository;
 
   @Mock
-  private ModelMapper modelMapper;
+  private ConverterService converterService;
 
   @InjectMocks
   private UserServiceImpl userService;
@@ -58,8 +58,8 @@ public class UserServiceImplTest {
     userEntity =
         UserEntity.builder().id(USER_ID).userName(USER_NAME).userPassword(USER_PASSWORD).build();
 
-    given(modelMapper.map(userEntity, UserDTO.class)).willReturn(detailedUserDTO);
-    given(modelMapper.map(detailedUserDTO, UserEntity.class)).willReturn(userEntity);
+    given(converterService.convert(userEntity, UserDTO.class)).willReturn(detailedUserDTO);
+    given(converterService.convert(detailedUserDTO, UserEntity.class)).willReturn(userEntity);
   }
 
   @Test(expected = UserNotFoundException.class)
@@ -132,7 +132,7 @@ public class UserServiceImplTest {
     UserDTO result = userService.login(userDTO);
 
     //Then
-    then(modelMapper).should().map(userEntity, UserDTO.class);
+    then(converterService).should().convert(userEntity, UserDTO.class);
     then(userRepository).should().findByUserNameAndUserPassword(USER_NAME, USER_PASSWORD);
     assertThat(result, is(detailedUserDTO));
   }
@@ -180,7 +180,7 @@ public class UserServiceImplTest {
     Long result = userService.saveOrUpdate(detailedUserDTO);
 
     //Then
-    then(modelMapper).should().map(detailedUserDTO, UserEntity.class);
+    then(converterService).should().convert(detailedUserDTO, UserEntity.class);
     then(userRepository).should().saveAndFlush(userEntity);
     assertThat(result, is(USER_ID));
   }
@@ -213,7 +213,7 @@ public class UserServiceImplTest {
     UserDTO result = userService.findUserByName(USER_NAME);
 
     //Then
-    then(modelMapper).should().map(userEntity, UserDTO.class);
+    then(converterService).should().convert(userEntity, UserDTO.class);
     then(userRepository).should().findByUserName(USER_NAME);
     assertThat(result, is(detailedUserDTO));
   }

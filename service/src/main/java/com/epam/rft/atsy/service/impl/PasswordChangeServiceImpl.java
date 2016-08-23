@@ -4,11 +4,11 @@ import com.epam.rft.atsy.persistence.entities.PasswordHistoryEntity;
 import com.epam.rft.atsy.persistence.entities.UserEntity;
 import com.epam.rft.atsy.persistence.repositories.PasswordHistoryRepository;
 import com.epam.rft.atsy.persistence.repositories.UserRepository;
+import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.PasswordChangeService;
 import com.epam.rft.atsy.service.domain.PasswordHistoryDTO;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
 import org.hibernate.exception.ConstraintViolationException;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,6 @@ import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -26,8 +25,8 @@ public class PasswordChangeServiceImpl implements PasswordChangeService {
 
   private static final int PASSWORD_HISTORY_LIMIT = 5;
 
-  @Resource
-  private ModelMapper modelMapper;
+  @Autowired
+  private ConverterService converterService;
 
   @Autowired
   private PasswordHistoryRepository passwordHistoryRepository;
@@ -40,7 +39,7 @@ public class PasswordChangeServiceImpl implements PasswordChangeService {
   public Long saveOrUpdate(PasswordHistoryDTO passwordHistoryDTO) {
     Assert.notNull(passwordHistoryDTO);
     Assert.notNull(passwordHistoryDTO.getUserId());
-    PasswordHistoryEntity entity = modelMapper.map(passwordHistoryDTO, PasswordHistoryEntity.class);
+    PasswordHistoryEntity entity = converterService.convert(passwordHistoryDTO, PasswordHistoryEntity.class);
 
     UserEntity userEntity = userRepository.findOne(passwordHistoryDTO.getUserId());
     Assert.notNull(userEntity);

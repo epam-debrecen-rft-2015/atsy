@@ -1,14 +1,11 @@
 package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.BDDMockito.given;
-
 import com.epam.rft.atsy.service.AuthenticationService;
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.exception.UserNotLoggedInException;
+import com.epam.rft.atsy.service.exception.passwordchange.PasswordOldMatchValidationException;
 import com.epam.rft.atsy.service.security.UserDetailsAdapter;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,6 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PasswordOldPasswordMatchesRuleTest {
@@ -29,7 +28,6 @@ public class PasswordOldPasswordMatchesRuleTest {
   private static final String NEW_PASSWORD_CONFIRM = NEW_PASSWORD;
   private static final String PASSWORD_CHANGE_DTO_OLD_PASSWORD = "password";
   private static final String PASSWORD_CHANGE_DTO_DIFFERENT_OLD_PASSWORD = "differentpassword";
-  private static final String MESSAGE_KEY = "passwordchange.validation.oldpasswordmatch";
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -57,7 +55,7 @@ public class PasswordOldPasswordMatchesRuleTest {
   }
 
   @Test
-  public void isValidShouldBeValidWhenOldPasswordMatches() {
+  public void isValidShouldBeValidWhenOldPasswordMatches() throws PasswordOldMatchValidationException {
     // Given
     PasswordChangeDTO
         passwordChangeDTO =
@@ -66,15 +64,11 @@ public class PasswordOldPasswordMatchesRuleTest {
             .build();
 
     // When
-    boolean result = passwordOldPasswordMatchesRule.isValid(passwordChangeDTO);
-
-    // Then
-    assertTrue(result);
-
+    passwordOldPasswordMatchesRule.validate(passwordChangeDTO);
   }
 
-  @Test
-  public void isValidShouldNotBeValidWhenOldPasswordsAreDifferent() {
+  @Test(expected = PasswordOldMatchValidationException.class)
+  public void isValidShouldNotBeValidWhenOldPasswordsAreDifferent() throws PasswordOldMatchValidationException {
     // Given
     PasswordChangeDTO
         passwordChangeDTO =
@@ -83,21 +77,17 @@ public class PasswordOldPasswordMatchesRuleTest {
             .oldPassword(PASSWORD_CHANGE_DTO_DIFFERENT_OLD_PASSWORD).build();
 
     // When
-    boolean result = passwordOldPasswordMatchesRule.isValid(passwordChangeDTO);
-
-    // Then
-    assertFalse(result);
-
+    passwordOldPasswordMatchesRule.validate(passwordChangeDTO);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void isValidShouldNotBeValidWhenPasswordChangeDTOIsNull() {
+  public void isValidShouldNotBeValidWhenPasswordChangeDTOIsNull() throws PasswordOldMatchValidationException {
     // When
-    boolean result = passwordOldPasswordMatchesRule.isValid(null);
+    passwordOldPasswordMatchesRule.validate(null);
   }
 
-  @Test
-  public void isValidShouldNotBeValidWhenUserIsNotLoggedIn() throws UserNotLoggedInException {
+  @Test(expected = PasswordOldMatchValidationException.class)
+  public void isValidShouldNotBeValidWhenUserIsNotLoggedIn() throws UserNotLoggedInException, PasswordOldMatchValidationException {
     // Given
     PasswordChangeDTO
         passwordChangeDTO =
@@ -107,14 +97,11 @@ public class PasswordOldPasswordMatchesRuleTest {
     given(authenticationService.getCurrentUserDetails()).willThrow(UserNotLoggedInException.class);
 
     // When
-    boolean result = passwordOldPasswordMatchesRule.isValid(passwordChangeDTO);
-
-    // Then
-    assertFalse(result);
+    passwordOldPasswordMatchesRule.validate(passwordChangeDTO);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void isValidShouldNotBeValidWhenPasswordChangeDTOsPasswordFieldIsNull() {
+  public void isValidShouldNotBeValidWhenPasswordChangeDTOsPasswordFieldIsNull() throws PasswordOldMatchValidationException {
     // Given
     PasswordChangeDTO
         passwordChangeDTO =
@@ -122,12 +109,12 @@ public class PasswordOldPasswordMatchesRuleTest {
             .newPasswordConfirm(NEW_PASSWORD_CONFIRM).oldPassword(null).build();
 
     // When
-    boolean result = passwordOldPasswordMatchesRule.isValid(passwordChangeDTO);
+    passwordOldPasswordMatchesRule.validate(passwordChangeDTO);
   }
 
-  @Test
+  @Test(expected = PasswordOldMatchValidationException.class)
   public void isValidShouldNotBeValidWhenUserDetailsPasswordFieldIsNull()
-      throws UserNotLoggedInException {
+      throws UserNotLoggedInException, PasswordOldMatchValidationException {
     // Given
     PasswordChangeDTO
         passwordChangeDTO =
@@ -143,21 +130,6 @@ public class PasswordOldPasswordMatchesRuleTest {
         .willReturn(userDetailsAdapterWithNullPassword);
 
     // When
-    boolean result = passwordOldPasswordMatchesRule.isValid(passwordChangeDTO);
-
-    // Then
-    assertFalse(result);
-
+    passwordOldPasswordMatchesRule.validate(passwordChangeDTO);
   }
-
-  @Test
-  public void getErrorMessageKeyTest() {
-
-    // When
-    String msg = passwordOldPasswordMatchesRule.getErrorMessageKey();
-
-    //Then
-    assertEquals(msg, MESSAGE_KEY);
-  }
-
 }

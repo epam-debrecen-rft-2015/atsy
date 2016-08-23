@@ -5,10 +5,12 @@ import com.epam.rft.atsy.service.UserService;
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.domain.PasswordHistoryDTO;
 import com.epam.rft.atsy.service.domain.UserDTO;
-import com.epam.rft.atsy.service.exception.PasswordValidationException;
+import com.epam.rft.atsy.service.exception.passwordchange.PasswordValidationException;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
 import com.epam.rft.atsy.service.security.UserDetailsAdapter;
 import com.epam.rft.atsy.web.CurrentUser;
+import com.epam.rft.atsy.web.mapper.PasswordValidationRuleMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,52 +23,67 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Date;
+
 import javax.annotation.Resource;
 
+/**
+ * Controller for the password change page.
+ */
 @Controller
 @RequestMapping(path = "/secure/password/manage")
 public class PasswordChangeController {
-  private static final String LOGIN_ERROR_KEY = "loginErrorKey";
-
-  private static final String VALIDATION_SUCCESS_KEY = "validationSuccessKey";
-
-  private static final String VALIDATION_ERROR_KEY = "validationErrorKey";
-
-  private static final String LOGIN_BACKEND_VALIDATION = "login.backend.validation";
-
-  private static final String PASSWORDCHANGE_VALIDATION_SUCCESS =
+  public static final String LOGIN_ERROR_KEY = "loginErrorKey";
+  public static final String VALIDATION_SUCCESS_KEY = "validationSuccessKey";
+  public static final String VALIDATION_ERROR_KEY = "validationErrorKey";
+  public static final String LOGIN_BACKEND_VALIDATION = "login.backend.validation";
+  public static final String
+      PASSWORDCHANGE_VALIDATION_SUCCESS =
       "passwordchange.validation.success";
-
   private static final String VIEW_NAME = "password_change";
-
   private static Logger logger = LoggerFactory.getLogger(PasswordChangeController.class);
 
   @Resource
-  private PasswordChangeService passwordChangeService;
+  PasswordChangeService passwordChangeService;
 
   @Resource
-  private UserService userService;
+  UserService userService;
+
+  @Resource
+  PasswordValidationRuleMapper passwordValidationRuleMapper;
 
   @Autowired
-  private PasswordValidator passwordValidator;
+  PasswordValidator passwordValidator;
 
-  private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+  BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
+  /**
+   * Loads the password change page.
+   * @return a ModelAndView object which contains the name of the page to be loaded
+   */
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView loadPage() {
     return new ModelAndView(VIEW_NAME);
   }
 
+  /**
+   * Changes the password of the user who is currently logged in.
+   * @param passwordChangeDTO an object which contains the user input from the password change form
+   * @param bindingResult an object used to check if any error occurs
+   * @param userDetailsAdapter contains the data of the user who is currently logged in
+   * @return a ModelAndView object which contains the name of the page to be loaded and additional
+   * information about the password change
+   */
   @RequestMapping(method = RequestMethod.POST)
   public ModelAndView changePassword(@ModelAttribute PasswordChangeDTO passwordChangeDTO,
                                      BindingResult bindingResult,
                                      @CurrentUser UserDetailsAdapter userDetailsAdapter) {
-    ModelAndView model = new ModelAndView(VIEW_NAME);
 
+    ModelAndView model = new ModelAndView(VIEW_NAME);
     if (bindingResult.hasErrors()) {
       model.addObject(LOGIN_ERROR_KEY, LOGIN_BACKEND_VALIDATION);
     } else {
       try {
+
         passwordValidator.validate(passwordChangeDTO);
 
         String newPassword = bCryptPasswordEncoder.encode(passwordChangeDTO.getNewPassword());
@@ -85,11 +102,9 @@ public class PasswordChangeController {
         model.addObject(VALIDATION_SUCCESS_KEY, PASSWORDCHANGE_VALIDATION_SUCCESS);
       } catch (PasswordValidationException e) {
         logger.error(e.getMessage(), e);
-
-        model.addObject(VALIDATION_ERROR_KEY, e.getMessageKey());
+        model.addObject(VALIDATION_ERROR_KEY, passwordValidationRuleMapper.getMessageKeyByException(e));
       }
     }
-
     return model;
   }
 }

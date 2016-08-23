@@ -1,15 +1,14 @@
 package com.epam.rft.atsy.web.controllers;
 
+import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StateFlowService;
 import com.epam.rft.atsy.service.StateService;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
-
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
-import org.springframework.context.MessageSource;
+import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,18 +17,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
-
 import javax.annotation.Resource;
 import javax.validation.Valid;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+/**
+ * Manages the page which shows the state history of a certain application of a certain candidate
+ * and allows the user to put the application into a new state.
+ */
 @Controller
 @RequestMapping(value = "/secure/application_state")
 public class ApplicationStateController {
@@ -41,11 +40,6 @@ public class ApplicationStateController {
 
   private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
 
-  private final static Type
-      STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE =
-      new TypeToken<List<StateHistoryViewRepresentation>>() {
-      }.getType();
-
   @Resource
   private StatesHistoryService statesHistoryService;
 
@@ -56,25 +50,35 @@ public class ApplicationStateController {
   private StateService stateService;
 
   @Resource
-  private MessageSource messageSource;
+  private MessageKeyResolver messageKeyResolver;
 
-  @Resource
-  private ModelMapper modelMapper;
+  @Autowired
+  private ConverterService converterService;
 
 
+  /**
+   * Creates the application state page and fills it with all the state information of the given
+   * application.
+   * @param applicationId determines which application is viewed on the page
+   * @param clickedState indicates which state button was pushed
+   * @return a ModelAndView object which contains all the state information of the given application
+   * and the name of the page that manages the application states
+   */
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView loadPage(@RequestParam Long applicationId,
-                               @RequestParam(required = false, name = "state") String clickedState,
-                               Locale locale) {
+                               @RequestParam(required = false, name = "state") String clickedState) {
     ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
     modelAndView.addObject("applicationId", applicationId);
 
-    List<StateHistoryViewRepresentation> stateHistoryViewRepresentations =
-        modelMapper.map(statesHistoryService.getStateHistoriesByApplicationId(applicationId),
-            STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE);
+    List<StateHistoryViewRepresentation>
+        stateHistoryViewRepresentations =
+        converterService
+            .convert(statesHistoryService.getStateHistoriesByApplicationId(applicationId),
+                StateHistoryViewRepresentation.class);
 
     if (clickedState != null) {
       StateDTO clickedStateDTO = stateService.getStateDtoByName(clickedState);
+
       Assert.notNull(clickedStateDTO);
 
       stateHistoryViewRepresentations.add(0, StateHistoryViewRepresentation.builder()
@@ -85,9 +89,13 @@ public class ApplicationStateController {
 
     for (StateHistoryViewRepresentation stateHistoryViewRepresentation : stateHistoryViewRepresentations) {
       String stateType = stateHistoryViewRepresentation.getStateName();
-      stateType = messageSource
-          .getMessage(APPLICATION_STATE + stateHistoryViewRepresentation.getStateName(),
-              new Object[]{stateType}, locale);
+
+      stateType =
+          messageKeyResolver
+              .resolveMessageOrDefault(
+                  APPLICATION_STATE + stateHistoryViewRepresentation.getStateName(),
+                  stateType);
+
       stateHistoryViewRepresentation.setStateFullName(stateType);
     }
 
@@ -98,7 +106,14 @@ public class ApplicationStateController {
     return modelAndView;
   }
 
-
+  /**
+   * This method is used to save new states or update the information of the latest state.
+   * @param applicationId identifier of the application whose states are viewed and edited
+   * @param stateHistoryViewRepresentation this attribute contains all the state information of the
+   * given application
+   * @return a ModelAndView object filled with the data to stay on the same page and view the states
+   * of the same application, but including the latest modification
+   */
   @RequestMapping(method = RequestMethod.POST)
   public ModelAndView saveOrUpdate(@RequestParam Long applicationId,
                                    @Valid @ModelAttribute StateHistoryViewRepresentation stateHistoryViewRepresentation) {

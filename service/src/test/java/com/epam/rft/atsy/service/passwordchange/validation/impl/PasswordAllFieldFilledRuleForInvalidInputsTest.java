@@ -1,12 +1,11 @@
 package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableSet;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
+import com.epam.rft.atsy.service.exception.passwordchange.PasswordAllFieldFilledValidationException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -77,8 +76,9 @@ public class PasswordAllFieldFilledRuleForInvalidInputsTest {
     rule = new PasswordAllFieldFilledRule();
   }
 
-  @Test
-  public void isValidShouldReturnFalseForAllNegativeInputs() {
+  @Test(expected = PasswordAllFieldFilledValidationException.class)
+  public void isValidShouldThrowPasswordAllFieldFilledValidationExceptionForAllNegativeInputs()
+      throws PasswordAllFieldFilledValidationException {
     //Given
     PasswordChangeDTO passwordChangeDTO = PasswordChangeDTO.builder()
         .newPassword(this.newPassword)
@@ -86,7 +86,7 @@ public class PasswordAllFieldFilledRuleForInvalidInputsTest {
         .oldPassword(this.oldPassword)
         .build();
 
-    //Then
-    assertThat(rule.isValid(passwordChangeDTO), is(expected));
+    //When
+    rule.validate(passwordChangeDTO);
   }
 }
