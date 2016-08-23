@@ -47,3 +47,7 @@ function actionFormatter(value, row, index) {
         '</a>'
     ].join('');
 }
+
+function positionFormatter(value) {
+  return value.join(", ");
+}
