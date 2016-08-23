@@ -12,7 +12,7 @@
   <jsp:body>
       <div class="page-header">
           <h1><spring:message code="application.state.title"/>
-              <small id="positionName">${states[0].position.name}</small>
+              <small id="positionName"><c:out value = "${states[0].position.name}"/></small>
           </h1>
       </div>
 
@@ -69,9 +69,9 @@
               <div class="form-group">
                   <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.description"/></label>
                   <div class="col-sm-8">
-                      <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="descriptionP">${data.description}</p>
+                      <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="descriptionP"><c:out value = "${data.description}"/></p>
                       <c:if test="${stat.first}">
-                          <input class="stateInput" type="text" name="description" id="descriptionInput" style="display:none" value="${data.description}">
+                          <input class="stateInput" type="text" name="description" id="descriptionInput" style="display:none" value="<c:out value = "${data.description}"/>">
                       </c:if>
                   </div>
               </div>
@@ -80,18 +80,18 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.position"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="positionNameP">${data.position.name}</p>
+                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="positionNameP"><c:out value = "${data.position.name}"/></p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="position.name" id="positionNameInput" style="display:none" value="${data.position.name}">
+                                  <input class="stateInput" type="text" name="position.name" id="positionNameInput" style="display:none" value="<c:out value = "${data.position.name}"/>">
                               </c:if>
                           </div>
                       </div>
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.channel"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="channelNameP">${data.channel.name}</p>
+                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="channelNameP"><c:out value = "${data.channel.name}"/></p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="channel.name" id="channelNameInput" style="display:none" value="${data.channel.name}">
+                                  <input class="stateInput" type="text" name="channel.name" id="channelNameInput" style="display:none" value="<c:out value = "${data.channel.name}"/>">
                               </c:if>
                           </div>
                       </div>
