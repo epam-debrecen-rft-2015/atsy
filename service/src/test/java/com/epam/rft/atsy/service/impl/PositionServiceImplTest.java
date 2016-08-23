@@ -1,16 +1,20 @@
 package com.epam.rft.atsy.service.impl;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
 import com.epam.rft.atsy.service.ConverterService;
+import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.exception.DuplicatePositionException;
 import org.hamcrest.CoreMatchers;
@@ -24,6 +28,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.omg.PortableInterceptor.NON_EXISTENT;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.Arrays;
@@ -36,6 +41,7 @@ public class PositionServiceImplTest {
 
   private static final Long DEVELOPER_ID = 1L;
   private static final String DEVELOPER_NAME = "Developer";
+  private static final String POSITION_NAME_NON_EXISTENT = "Table tennis instructor";
   private static final List<PositionEntity> EMPTY_POSITION_ENTITY_LIST = Collections.emptyList();
   private static final List<PositionDTO> EMPTY_POSITION_DTO_LIST = Collections.emptyList();
 
@@ -117,6 +123,48 @@ public class PositionServiceImplTest {
     assertEquals(result, expectedPositionDtoList);
 
     then(positionRepository).should(times(1)).findAll();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getPositionDtoByNameShouldThrowIllegalArgumentExceptionWhenPositionNameIsNull() {
+    // Given
+
+    // When
+    positionService.getPositionDtoByName(null);
+
+    // Then
+  }
+
+  @Test
+  public void getPositionDtoByNameShouldReturnNullPositionDtoWhenPositionNameIsNonExistent() {
+    // Given
+    given(positionRepository.findByName(POSITION_NAME_NON_EXISTENT)).willReturn(null);
+
+    // When
+    PositionDTO positionDTO = positionService.getPositionDtoByName(POSITION_NAME_NON_EXISTENT);
+
+    // Then
+    assertThat(positionDTO, nullValue());
+
+    then(positionRepository).should().findByName(POSITION_NAME_NON_EXISTENT);
+    verifyZeroInteractions(converterService);
+  }
+
+  @Test
+  public void getPositionDtoByNameShouldReturnExistingPositionDtoWhenPositionNameIsExisting() {
+    // Given
+    given(positionRepository.findByName(DEVELOPER_NAME)).willReturn(developerEntity);
+    given(converterService.convert(developerEntity, PositionDTO.class)).willReturn(developerDto);
+
+    // When
+    PositionDTO positionDTO = positionService.getPositionDtoByName(DEVELOPER_NAME);
+
+    // Then
+    assertThat(positionDTO, notNullValue());
+    assertThat(positionDTO, equalTo(developerDto));
+
+    then(positionRepository).should().findByName(DEVELOPER_NAME);
+    then(converterService).should().convert(developerEntity, PositionDTO.class);
   }
 
   @Test(expected = IllegalArgumentException.class)

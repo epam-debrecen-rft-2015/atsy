@@ -15,6 +15,8 @@ public interface PositionService {
    */
   Collection<PositionDTO> getAllPositions();
 
+  PositionDTO getPositionDtoByName(String positionName);
+
   /**
    * Saves a position to the database.
    * @param position the position

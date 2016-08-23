@@ -34,6 +34,7 @@ public class ChannelServiceImpl implements ChannelService {
     return converterService.convert(ChannelEntities, ChannelDTO.class);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public ChannelDTO getChannelDtoByName(String channelName) {
     Assert.notNull(channelName);

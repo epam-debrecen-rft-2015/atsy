@@ -34,6 +34,18 @@ public class PositionServiceImpl implements PositionService {
     return converterService.convert(positionEntities, PositionDTO.class);
   }
 
+  @Transactional(readOnly = true)
+  @Override
+  public PositionDTO getPositionDtoByName(String positionName) {
+    Assert.notNull(positionName);
+    PositionEntity positionEntity = positionRepository.findByName(positionName);
+
+    if (positionEntity != null) {
+      return converterService.convert(positionEntity, PositionDTO.class);
+    }
+    return null;
+  }
+
   @Transactional
   @Override
   public void saveOrUpdate(PositionDTO position) {
