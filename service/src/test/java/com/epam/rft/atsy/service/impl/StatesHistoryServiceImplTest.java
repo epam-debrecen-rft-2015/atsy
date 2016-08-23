@@ -1,13 +1,5 @@
 package com.epam.rft.atsy.service.impl;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
@@ -22,6 +14,7 @@ import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -34,6 +27,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StatesHistoryServiceImplTest {
@@ -323,35 +324,50 @@ public class StatesHistoryServiceImplTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void saveStateShouldThrowIllegalArgumentExceptionWhenStateDtoIsNull() {
+    // Given
     StateHistoryDTO stateHistoryDTO = StateHistoryDTO.builder().stateDTO(null).build();
 
+    // When
     statesHistoryService.saveStateHistory(stateHistoryDTO, FIRST_ID);
+
+    // Then
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveStateShouldThrowIllegalArgumentExceptionWhenStateDtoIdIsNull() {
+    // Given
     StateDTO stateDTO = StateDTO.builder().id(null).build();
     StateHistoryDTO stateHistoryDTO = StateHistoryDTO.builder().stateDTO(stateDTO).build();
 
+    // When
     statesHistoryService.saveStateHistory(stateHistoryDTO, FIRST_ID);
+
+    //Then
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveStateShouldThrowIllegalArgumentExceptionWhenApplicationIdIsANegativeNumber() {
+    // Given
     given(applicationsRepository.findOne(MINUS_FIRST_ID)).willReturn(null);
 
+    // When
     statesHistoryService.saveStateHistory(stateHistoryDTO, MINUS_FIRST_ID);
+
+    // Then
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveStateShouldThrowIllegalArgumentExceptionWhenStateDtoIdIsANegativeNumber() {
+    // Given
     StateDTO stateDTO = StateDTO.builder().id(MINUS_FIRST_ID).build();
     StateHistoryDTO stateHistoryDTO = StateHistoryDTO.builder().stateDTO(stateDTO).build();
     given(statesRepository.findOne(MINUS_FIRST_ID)).willReturn(null);
 
+    // When
     statesHistoryService.saveStateHistory(stateHistoryDTO, FIRST_ID);
-  }
 
+    // Then
+  }
 
   @Test
   public void saveStateShouldBeSuccessSaving() {
