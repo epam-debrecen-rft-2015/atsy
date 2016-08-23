@@ -31,7 +31,6 @@ def profileFor(branchName) {
   branchName ==~ /^master$/ ? 'production' : 'integration'
 }
 
-@NonCPS
 def determinePortMapping(branchName) {
   def existingPort = sh (
     script: "docker port ${branchName}_app_1 | cut -d: -f2",
