@@ -22,10 +22,9 @@ public class FieldErrorResponseComposer {
 
     RestResponse restResponse = new RestResponse(invalidInputMessage);
 
-    bindingResult.getFieldErrors().forEach(error -> {
-      restResponse.addField(error.getField(),
-          messageKeyResolver.resolveMessageOrDefault(error.getDefaultMessage()));
-    });
+    bindingResult.getFieldErrors().forEach(error ->
+        restResponse.addField(error.getField(),
+            messageKeyResolver.resolveMessageOrDefault(error.getDefaultMessage())));
 
     return new ResponseEntity<>(restResponse, HttpStatus.BAD_REQUEST);
   }
