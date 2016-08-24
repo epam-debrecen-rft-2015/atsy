@@ -46,6 +46,9 @@ public class StateHistoryTwoWayConverter
         .stateDTO(source.getStatesEntity() != null ?
             converterService.convert(source.getStatesEntity(), StateDTO.class) : null)
         .creationDate(source.getCreationDate())
+        .recommendation(source.getRecommendation())
+        .reviewerName(source.getReviewerName())
+        .recommendedPositionLevel(source.getRecommendedPositionLevel())
         .build();
   }
 
@@ -64,6 +67,9 @@ public class StateHistoryTwoWayConverter
         .claim(source.getClaim())
         .feedbackDate(source.getFeedbackDate())
         .dayOfStart(source.getDayOfStart())
+        .recommendation(source.getRecommendation())
+        .reviewerName(source.getReviewerName())
+        .recommendedPositionLevel(source.getRecommendedPositionLevel())
         .statesEntity(source.getStateDTO() != null ?
             converterService.convert(source.getStateDTO(), StatesEntity.class) : null)
         .build();

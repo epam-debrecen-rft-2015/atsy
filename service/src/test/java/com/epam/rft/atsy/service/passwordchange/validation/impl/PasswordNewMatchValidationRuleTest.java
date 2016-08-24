@@ -3,7 +3,6 @@ package com.epam.rft.atsy.service.passwordchange.validation.impl;
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordNewMatchValidationException;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordValidationException;
-
 import org.junit.Before;
 import org.junit.Test;
 

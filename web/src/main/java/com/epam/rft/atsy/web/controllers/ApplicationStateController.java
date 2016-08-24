@@ -19,10 +19,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+
 
 @Slf4j
 /**
@@ -77,11 +79,14 @@ public class ApplicationStateController {
                 StateHistoryViewRepresentation.class);
 
     if (clickedState != null) {
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
+
       StateDTO clickedStateDTO = stateService.getStateDtoByName(clickedState);
 
       Assert.notNull(clickedStateDTO);
 
       stateHistoryViewRepresentations.add(0, StateHistoryViewRepresentation.builder()
+          .creationDate(simpleDateFormat.format(new Date()))
           .stateId(clickedStateDTO.getId())
           .stateName(clickedStateDTO.getName())
           .build());

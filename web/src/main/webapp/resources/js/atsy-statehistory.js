@@ -30,4 +30,5 @@ function cancelButtonOnClick() {
     $('.stateData').show();
     $('#latestStateEditButton').show();
     $('div.button-panel > form.form-inline div.btn-group > a').removeClass("disabled");
+    $('#create-state-form').validator('destroy');
 }
