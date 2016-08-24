@@ -1,13 +1,5 @@
 package com.epam.rft.atsy.service.impl;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
@@ -15,6 +7,7 @@ import com.epam.rft.atsy.service.exception.DuplicateCandidateException;
 import com.epam.rft.atsy.service.request.FilterRequest;
 import com.epam.rft.atsy.service.request.SearchOptions;
 import com.epam.rft.atsy.service.request.SortingRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
@@ -33,6 +26,15 @@ import org.springframework.data.domain.Sort;
 
 import java.util.Collection;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 @RunWith(MockitoJUnitRunner.class)
 public class CandidateServiceImplTest {
   private static final Long ID = 1L;
@@ -42,6 +44,7 @@ public class CandidateServiceImplTest {
   private static final String REFERER = "Jane Doe";
   private static final Short LANGUAGE_SKILL = 5;
   private static final String DESCRIPTION = "Simply John Doe.";
+  private static final String CV_FILENAME = "Implicit_John_Doe.pdf";
   private static final SortingRequest.Field SORT_FIELD = SortingRequest.Field.NAME;
   private static final CandidateEntity NOT_FOUND_CANDIDATE_ENTITY = null;
   private static final CandidateDTO NOT_FOUND_CANDIDATE_DTO = null;
@@ -53,8 +56,11 @@ public class CandidateServiceImplTest {
   private CandidateRepository candidateRepository;
   @InjectMocks
   private CandidateServiceImpl candidateService;
+
   private CandidateEntity dummyCandidateEntity;
   private CandidateDTO dummyCandidateDto;
+  private CandidateEntity candidateEntityWithCvFilename;
+  private CandidateDTO candidateDTOWithCvFilename;
   private FilterRequest ascendingFilterRequest;
   private FilterRequest descendingFilterRequest;
   private Sort ascendingSort;
@@ -62,20 +68,22 @@ public class CandidateServiceImplTest {
   @Before
   public void setUp() {
     dummyCandidateEntity = CandidateEntity.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
-        .referer(REFERER).languageSkill(LANGUAGE_SKILL)
-        .description(DESCRIPTION).build();
+        .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).build();
 
     dummyCandidateDto = CandidateDTO.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
-        .referer(REFERER).languageSkill(LANGUAGE_SKILL)
-        .description(DESCRIPTION).build();
+        .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).build();
 
-    ascendingFilterRequest =
-        FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
-            .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
+    candidateEntityWithCvFilename = CandidateEntity.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
+        .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).cvFilename(CV_FILENAME).build();
 
-    descendingFilterRequest =
-        FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.DESC)
-            .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
+    candidateDTOWithCvFilename = CandidateDTO.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
+        .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).cvFilename(CV_FILENAME).build();
+
+    ascendingFilterRequest = FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
+        .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
+
+    descendingFilterRequest = FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.DESC)
+        .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
 
     ascendingSort = new Sort(Sort.Direction.ASC, SORT_FIELD.toString());
   }
@@ -223,6 +231,61 @@ public class CandidateServiceImplTest {
     verify(candidateRepository)
         .findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL, PHONE,
             descendingSort);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getCvFilenameByIdShouldThrowIllegalArgumentExceptionWhenCandidateIdIsNull() {
+    // Given
+
+    // When
+    candidateService.getCvFilenameById(null);
+
+    // Then
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getCvFilenameByIdShouldThrowIllegalArgumentExceptionWhenCandidateDtoIsNull() {
+    // Given
+    given(candidateRepository.findOne(ID)).willReturn(NOT_FOUND_CANDIDATE_ENTITY);
+    given(modelMapper.map(NOT_FOUND_CANDIDATE_ENTITY, CandidateDTO.class)).willReturn(null);
+
+    // When
+    candidateService.getCvFilenameById(ID);
+
+    // Then
+  }
+
+  @Test
+  public void getCvFilenameByIdShouldReturnNullWhenCandidateDtoHasNotCvFilename() {
+    // Given
+    given(candidateRepository.findOne(ID)).willReturn(dummyCandidateEntity);
+    given(modelMapper.map(dummyCandidateEntity, CandidateDTO.class)).willReturn(dummyCandidateDto);
+
+    // When
+    String actualCvFilename = candidateService.getCvFilenameById(ID);
+
+    // Then
+    assertThat(actualCvFilename, nullValue());
+
+    then(candidateRepository).should().findOne(ID);
+    then(modelMapper).should().map(dummyCandidateEntity, CandidateDTO.class);
+  }
+
+  @Test
+  public void getCvFilenameByIdShouldReturnExistingCvFilenameWhenCandidateDtoHasCvFilename() {
+    // Given
+    given(candidateRepository.findOne(ID)).willReturn(candidateEntityWithCvFilename);
+    given(modelMapper.map(candidateEntityWithCvFilename, CandidateDTO.class)).willReturn(candidateDTOWithCvFilename);
+
+    // When
+    String actualCvFilename = candidateService.getCvFilenameById(ID);
+
+    // Then
+    assertThat(actualCvFilename, notNullValue());
+    assertThat(actualCvFilename, equalTo(CV_FILENAME));
+
+    then(candidateRepository).should().findOne(ID);
+    then(modelMapper).should().map(candidateEntityWithCvFilename, CandidateDTO.class);
   }
 
   @Test(expected = IllegalArgumentException.class)
