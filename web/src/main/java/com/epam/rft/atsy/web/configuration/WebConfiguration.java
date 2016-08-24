@@ -42,12 +42,10 @@ public class WebConfiguration extends DelegatingWebMvcConfiguration {
 
   @Value("${upload_location_cv}")
   private String uploadLocation;
-  public static String UPLOAD_LOCATION;
 
   @PostConstruct
   public void init() {
-    UPLOAD_LOCATION = uploadLocation;
-    File folder = new File(UPLOAD_LOCATION);
+    File folder = new File(uploadLocation);
     if (!folder.exists()) {
       folder.mkdir();
     }
