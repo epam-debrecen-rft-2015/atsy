@@ -3,7 +3,6 @@ package com.epam.rft.atsy.service.domain.states;
 import com.epam.rft.atsy.service.domain.states.builder.AbstractStateBuilder;
 
 import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,6 +10,11 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 
+/**
+ * Supplies state history information to the view layer. Contains the time when the represented
+ * state was created.
+ * See {@link AbstractStateHistoryDTO AbstractStateHistoryDTO}.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

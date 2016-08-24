@@ -16,7 +16,7 @@
   <jsp:body>
       <div class="page-header">
           <h1><spring:message code="application.state.title"/>
-              <small id="positionName">${states[0].position.name}</small>
+              <small id="positionName"><c:out value = "${states[0].position.name}"/></small>
           </h1>
       </div>
 
@@ -91,11 +91,17 @@
               <div class="form-group">
                   <label for="descriptionInput" class="control-label col-sm-4"><spring:message code="statehistory.field.description"/></label>
                   <div class="col-sm-8">
+<<<<<<< HEAD
                       <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="descriptionP">${data.description}</p>
                       <c:if test="${stat.first}">
                           <textarea class="stateInput" wrap="soft" name="description" id="descriptionInput" style="display:none; resize: both;"
                             data-bind="valueWithInit: 'description'"
                             maxlength="2000">${data.description}</textarea>
+=======
+                      <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="descriptionP"><c:out value = "${data.description}"/></p>
+                      <c:if test="${stat.first}">
+                          <input class="stateInput" type="text" name="description" id="descriptionInput" style="display:none" value="<c:out value = "${data.description}"/>">
+>>>>>>> master
                       </c:if>
                   </div>
                   <div class="help-block with-errors"></div>
@@ -106,20 +112,32 @@
                       <div class="form-group">
                           <label for="positionNameInput" class="control-label col-sm-4"><spring:message code="statehistory.field.position"/></label>
                           <div class="col-sm-8">
+<<<<<<< HEAD
                               <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="positionNameP">${data.position.name}</p>
                               <c:if test="${stat.first}">
                                   <input class="stateInput" type="text" name="position.name" id="positionNameInput" style="display:none" value="${data.position.name}"
                                     data-bind="valueWithInit: 'name'">
+=======
+                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="positionNameP"><c:out value = "${data.position.name}"/></p>
+                              <c:if test="${stat.first}">
+                                  <input class="stateInput" type="text" name="position.name" id="positionNameInput" style="display:none" value="<c:out value = "${data.position.name}"/>">
+>>>>>>> master
                               </c:if>
                           </div>
                       </div>
                       <div class="form-group">
                           <label for="channelNameInput" class="control-label col-sm-4"><spring:message code="statehistory.field.channel"/></label>
                           <div class="col-sm-8">
+<<<<<<< HEAD
                               <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="channelNameP">${data.channel.name}</p>
                               <c:if test="${stat.first}">
                                   <input class="stateInput" type="text" name="channel.name" id="channelNameInput" style="display:none" value="${data.channel.name}"
                                     data-bind="valueWithInit: 'channelName'">
+=======
+                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="channelNameP"><c:out value = "${data.channel.name}"/></p>
+                              <c:if test="${stat.first}">
+                                  <input class="stateInput" type="text" name="channel.name" id="channelNameInput" style="display:none" value="<c:out value = "${data.channel.name}"/>">
+>>>>>>> master
                               </c:if>
                           </div>
                       </div>

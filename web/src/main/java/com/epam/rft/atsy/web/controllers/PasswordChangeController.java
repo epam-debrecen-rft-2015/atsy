@@ -10,7 +10,6 @@ import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
 import com.epam.rft.atsy.service.security.UserDetailsAdapter;
 import com.epam.rft.atsy.web.CurrentUser;
 import com.epam.rft.atsy.web.mapper.PasswordValidationRuleMapper;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +22,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Date;
-
 import javax.annotation.Resource;
 
+/**
+ * Controller for the password change page.
+ */
 @Controller
 @RequestMapping(path = "/secure/password/manage")
 public class PasswordChangeController {
@@ -53,11 +54,23 @@ public class PasswordChangeController {
 
   BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
+  /**
+   * Loads the password change page.
+   * @return a ModelAndView object which contains the name of the page to be loaded
+   */
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView loadPage() {
     return new ModelAndView(VIEW_NAME);
   }
 
+  /**
+   * Changes the password of the user who is currently logged in.
+   * @param passwordChangeDTO an object which contains the user input from the password change form
+   * @param bindingResult an object used to check if any error occurs
+   * @param userDetailsAdapter contains the data of the user who is currently logged in
+   * @return a ModelAndView object which contains the name of the page to be loaded and additional
+   * information about the password change
+   */
   @RequestMapping(method = RequestMethod.POST)
   public ModelAndView changePassword(@ModelAttribute PasswordChangeDTO passwordChangeDTO,
                                      BindingResult bindingResult,

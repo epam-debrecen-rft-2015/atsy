@@ -10,6 +10,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * Represents the state of the candidate during the application process, in the database.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
