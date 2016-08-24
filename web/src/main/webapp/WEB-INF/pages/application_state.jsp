@@ -265,9 +265,10 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.dayOfStart"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="dayOfStartP">${data.dayOfStart}</p>
+                              <fmt:formatDate value="${data.dayOfStart}" type="date" pattern="yyyy-MM-dd" var="formattedDayOfStart"/>
+                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="dayOfStartP">${formattedDayOfStart}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="dayOfStart" id="dayOfStartInput" style="display:none" value="${data.dayOfStart}"
+                                  <input class="stateInput" type="date" name="dayOfStart" id="dayOfStartInput" style="display:none" value="${formattedDayOfStart}"
                                   data-bind="valueWithInit: 'dayOfStart'">
                               </c:if>
                           </div>

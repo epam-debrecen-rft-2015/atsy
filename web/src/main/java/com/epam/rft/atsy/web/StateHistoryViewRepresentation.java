@@ -4,6 +4,7 @@ import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 
+import java.util.Date;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -54,7 +55,7 @@ public class StateHistoryViewRepresentation {
   @Min(value = 0, message = "statehistory.error.claim.negative")
   private Long claim;
 
-  private String dayOfStart;
+  private Date dayOfStart;
 
   private String stateFullName;
 

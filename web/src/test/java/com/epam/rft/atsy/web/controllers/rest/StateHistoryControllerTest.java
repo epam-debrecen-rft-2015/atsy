@@ -132,7 +132,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .result(RESULT)
         .offeredMoney(OFFERED_MONEY)
         .claim(CLAIM)
-        .dayOfStart(DAY_OF_START_STRING)
+        //.dayOfStart(DAY_OF_START_STRING)
         .stateFullName(STATE_FULL_NAME)
         .stateId(STATE_ID)
         .stateName(STATE_NAME)
