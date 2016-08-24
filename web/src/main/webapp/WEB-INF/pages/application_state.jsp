@@ -70,7 +70,7 @@
           <form data-toggle="validator" class="form form-horizontal" role="form" method="POST" id="create-state-form" action="#">
               <c:if test="${stat.first}">
                 <input type="hidden" name="id" value="${data.id}" data-bind="valueWithInit: 'id'"/>
-                <input type="hidden" name="stateId" value="${data.stateId}" data-bind="valueWithInit: 'stateId'"/>
+                <input type="hidden" id="stateId" name="stateId" value="${data.stateId}" data-bind="valueWithInit: 'stateId'"/>
               </c:if>
 
               <div class="form-group col-sm-12 col-md-12 col-lg-12">
@@ -108,8 +108,8 @@
                               <spring:message code="statehistory.field.position"/>
                           </label>
                           <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="dropSource">
-                              <select class="input form-control" name="position" id="position" data-bind="valueWithInit: 'positionName'">
-                                  <option value="${data.positionName}" selected disabled>
+                              <select class="input form-control" name="positionSelector" id="positionSelector" data-bind="valueWithInit: 'positionName'" disabled="disabled">
+                                  <option selected disabled value="${data.positionName}">
                                       <c:out value="${data.positionName}"/>
                                   </option>
                               </select>
@@ -120,13 +120,13 @@
                           <label id="sourceLabel" class="control-label col-lg-4 col-md-4 col-sm-4 text-right">
                               <spring:message code="statehistory.field.channel"/>
                           </label>
-
                           <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="dropSource">
-                              <select class="input form-control" name="channel" id="channel" data-bind="valueWithInit: 'channelName'">
-                                  <option value="${data.channelName}" selected disabled>
+                              <select class="input form-control" name="channelSelector" id="channelSelector" data-bind="valueWithInit: 'channelName'" disabled="disabled">
+                                  <option selected disabled value="${data.channelName}">
                                       <c:out value="${data.channelName}"/>
                                   </option>
                               </select>
+
                           </div>
                       </div>
                   </c:when>
