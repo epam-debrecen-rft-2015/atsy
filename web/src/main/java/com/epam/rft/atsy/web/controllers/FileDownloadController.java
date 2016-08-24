@@ -1,8 +1,9 @@
 package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.CandidateService;
-import com.epam.rft.atsy.web.util.FileUploadingUtil;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.annotation.Resource;
-
 @Controller
 public class FileDownloadController {
   private static final String CONTENT_DISPOSITION = "Content-Disposition";
@@ -32,7 +31,10 @@ public class FileDownloadController {
   private static final String FILE_ERROR_MESSAGE_KEY = "file.not.exists.anymore";
   private static final String REDIRECT_CANDIDATE_PAGE = "redirect:/secure/candidate";
 
-  @Resource
+  @Value("${upload_location_cv}")
+  private String uploadLocation;
+
+  @Autowired
   private CandidateService candidateService;
 
 
@@ -45,7 +47,7 @@ public class FileDownloadController {
     if (fileName != null) {
 
       try {
-        File file = new File(FileUploadingUtil.UPLOAD_LOCATION + File.separator + fileName);
+        File file = new File(uploadLocation + File.separator + fileName);
         InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
         InputStreamResource inputStreamResource = new InputStreamResource(inputStream);
 

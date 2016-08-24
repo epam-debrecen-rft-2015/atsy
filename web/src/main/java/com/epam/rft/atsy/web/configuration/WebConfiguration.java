@@ -41,12 +41,12 @@ import javax.annotation.PostConstruct;
 public class WebConfiguration extends DelegatingWebMvcConfiguration {
 
   @Value("${upload_location_cv}")
-  private String uploadLocationValue;
+  private String uploadLocation;
   public static String UPLOAD_LOCATION;
 
   @PostConstruct
   public void init() {
-    UPLOAD_LOCATION = uploadLocationValue;
+    UPLOAD_LOCATION = uploadLocation;
     File folder = new File(UPLOAD_LOCATION);
     if (!folder.exists()) {
       folder.mkdir();
@@ -120,7 +120,7 @@ public class WebConfiguration extends DelegatingWebMvcConfiguration {
     exceptionResolvers.add(1, new UncheckedExceptionResolver(mappingJackson2JsonView()));
   }
 
-  @Bean(name = "multipartResolver")
+  @Bean()
   public CommonsMultipartResolver multipartResolver() {
     return new CommonsMultipartResolver();
   }

@@ -7,10 +7,10 @@ import com.epam.rft.atsy.service.exception.file.FileValidationException;
 import com.epam.rft.atsy.web.mapper.FileValidationRuleMapper;
 import com.epam.rft.atsy.web.model.file.FileBucket;
 import com.epam.rft.atsy.web.model.file.FileStatus;
-import com.epam.rft.atsy.web.util.FileUploadingUtil;
 import com.epam.rft.atsy.web.validator.FileValidator;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.annotation.Validated;
@@ -36,6 +36,9 @@ public class FileUploadController {
   private static final String VALIDATION_ERROR_KEY = "validationErrorKey";
   private static final String VALIDATION_FILE_SUCCESS = "file.validation.success";
   private static final String FILE = "file";
+
+  @Value("${upload_location_cv}")
+  private String uploadLocation;
 
   @Autowired
   private FileValidator fileValidator;
@@ -83,7 +86,7 @@ public class FileUploadController {
   }
 
   private File createFile(String fileName) throws FileAlreadyExistsValidationException {
-    String fileNameWithFullPath = FileUploadingUtil.UPLOAD_LOCATION + File.separator + fileName;
+    String fileNameWithFullPath = uploadLocation + File.separator + fileName;
     File file = new File(fileNameWithFullPath);
     if (file.exists()) {
       throw new FileAlreadyExistsValidationException();
