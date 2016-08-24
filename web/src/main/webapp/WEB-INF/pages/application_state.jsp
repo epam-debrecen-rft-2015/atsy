@@ -76,10 +76,11 @@
                   <div class="col-sm-8">
                       <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="creationDateP">${data.creationDate}</p>
                       <c:if test="${stat.first}">
-                          <input class="stateInput" type="text" name="creationDate" id="creationDateInput" style="display:none" value="${data.creationDate}"
+                          <spring:message code="statehistory.error.parse.date" var="errorParseDateMessage" />
+                          <input class="stateInput hidden" type="text" name="creationDate" id="creationDateInput" value="${data.creationDate}"
                             data-bind="valueWithInit: 'creationDate'"
                             data-formatter="creationDateFormatter"
-                            data-error="<spring:message code="statehistory.error.parse.date"/>"
+                            data-error="${errorParseDateMessage}"
                             pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$">
                       </c:if>
                   </div>
@@ -90,7 +91,7 @@
                   <div class="col-sm-8">
                       <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="descriptionP">${data.description}</p>
                       <c:if test="${stat.first}">
-                          <input class="stateInput" type="text" name="description" id="descriptionInput" style="display:none" value="${data.description}"
+                          <input class="stateInput hidden" type="text" name="description" id="descriptionInput" value="${data.description}"
                             data-bind="valueWithInit: 'description'">
                       </c:if>
                   </div>
@@ -102,7 +103,7 @@
                           <div class="col-sm-8">
                               <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="positionNameP">${data.position.name}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="position.name" id="positionNameInput" style="display:none" value="${data.position.name}"
+                                  <input class="stateInput hidden" type="text" name="position.name" id="positionNameInput" value="${data.position.name}"
                                     data-bind="valueWithInit: 'name'">
                               </c:if>
                           </div>
@@ -112,7 +113,7 @@
                           <div class="col-sm-8">
                               <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="channelNameP">${data.channel.name}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="channel.name" id="channelNameInput" style="display:none" value="${data.channel.name}"
+                                  <input class="stateInput hidden" type="text" name="channel.name" id="channelNameInput" value="${data.channel.name}"
                                     data-bind="valueWithInit: 'channelName'">
                               </c:if>
                           </div>
@@ -132,8 +133,9 @@
                           <div class="col-sm-8">
                               <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="languageSkillP">${data.languageSkill}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="number" name="languageSkill" id="languageSkillInput" style="display:none" value="${data.languageSkill}"
-                                  data-error="<spring:message code="candidate.error.language.incorrect"/>"
+                                  <spring:message code="candidate.error.language.incorrect" var="errorLanguageIncorrectMessage" />
+                                  <input class="stateInput hidden" type="number" name="languageSkill" id="languageSkillInput" value="${data.languageSkill}"
+                                  data-error="${errorLanguageIncorrectMessage}"
                                   data-bind="valueWithInit: 'languageSkill'"
                                   max="10" min="0">
                               </c:if>
@@ -147,7 +149,7 @@
                           <div class="col-sm-8">
                               <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="resultP" >${data.result}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="result" id="resultInput" style="display:none" value="${data.result}"
+                                  <input class="stateInput hidden" type="text" name="result" id="resultInput" value="${data.result}"
                                     data-bind="valueWithInit: 'result'">
                               </c:if>
                           </div>
@@ -159,8 +161,9 @@
                           <div class="col-sm-8">
                               <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="offeredMoneyP">${data.offeredMoney}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="number" name="offeredMoney" id="offeredMoneyInput" style="display:none" value="${data.offeredMoney}"
-                                  data-error="<spring:message code="statehistory.error.offeredMoney.negative"/>"
+                                  <spring:message code="statehistory.error.offeredMoney.negative" var="errorOfferedMoneyNegative" />
+                                  <input class="stateInput hidden" type="number" name="offeredMoney" id="offeredMoneyInput" value="${data.offeredMoney}"
+                                  data-error="${errorOfferedMoneyNegative}"
                                   data-bind="valueWithInit: 'offeredMoney'"
                                   min="0">
                               </c:if>
@@ -172,8 +175,9 @@
                           <div class="col-sm-8">
                               <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="claimP">${data.claim}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="number" name="claim" id="claimInput" style="display:none" value="${data.claim}"
-                                  data-error="<spring:message code="statehistory.error.claim.negative"/>"
+                                  <spring:message code="statehistory.error.claim.negative" var="errorClaimNegativeMessage" />
+                                  <input class="stateInput hidden" type="number" name="claim" id="claimInput" value="${data.claim}"
+                                  data-error="${errorClaimNegativeMessage}"
                                   data-bind="valueWithInit: 'claim'"
                                   min="0">
                               </c:if>
@@ -185,8 +189,9 @@
                           <div class="col-sm-8">
                               <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="feedbackDateP">${data.feedbackDate}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="feedbackDate" id="feedbackDateInput" style="display:none" value="${data.feedbackDate}"
-                                  data-error="<spring:message code="statehistory.error.parse.date"/>"
+                                  <spring:message code="statehistory.error.parse.date" var="errorParseDateMessage" />
+                                  <input class="stateInput hidden" type="text" name="feedbackDate" id="feedbackDateInput" value="${data.feedbackDate}"
+                                  data-error="${errorParseDateMessage}"
                                   data-bind="valueWithInit: 'feedbackDate'"
                                   pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$">
                               </c:if>
@@ -200,7 +205,7 @@
                           <div class="col-sm-8">
                               <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="dayOfStartP">${data.dayOfStart}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="dayOfStart" id="dayOfStartInput" style="display:none" value="${data.dayOfStart}"
+                                  <input class="stateInput hidden" type="text" name="dayOfStart" id="dayOfStartInput" value="${data.dayOfStart}"
                                   data-bind="valueWithInit: 'dayOfStart'">
                               </c:if>
                           </div>
@@ -208,10 +213,10 @@
                   </c:when>
               </c:choose>
               <c:if test="${stat.first}">
-                  <button type="submit" class="btn btn-success stateInput" style="display:none">
+                  <button type="submit" class="btn btn-success stateInput hidden">
                       <spring:message code="save.button"/>
                   </button>
-                  <button type="reset" class="btn btn-danger stateInput" style="display:none" onclick="cancelButtonOnClick()">
+                  <button type="reset" class="btn btn-danger stateInput hidden" onclick="cancelButtonOnClick()">
                       <spring:message code="cancel.button"/>
                   </button>
               </c:if>
