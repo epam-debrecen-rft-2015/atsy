@@ -43,7 +43,7 @@ public class FileDownloadController {
   public Object download(@PathVariable("candidateId") Long candidateId, RedirectAttributes redirectAttrs)
       throws Exception {
 
-    String fileName = candidateService.getCVPathByCandidateId(candidateId);
+    String fileName = candidateService.getCvFilenameById(candidateId);
     if (fileName != null) {
 
       try {

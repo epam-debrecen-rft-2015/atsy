@@ -31,5 +31,5 @@ public interface CandidateService {
    */
   Long saveOrUpdate(CandidateDTO candidate);
 
-  String getCVPathByCandidateId(Long candidateId);
+  String getCvFilenameById(Long candidateId);
 }

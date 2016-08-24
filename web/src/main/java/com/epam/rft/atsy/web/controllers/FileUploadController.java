@@ -71,7 +71,7 @@ public class FileUploadController {
           FileStatus.FILE_ALREADY_EXISTS);
 
       CandidateDTO candidateDTO = candidateService.getCandidate(candidateId);
-      candidateDTO.setCvPath(fileName);
+      candidateDTO.setCvFilename(fileName);
       candidateService.saveOrUpdate(candidateDTO);
 
     } catch (FileValidationException e) {

@@ -62,6 +62,14 @@ public class CandidateServiceImpl implements CandidateService {
     return modelMapper.map(candidateEntities, CANDIDATEDTO_LIST_TYPE);
   }
 
+  @Transactional(readOnly = true)
+  @Override
+  public String getCvFilenameById(Long candidateId) {
+    CandidateDTO candidateDTO = this.getCandidate(candidateId);
+    Assert.notNull(candidateDTO);
+    return candidateDTO.getCvFilename();
+  }
+
   @Transactional
   @Override
   public Long saveOrUpdate(CandidateDTO candidate) {
@@ -76,13 +84,6 @@ public class CandidateServiceImpl implements CandidateService {
 
       throw new DuplicateCandidateException(candidateName, ex);
     }
-  }
-
-  @Override
-  public String getCVPathByCandidateId(Long candidateId) {
-    CandidateDTO candidateDTO = this.getCandidate(candidateId);
-    Assert.notNull(candidateDTO);
-    return candidateDTO.getCvPath();
   }
 
   /**

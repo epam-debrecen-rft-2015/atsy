@@ -29,7 +29,6 @@ public class FileValidatorImpl implements FileValidator {
   private static final Collection<String> EXTENSIONS =
       Arrays.asList(EXTENSION_DOC, EXTENSION_DOCX, EXTENSION_ODT, EXTENSION_PDF);
 
-
   private Pattern pattern;
   private Matcher matcher;
 

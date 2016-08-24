@@ -38,11 +38,11 @@ public class SingleCandidateController {
 
       String candidateCvPath = null;
       if (candidateDTO.getId() != null) {
-        candidateCvPath = candidateService.getCVPathByCandidateId(candidateDTO.getId());
+        candidateCvPath = candidateService.getCvFilenameById(candidateDTO.getId());
       }
 
       if (candidateCvPath != null) {
-        candidateDTO.setCvPath(candidateCvPath);
+        candidateDTO.setCvFilename(candidateCvPath);
       }
 
       Long candidateId = candidateService.saveOrUpdate(candidateDTO);

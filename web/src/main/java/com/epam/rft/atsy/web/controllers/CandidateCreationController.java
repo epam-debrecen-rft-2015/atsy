@@ -34,7 +34,7 @@ public class CandidateCreationController {
 
     String candidateCvPath = null;
     if (candidateId != null) {
-      candidateCvPath = candidateService.getCVPathByCandidateId(candidateId);
+      candidateCvPath = candidateService.getCvFilenameById(candidateId);
     }
 
     if (candidateCvPath == null) {
