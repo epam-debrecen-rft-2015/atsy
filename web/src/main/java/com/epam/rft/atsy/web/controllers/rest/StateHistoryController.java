@@ -6,7 +6,6 @@ import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.web.FieldErrorResponseComposer;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -33,9 +32,6 @@ public class StateHistoryController {
 
   @Resource
   private StatesHistoryService statesHistoryService;
-
-  @Resource
-  private MessageSource messageSource;
 
   @Resource
   private FieldErrorResponseComposer fieldErrorResponseComposer;

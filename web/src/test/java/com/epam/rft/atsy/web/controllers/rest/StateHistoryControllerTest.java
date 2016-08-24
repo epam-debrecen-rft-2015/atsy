@@ -5,7 +5,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -14,20 +13,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+import com.epam.rft.atsy.web.FieldErrorResponseComposer;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
 import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
+import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Locale;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StateHistoryControllerTest extends AbstractControllerTest {
@@ -73,15 +75,21 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
   private static final String CREATION_DATE_STRING = "2016-08-15 14:00:00";
 
-  private static final Date CREATION_DATE = new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
+  private static final Date
+      CREATION_DATE =
+      new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
 
   private static final String FEEDBACK_DATE_STRING = "2016-08-15 14:00:00";
 
-  private static final Date FEEDBACK_DATE = new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
+  private static final Date
+      FEEDBACK_DATE =
+      new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
 
   private static final String DAY_OF_START_STRING = "2016-08-15 14:00:00";
 
-  private static final Date DAY_OF_START = new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
+  private static final Date
+      DAY_OF_START =
+      new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
 
   private static final Short LANGUAGE_SKILL = 10;
 
@@ -105,7 +113,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   private StatesHistoryService statesHistoryService;
 
   @Mock
-  private MessageSource messageSource;
+  private FieldErrorResponseComposer fieldErrorResponseComposer;
 
   @InjectMocks
   private StateHistoryController stateHistoryController;
@@ -118,9 +126,6 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   @Override
   public void setUp() {
     super.setUp();
-
-    given(messageSource.getMessage(anyString(), any(Object[].class), any(Locale.class)))
-        .willAnswer(i -> i.getArgumentAt(0, String.class));
 
     dummyStateHistory = StateHistoryViewRepresentation.builder()
         .id(ID)
@@ -163,6 +168,9 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
     StateHistoryViewRepresentation stateHistoryViewRepresentation =
         StateHistoryViewRepresentation.builder().creationDate(MALFORMED_DATE).build();
 
+    given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
+        .willReturn(composeResponseFromField("creationDate", DATE_PARSE_ERROR_MESSAGE_KEY));
+
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage").value(COMMON_INVALID_INPUT_MESSAGE_KEY))
@@ -175,6 +183,9 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   public void saveOrUpdateShouldRespondWithErrorJSONWhenFeedbackDateIsMalformed() throws Exception {
     StateHistoryViewRepresentation stateHistoryViewRepresentation =
         StateHistoryViewRepresentation.builder().feedbackDate(MALFORMED_DATE).build();
+
+    given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
+        .willReturn(composeResponseFromField("feedbackDate", DATE_PARSE_ERROR_MESSAGE_KEY));
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
@@ -189,6 +200,10 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
     StateHistoryViewRepresentation stateHistoryViewRepresentation =
         StateHistoryViewRepresentation.builder().languageSkill(LOWER_LANGUAGE_SKILL).build();
 
+    given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
+        .willReturn(
+            composeResponseFromField("languageSkill", LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
+
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage").value(COMMON_INVALID_INPUT_MESSAGE_KEY))
@@ -201,6 +216,10 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   public void saveOrUpdateShouldRespondWithErrorJSONWhenLanguageSkillIsHigher() throws Exception {
     StateHistoryViewRepresentation stateHistoryViewRepresentation =
         StateHistoryViewRepresentation.builder().languageSkill(HIGHER_LANGUAGE_SKILL).build();
+
+    given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
+        .willReturn(
+            composeResponseFromField("languageSkill", LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
@@ -215,6 +234,9 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
     StateHistoryViewRepresentation stateHistoryViewRepresentation =
         StateHistoryViewRepresentation.builder().claim(NEGATIVE_CLAIM).build();
 
+    given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
+        .willReturn(composeResponseFromField("claim", CLAIM_NEGATIVE_MESSAGE_KEY));
+
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage").value(COMMON_INVALID_INPUT_MESSAGE_KEY))
@@ -227,6 +249,9 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   public void saveOrUpdateShouldRespondWithErrorJSONWhenOfferedMoneyIsNegative() throws Exception {
     StateHistoryViewRepresentation stateHistoryViewRepresentation =
         StateHistoryViewRepresentation.builder().offeredMoney(NEGATIVE_OFFERED_MONEY).build();
+
+    given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
+        .willReturn(composeResponseFromField("offeredMoney", OFFERED_MONEY_NEGATIVE_MESSAGE_KEY));
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
@@ -244,8 +269,19 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
     ArgumentCaptor<StateHistoryDTO> historyCaptor = ArgumentCaptor.forClass(StateHistoryDTO.class);
 
-    then(statesHistoryService).should().saveStateHistory(historyCaptor.capture(), eq(APPLICATION_ID));
+    then(statesHistoryService).should()
+        .saveStateHistory(historyCaptor.capture(), eq(APPLICATION_ID));
 
     assertThat(historyCaptor.getValue(), equalTo(dummyStateHistoryDto));
+  }
+
+
+  private ResponseEntity<RestResponse> composeResponseFromField(String fieldName,
+                                                                String fieldValue) {
+    RestResponse restResponse = new RestResponse(COMMON_INVALID_INPUT_MESSAGE_KEY);
+
+    restResponse.addField(fieldName, fieldValue);
+
+    return new ResponseEntity<>(restResponse, HttpStatus.BAD_REQUEST);
   }
 }
