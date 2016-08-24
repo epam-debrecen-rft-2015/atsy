@@ -3,6 +3,7 @@ package com.epam.rft.atsy.web.controllers.rest;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+import com.epam.rft.atsy.web.FieldErrorResponseComposer;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
 import org.springframework.context.MessageSource;
@@ -28,8 +29,6 @@ public class StateHistoryController {
 
   private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
 
-  private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
-
   private final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
   @Resource
@@ -37,6 +36,9 @@ public class StateHistoryController {
 
   @Resource
   private MessageSource messageSource;
+
+  @Resource
+  private FieldErrorResponseComposer fieldErrorResponseComposer;
 
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity saveOrUpdate(@RequestParam Long applicationId,
@@ -46,18 +48,7 @@ public class StateHistoryController {
     StateHistoryDTO stateHistoryDTO = null;
 
     if (bindingResult.hasErrors()) {
-      String
-          invalidInputMessage =
-          messageSource.getMessage(COMMON_INVALID_INPUT_MESSAGE_KEY, null, locale);
-
-      RestResponse restResponse = new RestResponse(invalidInputMessage);
-
-      bindingResult.getFieldErrors().forEach(error -> {
-        restResponse.addField(error.getField(), messageSource.getMessage(error.getDefaultMessage(),
-            new Object[0], locale));
-      });
-
-      return new ResponseEntity<>(restResponse, HttpStatus.BAD_REQUEST);
+      return fieldErrorResponseComposer.composeResponse(bindingResult);
     } else {
       try {
         stateHistoryDTO = StateHistoryDTO.builder()
@@ -82,8 +73,9 @@ public class StateHistoryController {
             .build();
 
       } catch (ParseException e) {
-        //TODO: what should we do about this?
-        e.printStackTrace();
+        RestResponse restResponse = new RestResponse(e.getMessage());
+
+        return new ResponseEntity<>(restResponse, HttpStatus.BAD_REQUEST);
       }
 
       statesHistoryService.saveStateHistory(stateHistoryDTO, applicationId);
