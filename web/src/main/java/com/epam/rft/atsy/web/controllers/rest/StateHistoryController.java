@@ -30,6 +30,8 @@ public class StateHistoryController {
 
   private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
 
+  private final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
+
   @Resource
   private StatesHistoryService statesHistoryService;
 
@@ -40,8 +42,6 @@ public class StateHistoryController {
   public ResponseEntity saveOrUpdate(@RequestParam Long applicationId,
                                      @Valid @RequestBody StateHistoryViewRepresentation stateHistoryViewRepresentation,
                                      BindingResult bindingResult, Locale locale) {
-
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
     StateHistoryDTO stateHistoryDTO = null;
 
@@ -69,13 +69,13 @@ public class StateHistoryController {
             .offeredMoney(stateHistoryViewRepresentation.getOfferedMoney())
             .claim(stateHistoryViewRepresentation.getClaim())
             .feedbackDate(stateHistoryViewRepresentation.getFeedbackDate() != null
-                && !stateHistoryViewRepresentation.getFeedbackDate().isEmpty() ? simpleDateFormat
+                && !stateHistoryViewRepresentation.getFeedbackDate().isEmpty() ? dateFormat
                 .parse(stateHistoryViewRepresentation.getFeedbackDate()) : null)
             .dayOfStart(stateHistoryViewRepresentation.getDayOfStart() != null
-                && !stateHistoryViewRepresentation.getDayOfStart().isEmpty() ? simpleDateFormat
+                && !stateHistoryViewRepresentation.getDayOfStart().isEmpty() ? dateFormat
                 .parse(stateHistoryViewRepresentation.getDayOfStart()) : null)
             .creationDate(stateHistoryViewRepresentation.getCreationDate() != null
-                && !stateHistoryViewRepresentation.getCreationDate().isEmpty() ? simpleDateFormat
+                && !stateHistoryViewRepresentation.getCreationDate().isEmpty() ? dateFormat
                 .parse(stateHistoryViewRepresentation.getCreationDate()) : null)
             .stateDTO(StateDTO.builder().id(stateHistoryViewRepresentation.getStateId())
                 .name(stateHistoryViewRepresentation.getStateName()).build())
