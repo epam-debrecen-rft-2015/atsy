@@ -15,14 +15,14 @@ import lombok.Getter;
 @Getter
 public enum FileValidationRule {
 
-  FILE_IS_MISSING("file.is.missing", FileIsMissingValidationException.class),
-  FILE_IS_EMPTY("file.is.empty", FileIsEmptyValidationException.class),
-  FILE_IS_TOO_LARGE("file.is.too.large", FileIsTooLargeValidationException.class),
-  FILE_IS_IN_WRONG_EXTENSION("file.is.in.wrong.extension",
+  FILE_IS_MISSING_RULE("file.is.missing", FileIsMissingValidationException.class),
+  FILE_IS_EMPTY_RULE("file.is.empty", FileIsEmptyValidationException.class),
+  FILE_IS_TOO_LARGE_RULE("file.is.too.large", FileIsTooLargeValidationException.class),
+  FILE_IS_IN_WRONG_EXTENSION_RULE("file.is.in.wrong.extension",
       FileIsInWrongExtensionValidationException.class),
-  FILE_CONTAINS_INVALID_CHARACTER("file.contains.invalid.character",
+  FILE_CONTAINS_INVALID_CHARACTER_RULE("file.contains.invalid.character",
       FileContainsInvalidCharacterValidationException.class),
-  FILE_ALREADY_EXISTS("file.already.exists", FileAlreadyExistsValidationException.class);
+  FILE_ALREADY_EXISTS_RULE("file.already.exists", FileAlreadyExistsValidationException.class);
 
   private final String messageKey;
   private final Class exceptionClass;
