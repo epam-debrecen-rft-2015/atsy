@@ -8,7 +8,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
+/**
+ * DTO for PositionEntity
+ * See {@link com.epam.rft.atsy.persistence.entities.PositionEntity}.
+ */
 @Builder
 @Data
 @NoArgsConstructor

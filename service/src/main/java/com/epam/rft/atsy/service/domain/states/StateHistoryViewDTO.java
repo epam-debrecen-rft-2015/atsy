@@ -11,6 +11,11 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 
+/**
+ * Supplies state history information to the view layer. Contains the time when the represented
+ * state was created.
+ * See {@link AbstractStateHistoryDTO AbstractStateHistoryDTO}.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

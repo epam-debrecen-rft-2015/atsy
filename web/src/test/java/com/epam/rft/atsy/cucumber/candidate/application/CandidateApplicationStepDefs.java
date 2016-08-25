@@ -1,4 +1,4 @@
-package com.epam.rft.atsy.cucumber.candidate;
+package com.epam.rft.atsy.cucumber.candidate.application;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -26,7 +26,9 @@ public class CandidateApplicationStepDefs {
 
   private static WebDriver webDriver = DriverProvider.getDriver();
   private static final String CANDIDATE_PAGE_URL = "http://localhost:8080/atsy/secure/candidate/3";
-  private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss");
+  private static final SimpleDateFormat
+      SIMPLE_DATE_FORMAT =
+      new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss");
 
   private static final String APPLICATIONS_TABLE_ID = "applications_table";
   private static final String POSITION_NAME = "Fejlesztő";
@@ -53,7 +55,8 @@ public class CandidateApplicationStepDefs {
   }
 
   @Then("^the Application list displays and order by last modification date and time desc$")
-  public void the_application_list_displays_and_order_by_last_modification_date_and_time_desc() throws ParseException {
+  public void the_application_list_displays_and_order_by_last_modification_date_and_time_desc()
+      throws ParseException {
 
     isSortedCandidateApplicationDTOListByModificationDate(
         getCandidateApplicationDTOListFromTableByTableId(APPLICATIONS_TABLE_ID));
@@ -61,10 +64,8 @@ public class CandidateApplicationStepDefs {
 
   @And("^each application has valid values$")
   public void each_application_has_valid_values() throws ParseException {
-
     assertThat(getCandidateApplicationDTOListFromTableByTableId(APPLICATIONS_TABLE_ID),
         equalTo(getExpectedCandidateApplicationDTOList()));
-
   }
 
   private Integer getNumberOfRowsInTableByTableId(String tableId) {
@@ -153,6 +154,4 @@ public class CandidateApplicationStepDefs {
     }
     return true;
   }
-
-
 }

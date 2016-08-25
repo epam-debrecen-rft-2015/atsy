@@ -16,7 +16,7 @@
   <jsp:body>
       <div class="page-header">
           <h1><spring:message code="application.state.title"/>
-              <small id="positionName">${states[0].position.name}</small>
+              <small id="positionName"><c:out value = "${states[0].position.name}"/></small>
           </h1>
       </div>
 
@@ -60,7 +60,7 @@
 
       <div id="stateList">
       <c:forEach var="data" items="${states}" varStatus="stat">
-          <fmt:parseDate pattern="yyyy-MM-dd HH:mm:ss" value="${data.creationDate}" var="parsedCreationDate" />
+          <fmt:parseDate pattern="yyyy-MM-dd HH:mm" value="${data.creationDate}" var="parsedCreationDate" />
           <div class="page-header">
               <h4 class="col-sm-6 col-md-6 col-lg-6">${data.stateFullName}</h4>
               <c:if test="${stat.first}">
@@ -93,11 +93,11 @@
               <div class="form-group">
                   <label for="descriptionInput" class="control-label col-sm-4"><spring:message code="statehistory.field.description"/></label>
                   <div class="col-sm-8">
-                      <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.description}</p>
+                      <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value = "${data.description}"/></p>
                       <c:if test="${stat.first}">
                           <textarea class="stateInput hidden resizeable" wrap="soft" name="description" id="descriptionInput"
                             data-bind="valueWithInit: 'description'"
-                            maxlength="2000">${data.description}</textarea>
+                            maxlength="2000"><c:out value = "${data.description}"/></textarea>
                       </c:if>
                   </div>
                   <div class="help-block with-errors"></div>
@@ -108,9 +108,9 @@
                       <div class="form-group">
                           <label for="positionNameInput" class="control-label col-sm-4"><spring:message code="statehistory.field.position"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.position.name}</p>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value = "${data.position.name}"/></p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput hidden" type="text" name="position.name" id="positionNameInput" value="${data.position.name}"
+                                  <input class="stateInput hidden" type="text" name="position.name" id="positionNameInput" value="<c:out value = "${data.position.name}"/>"
                                     data-bind="valueWithInit: 'name'">
                               </c:if>
                           </div>
@@ -118,9 +118,9 @@
                       <div class="form-group">
                           <label for="channelNameInput" class="control-label col-sm-4"><spring:message code="statehistory.field.channel"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.channel.name}</p>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value = "${data.channel.name}"/></p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput hidden" type="text" name="channel.name" id="channelNameInput" value="${data.channel.name}"
+                                  <input class="stateInput hidden" type="text" name="channel.name" id="channelNameInput" value="<c:out value = "${data.channel.name}"/>"
                                     data-bind="valueWithInit: 'channelName'">
                               </c:if>
                           </div>
@@ -142,7 +142,7 @@
                               <c:if test="${stat.first}">
                                   <spring:message code="candidate.error.language.incorrect" var="errorLanguageIncorrectMessage"/>
 
-                                  <input class="stateInput hidden" type="number" name="languageSkill" id="languageSkillInput"  value="${data.languageSkill}"
+                                  <input class="stateInput hidden" type="number" name="languageSkill" id="languageSkillInput" value="${data.languageSkill}"
                                   data-error="${errorLanguageIncorrectMessage}"
                                   data-bind="valueWithInit: 'languageSkill'"
                                   max="10" min="0">

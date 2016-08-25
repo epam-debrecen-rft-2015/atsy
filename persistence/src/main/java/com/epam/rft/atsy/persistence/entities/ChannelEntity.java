@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 
+/**
+ * This entity class represents how the candidate was found, how he got in touch with the company.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
