@@ -5,23 +5,18 @@ import com.epam.rft.atsy.service.StateFlowService;
 import com.epam.rft.atsy.service.StateService;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
-import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.annotation.Resource;
-import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -104,49 +99,5 @@ public class ApplicationStateController {
             stateHistoryViewRepresentations.get(0).getStateName())));
     modelAndView.addObject(STATES_OBJECT_KEY, stateHistoryViewRepresentations);
     return modelAndView;
-  }
-
-  /**
-   * This method is used to save new states or update the information of the latest state.
-   * @param applicationId identifier of the application whose states are viewed and edited
-   * @param stateHistoryViewRepresentation this attribute contains all the state information of the
-   * given application
-   * @return a ModelAndView object filled with the data to stay on the same page and view the states
-   * of the same application, but including the latest modification
-   */
-  @RequestMapping(method = RequestMethod.POST)
-  public ModelAndView saveOrUpdate(@RequestParam Long applicationId,
-                                   @Valid @ModelAttribute StateHistoryViewRepresentation stateHistoryViewRepresentation) {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
-    StateHistoryDTO stateHistoryDTO = null;
-
-    try {
-      stateHistoryDTO = StateHistoryDTO.builder()
-          .id(stateHistoryViewRepresentation.getId())
-          .languageSkill(stateHistoryViewRepresentation.getLanguageSkill())
-          .description(stateHistoryViewRepresentation.getDescription())
-          .result(stateHistoryViewRepresentation.getResult())
-          .offeredMoney(stateHistoryViewRepresentation.getOfferedMoney())
-          .claim(stateHistoryViewRepresentation.getClaim())
-          .feedbackDate(stateHistoryViewRepresentation.getFeedbackDate() != null
-              && !stateHistoryViewRepresentation.getFeedbackDate().isEmpty() ? simpleDateFormat
-              .parse(stateHistoryViewRepresentation.getFeedbackDate()) : null)
-          .dayOfStart(stateHistoryViewRepresentation.getDayOfStart() != null
-              && !stateHistoryViewRepresentation.getDayOfStart().isEmpty() ? simpleDateFormat
-              .parse(stateHistoryViewRepresentation.getDayOfStart()) : null)
-          .creationDate(stateHistoryViewRepresentation.getCreationDate() != null
-              && !stateHistoryViewRepresentation.getCreationDate().isEmpty() ? simpleDateFormat
-              .parse(stateHistoryViewRepresentation.getCreationDate()) : null)
-          .stateDTO(StateDTO.builder().id(stateHistoryViewRepresentation.getStateId())
-              .name(stateHistoryViewRepresentation.getStateName()).build())
-          .build();
-
-    } catch (ParseException e) {
-      log.error(ApplicationStateController.class.getName(), e);
-    }
-
-    statesHistoryService.saveStateHistory(stateHistoryDTO, applicationId);
-
-    return new ModelAndView("redirect:/secure/application_state?applicationId=" + applicationId);
   }
 }

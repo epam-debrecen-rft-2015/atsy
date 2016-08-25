@@ -2,16 +2,10 @@ package com.epam.rft.atsy.web.controllers;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -21,7 +15,6 @@ import com.epam.rft.atsy.service.StateService;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateFlowDTO;
-import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
@@ -31,9 +24,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.modelmapper.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,15 +35,12 @@ import java.util.List;
 public class ApplicationStateControllerTest extends AbstractControllerTest {
 
   private static final String REQUEST_URL = "/secure/application_state";
-  private static final String REDIRECT_URL = "/secure/application_state?applicationId=1";
   private static final String STATE_FLOW_OBJECT_KEY = "stateflows";
   private static final String STATES_OBJECT_KEY = "states";
   private static final String APPLICATION_STATE = "candidate.table.state.";
   private static final String ERROR_VIEW_NAME = "error";
 
   private static final String PARAM_APPLICATION_ID = "applicationId";
-  private static final String PARAM_STATE_ID = "stateId";
-  private static final String PARAM_CREATION_DATE = "creationDate";
   private static final String PARAM_CLICKED_STATE = "state";
   private static final String TEXT = "text";
 
@@ -65,8 +53,6 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   private static final String STATE_NAME_NEW_APPLY = "New apply";
   private static final String STATE_NAME_CV = "CV";
   private static final String STATE_NAME_CODING = "Coding";
-  private static final String CREATION_DATE_AS_STRING = "2016-08-12 15:00:00";
-
 
   private StateDTO
       stateDTOWithStateNameNewApply =
@@ -119,12 +105,6 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
       new LinkedList<>(Arrays.asList(expectedThirdStateHistoryViewRepresentation,
           expectedSecondStateHistoryViewRepresentation,
           expectedFirstStateHistoryViewRepresentation));
-
-
-  private final static Type STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE =
-      new TypeToken<List<StateHistoryViewRepresentation>>() {
-      }.getType();
-
 
   @Mock
   private StatesHistoryService statesHistoryService;
@@ -312,97 +292,5 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     then(messageKeyResolver).should()
         .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_CODING,
             CLICKED_STATE_NAME_CODING);
-  }
-
-  @Test
-  public void saveOrUpdateShouldRespondInternalServerErrorWhenParamApplicationIdIsAnEmptyString()
-      throws Exception {
-    given(statesHistoryService.saveStateHistory(any(StateHistoryDTO.class), eq(null)))
-        .willThrow(IllegalArgumentException.class);
-
-    this.mockMvc.perform(post(REQUEST_URL).param(PARAM_APPLICATION_ID, StringUtils.EMPTY))
-        .andExpect(status().isInternalServerError())
-        .andExpect(view().name(ERROR_VIEW_NAME))
-        .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
-
-    then(statesHistoryService).should().saveStateHistory(any(StateHistoryDTO.class), eq(null));
-  }
-
-
-  @Test
-  public void saveOrUpdateShouldRespondInternalServerErrorWhenParamApplicationIdIsANegativeNumber()
-      throws Exception {
-    given(statesHistoryService.saveStateHistory(any(StateHistoryDTO.class), eq(-1L)))
-        .willThrow(IllegalArgumentException.class);
-
-    this.mockMvc.perform(post(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST_MINUS))
-        .andExpect(status().isInternalServerError())
-        .andExpect(view().name(ERROR_VIEW_NAME))
-        .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
-
-    then(statesHistoryService).should().saveStateHistory(any(StateHistoryDTO.class), eq(-1L));
-  }
-
-
-  @Test
-  public void saveOrUpdateShouldRespondInternalServerErrorWhenParamStateIdIsAnEmptyString()
-      throws Exception {
-    given(statesHistoryService.saveStateHistory(any(StateHistoryDTO.class), eq(1L)))
-        .willThrow(IllegalArgumentException.class);
-
-    this.mockMvc.perform(post(REQUEST_URL)
-        .param(PARAM_APPLICATION_ID, ID_FIRST)
-        .param(PARAM_STATE_ID, StringUtils.EMPTY))
-        .andExpect(status().isInternalServerError())
-        .andExpect(view().name(ERROR_VIEW_NAME))
-        .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
-
-    then(statesHistoryService).should().saveStateHistory(any(StateHistoryDTO.class), eq(1L));
-  }
-
-  @Test
-  public void saveOrUpdateShouldRespondInternalServerErrorWhenParamStateIdIsANegativeNumber()
-      throws Exception {
-    given(statesHistoryService.saveStateHistory(any(StateHistoryDTO.class), eq(1L)))
-        .willThrow(IllegalArgumentException.class);
-
-    this.mockMvc.perform(post(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST)
-        .param(PARAM_STATE_ID, ID_FIRST_MINUS))
-        .andExpect(status().isInternalServerError())
-        .andExpect(view().name(ERROR_VIEW_NAME))
-        .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
-
-    then(statesHistoryService).should().saveStateHistory(any(StateHistoryDTO.class), eq(1L));
-  }
-
-  @Test
-  public void saveOrUpdateShouldRespondInternalServerErrorWhenCreationDateIsNotInValidFormat()
-      throws Exception {
-
-    given(statesHistoryService.saveStateHistory(null, 1L))
-        .willThrow(IllegalArgumentException.class);
-
-    this.mockMvc.perform(
-        post(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST).param(PARAM_STATE_ID, ID_FIRST)
-            .param(PARAM_CREATION_DATE, TEXT))
-        .andExpect(status().isInternalServerError())
-        .andExpect(view().name(ERROR_VIEW_NAME))
-        .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
-
-    then(statesHistoryService).should().saveStateHistory(null, 1L);
-  }
-
-  @Test
-  public void saveOrUpdateShouldRespondRedirectWhenAllParamIsCorrect() throws Exception {
-    given(statesHistoryService.saveStateHistory(null, 1L))
-        .willThrow(IllegalArgumentException.class);
-
-    this.mockMvc.perform(
-        post(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST).param(PARAM_STATE_ID, ID_FIRST)
-            .param(PARAM_CREATION_DATE, CREATION_DATE_AS_STRING))
-        .andExpect(status().is3xxRedirection())
-        .andExpect(redirectedUrl(REDIRECT_URL));
-
-    then(statesHistoryService).should(times(0)).saveStateHistory(null, 1L);
   }
 }
