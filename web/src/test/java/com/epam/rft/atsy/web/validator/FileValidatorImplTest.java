@@ -35,6 +35,13 @@ public class FileValidatorImplTest {
 
   private FileValidator fileValidator = new FileValidatorImpl();
 
+
+  @Test(expected = IllegalArgumentException.class)
+  public void validateShouldThrowIllegalArgumentExceptionWhenFileIsNull() throws FileValidationException {
+
+    fileValidator.validate(null);
+  }
+
   @Test(expected = FileIsMissingValidationException.class)
   public void isMissingFileShouldThrowFileIsMissingValidationExceptionWhenOriginalFilenameIsEmpty()
       throws FileValidationException {
