@@ -155,7 +155,7 @@
                       <div class="form-group">
                           <label for="resultInput" class="control-label col-sm-4"><spring:message code="statehistory.field.result"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static <c:if test='${stat.first}'>stateData</c:if>">${data.result}%</p>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.result}%</p>
                               <c:if test="${stat.first}">
                                   <spring:message code="statehistory.error.result.range" var="errorResultRangeMessage"/>
 
