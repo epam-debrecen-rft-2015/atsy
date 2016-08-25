@@ -28,7 +28,7 @@ public class StateHistoryController {
 
   private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
 
-  private final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
+  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
   @Resource
   private StatesHistoryService statesHistoryService;
@@ -56,13 +56,13 @@ public class StateHistoryController {
             .offeredMoney(stateHistoryViewRepresentation.getOfferedMoney())
             .claim(stateHistoryViewRepresentation.getClaim())
             .feedbackDate(stateHistoryViewRepresentation.getFeedbackDate() != null
-                && !stateHistoryViewRepresentation.getFeedbackDate().isEmpty() ? dateFormat
+                && !stateHistoryViewRepresentation.getFeedbackDate().isEmpty() ? DATE_FORMAT
                 .parse(stateHistoryViewRepresentation.getFeedbackDate()) : null)
             .dayOfStart(stateHistoryViewRepresentation.getDayOfStart() != null
-                && !stateHistoryViewRepresentation.getDayOfStart().isEmpty() ? dateFormat
+                && !stateHistoryViewRepresentation.getDayOfStart().isEmpty() ? DATE_FORMAT
                 .parse(stateHistoryViewRepresentation.getDayOfStart()) : null)
             .creationDate(stateHistoryViewRepresentation.getCreationDate() != null
-                && !stateHistoryViewRepresentation.getCreationDate().isEmpty() ? dateFormat
+                && !stateHistoryViewRepresentation.getCreationDate().isEmpty() ? DATE_FORMAT
                 .parse(stateHistoryViewRepresentation.getCreationDate()) : null)
             .stateDTO(StateDTO.builder().id(stateHistoryViewRepresentation.getStateId())
                 .name(stateHistoryViewRepresentation.getStateName()).build())
