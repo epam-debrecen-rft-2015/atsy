@@ -57,6 +57,7 @@
                         <div class="form-group"
                              id="nameDiv">
                             <input type="hidden" name="candidateId" id="candidateId" data-bind="valueWithInit: 'id'" value="${candidate.id}" >
+                            <input type="hidden" name="cvFilename" id="cvFilename" data-bind="valueWithInit: 'cvFilename'" value="${candidate.cvFilename}" >
                             <spring:message code="candidate.name.field" var="i18nname"/>
                             <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
                                    for="name"><spring:message
@@ -228,7 +229,7 @@
                 </c:if>
 
                 <c:if test="${empty candidate.cvFilename}">
-                    <label class="control-label col-lg-2 col-md-4 col-sm-4 text-right" for="name">
+                    <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="name">
                         <spring:message code="cv"/>
                     </label>
 
@@ -239,7 +240,7 @@
                 </c:if>
 
                 <c:if test="${not empty candidate.cvFilename}">
-                    <label class="control-label col-lg-2 col-md-4 col-sm-4 text-right" for="name">
+                    <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="name">
                         <spring:message code="cv"/>
                     </label>
 

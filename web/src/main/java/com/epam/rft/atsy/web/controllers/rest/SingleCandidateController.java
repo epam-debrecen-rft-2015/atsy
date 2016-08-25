@@ -38,15 +38,6 @@ public class SingleCandidateController {
 
     if (!result.hasErrors()) {
 
-      String candidateCvFilename = null;
-      if (candidateDTO.getId() != null) {
-        candidateCvFilename = candidateService.getCvFilenameById(candidateDTO.getId());
-      }
-
-      if (candidateCvFilename != null) {
-        candidateDTO.setCvFilename(candidateCvFilename);
-      }
-
       Long candidateId = candidateService.saveOrUpdate(candidateDTO);
       return new ResponseEntity<>(Collections.singletonMap("id", candidateId), HttpStatus.OK);
 
