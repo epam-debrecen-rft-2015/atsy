@@ -24,9 +24,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.modelmapper.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,15 +35,12 @@ import java.util.List;
 public class ApplicationStateControllerTest extends AbstractControllerTest {
 
   private static final String REQUEST_URL = "/secure/application_state";
-  private static final String REDIRECT_URL = "/secure/application_state?applicationId=1";
   private static final String STATE_FLOW_OBJECT_KEY = "stateflows";
   private static final String STATES_OBJECT_KEY = "states";
   private static final String APPLICATION_STATE = "candidate.table.state.";
   private static final String ERROR_VIEW_NAME = "error";
 
   private static final String PARAM_APPLICATION_ID = "applicationId";
-  private static final String PARAM_STATE_ID = "stateId";
-  private static final String PARAM_CREATION_DATE = "creationDate";
   private static final String PARAM_CLICKED_STATE = "state";
   private static final String TEXT = "text";
 
@@ -58,8 +53,6 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   private static final String STATE_NAME_NEW_APPLY = "New apply";
   private static final String STATE_NAME_CV = "CV";
   private static final String STATE_NAME_CODING = "Coding";
-  private static final String CREATION_DATE_AS_STRING = "2016-08-12 15:00:00";
-
 
   private StateDTO
       stateDTOWithStateNameNewApply =
@@ -112,12 +105,6 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
       new LinkedList<>(Arrays.asList(expectedThirdStateHistoryViewRepresentation,
           expectedSecondStateHistoryViewRepresentation,
           expectedFirstStateHistoryViewRepresentation));
-
-
-  private final static Type STATE_HISTORY_VIEW_REPRESENTATION_LIST_TYPE =
-      new TypeToken<List<StateHistoryViewRepresentation>>() {
-      }.getType();
-
 
   @Mock
   private StatesHistoryService statesHistoryService;
