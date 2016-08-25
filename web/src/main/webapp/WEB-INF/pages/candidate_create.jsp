@@ -227,7 +227,7 @@
                     </div>
                 </c:if>
 
-                <c:if test="${cv_status == 'FILE_NOT_EXISTS'}">
+                <c:if test="${empty candidate.cvFilename}">
                     <label class="control-label col-lg-2 col-md-4 col-sm-4 text-right" for="name">
                         <spring:message code="cv"/>
                     </label>
@@ -238,14 +238,14 @@
                     </div>
                 </c:if>
 
-                <c:if test="${cv_status == 'FILE_ALREADY_EXISTS'}">
+                <c:if test="${not empty candidate.cvFilename}">
                     <label class="control-label col-lg-2 col-md-4 col-sm-4 text-right" for="name">
                         <spring:message code="cv"/>
                     </label>
 
                     <label class="control-label col-lg-2 col-md-4 col-sm-4 text-left" for="name">
                         <a href="<c:url value='/secure/candidate/fileDownload/${candidateId}' />">
-                            <c:out value="${cvName}"/>
+                            <c:out value="${candidate.cvFilename}"/>
                         </a>
                     </label>
                 </c:if>

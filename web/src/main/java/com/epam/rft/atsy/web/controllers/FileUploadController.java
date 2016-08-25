@@ -6,7 +6,6 @@ import com.epam.rft.atsy.service.exception.file.FileAlreadyExistsValidationExcep
 import com.epam.rft.atsy.service.exception.file.FileValidationException;
 import com.epam.rft.atsy.web.mapper.FileValidationRuleMapper;
 import com.epam.rft.atsy.web.model.file.FileBucket;
-import com.epam.rft.atsy.web.model.file.FileStatus;
 import com.epam.rft.atsy.web.validator.FileValidator;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +66,6 @@ public class FileUploadController {
       FileCopyUtils.copy(fileBucket.getFile().getBytes(), file);
       redirectAttributes.addFlashAttribute(FILE, fileName);
       redirectAttributes.addFlashAttribute(VALIDATION_SUCCESS_KEY, VALIDATION_FILE_SUCCESS);
-      redirectAttributes.addFlashAttribute(FileStatus.CV_STATUS_MODEL_ATTR_NAME,
-          FileStatus.FILE_ALREADY_EXISTS);
 
       CandidateDTO candidateDTO = candidateService.getCandidate(candidateId);
       candidateDTO.setCvFilename(fileName);
@@ -76,8 +73,6 @@ public class FileUploadController {
 
     } catch (FileValidationException e) {
       log.error(FileUploadController.class.getName(), e);
-      redirectAttributes
-          .addFlashAttribute(FileStatus.CV_STATUS_MODEL_ATTR_NAME, FileStatus.FILE_NOT_EXISTS);
       redirectAttributes.addFlashAttribute(VALIDATION_ERROR_KEY,
           fileUploadValidationRuleMapper.getMessageKeyByException(e));
     }

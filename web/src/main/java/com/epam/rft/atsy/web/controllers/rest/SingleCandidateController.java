@@ -3,6 +3,8 @@ package com.epam.rft.atsy.web.controllers.rest;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import javax.annotation.Resource;
+
 import javax.validation.Valid;
 
 @RestController
@@ -24,10 +26,10 @@ import javax.validation.Valid;
 public class SingleCandidateController {
   private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
 
-  @Resource
+  @Autowired
   private CandidateService candidateService;
 
-  @Resource
+  @Autowired
   private MessageSource messageSource;
 
   @RequestMapping(method = RequestMethod.POST)
@@ -36,13 +38,13 @@ public class SingleCandidateController {
 
     if (!result.hasErrors()) {
 
-      String candidateCvPath = null;
+      String candidateCvFilename = null;
       if (candidateDTO.getId() != null) {
-        candidateCvPath = candidateService.getCvFilenameById(candidateDTO.getId());
+        candidateCvFilename = candidateService.getCvFilenameById(candidateDTO.getId());
       }
 
-      if (candidateCvPath != null) {
-        candidateDTO.setCvFilename(candidateCvPath);
+      if (candidateCvFilename != null) {
+        candidateDTO.setCvFilename(candidateCvFilename);
       }
 
       Long candidateId = candidateService.saveOrUpdate(candidateDTO);
