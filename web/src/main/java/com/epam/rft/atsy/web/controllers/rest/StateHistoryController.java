@@ -36,6 +36,14 @@ public class StateHistoryController {
   @Resource
   private FieldErrorResponseComposer fieldErrorResponseComposer;
 
+  /**
+   * This method is used to save new states or update the information of the latest state.
+   * @param applicationId identifier of the application whose states are viewed and edited
+   * @param stateHistoryViewRepresentation this attribute contains all the state information of the
+   * given application
+   * @return a ModelAndView object filled with the data to stay on the same page and view the states
+   * of the same application, but including the latest modification
+   */
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity saveOrUpdate(@RequestParam Long applicationId,
                                      @Valid @RequestBody StateHistoryViewRepresentation stateHistoryViewRepresentation,

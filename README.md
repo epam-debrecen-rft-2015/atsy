@@ -20,6 +20,36 @@ Running integration tests as part of the build:
 
     mvn clean install -Pintegration
 
+Running Atsy in docker:
+=======================
+
+Prerequirements:
+
+* [Docker](https://docs.docker.com/engine/getstarted/step_one/) is installed
+* For linux [Docker Compose](https://docs.docker.com/compose/install/) is installed
+* Maven is installed
+
+Build atsy webapp image (after building the project):
+
+    mvn -f web clean package -Pdocker
+
+This command creates and registers a docker image called atsy.
+
+Run atsy webapp (using production spring profile by default):
+
+    docker-compose up
+    
+Run atsy webapp using integration spring profile:
+
+    PROFILE=integration docker-compose up
+    
+Docker Compose will start a mysql database and the preconfigured atsy application.
+Tomcat container exposes port 8080 on the host machine, which can bo overridden by setting PORT_MAPPING environment variable, like:
+
+    PORT_MAPPING=8081:8080 docker-compose up
+    
+The above command maps tomcat container's 8080 port to host 8081 port.
+
 Definition of Done
 ==================
 
