@@ -191,6 +191,8 @@ public class FileUploadControllerTest extends AbstractControllerTest {
         .andExpect(flash().attribute(VALIDATION_SUCCESS_KEY, equalTo(VALIDATION_FILE_SUCCESS_MESSAGE_KEY)))
         .andExpect(status().is3xxRedirection());
 
+    assertThat(candidateDTOWithCVFile.getCvFilename(), equalTo(ORIGINAL_FILENAME_VALID));
+
     then(candidateService).should().getCandidate(CANDIDATE_ID_A);
     then(fileValidator).should().validate(multipartFile);
     then(candidateService).should().saveOrUpdate(candidateDTOWithoutCVFile);
