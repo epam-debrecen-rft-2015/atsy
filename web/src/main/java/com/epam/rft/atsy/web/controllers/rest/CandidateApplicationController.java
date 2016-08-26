@@ -12,6 +12,10 @@ import java.util.Collection;
 import java.util.Locale;
 import javax.annotation.Resource;
 
+/**
+ * A REST controller that is responsible for providing every information about the applications of
+ * the candidates.
+ */
 @RestController
 @RequestMapping(value = "/secure/applications/{candidateId}")
 public class CandidateApplicationController {
@@ -24,6 +28,13 @@ public class CandidateApplicationController {
   @Resource
   private MessageKeyResolver messageKeyResolver;
 
+  /**
+   * Loads and returns all applications of the candidate with the specified identifier, using the
+   * specified language.
+   * @param candidateId the identifier of the candidate whose applications will be given back
+   * @param locale specifies to language to use
+   * @return a collection with all applications of the specified candidate
+   */
   @RequestMapping(method = RequestMethod.GET)
   public Collection<CandidateApplicationDTO> loadApplications(
       @PathVariable(value = "candidateId") Long candidateId, Locale locale) {

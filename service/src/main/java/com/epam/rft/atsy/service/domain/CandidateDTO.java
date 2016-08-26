@@ -12,12 +12,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+/**
+ * Data transfer class that is used to transfer personal data of a candidate between the service and
+ * web layers. Contains validation rules. See {@link com.epam.rft.atsy.persistence.entities.CandidateEntity
+ * CandidateEntity}.
+ */
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CandidateDTO {
-
 
   private Long id;
 
