@@ -26,7 +26,7 @@ import javax.validation.Valid;
 @RequestMapping(value = "/secure/application_state")
 public class StateHistoryController {
 
-  private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
+  private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm";
 
   private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
@@ -69,11 +69,13 @@ public class StateHistoryController {
             .dayOfStart(stateHistoryViewRepresentation.getDayOfStart() != null
                 && !stateHistoryViewRepresentation.getDayOfStart().isEmpty() ? DATE_FORMAT
                 .parse(stateHistoryViewRepresentation.getDayOfStart()) : null)
-            .creationDate(stateHistoryViewRepresentation.getCreationDate() != null
-                && !stateHistoryViewRepresentation.getCreationDate().isEmpty() ? DATE_FORMAT
-                .parse(stateHistoryViewRepresentation.getCreationDate()) : null)
+            .creationDate(null)
             .stateDTO(StateDTO.builder().id(stateHistoryViewRepresentation.getStateId())
                 .name(stateHistoryViewRepresentation.getStateName()).build())
+            .recommendation(stateHistoryViewRepresentation.getRecommendation() != null ?
+                stateHistoryViewRepresentation.getRecommendation() == 1 : null)
+            .reviewerName(stateHistoryViewRepresentation.getReviewerName())
+            .recommendedPositionLevel(stateHistoryViewRepresentation.getRecommendedPositionLevel())
             .build();
 
       } catch (ParseException e) {

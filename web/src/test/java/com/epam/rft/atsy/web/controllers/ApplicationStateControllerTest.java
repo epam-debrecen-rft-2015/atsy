@@ -1,5 +1,8 @@
 package com.epam.rft.atsy.web.controllers;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -24,10 +27,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -206,6 +211,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void pageLoadShouldRespondModelAndViewWhenParamApplicationIdAndSParamClickedStateAreCorrectAndStateHistoryViewRepresentationListContainsSingleElement()
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(1L))
@@ -223,16 +229,24 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     given(stateFlowService.getStateFlowDTOByFromStateDTO(stateDTOWithStateNameNewApply))
         .willReturn(stateFlowDTOListWithSingleElement);
 
-    this.mockMvc.perform(get(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST)
-        .param(PARAM_CLICKED_STATE, CLICKED_STATE_NAME_NEW_APPLY))
-        .andExpect(status().isOk())
-        .andExpect(model().attributeExists(PARAM_APPLICATION_ID))
-        .andExpect(model().attribute(PARAM_APPLICATION_ID, 1L))
-        .andExpect(model().attributeExists(STATE_FLOW_OBJECT_KEY))
-        .andExpect(model().attribute(STATE_FLOW_OBJECT_KEY, stateFlowDTOListWithSingleElement))
-        .andExpect(model().attributeExists(STATES_OBJECT_KEY))
-        .andExpect(model().attribute(STATES_OBJECT_KEY,
-            expectedStateHistoryViewRepresentationListWithSingleElement));
+    MvcResult
+        mvcResult =
+        this.mockMvc.perform(get(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST)
+            .param(PARAM_CLICKED_STATE, CLICKED_STATE_NAME_NEW_APPLY))
+            .andExpect(status().isOk())
+            .andExpect(model().attributeExists(PARAM_APPLICATION_ID))
+            .andExpect(model().attribute(PARAM_APPLICATION_ID, 1L))
+            .andExpect(model().attributeExists(STATE_FLOW_OBJECT_KEY))
+            .andExpect(model().attribute(STATE_FLOW_OBJECT_KEY, stateFlowDTOListWithSingleElement))
+            .andExpect(model().attributeExists(STATES_OBJECT_KEY))
+            .andReturn();
+
+    List<StateHistoryViewRepresentation> representationList =
+        (List<StateHistoryViewRepresentation>) mvcResult.getModelAndView().getModel()
+            .get(STATES_OBJECT_KEY);
+
+    assertStateHistoryViewRepresentationList(representationList,
+        expectedStateHistoryViewRepresentationListWithSingleElement);
 
     then(statesHistoryService).should().getStateHistoriesByApplicationId(1L);
 
@@ -244,6 +258,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void pageLoadShouldRespondModelAndViewWhenParamApplicationIdAndParamClickedStateAreCorrectAndStateHistoryViewRepresentationListContainsThreeElements()
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(1L))
@@ -266,7 +281,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
         .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_CODING,
             CLICKED_STATE_NAME_CODING)).willReturn(STATE_NAME_CODING);
 
-    this.mockMvc
+    MvcResult mvcResult = this.mockMvc
         .perform(get(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST)
             .param(PARAM_CLICKED_STATE, CLICKED_STATE_NAME_CODING))
         .andExpect(status().isOk())
@@ -275,8 +290,14 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
         .andExpect(model().attributeExists(STATE_FLOW_OBJECT_KEY))
         .andExpect(model().attribute(STATE_FLOW_OBJECT_KEY, stateFlowDTOListWithSingleElement))
         .andExpect(model().attributeExists(STATES_OBJECT_KEY))
-        .andExpect(model().attribute(STATES_OBJECT_KEY,
-            expectedStateHistoryViewRepresentationListWithThreeElements));
+        .andReturn();
+
+    List<StateHistoryViewRepresentation> representationList =
+        (List<StateHistoryViewRepresentation>) mvcResult.getModelAndView().getModel()
+            .get(STATES_OBJECT_KEY);
+
+    assertStateHistoryViewRepresentationList(representationList,
+        expectedStateHistoryViewRepresentationListWithThreeElements);
 
     then(statesHistoryService).should().getStateHistoriesByApplicationId(1L);
     then(converterService).should()
@@ -292,5 +313,31 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     then(messageKeyResolver).should()
         .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_CODING,
             CLICKED_STATE_NAME_CODING);
+  }
+
+  private void assertStateHistoryViewRepresentationList(
+      List<StateHistoryViewRepresentation> actualList,
+      List<StateHistoryViewRepresentation> expectedList) {
+    assertThat(actualList.size(), equalTo(expectedList.size()));
+
+    // Creation date is only set on the first element
+    Date currentDate = new Date();
+
+    assertThat(actualList.get(0).getCreationDate(), lessThanOrEqualTo(currentDate));
+
+    for (int i = 0; i < actualList.size(); ++i) {
+      assertStateHistoryViewRepresentation(actualList.get(i), expectedList.get(i));
+    }
+  }
+
+  private void assertStateHistoryViewRepresentation(
+      StateHistoryViewRepresentation actualRepresentation,
+      StateHistoryViewRepresentation expectedRepresentation) {
+    assertThat(actualRepresentation.getStateId(), equalTo(expectedRepresentation.getStateId()));
+
+    assertThat(actualRepresentation.getStateName(), equalTo(expectedRepresentation.getStateName()));
+
+    assertThat(actualRepresentation.getStateFullName(),
+        equalTo(expectedRepresentation.getStateFullName()));
   }
 }

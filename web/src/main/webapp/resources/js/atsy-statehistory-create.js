@@ -71,6 +71,22 @@ function StateHistoryModel() {
              }
      });
    }
+
+   self.isRecommendationValid = ko.pureComputed(function() {
+    var recomm = typeof self.recommendation !== 'undefined' ? self.recommendation() : "0";
+
+    return ((recomm == "0") || (recomm == "1"));
+   });
+
+   self.isRecommendationPositionLevelValid = ko.pureComputed(function() {
+    var pos = typeof self.recommendedPositionLevel !== 'undefined' ? self.recommendedPositionLevel() : "0";
+
+    return (pos >= "0" && pos <= "5");
+   });
+
+   self.canSave = ko.pureComputed(function() {
+    return self.isRecommendationValid() && self.isRecommendationPositionLevelValid();
+   });
 }
 
 StateHistoryModel.prototype.redirectWithoutState = function() {
@@ -81,4 +97,4 @@ StateHistoryModel.prototype.redirectWithoutState = function() {
 
 var stateHistoryModel = new StateHistoryModel();
 
-ko.applyBindings(stateHistoryModel)
+ko.applyBindings(stateHistoryModel);

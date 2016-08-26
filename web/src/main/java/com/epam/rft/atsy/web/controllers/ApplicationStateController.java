@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -77,6 +78,7 @@ public class ApplicationStateController {
       Assert.notNull(clickedStateDTO);
 
       stateHistoryViewRepresentations.add(0, StateHistoryViewRepresentation.builder()
+          .creationDate(new Date())
           .stateId(clickedStateDTO.getId())
           .stateName(clickedStateDTO.getName())
           .build());
