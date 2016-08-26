@@ -37,6 +37,24 @@ $(document).ready(function () {
         });
     }
 
+    var additionalOptions = {
+      customSort: function(sortName, sortOrder) {
+        var defaultComparator;
+
+        if (sortOrder === "asc") {
+         defaultComparator = function(a, b, field) { return a[field] > b[field]; };
+        } else {
+         defaultComparator = function(a, b, field) { return a[field] < b[field]; };
+        }
+
+        this.data.sort(function(a, b) {
+            return defaultComparator(a, b, a[sortName] !== b[sortName] ? sortName : "name");
+        });
+      }
+    };
+
+    table.bootstrapTable('refreshOptions', additionalOptions);
+
     locationHashChanged();
 });
 
@@ -51,3 +69,5 @@ function actionFormatter(value, row, index) {
 function positionFormatter(value) {
   return value.join(", ");
 }
+
+

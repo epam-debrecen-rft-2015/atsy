@@ -18,7 +18,7 @@ public class SortingRequest {
   }
 
   public enum Field {
-    NAME , EMAIL, PHONE;
+    NAME, EMAIL, PHONE, POSITIONS;
 
     @Override
     public String toString() {
