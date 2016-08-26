@@ -33,7 +33,7 @@ public class FileUploadController {
   private static final String REDIRECT_URL_CANDIDATE_PAGE = "redirect:/secure/candidate";
   private static final String VALIDATION_SUCCESS_KEY = "validationSuccessKey";
   private static final String VALIDATION_ERROR_KEY = "validationErrorKey";
-  private static final String VALIDATION_FILE_SUCCESS = "file.validation.success";
+  private static final String VALIDATION_FILE_SUCCESS_MESSAGE_KEY = "file.validation.success";
   private static final String CANDIDATE_ALREADY_HAS_CV_FILE_MESSAGE_KEY = "candidate.already.has.cv.file";
   private static final String FILE = "file";
 
@@ -70,7 +70,7 @@ public class FileUploadController {
 
       FileCopyUtils.copy(multipartFile.getBytes(), file);
       redirectAttributes.addFlashAttribute(FILE, fileName);
-      redirectAttributes.addFlashAttribute(VALIDATION_SUCCESS_KEY, VALIDATION_FILE_SUCCESS);
+      redirectAttributes.addFlashAttribute(VALIDATION_SUCCESS_KEY, VALIDATION_FILE_SUCCESS_MESSAGE_KEY);
 
       candidateDTO.setCvFilename(fileName);
       candidateService.saveOrUpdate(candidateDTO);
