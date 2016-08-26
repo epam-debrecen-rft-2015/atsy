@@ -73,10 +73,10 @@ function StateHistoryModel() {
    }
 
    self.isRecommendationValid = ko.pureComputed(function() {
-       var recomm = typeof self.recommendation !== 'undefined' ? self.recommendation() : "0";
+    var recomm = typeof self.recommendation !== 'undefined' ? self.recommendation() : "0";
 
-       return ((recomm == "0") || (recomm == "1"));
-     });
+    return ((recomm == "0") || (recomm == "1"));
+   });
 
    self.isRecommendationPositionLevelValid = ko.pureComputed(function() {
      var pos = typeof self.recommendedPositionLevel !== 'undefined' ? self.recommendedPositionLevel() : "0";

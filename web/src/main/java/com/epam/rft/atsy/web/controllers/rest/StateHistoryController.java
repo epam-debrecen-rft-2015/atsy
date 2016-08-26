@@ -3,9 +3,9 @@ package com.epam.rft.atsy.web.controllers.rest;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+import com.epam.rft.atsy.web.FieldErrorResponseComposer;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -28,36 +28,31 @@ public class StateHistoryController {
 
   private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm";
 
-  private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
+  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
 
   @Resource
   private StatesHistoryService statesHistoryService;
 
   @Resource
-  private MessageSource messageSource;
+  private FieldErrorResponseComposer fieldErrorResponseComposer;
 
+  /**
+   * This method is used to save new states or update the information of the latest state.
+   * @param applicationId identifier of the application whose states are viewed and edited
+   * @param stateHistoryViewRepresentation this attribute contains all the state information of the
+   * given application
+   * @return a ModelAndView object filled with the data to stay on the same page and view the states
+   * of the same application, but including the latest modification
+   */
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity saveOrUpdate(@RequestParam Long applicationId,
                                      @Valid @RequestBody StateHistoryViewRepresentation stateHistoryViewRepresentation,
                                      BindingResult bindingResult, Locale locale) {
 
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
-
     StateHistoryDTO stateHistoryDTO = null;
 
     if (bindingResult.hasErrors()) {
-      String
-          invalidInputMessage =
-          messageSource.getMessage(COMMON_INVALID_INPUT_MESSAGE_KEY, null, locale);
-
-      RestResponse restResponse = new RestResponse(invalidInputMessage);
-
-      bindingResult.getFieldErrors().forEach(error -> {
-        restResponse.addField(error.getField(), messageSource.getMessage(error.getDefaultMessage(),
-            new Object[0], locale));
-      });
-
-      return new ResponseEntity<>(restResponse, HttpStatus.BAD_REQUEST);
+      return fieldErrorResponseComposer.composeResponse(bindingResult);
     } else {
       try {
         stateHistoryDTO = StateHistoryDTO.builder()
@@ -69,7 +64,7 @@ public class StateHistoryController {
             .offeredMoney(stateHistoryViewRepresentation.getOfferedMoney())
             .claim(stateHistoryViewRepresentation.getClaim())
             .feedbackDate(stateHistoryViewRepresentation.getFeedbackDate() != null
-                && !stateHistoryViewRepresentation.getFeedbackDate().isEmpty() ? simpleDateFormat
+                && !stateHistoryViewRepresentation.getFeedbackDate().isEmpty() ? DATE_FORMAT
                 .parse(stateHistoryViewRepresentation.getFeedbackDate()) : null)
             .dayOfStart(stateHistoryViewRepresentation.getDayOfStart())
             .creationDate(null)
@@ -81,8 +76,9 @@ public class StateHistoryController {
             .recommendedPositionLevel(stateHistoryViewRepresentation.getRecommendedPositionLevel())
             .build();
       } catch (ParseException e) {
-        //TODO: what should we do about this?
-        e.printStackTrace();
+        RestResponse restResponse = new RestResponse(e.getMessage());
+
+        return new ResponseEntity<>(restResponse, HttpStatus.BAD_REQUEST);
       }
 
       statesHistoryService.saveStateHistory(stateHistoryDTO, applicationId);
