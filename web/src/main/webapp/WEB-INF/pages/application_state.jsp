@@ -269,7 +269,7 @@
                               <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="dayOfStartP">${formattedDayOfStart}</p>
                               <c:if test="${stat.first}">
                                   <input class="stateInput" type="date" name="dayOfStart" id="dayOfStartInput" style="display:none" value="${formattedDayOfStart}"
-                                  data-bind="valueWithInit: 'dayOfStart'">
+                                  data-bind="valueWithInit: 'dayOfStart'" required>
                               </c:if>
                           </div>
                       </div>
