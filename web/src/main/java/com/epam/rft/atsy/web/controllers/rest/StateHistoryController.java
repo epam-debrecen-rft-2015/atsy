@@ -66,9 +66,7 @@ public class StateHistoryController {
             .feedbackDate(stateHistoryViewRepresentation.getFeedbackDate() != null
                 && !stateHistoryViewRepresentation.getFeedbackDate().isEmpty() ? DATE_FORMAT
                 .parse(stateHistoryViewRepresentation.getFeedbackDate()) : null)
-            .dayOfStart(stateHistoryViewRepresentation.getDayOfStart() != null
-                && !stateHistoryViewRepresentation.getDayOfStart().isEmpty() ? DATE_FORMAT
-                .parse(stateHistoryViewRepresentation.getDayOfStart()) : null)
+            .dayOfStart(stateHistoryViewRepresentation.getDayOfStart())
             .creationDate(null)
             .stateDTO(StateDTO.builder().id(stateHistoryViewRepresentation.getStateId())
                 .name(stateHistoryViewRepresentation.getStateName()).build())
@@ -77,7 +75,6 @@ public class StateHistoryController {
             .reviewerName(stateHistoryViewRepresentation.getReviewerName())
             .recommendedPositionLevel(stateHistoryViewRepresentation.getRecommendedPositionLevel())
             .build();
-
       } catch (ParseException e) {
         RestResponse restResponse = new RestResponse(e.getMessage());
 

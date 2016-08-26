@@ -60,7 +60,7 @@
 
       <div id="stateList">
       <c:forEach var="data" items="${states}" varStatus="stat">
-          <fmt:parseDate pattern="yyyy-MM-dd HH:mm" value="${data.creationDate}" var="parsedCreationDate" />
+
           <div class="page-header">
               <h4 class="col-sm-6 col-md-6 col-lg-6">${data.stateFullName}</h4>
               <c:if test="${stat.first}">
@@ -76,12 +76,14 @@
               <div class="form-group col-sm-12 col-md-12 col-lg-12">
                   <label for="creationDateInput" class="control-label col-sm-4"><spring:message code="statehistory.field.date"/></label>
                   <div class="col-sm-8">
-                      <p class="form-control-static ${stat.first ? 'stateData' : ''}"><fmt:formatDate value='${parsedCreationDate}' pattern='yyyy-MM-dd HH:mm'/></p>
+                      <fmt:formatDate value='${data.creationDate}' pattern='yyyy-MM-dd HH:mm' var="formattedCreationDate"/>
+
+                      <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedCreationDate}</p>
                       <c:if test="${stat.first}">
                           <spring:message code="statehistory.error.parse.date" var="errorParseDateMessage"/>
 
                           <input class="stateInput hidden" readOnly="true" type="text" name="creationDate" id="creationDateInput"
-                            value="<fmt:formatDate value='${parsedCreationDate}' pattern='yyyy-MM-dd HH:mm'/>"
+                            value="${formattedCreationDate}"
                             data-bind="valueWithInit: 'creationDate'"
                             data-error="${errorParseDateMessage}"
                             pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$"/>
@@ -276,10 +278,11 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.dayOfStart"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.dayOfStart}</p>
+                              <fmt:formatDate value="${data.dayOfStart}" type="date" pattern="yyyy-MM-dd" var="formattedDayOfStart"/>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedDayOfStart}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput hidden" type="text" name="dayOfStart" id="dayOfStartInput" value="${data.dayOfStart}"
-                                  data-bind="valueWithInit: 'dayOfStart'">
+                                  <input class="stateInput hidden" type="date" name="dayOfStart" id="dayOfStartInput" value="${formattedDayOfStart}"
+                                  data-bind="valueWithInit: 'dayOfStart'" required>
                               </c:if>
                           </div>
                       </div>

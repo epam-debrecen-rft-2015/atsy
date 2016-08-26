@@ -56,7 +56,7 @@ public class StateHistoryViewRepresentation {
   @Min(value = 0, message = "statehistory.error.claim.negative")
   private Long claim;
 
-  private String dayOfStart;
+  private Date dayOfStart;
 
   private String stateFullName;
 

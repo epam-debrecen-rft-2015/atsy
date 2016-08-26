@@ -80,11 +80,9 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
       FEEDBACK_DATE =
       new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
 
-  private static final String DAY_OF_START_STRING = "2016-08-15 14:00:00";
-
   private static final Date
       DAY_OF_START =
-      new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
+      new GregorianCalendar(2016, 8 - 1, 15, 0, 0, 0).getTime();
 
   private static final Short LANGUAGE_SKILL = 10;
 
@@ -132,7 +130,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .result(RESULT)
         .offeredMoney(OFFERED_MONEY)
         .claim(CLAIM)
-        .dayOfStart(DAY_OF_START_STRING)
+        .dayOfStart(DAY_OF_START)
         .stateFullName(STATE_FULL_NAME)
         .stateId(STATE_ID)
         .stateName(STATE_NAME)
