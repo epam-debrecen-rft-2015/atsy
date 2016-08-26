@@ -10,9 +10,9 @@ public class MultipartFileCreatorTestHelper {
   public static final String MULTIPART_FILE_NAME = "file";
   public static final String CONTENT_TYPE = "text/plain";
 
-  public static MockMultipartFile createMultipartFile(String originalFilename, int fileSize) {
+  public static MockMultipartFile createMultipartFile(String originalFilename, Long fileSizeByte) {
     return new MockMultipartFile(MULTIPART_FILE_NAME, originalFilename, CONTENT_TYPE,
-        getStringBySize(fileSize).getBytes());
+        getStringBySize(fileSizeByte.intValue()).getBytes());
   }
 
   protected static String getStringBySize(int size) {
