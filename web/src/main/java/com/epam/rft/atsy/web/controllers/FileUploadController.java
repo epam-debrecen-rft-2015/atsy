@@ -2,6 +2,7 @@ package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
+import com.epam.rft.atsy.service.exception.CandidateAlreadyHasCVFileException;
 import com.epam.rft.atsy.service.exception.file.FileAlreadyExistsValidationException;
 import com.epam.rft.atsy.service.exception.file.FileValidationException;
 import com.epam.rft.atsy.web.mapper.FileValidationRuleMapper;
@@ -33,6 +34,7 @@ public class FileUploadController {
   private static final String VALIDATION_SUCCESS_KEY = "validationSuccessKey";
   private static final String VALIDATION_ERROR_KEY = "validationErrorKey";
   private static final String VALIDATION_FILE_SUCCESS = "file.validation.success";
+  private static final String CANDIDATE_ALREADY_HAS_CV_FILE_MESSAGE_KEY = "candidate.already.has.cv.file";
   private static final String FILE = "file";
 
   @Value("${upload_location_cv}")
@@ -58,6 +60,11 @@ public class FileUploadController {
     String fileName = multipartFile.getOriginalFilename();
 
     try {
+      CandidateDTO candidateDTO = candidateService.getCandidate(candidateId);
+      if (candidateDTO.getCvFilename() != null && !candidateDTO.getCvFilename().isEmpty()) {
+        throw new CandidateAlreadyHasCVFileException();
+      }
+
       fileValidator.validate(multipartFile);
       File file = createFile(fileName);
 
@@ -65,11 +72,14 @@ public class FileUploadController {
       redirectAttributes.addFlashAttribute(FILE, fileName);
       redirectAttributes.addFlashAttribute(VALIDATION_SUCCESS_KEY, VALIDATION_FILE_SUCCESS);
 
-      CandidateDTO candidateDTO = candidateService.getCandidate(candidateId);
       candidateDTO.setCvFilename(fileName);
       candidateService.saveOrUpdate(candidateDTO);
 
-    } catch (FileValidationException e) {
+    } catch (CandidateAlreadyHasCVFileException e) {
+      log.error(FileUploadController.class.getName(), e);
+      redirectAttributes.addFlashAttribute(VALIDATION_ERROR_KEY, CANDIDATE_ALREADY_HAS_CV_FILE_MESSAGE_KEY);
+    }
+    catch (FileValidationException e) {
       log.error(FileUploadController.class.getName(), e);
       redirectAttributes.addFlashAttribute(VALIDATION_ERROR_KEY,
           fileValidationRuleMapper.getMessageKeyByException(e));
@@ -78,9 +88,9 @@ public class FileUploadController {
     return modelAndView;
   }
 
-  private File createFile(String fileName) throws FileAlreadyExistsValidationException {
-    String fileNameWithFullPath = uploadLocation + File.separator + fileName;
-    File file = new File(fileNameWithFullPath);
+  protected File createFile(String filename) throws FileValidationException {
+    String filenameWithFullPath = uploadLocation + File.separator + filename;
+    File file = new File(filenameWithFullPath);
     if (file.exists()) {
       throw new FileAlreadyExistsValidationException();
     }
