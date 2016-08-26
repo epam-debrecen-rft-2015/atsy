@@ -40,19 +40,19 @@ public class FileDownloadController {
 
   @ResponseBody
   @RequestMapping(value = "/secure/candidate/fileDownload/{candidateId}", method = RequestMethod.GET)
-  public Object download(@PathVariable("candidateId") Long candidateId, RedirectAttributes redirectAttrs)
+  public Object downloadFile(@PathVariable("candidateId") Long candidateId, RedirectAttributes redirectAttrs)
       throws Exception {
 
-    String fileName = candidateService.getCvFilenameById(candidateId);
-    if (fileName != null) {
+    String cvFilename = candidateService.getCvFilenameById(candidateId);
+    if (cvFilename != null) {
 
       try {
-        File file = new File(uploadLocation + File.separator + fileName);
+        File file = new File(uploadLocation + File.separator + cvFilename);
         InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
         InputStreamResource inputStreamResource = new InputStreamResource(inputStream);
 
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(CONTENT_DISPOSITION, String.format(INLINE_FORMAT + fileName + "\""));
+        responseHeaders.set(CONTENT_DISPOSITION, String.format(INLINE_FORMAT + cvFilename + "\""));
         responseHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         responseHeaders.setContentLength(file.length());
 
