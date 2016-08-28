@@ -37,14 +37,13 @@ public class FileDownloadController {
   @Autowired
   private CandidateService candidateService;
 
-
   @ResponseBody
   @RequestMapping(value = "/secure/candidate/fileDownload/{candidateId}", method = RequestMethod.GET)
   public Object downloadFile(@PathVariable("candidateId") Long candidateId, RedirectAttributes redirectAttrs)
       throws Exception {
 
     String cvFilename = candidateService.getCvFilenameById(candidateId);
-    if (cvFilename != null) {
+    if (cvFilename != null && !cvFilename.isEmpty()) {
 
       try {
         File file = new File(uploadLocation + File.separator + cvFilename);
