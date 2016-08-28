@@ -62,14 +62,15 @@ public class FileUploadController {
 
     try {
       CandidateDTO candidateDTO = candidateService.getCandidate(candidateId);
-      if (candidateDTO.getCvFilename() != null && !candidateDTO.getCvFilename().isEmpty()) {
+      String candidateCVFilename = candidateDTO.getCvFilename();
+      if (candidateCVFilename != null && !candidateCVFilename.isEmpty()) {
         throw new CandidateAlreadyHasCVFileException();
       }
 
       fileValidator.validate(multipartFile);
       File file = createFile(candidateDTO, fileName);
       FileCopyUtils.copy(multipartFile.getBytes(), file);
-      
+
       redirectAttributes.addFlashAttribute(FILE, fileName);
       redirectAttributes.addFlashAttribute(VALIDATION_SUCCESS_KEY, VALIDATION_FILE_SUCCESS_MESSAGE_KEY);
 

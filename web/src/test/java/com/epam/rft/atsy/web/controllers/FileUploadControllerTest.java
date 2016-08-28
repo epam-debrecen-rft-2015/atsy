@@ -22,6 +22,7 @@ import com.epam.rft.atsy.service.exception.file.FileValidationException;
 import com.epam.rft.atsy.web.mapper.FileValidationRuleMapper;
 import com.epam.rft.atsy.web.validator.FileValidator;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -51,16 +52,13 @@ public class FileUploadControllerTest extends AbstractControllerTest {
   private static final String VALIDATION_FILE_SUCCESS_MESSAGE_KEY = "file.validation.success";
   private static final String FILE_IS_IN_WRONG_EXTENSION_MESSAGE_KEY = "file.is.in.wrong.extension";
   private static final String FILE_ALREADY_EXISTS_MESSAGE_KEY = "file.already.exists";
-  private static final String
-      CANDIDATE_ALREADY_HAS_CV_FILE_MESSAGE_KEY =
-      "candidate.already.has.cv.file";
+  private static final String CANDIDATE_ALREADY_HAS_CV_FILE_MESSAGE_KEY = "candidate.already.has.cv.file";
 
   private static final String UPLOAD_LOCATION_VARIABLE_NAME = "uploadLocation";
   private static final String CATALINA_BASE = "${catalina.base}";
   private static final String CV_TEST_FOLDER_NAME = "cv_test_folder";
 
-  private static final String CV_TEST_FOLDER_LOCATION_PATH =
-      System.getProperty(CATALINA_BASE) + File.separator + CV_TEST_FOLDER_NAME;
+  private static final String CV_TEST_FOLDER_LOCATION_PATH = System.getProperty(CATALINA_BASE) + File.separator + CV_TEST_FOLDER_NAME;
   private static final File FOLDER = new File(CV_TEST_FOLDER_LOCATION_PATH);
 
   private static final String CANDIDATE_ID_PARAM_NAME = "candidateId";
@@ -72,11 +70,9 @@ public class FileUploadControllerTest extends AbstractControllerTest {
   private static final String ORIGINAL_FILENAME_INVALID = "file.txt";
   private static final long FILE_SIZE_HUNDRED_BYTE = 100;
 
-  private CandidateDTO candidateDTOWithoutCVFile =
-      CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).cvFilename(null).build();
-  private CandidateDTO candidateDTOWithCVFile =
-      CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME)
-          .cvFilename(ORIGINAL_FILENAME_VALID).build();
+  private CandidateDTO candidateDTOWithNullCVFilename = CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).cvFilename(null).build();
+  private CandidateDTO candidateDTOWithEmptyCVFilename = CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).cvFilename(StringUtils.EMPTY).build();
+  private CandidateDTO candidateDTOWithValidCVFilename = CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).cvFilename(ORIGINAL_FILENAME_VALID).build();
 
   @Mock
   private FileValidator fileValidator;
@@ -117,28 +113,44 @@ public class FileUploadControllerTest extends AbstractControllerTest {
     FileUtils.forceDelete(FOLDER);
   }
 
-
   @Test
-  public void uploadFileShouldThrowFileValidationExceptionWhenFileIsInWrongExtension()
+  public void uploadFileShouldThrowFileValidationExceptionWhenFileIsInWrongExtensionAndCVFilenameIsNull()
       throws Exception {
     // Given
-    FileValidationException
-        fileValidationException =
-        new FileIsInWrongExtensionValidationException();
-    MockMultipartFile multipartFile =
-        MultipartFileCreatorTestHelper
-            .createMultipartFile(ORIGINAL_FILENAME_INVALID, FILE_SIZE_HUNDRED_BYTE);
+    FileValidationException fileValidationException = new FileIsInWrongExtensionValidationException();
+    MockMultipartFile multipartFile = MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_INVALID, FILE_SIZE_HUNDRED_BYTE);
 
-    given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithoutCVFile);
+    given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithNullCVFilename);
+    given(fileValidationRuleMapper.getMessageKeyByException(fileValidationException)).willReturn(FILE_IS_IN_WRONG_EXTENSION_MESSAGE_KEY);
     doThrow(fileValidationException).when(fileValidator).validate(multipartFile);
-    given(fileValidationRuleMapper.getMessageKeyByException(fileValidationException))
-        .willReturn(FILE_IS_IN_WRONG_EXTENSION_MESSAGE_KEY);
 
     this.mockMvc.perform(buildFileUploadRequest(multipartFile))
-        .andExpect(flash().attributeExists(VALIDATION_ERROR_KEY))
-        .andExpect(flash()
-            .attribute(VALIDATION_ERROR_KEY, equalTo(FILE_IS_IN_WRONG_EXTENSION_MESSAGE_KEY)))
         .andExpect(status().is3xxRedirection())
+        .andExpect(flash().attributeExists(VALIDATION_ERROR_KEY))
+        .andExpect(flash().attribute(VALIDATION_ERROR_KEY, equalTo(FILE_IS_IN_WRONG_EXTENSION_MESSAGE_KEY)))
+        .andExpect(redirectedUrl(REDIRECT_URL));
+
+    then(candidateService).should().getCandidate(CANDIDATE_ID);
+    then(fileValidator).should().validate(multipartFile);
+    then(fileValidationRuleMapper).should().getMessageKeyByException(fileValidationException);
+    then(candidateService).should(times(0)).saveOrUpdate(any(CandidateDTO.class));
+  }
+
+  @Test
+  public void uploadFileShouldThrowFileValidationExceptionWhenFileIsInWrongExtensionAndCVFilenameIsEmpty()
+      throws Exception {
+    // Given
+    FileValidationException fileValidationException = new FileIsInWrongExtensionValidationException();
+    MockMultipartFile multipartFile = MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_INVALID, FILE_SIZE_HUNDRED_BYTE);
+
+    given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithEmptyCVFilename);
+    given(fileValidationRuleMapper.getMessageKeyByException(fileValidationException)).willReturn(FILE_IS_IN_WRONG_EXTENSION_MESSAGE_KEY);
+    doThrow(fileValidationException).when(fileValidator).validate(multipartFile);
+
+    this.mockMvc.perform(buildFileUploadRequest(multipartFile))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(flash().attributeExists(VALIDATION_ERROR_KEY))
+        .andExpect(flash().attribute(VALIDATION_ERROR_KEY, equalTo(FILE_IS_IN_WRONG_EXTENSION_MESSAGE_KEY)))
         .andExpect(redirectedUrl(REDIRECT_URL));
 
     then(candidateService).should().getCandidate(CANDIDATE_ID);
@@ -152,20 +164,16 @@ public class FileUploadControllerTest extends AbstractControllerTest {
       throws Exception {
     // Given
     FileValidationException fileValidationException = new FileAlreadyExistsValidationException();
-    MockMultipartFile multipartFile =
-        MultipartFileCreatorTestHelper
-            .createMultipartFile(ORIGINAL_FILENAME_VALID, FILE_SIZE_HUNDRED_BYTE);
+    MockMultipartFile multipartFile = MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_VALID, FILE_SIZE_HUNDRED_BYTE);
 
-    given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithoutCVFile);
-    doThrow(fileValidationException).when(fileUploadController).createFile(ORIGINAL_FILENAME_VALID);
-    given(fileValidationRuleMapper.getMessageKeyByException(fileValidationException))
-        .willReturn(FILE_ALREADY_EXISTS_MESSAGE_KEY);
+    given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithNullCVFilename);
+    given(fileValidationRuleMapper.getMessageKeyByException(fileValidationException)).willReturn(FILE_ALREADY_EXISTS_MESSAGE_KEY);
+    doThrow(fileValidationException).when(fileUploadController).createFile(candidateDTOWithNullCVFilename, ORIGINAL_FILENAME_VALID);
 
     this.mockMvc.perform(buildFileUploadRequest(multipartFile))
-        .andExpect(flash().attributeExists(VALIDATION_ERROR_KEY))
-        .andExpect(
-            flash().attribute(VALIDATION_ERROR_KEY, equalTo(FILE_ALREADY_EXISTS_MESSAGE_KEY)))
         .andExpect(status().is3xxRedirection())
+        .andExpect(flash().attributeExists(VALIDATION_ERROR_KEY))
+        .andExpect(flash().attribute(VALIDATION_ERROR_KEY, equalTo(FILE_ALREADY_EXISTS_MESSAGE_KEY)))
         .andExpect(redirectedUrl(REDIRECT_URL));
 
     then(candidateService).should().getCandidate(CANDIDATE_ID);
@@ -178,17 +186,13 @@ public class FileUploadControllerTest extends AbstractControllerTest {
   public void uploadFileShouldThrowCandidateAlreadyHasCVFileExceptionWhenCandidateAlreadyHasCVFile()
       throws Exception {
     // Given
-    MockMultipartFile multipartFile =
-        MultipartFileCreatorTestHelper
-            .createMultipartFile(ORIGINAL_FILENAME_VALID, FILE_SIZE_HUNDRED_BYTE);
-
-    given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithCVFile);
+    MockMultipartFile multipartFile = MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_VALID, FILE_SIZE_HUNDRED_BYTE);
+    given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithValidCVFilename);
 
     this.mockMvc.perform(buildFileUploadRequest(multipartFile))
-        .andExpect(flash().attributeExists(VALIDATION_ERROR_KEY))
-        .andExpect(flash()
-            .attribute(VALIDATION_ERROR_KEY, equalTo(CANDIDATE_ALREADY_HAS_CV_FILE_MESSAGE_KEY)))
         .andExpect(status().is3xxRedirection())
+        .andExpect(flash().attributeExists(VALIDATION_ERROR_KEY))
+        .andExpect(flash().attribute(VALIDATION_ERROR_KEY, equalTo(CANDIDATE_ALREADY_HAS_CV_FILE_MESSAGE_KEY)))
         .andExpect(redirectedUrl(REDIRECT_URL));
 
     then(candidateService).should().getCandidate(CANDIDATE_ID);
@@ -199,24 +203,20 @@ public class FileUploadControllerTest extends AbstractControllerTest {
   @Test
   public void uploadFileShouldSaveFileWhenEverythingIsOk() throws Exception {
     // Given
-    MockMultipartFile multipartFile =
-        MultipartFileCreatorTestHelper
-            .createMultipartFile(ORIGINAL_FILENAME_VALID, FILE_SIZE_HUNDRED_BYTE);
-
-    given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithoutCVFile);
+    MockMultipartFile multipartFile = MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_VALID, FILE_SIZE_HUNDRED_BYTE);
+    given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithNullCVFilename);
 
     this.mockMvc.perform(buildFileUploadRequest(multipartFile))
-        .andExpect(flash().attributeExists(VALIDATION_SUCCESS_KEY))
-        .andExpect(
-            flash().attribute(VALIDATION_SUCCESS_KEY, equalTo(VALIDATION_FILE_SUCCESS_MESSAGE_KEY)))
         .andExpect(status().is3xxRedirection())
+        .andExpect(flash().attributeExists(VALIDATION_SUCCESS_KEY))
+        .andExpect(flash().attribute(VALIDATION_SUCCESS_KEY, equalTo(VALIDATION_FILE_SUCCESS_MESSAGE_KEY)))
         .andExpect(redirectedUrl(REDIRECT_URL));
 
-    assertThat(candidateDTOWithCVFile.getCvFilename(), equalTo(ORIGINAL_FILENAME_VALID));
+    assertThat(candidateDTOWithValidCVFilename.getCvFilename(), equalTo(ORIGINAL_FILENAME_VALID));
 
     then(candidateService).should().getCandidate(CANDIDATE_ID);
     then(fileValidator).should().validate(multipartFile);
-    then(candidateService).should().saveOrUpdate(candidateDTOWithoutCVFile);
+    then(candidateService).should().saveOrUpdate(candidateDTOWithNullCVFilename);
     verifyZeroInteractions(fileValidationRuleMapper);
   }
 
