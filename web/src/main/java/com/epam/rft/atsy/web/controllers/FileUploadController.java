@@ -5,6 +5,7 @@ import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.CandidateAlreadyHasCVFileException;
 import com.epam.rft.atsy.service.exception.file.FileAlreadyExistsValidationException;
 import com.epam.rft.atsy.service.exception.file.FileValidationException;
+import com.epam.rft.atsy.web.util.CandidateCVFileHandlerUtil;
 import com.epam.rft.atsy.web.mapper.FileValidationRuleMapper;
 import com.epam.rft.atsy.web.validator.FileValidator;
 
@@ -66,9 +67,9 @@ public class FileUploadController {
       }
 
       fileValidator.validate(multipartFile);
-      File file = createFile(fileName);
-
+      File file = createFile(candidateDTO, fileName);
       FileCopyUtils.copy(multipartFile.getBytes(), file);
+      
       redirectAttributes.addFlashAttribute(FILE, fileName);
       redirectAttributes.addFlashAttribute(VALIDATION_SUCCESS_KEY, VALIDATION_FILE_SUCCESS_MESSAGE_KEY);
 
@@ -88,9 +89,11 @@ public class FileUploadController {
     return modelAndView;
   }
 
-  protected File createFile(String filename) throws FileValidationException {
-    String filenameWithFullPath = uploadLocation + File.separator + filename;
-    File file = new File(filenameWithFullPath);
+  protected File createFile(CandidateDTO candidateDTO, String filename) throws FileValidationException, IOException {
+    if (!CandidateCVFileHandlerUtil.existCandidateFolderOnFolderLocation(uploadLocation, candidateDTO)) {
+      CandidateCVFileHandlerUtil.createCandidateFolderOnFolderLocation(uploadLocation, candidateDTO);
+    }
+    File file = CandidateCVFileHandlerUtil.createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(uploadLocation, candidateDTO, filename);
     if (file.exists()) {
       throw new FileAlreadyExistsValidationException();
     }

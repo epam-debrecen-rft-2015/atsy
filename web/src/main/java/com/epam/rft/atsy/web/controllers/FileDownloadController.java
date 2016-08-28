@@ -1,6 +1,8 @@
 package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.CandidateService;
+import com.epam.rft.atsy.service.domain.CandidateDTO;
+import com.epam.rft.atsy.web.util.CandidateCVFileHandlerUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,16 +44,17 @@ public class FileDownloadController {
   public Object downloadFile(@PathVariable("candidateId") Long candidateId, RedirectAttributes redirectAttrs)
       throws Exception {
 
-    String cvFilename = candidateService.getCvFilenameById(candidateId);
+    CandidateDTO candidateDTO = candidateService.getCandidate(candidateId);
+    String cvFilename = candidateDTO.getCvFilename();
     if (cvFilename != null && !cvFilename.isEmpty()) {
 
       try {
-        File file = new File(uploadLocation + File.separator + cvFilename);
+        File file = CandidateCVFileHandlerUtil.createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(uploadLocation, candidateDTO, cvFilename);
         InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
         InputStreamResource inputStreamResource = new InputStreamResource(inputStream);
 
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(CONTENT_DISPOSITION, String.format(INLINE_FORMAT + cvFilename + "\""));
+        responseHeaders.set(CONTENT_DISPOSITION, String.format(INLINE_FORMAT + cvFilename));
         responseHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         responseHeaders.setContentLength(file.length());
 
