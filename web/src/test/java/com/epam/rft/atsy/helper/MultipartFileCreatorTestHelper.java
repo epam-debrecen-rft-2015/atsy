@@ -3,7 +3,6 @@ package com.epam.rft.atsy.helper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 public class MultipartFileCreatorTestHelper {
 
