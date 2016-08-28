@@ -4,11 +4,15 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.epam.rft.atsy.helper.MultipartFileCreatorTestHelper;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.util.CandidateCVFileHandlerUtil;
@@ -25,6 +29,7 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.FileCopyUtils;
 
@@ -56,12 +61,14 @@ public class FileDownloadControllerTest extends AbstractControllerTest {
   private static final long CANDIDATE_ID = 1L;
   private static final String CANDIDATE_NAME = "Candidate A";
   private static final String CANDIDATE_CV_FILENAME = "file.pdf";
+  private static final String NON_EXISTENT_CV_FILENAME = "missing_file.pdf";
   private static final int FILE_SIZE_HUNDRED_BYTE = 100;
   private static final char CHARACTER = 'a';
 
   private CandidateDTO candidateDTOWitNullCVFilename = CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).cvFilename(null).build();
   private CandidateDTO candidateDTOWithEmptyCVFilename = CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).cvFilename(StringUtils.EMPTY).build();
   private CandidateDTO candidateDTOWithValidCVFilename = CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).cvFilename(CANDIDATE_CV_FILENAME).build();
+  private CandidateDTO candidateDTOWithNonExistentCVFilename = CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).cvFilename(NON_EXISTENT_CV_FILENAME).build();
 
   @Mock
   private CandidateService candidateService;
@@ -96,6 +103,16 @@ public class FileDownloadControllerTest extends AbstractControllerTest {
   }
 
   @Test
+  public void downloadFileShouldRespondInternalServerErrorWhenCandidateIsNull() throws Exception {
+    given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(null);
+
+    this.mockMvc.perform(get(REQUEST_URL).param(CANDIDATE_ID_PARAM_NAME, CANDIDATE_ID_PARAM_VALUE))
+        .andExpect(status().isInternalServerError());
+
+    then(candidateService).should().getCandidate(CANDIDATE_ID);
+  }
+
+  @Test
   public void downloadFileShouldNotDownloadWhenTheNameOfTheCVFileIsNullInDB() throws Exception {
     given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWitNullCVFilename);
     this.mockMvc.perform(get(REQUEST_URL).param(CANDIDATE_ID_PARAM_NAME, CANDIDATE_ID_PARAM_VALUE))
@@ -121,7 +138,20 @@ public class FileDownloadControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void downloadFileShouldDownloadWhenTheNameOfTheCVFileExistsInDB() throws Exception {
+  public void downloadFileShouldNotDownloadWhenTheNameOfTheCVFileExistsInDBAndNotExistsInFileSystem() throws Exception {
+    given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithNonExistentCVFilename);
+
+    this.mockMvc.perform(get(REQUEST_URL).param(CANDIDATE_ID_PARAM_NAME, CANDIDATE_ID_PARAM_VALUE))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(flash().attributeExists(FILE_ERROR_MESSAGE))
+        .andExpect(flash().attribute(FILE_ERROR_MESSAGE, equalTo(FILE_ERROR_MESSAGE_KEY)))
+        .andExpect(redirectedUrl(REDIRECT_URL));
+
+    then(candidateService).should().getCandidate(CANDIDATE_ID);
+  }
+
+  @Test
+  public void downloadFileShouldDownloadWhenTheNameOfTheCVFileExistsInDBAndInFileSystem() throws Exception {
     given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithValidCVFilename);
 
     MockHttpServletResponse result = this.mockMvc.perform(get(REQUEST_URL).param(CANDIDATE_ID_PARAM_NAME, CANDIDATE_ID_PARAM_VALUE))

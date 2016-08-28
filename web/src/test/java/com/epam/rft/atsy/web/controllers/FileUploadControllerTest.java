@@ -114,6 +114,20 @@ public class FileUploadControllerTest extends AbstractControllerTest {
   }
 
   @Test
+  public void uploadFileShouldRespondInternalServerErrorWhenCandidateIsNull() throws Exception {
+    // Given
+    MockMultipartFile multipartFile = MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_INVALID, FILE_SIZE_HUNDRED_BYTE);
+    given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(null);
+
+    this.mockMvc.perform(buildFileUploadRequest(multipartFile))
+        .andExpect(status().isInternalServerError());
+
+    then(candidateService).should().getCandidate(CANDIDATE_ID);
+    then(candidateService).should(times(0)).saveOrUpdate(any(CandidateDTO.class));
+    verifyZeroInteractions(fileValidator, fileValidationRuleMapper);
+  }
+
+  @Test
   public void uploadFileShouldThrowFileValidationExceptionWhenFileIsInWrongExtensionAndCVFilenameIsNull()
       throws Exception {
     // Given
