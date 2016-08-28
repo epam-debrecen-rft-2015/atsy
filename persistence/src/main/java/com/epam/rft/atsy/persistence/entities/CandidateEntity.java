@@ -42,7 +42,7 @@ public class CandidateEntity extends SuperEntity implements Serializable {
   @Column(name = "language_skill")
   private Short languageSkill;
 
-  @Column(name = "cv_file_name", unique = true)
+  @Column(name = "cv_file_name")
   private String cvFilename;
 
 
