@@ -1,14 +1,21 @@
 package com.epam.rft.atsy.web.controllers;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
-import com.epam.rft.atsy.web.util.CandidateCVFileHandlerUtil;
-
+import com.epam.rft.atsy.web.util.CandidateCVFileHandler;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -22,15 +29,6 @@ import org.springframework.util.FileCopyUtils;
 
 import java.io.File;
 import java.io.IOException;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -65,9 +63,14 @@ public class FileDownloadControllerTest extends AbstractControllerTest {
   private CandidateDTO candidateDTOWithEmptyCVFilename = CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).cvFilename(StringUtils.EMPTY).build();
   private CandidateDTO candidateDTOWithValidCVFilename = CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).cvFilename(CANDIDATE_CV_FILENAME).build();
   private CandidateDTO candidateDTOWithNonExistentCVFilename = CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).cvFilename(NON_EXISTENT_CV_FILENAME).build();
+  private File cvFileExisting = null;
+  private File cvFileNonExistent = null;
 
   @Mock
   private CandidateService candidateService;
+
+  @Mock
+  private CandidateCVFileHandler candidateCVFileHandler;
 
   @Spy
   @InjectMocks
@@ -78,23 +81,18 @@ public class FileDownloadControllerTest extends AbstractControllerTest {
     return new Object[]{fileDownloadController};
   }
 
-  @BeforeClass
-  public static void doBeforeClass() throws IOException {
-    CandidateDTO candidateDTO = CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).cvFilename(null).build();
-
-    FileUtils.forceMkdir(TEST_FOLDER);
-    CandidateCVFileHandlerUtil.createCandidateFolderOnFolderLocation(CV_TEST_FOLDER_LOCATION_PATH, candidateDTO);
-    File file = CandidateCVFileHandlerUtil.createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(CV_TEST_FOLDER_LOCATION_PATH, candidateDTO, CANDIDATE_CV_FILENAME);
-    FileCopyUtils.copy(StringUtils.repeat(CHARACTER, FILE_SIZE_HUNDRED_BYTE).getBytes(), file);
-  }
-
   @Before
-  public void setup() {
+  public void setup() throws IOException {
+    FileUtils.forceMkdir(TEST_FOLDER);
+    FileUtils.forceMkdir(new File(CV_TEST_FOLDER_LOCATION_PATH + File.separator + CANDIDATE_ID + CandidateCVFileHandler.SEPARATOR + CANDIDATE_NAME));
+    cvFileExisting = new File(CV_TEST_FOLDER_LOCATION_PATH + File.separator + CANDIDATE_ID + CandidateCVFileHandler.SEPARATOR + CANDIDATE_NAME + File.separator + CANDIDATE_CV_FILENAME);
+    cvFileNonExistent = new File(CV_TEST_FOLDER_LOCATION_PATH + File.separator + CANDIDATE_ID + CandidateCVFileHandler.SEPARATOR + CANDIDATE_NAME + File.separator + NON_EXISTENT_CV_FILENAME);
+    FileCopyUtils.copy(StringUtils.repeat(CHARACTER, FILE_SIZE_HUNDRED_BYTE).getBytes(), cvFileExisting);
     ReflectionTestUtils.setField(fileDownloadController, UPLOAD_LOCATION_VARIABLE_NAME, CV_TEST_FOLDER_LOCATION_PATH);
   }
 
-  @AfterClass
-  public static void doAfterClass() throws IOException {
+  @After
+  public void teardown() throws IOException {
     FileUtils.forceDelete(TEST_FOLDER);
   }
 
@@ -137,6 +135,7 @@ public class FileDownloadControllerTest extends AbstractControllerTest {
   @Test
   public void downloadFileShouldNotDownloadWhenTheNameOfTheCVFileExistsInDBAndNotExistsInFileSystem() throws Exception {
     given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithNonExistentCVFilename);
+    given(candidateCVFileHandler.createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(CV_TEST_FOLDER_LOCATION_PATH, candidateDTOWithNonExistentCVFilename, NON_EXISTENT_CV_FILENAME)).willReturn(cvFileNonExistent);
 
     this.mockMvc.perform(get(REQUEST_URL).param(CANDIDATE_ID_PARAM_NAME, CANDIDATE_ID_PARAM_VALUE))
         .andExpect(status().is3xxRedirection())
@@ -145,11 +144,13 @@ public class FileDownloadControllerTest extends AbstractControllerTest {
         .andExpect(redirectedUrl(REDIRECT_URL));
 
     then(candidateService).should().getCandidate(CANDIDATE_ID);
+    then(candidateCVFileHandler).should().createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(CV_TEST_FOLDER_LOCATION_PATH, candidateDTOWithNonExistentCVFilename, NON_EXISTENT_CV_FILENAME);
   }
 
   @Test
   public void downloadFileShouldDownloadWhenTheNameOfTheCVFileExistsInDBAndInFileSystem() throws Exception {
     given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithValidCVFilename);
+    given(candidateCVFileHandler.createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(CV_TEST_FOLDER_LOCATION_PATH, candidateDTOWithValidCVFilename, CANDIDATE_CV_FILENAME)).willReturn(cvFileExisting);
 
     MockHttpServletResponse result = this.mockMvc.perform(get(REQUEST_URL).param(CANDIDATE_ID_PARAM_NAME, CANDIDATE_ID_PARAM_VALUE))
         .andExpect(status().isOk())
@@ -160,5 +161,6 @@ public class FileDownloadControllerTest extends AbstractControllerTest {
     assertThat(result.getContentLength(), equalTo(FILE_SIZE_HUNDRED_BYTE));
 
     then(candidateService).should().getCandidate(CANDIDATE_ID);
+    then(candidateCVFileHandler).should().createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(CV_TEST_FOLDER_LOCATION_PATH, candidateDTOWithValidCVFilename, CANDIDATE_CV_FILENAME);
   }
 }

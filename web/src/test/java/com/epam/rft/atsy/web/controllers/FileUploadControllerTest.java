@@ -20,13 +20,12 @@ import com.epam.rft.atsy.service.exception.file.FileAlreadyExistsValidationExcep
 import com.epam.rft.atsy.service.exception.file.FileIsInWrongExtensionValidationException;
 import com.epam.rft.atsy.service.exception.file.FileValidationException;
 import com.epam.rft.atsy.web.mapper.FileValidationRuleMapper;
+import com.epam.rft.atsy.web.util.CandidateCVFileHandler;
 import com.epam.rft.atsy.web.validator.FileValidator;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -58,9 +57,6 @@ public class FileUploadControllerTest extends AbstractControllerTest {
   private static final String CATALINA_BASE = "${catalina.base}";
   private static final String CV_TEST_FOLDER_NAME = "cv_test_folder";
 
-  private static final String CV_TEST_FOLDER_LOCATION_PATH = System.getProperty(CATALINA_BASE) + File.separator + CV_TEST_FOLDER_NAME;
-  private static final File FOLDER = new File(CV_TEST_FOLDER_LOCATION_PATH);
-
   private static final String CANDIDATE_ID_PARAM_NAME = "candidateId";
   private static final String CANDIDATE_ID_PARAM_VALUE = "1L";
 
@@ -70,6 +66,12 @@ public class FileUploadControllerTest extends AbstractControllerTest {
   private static final String ORIGINAL_FILENAME_INVALID = "file.txt";
   private static final int FILE_SIZE_HUNDRED_BYTE = 100;
 
+  private static final String CV_TEST_FOLDER_LOCATION_PATH = System.getProperty(CATALINA_BASE) + File.separator + CV_TEST_FOLDER_NAME;
+  private static final String CANDIDATE_FOLDER_NAME = CV_TEST_FOLDER_LOCATION_PATH + File.separator + CANDIDATE_ID + CandidateCVFileHandler.SEPARATOR + CANDIDATE_NAME;
+  private static final File TEST_FOLDER = new File(CV_TEST_FOLDER_LOCATION_PATH);
+  private static final File CANDIDATE_FOLDER = new File(CANDIDATE_FOLDER_NAME);
+
+  private File cvFile = new File(CV_TEST_FOLDER_LOCATION_PATH + File.separator + CANDIDATE_ID + CandidateCVFileHandler.SEPARATOR + CANDIDATE_NAME + File.separator + ORIGINAL_FILENAME_VALID);
   private CandidateDTO candidateDTOWithNullCVFilename = CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).cvFilename(null).build();
   private CandidateDTO candidateDTOWithEmptyCVFilename = CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).cvFilename(StringUtils.EMPTY).build();
   private CandidateDTO candidateDTOWithValidCVFilename = CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).cvFilename(ORIGINAL_FILENAME_VALID).build();
@@ -79,6 +81,9 @@ public class FileUploadControllerTest extends AbstractControllerTest {
 
   @Mock
   private FileValidationRuleMapper fileValidationRuleMapper;
+
+  @Mock
+  private CandidateCVFileHandler candidateCVFileHandler;
 
   @Mock
   private CandidateService candidateService;
@@ -92,25 +97,17 @@ public class FileUploadControllerTest extends AbstractControllerTest {
     return new Object[]{fileUploadController};
   }
 
-  @BeforeClass
-  public static void doBeforeClass() throws IOException {
-    FileUtils.forceMkdir(FOLDER);
-  }
-
   @Before
-  public void setup() {
+  public void setup() throws IOException {
+    FileUtils.forceMkdir(TEST_FOLDER);
+    FileUtils.forceMkdir(CANDIDATE_FOLDER);
     ReflectionTestUtils.setField(fileUploadController, UPLOAD_LOCATION_VARIABLE_NAME,
         CV_TEST_FOLDER_LOCATION_PATH);
   }
 
   @After
   public void tearDown() throws IOException {
-    FileUtils.cleanDirectory(FOLDER);
-  }
-
-  @AfterClass
-  public static void doAfterClass() throws IOException {
-    FileUtils.forceDelete(FOLDER);
+    FileUtils.forceDelete(TEST_FOLDER);
   }
 
   @Test
@@ -213,6 +210,7 @@ public class FileUploadControllerTest extends AbstractControllerTest {
   public void uploadFileShouldSaveFileWhenEverythingIsOk() throws Exception {
     MockMultipartFile multipartFile = MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_VALID, FILE_SIZE_HUNDRED_BYTE);
     given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithNullCVFilename);
+    given(candidateCVFileHandler.createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(CV_TEST_FOLDER_LOCATION_PATH, candidateDTOWithNullCVFilename, ORIGINAL_FILENAME_VALID)).willReturn(cvFile);
 
     this.mockMvc.perform(buildFileUploadRequest(multipartFile))
         .andExpect(status().is3xxRedirection())
@@ -225,6 +223,7 @@ public class FileUploadControllerTest extends AbstractControllerTest {
     then(candidateService).should().getCandidate(CANDIDATE_ID);
     then(fileValidator).should().validate(multipartFile);
     then(candidateService).should().saveOrUpdate(candidateDTOWithNullCVFilename);
+    then(candidateCVFileHandler).should().createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(CV_TEST_FOLDER_LOCATION_PATH, candidateDTOWithNullCVFilename, ORIGINAL_FILENAME_VALID);
     verifyZeroInteractions(fileValidationRuleMapper);
   }
 

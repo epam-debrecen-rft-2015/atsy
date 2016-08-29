@@ -5,11 +5,10 @@ import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.CandidateAlreadyHasCVFileException;
 import com.epam.rft.atsy.service.exception.file.FileAlreadyExistsValidationException;
 import com.epam.rft.atsy.service.exception.file.FileValidationException;
-import com.epam.rft.atsy.web.util.CandidateCVFileHandlerUtil;
+import com.epam.rft.atsy.web.util.CandidateCVFileHandler;
 import com.epam.rft.atsy.web.mapper.FileValidationRuleMapper;
 import com.epam.rft.atsy.web.validator.FileValidator;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,6 +47,9 @@ public class FileUploadController {
 
   @Autowired
   private FileValidationRuleMapper fileValidationRuleMapper;
+
+  @Autowired
+  private CandidateCVFileHandler candidateCVFileHandler;
 
   @Autowired
   private CandidateService candidateService;
@@ -93,10 +95,11 @@ public class FileUploadController {
   }
 
   protected File createFile(CandidateDTO candidateDTO, String filename) throws FileValidationException, IOException {
-    if (!CandidateCVFileHandlerUtil.existCandidateFolderOnFolderLocation(uploadLocation, candidateDTO)) {
-      CandidateCVFileHandlerUtil.createCandidateFolderOnFolderLocation(uploadLocation, candidateDTO);
+    if (!candidateCVFileHandler.existCandidateFolderOnFolderLocation(uploadLocation, candidateDTO)) {
+      candidateCVFileHandler.createCandidateFolderOnFolderLocation(uploadLocation, candidateDTO);
     }
-    File file = CandidateCVFileHandlerUtil.createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(uploadLocation, candidateDTO, filename);
+    File file = candidateCVFileHandler
+        .createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(uploadLocation, candidateDTO, filename);
     if (file.exists()) {
       throw new FileAlreadyExistsValidationException();
     }
