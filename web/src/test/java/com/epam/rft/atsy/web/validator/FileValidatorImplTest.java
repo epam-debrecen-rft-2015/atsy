@@ -24,11 +24,11 @@ public class FileValidatorImplTest {
   private static final String ORIGINAL_FILENAME_IS_VALID_ODT = "CaaaT__0-9.odt";
   private static final String ORIGINAL_FILENAME_IS_VALID_PDF = "cAAt.pdf";
 
-  private static final long FILE_SIZE_ZERO_MB = 0;
-  private static final long FILE_SIZE_FIVE_MB = 1024 * 1024 * 5;
-  private static final long FILE_SIZE_TEN_MB_MINUS_ONE_BYTE = (1024 * 1024 * 10) - 1;
-  private static final long FILE_SIZE_TEN_MB = (1024 * 1024 * 10);
-  private static final long FILE_SIZE_TEN_MB_PLUS_ONE_BYTE = (1024 * 1024 * 10) + 1;
+  private static final int FILE_SIZE_ZERO_MB = 0;
+  private static final int FILE_SIZE_FIVE_MB = 1024 * 1024 * 5;
+  private static final int FILE_SIZE_TEN_MB_MINUS_ONE_BYTE = (1024 * 1024 * 10) - 1;
+  private static final int FILE_SIZE_TEN_MB = (1024 * 1024 * 10);
+  private static final int FILE_SIZE_TEN_MB_PLUS_ONE_BYTE = (1024 * 1024 * 10) + 1;
 
   private FileValidator fileValidator = new FileValidatorImpl();
 

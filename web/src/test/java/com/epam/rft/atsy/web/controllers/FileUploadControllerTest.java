@@ -68,7 +68,7 @@ public class FileUploadControllerTest extends AbstractControllerTest {
   private static final String CANDIDATE_NAME = "Candidate A";
   private static final String ORIGINAL_FILENAME_VALID = "file.pdf";
   private static final String ORIGINAL_FILENAME_INVALID = "file.txt";
-  private static final long FILE_SIZE_HUNDRED_BYTE = 100;
+  private static final int FILE_SIZE_HUNDRED_BYTE = 100;
 
   private CandidateDTO candidateDTOWithNullCVFilename = CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).cvFilename(null).build();
   private CandidateDTO candidateDTOWithEmptyCVFilename = CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).cvFilename(StringUtils.EMPTY).build();
