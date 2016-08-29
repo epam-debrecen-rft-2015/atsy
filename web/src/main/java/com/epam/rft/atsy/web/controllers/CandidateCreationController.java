@@ -20,7 +20,6 @@ public class CandidateCreationController {
   @Autowired
   private CandidateService candidateService;
 
-
   @RequestMapping(method = RequestMethod.GET, path = "/{candidateId}")
   public ModelAndView loadCandidate(@PathVariable(value = "candidateId") Long candidateId) {
     ModelAndView modelAndView = new ModelAndView(VIEW_NAME);

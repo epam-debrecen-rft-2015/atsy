@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class FileValidatorImplTest {
 
-
   private static final String ORIGINAL_FILENAME_IS_EMPTY = StringUtils.EMPTY;
   private static final String ORIGINAL_FILENAME_CONTAINS_INVALID_CHARACTER = "cat$.pdf";
   private static final String ORIGINAL_FILENAME_IN_WRONG_EXTENSION = "cat.txt";
@@ -32,7 +31,6 @@ public class FileValidatorImplTest {
   private static final long FILE_SIZE_TEN_MB_PLUS_ONE_BYTE = (1024 * 1024 * 10) + 1;
 
   private FileValidator fileValidator = new FileValidatorImpl();
-
 
   @Test(expected = IllegalArgumentException.class)
   public void validateShouldThrowIllegalArgumentExceptionWhenFileIsNull() throws FileValidationException {

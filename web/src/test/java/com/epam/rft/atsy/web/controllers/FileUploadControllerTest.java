@@ -115,7 +115,6 @@ public class FileUploadControllerTest extends AbstractControllerTest {
 
   @Test
   public void uploadFileShouldRespondInternalServerErrorWhenCandidateIsNull() throws Exception {
-    // Given
     MockMultipartFile multipartFile = MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_INVALID, FILE_SIZE_HUNDRED_BYTE);
     given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(null);
 
@@ -130,7 +129,6 @@ public class FileUploadControllerTest extends AbstractControllerTest {
   @Test
   public void uploadFileShouldThrowFileValidationExceptionWhenFileIsInWrongExtensionAndCVFilenameIsNull()
       throws Exception {
-    // Given
     FileValidationException fileValidationException = new FileIsInWrongExtensionValidationException();
     MockMultipartFile multipartFile = MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_INVALID, FILE_SIZE_HUNDRED_BYTE);
 
@@ -153,7 +151,6 @@ public class FileUploadControllerTest extends AbstractControllerTest {
   @Test
   public void uploadFileShouldThrowFileValidationExceptionWhenFileIsInWrongExtensionAndCVFilenameIsEmpty()
       throws Exception {
-    // Given
     FileValidationException fileValidationException = new FileIsInWrongExtensionValidationException();
     MockMultipartFile multipartFile = MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_INVALID, FILE_SIZE_HUNDRED_BYTE);
 
@@ -176,7 +173,6 @@ public class FileUploadControllerTest extends AbstractControllerTest {
   @Test
   public void uploadFileShouldThrowFileAlreadyExistsValidationExceptionWhenFileAlreadyExists()
       throws Exception {
-    // Given
     FileValidationException fileValidationException = new FileAlreadyExistsValidationException();
     MockMultipartFile multipartFile = MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_VALID, FILE_SIZE_HUNDRED_BYTE);
 
@@ -199,7 +195,6 @@ public class FileUploadControllerTest extends AbstractControllerTest {
   @Test
   public void uploadFileShouldThrowCandidateAlreadyHasCVFileExceptionWhenCandidateAlreadyHasCVFile()
       throws Exception {
-    // Given
     MockMultipartFile multipartFile = MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_VALID, FILE_SIZE_HUNDRED_BYTE);
     given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithValidCVFilename);
 
@@ -216,7 +211,6 @@ public class FileUploadControllerTest extends AbstractControllerTest {
 
   @Test
   public void uploadFileShouldSaveFileWhenEverythingIsOk() throws Exception {
-    // Given
     MockMultipartFile multipartFile = MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_VALID, FILE_SIZE_HUNDRED_BYTE);
     given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithNullCVFilename);
 

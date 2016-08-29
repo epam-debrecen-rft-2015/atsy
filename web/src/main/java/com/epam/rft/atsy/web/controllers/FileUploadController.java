@@ -9,6 +9,8 @@ import com.epam.rft.atsy.web.util.CandidateCVFileHandlerUtil;
 import com.epam.rft.atsy.web.mapper.FileValidationRuleMapper;
 import com.epam.rft.atsy.web.validator.FileValidator;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -63,7 +65,7 @@ public class FileUploadController {
     try {
       CandidateDTO candidateDTO = candidateService.getCandidate(candidateId);
       String candidateCVFilename = candidateDTO.getCvFilename();
-      if (candidateCVFilename != null && !candidateCVFilename.isEmpty()) {
+      if (candidateCVFilename != null && StringUtils.isNotEmpty(candidateCVFilename)) {
         throw new CandidateAlreadyHasCVFileException();
       }
 
