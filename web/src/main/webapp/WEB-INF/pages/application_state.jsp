@@ -16,7 +16,7 @@
   <jsp:body>
       <div class="page-header">
           <h1><spring:message code="application.state.title"/>
-              <small id="positionName">${states[0].positionName}</small>
+              <small id="positionName"><c:out value = "${states[0].positionName}"/></small>
           </h1>
       </div>
 
@@ -60,7 +60,7 @@
 
       <div id="stateList">
       <c:forEach var="data" items="${states}" varStatus="stat">
-          <fmt:parseDate pattern="yyyy-MM-dd HH:mm:ss" value="${data.creationDate}" var="parsedCreationDate" />
+
           <div class="page-header">
               <h4 class="col-sm-6 col-md-6 col-lg-6">${data.stateFullName}</h4>
               <c:if test="${stat.first}">
@@ -76,12 +76,16 @@
               <div class="form-group col-sm-12 col-md-12 col-lg-12">
                   <label for="creationDateInput" class="control-label col-sm-4"><spring:message code="statehistory.field.date"/></label>
                   <div class="col-sm-8">
-                      <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="creationDateP"><fmt:formatDate value='${parsedCreationDate}' pattern='yyyy-MM-dd HH:mm'/></p>
+                      <fmt:formatDate value='${data.creationDate}' pattern='yyyy-MM-dd HH:mm' var="formattedCreationDate"/>
+
+                      <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedCreationDate}</p>
                       <c:if test="${stat.first}">
-                          <input class="stateInput" readOnly="true" type="text" name="creationDate" id="creationDateInput" style="display:none"
-                            value="<fmt:formatDate value='${parsedCreationDate}' pattern='yyyy-MM-dd HH:mm'/>"
+                          <spring:message code="statehistory.error.parse.date" var="errorParseDateMessage"/>
+
+                          <input class="stateInput hidden" readOnly="true" type="text" name="creationDate" id="creationDateInput"
+                            value="${formattedCreationDate}"
                             data-bind="valueWithInit: 'creationDate'"
-                            data-error="<spring:message code="statehistory.error.parse.date"/>"
+                            data-error="${errorParseDateMessage}"
                             pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$"/>
                       </c:if>
                   </div>
@@ -91,17 +95,17 @@
               <div class="form-group">
                   <label for="descriptionInput" class="control-label col-sm-4"><spring:message code="statehistory.field.description"/></label>
                   <div class="col-sm-8">
-                      <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="descriptionP">${data.description}</p>
+                      <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value = "${data.description}"/></p>
                       <c:if test="${stat.first}">
-                          <textarea class="stateInput" wrap="soft" name="description" id="descriptionInput" style="display:none; resize: both;"
+                          <textarea class="stateInput hidden resizeable" wrap="soft" name="description" id="descriptionInput"
                             data-bind="valueWithInit: 'description'"
-                            maxlength="2000">${data.description}</textarea>
+                            maxlength="2000"><c:out value = "${data.description}"/></textarea>
                       </c:if>
                   </div>
                   <div class="help-block with-errors"></div>
               </div>
-
               <c:choose>
+
                   <c:when test="${data.stateName == 'newstate'}">
                       <div class="form-group">
                           <label id="positionLabel" class="control-label col-lg-4 col-md-4 col-sm-4 text-right">
@@ -110,7 +114,7 @@
                           <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="dropSource">
                               <select class="input form-control" name="positionSelector" id="positionSelector" data-bind="valueWithInit: 'positionName'" disabled="disabled">
                                   <option selected disabled value="${data.positionName}">
-                                      <c:out value="${data.positionName}"/>
+                                       <c:out value="${data.positionName}"/>
                                   </option>
                               </select>
                           </div>
@@ -118,7 +122,7 @@
 
                       <div class="form-group">
                           <label id="sourceLabel" class="control-label col-lg-4 col-md-4 col-sm-4 text-right">
-                              <spring:message code="statehistory.field.channel"/>
+                               <spring:message code="statehistory.field.channel"/>
                           </label>
                           <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="dropSource">
                               <select class="input form-control" name="channelSelector" id="channelSelector" data-bind="valueWithInit: 'channelName'" disabled="disabled">
@@ -126,11 +130,9 @@
                                       <c:out value="${data.channelName}"/>
                                   </option>
                               </select>
-
                           </div>
                       </div>
                   </c:when>
-
                   <c:when test="${data.stateName == 'cv'}">
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.cv"/></label>
@@ -143,10 +145,12 @@
                       <div class="form-group">
                           <label for="languageSkillInput" class="control-label col-sm-4"><spring:message code="statehistory.field.languageSkill"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="languageSkillP">${data.languageSkill}</p>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.languageSkill}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="number" name="languageSkill" id="languageSkillInput" style="display:none" value="${data.languageSkill}"
-                                  data-error="<spring:message code="candidate.error.language.incorrect"/>"
+                                  <spring:message code="candidate.error.language.incorrect" var="errorLanguageIncorrectMessage"/>
+
+                                  <input class="stateInput hidden" type="number" name="languageSkill" id="languageSkillInput" value="${data.languageSkill}"
+                                  data-error="${errorLanguageIncorrectMessage}"
                                   data-bind="valueWithInit: 'languageSkill'"
                                   max="10" min="0">
                               </c:if>
@@ -158,12 +162,14 @@
                       <div class="form-group">
                           <label for="resultInput" class="control-label col-sm-4"><spring:message code="statehistory.field.result"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static <c:if test='${stat.first}'>stateData</c:if>" id="resultP" >${data.result}%</p>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.result}%</p>
                               <c:if test="${stat.first}">
-                                  <input required class="stateInput" type="number" name="result" id="resultInput" style="display:none;" value="${data.result}"
+                                  <spring:message code="statehistory.error.result.range" var="errorResultRangeMessage"/>
+
+                                  <input required class="stateInput hidden" type="number" name="result" id="resultInput" value="${data.result}"
                                     data-bind="valueWithInit: 'result'"
                                     max="100" min="0"
-                                    data-error="<spring:message code='statehistory.error.result.range'/>" />
+                                    data-error="${errorResultRangeMessage}" />
                               </c:if>
                           </div>
                           <div class="help-block with-errors"></div>
@@ -171,18 +177,14 @@
                       <div class="form-group">
                         <label for="recommendationInput" class="control-label col-sm-4"><spring:message code="statehistory.field.recommendation"/></label>
                         <div class="col-sm-8">
-                          <p class="form-control-static <c:if test="${stat.first}">stateData</c:if>" id="recommendationP">
-                            <c:choose>
-                              <c:when test="${data.recommendation == 1}">
-                                <spring:message code="common.yes"/>
-                              </c:when>
-                              <c:when test="${data.recommendation == 0}">
-                                <spring:message code="common.no"/>
-                              </c:when>
-                            </c:choose>
+                          <p class="form-control-static ${stat.first ? 'stateData' : ''}">
+                            <spring:message code="common.yes" var="yesMessage" />
+                            <spring:message code="common.no" var="noMessage"/>
+
+                            <c:out value="${data.recommendation == 1 ? yesMessage : noMessage}" />
                           </p>
                           <c:if test="${stat.first}">
-                            <select required class="stateInput" id="recommendationInput" style="display:none;"
+                            <select required class="stateInput hidden" id="recommendationInput"
                               data-bind="valueWithInit: 'recommendation'">
                               <option disabled ${data.recommendation == null ? 'selected' : ''}><spring:message code="common.pleaseChoose"/></option>
                               <option value="1" ${data.recommendation == 1 ? 'selected' : ''}><spring:message code="common.yes"/></option>
@@ -195,11 +197,13 @@
                       <div class="form-group">
                         <label for="reviewerNameInput"  class="control-label col-sm-4"><spring:message code="statehistory.field.reviewerName"/></label>
                         <div class="col-sm-8">
-                          <p class="form-control-static <c:if test='${stat.first}'>stateData</c:if>" id="reviewerNameP">${data.reviewerName}</p>
+                          <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.reviewerName}</p>
                           <c:if test="${stat.first}">
-                            <input type="text" class="stateInput" id="reviwerNameInput" style="display:none" value="${data.reviewerName}"
+                            <spring:message code="statehistory.error.reviewerName.length" var="errorReviewerNameLengthMessage" />
+
+                            <input type="text " class="stateInput hidden" id="reviwerNameInput"  value="${data.reviewerName}"
                               data-bind="valueWithInit: 'reviewerName'"
-                              data-error="<spring:message code='statehistory.error.reviewerName.length'/>"
+                              data-error="${errorReviewerNameLengthMessage}"
                               pattern="^.{3,100}$" required />
                           </c:if>
                         </div>
@@ -208,12 +212,13 @@
                       <div class="form-group">
                         <label for="recommendedPositionLevelInput"  class="control-label col-sm-4"><spring:message code="statehistory.field.recommendedPositionLevel"/></label>
                         <div class="col-sm-8">
-                          <p class="form-control-static <c:if test='${stat.first}'>stateData</c:if>" id="reviewerNameP">L${data.recommendedPositionLevel}</p>
+                          <p class="form-control-static ${stat.first ? 'stateData' : ''}">L${data.recommendedPositionLevel}</p>
                           <c:if test="${stat.first}">
-                              <select required class="stateInput" id="recommendedPositionLevelInput"
+                              <spring:message code="statehistory.error.recommendedPositionLevel.range" var="errorRecommendedPositionLevelRangeMessage"/>
+
+                              <select required class="stateInput hidden" id="recommendedPositionLevelInput"
                                 data-bind="valueWithInit: 'recommendedPositionLevel'"
-                                data-error="<spring:message code='statehistory.error.recommendedPositionLevel.range'/>"
-                                style="display:none;">
+                                data-error="${errorRecommendedPositionLevelRangeMessage}">
                                   <option disabled <c:if test="${data.recommendedPositionLevel eq null}"> selected="selected" </c:if>>
                                                                           <spring:message code="common.pleaseChoose"/></option>
                                   <c:forEach begin="0" end="5" step="1" var="index">
@@ -231,10 +236,12 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.offeredMoney"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="offeredMoneyP">${data.offeredMoney}</p>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.offeredMoney}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="number" name="offeredMoney" id="offeredMoneyInput" style="display:none" value="${data.offeredMoney}"
-                                  data-error="<spring:message code="statehistory.error.offeredMoney.negative"/>"
+                                  <spring:message code="statehistory.error.offeredMoney.negative" var="errorOfferedMoneyNegativeMessage"/>
+
+                                  <input class="stateInput hidden" type="number" name="offeredMoney" id="offeredMoneyInput"  value="${data.offeredMoney}"
+                                  data-error="${errorOfferedMoneyNegativeMessage}"
                                   data-bind="valueWithInit: 'offeredMoney'"
                                   min="0">
                               </c:if>
@@ -244,10 +251,12 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.claim"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="claimP">${data.claim}</p>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.claim}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="number" name="claim" id="claimInput" style="display:none" value="${data.claim}"
-                                  data-error="<spring:message code="statehistory.error.claim.negative"/>"
+                                  <spring:message code="statehistory.error.claim.negative" var="errorClaimNegativeMessage"/>
+
+                                  <input class="stateInput hidden" type="number" name="claim" id="claimInput" value="${data.claim}"
+                                  data-error="${errorClaimNegativeMessage}"
                                   data-bind="valueWithInit: 'claim'"
                                   min="0">
                               </c:if>
@@ -257,10 +266,12 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.feedbackDate"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="feedbackDateP">${data.feedbackDate}</p>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.feedbackDate}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="feedbackDate" id="feedbackDateInput" style="display:none" value="${data.feedbackDate}"
-                                  data-error="<spring:message code="statehistory.error.parse.date"/>"
+                                  <spring:message code="statehistory.error.parse.date" var="errorParseDateMessage"/>
+
+                                  <input class="stateInput hidden" type="text" name="feedbackDate" id="feedbackDateInput" value="${data.feedbackDate}"
+                                  data-error="${errorParseDateMessage}"
                                   data-bind="valueWithInit: 'feedbackDate'"
                                   pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$">
                               </c:if>
@@ -272,20 +283,21 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.dayOfStart"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static <c:if test="${stat.first}">stateData"</c:if> id="dayOfStartP">${data.dayOfStart}</p>
+                              <fmt:formatDate value="${data.dayOfStart}" type="date" pattern="yyyy-MM-dd" var="formattedDayOfStart"/>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedDayOfStart}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput" type="text" name="dayOfStart" id="dayOfStartInput" style="display:none" value="${data.dayOfStart}"
-                                  data-bind="valueWithInit: 'dayOfStart'">
+                                  <input class="stateInput hidden" type="date" name="dayOfStart" id="dayOfStartInput" value="${formattedDayOfStart}"
+                                  data-bind="valueWithInit: 'dayOfStart'" required>
                               </c:if>
                           </div>
                       </div>
                   </c:when>
               </c:choose>
               <c:if test="${stat.first}">
-                  <button type="submit" class="btn btn-success stateInput" style="display:none" data-bind="enable: canSave">
+                  <button type="submit" class="btn btn-success stateInput hidden"  data-bind="enable: canSave">
                       <spring:message code="save.button"/>
                   </button>
-                  <button type="reset" class="btn btn-danger stateInput" style="display:none" onclick="cancelButtonOnClick()">
+                  <button type="reset" class="btn btn-danger stateInput hidden" onclick="cancelButtonOnClick()">
                       <spring:message code="cancel.button"/>
                   </button>
               </c:if>

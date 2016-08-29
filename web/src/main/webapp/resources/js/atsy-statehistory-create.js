@@ -72,12 +72,32 @@ function StateHistoryModel() {
      });
    }
 
+   self.isRecommendationValid = ko.pureComputed(function() {
+    var recomm = typeof self.recommendation !== 'undefined' ? self.recommendation() : "0";
+
+    return ((recomm == "0") || (recomm == "1"));
+   });
+
+   self.isRecommendationPositionLevelValid = ko.pureComputed(function() {
+     var pos = typeof self.recommendedPositionLevel !== 'undefined' ? self.recommendedPositionLevel() : "0";
+
+     return (pos >= "0" && pos <= "5");
+   });
+
+   self.isDayOfStartValid = ko.pureComputed(function () {
+    var date = typeof self.dayOfStart !== 'undefined' ? self.dayOfStart() : "0000-00-00";
+
+    return date.match(/^\d{4}\-\d{2}\-\d{2}$/) !== null;
+   });
+
    self.canSave = ko.pureComputed(function() {
-    var recomm = self.recommendation();
-    var pos = self.recommendedPositionLevel();
-    return ((recomm == "0") || (recomm == "1")) && (pos >= "0" && pos <= "5");
+     return self.isRecommendationValid()
+            && self.isRecommendationPositionLevelValid()
+            && self.isDayOfStartValid();
    });
 }
+
+
 
 StateHistoryModel.prototype.redirectWithoutState = function() {
   var appIdRegex = /applicationId\=[\d]+/;

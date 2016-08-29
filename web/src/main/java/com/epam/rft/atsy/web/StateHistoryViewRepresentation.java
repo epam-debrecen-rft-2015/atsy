@@ -2,6 +2,9 @@ package com.epam.rft.atsy.web;
 
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.util.Date;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -30,8 +33,8 @@ public class StateHistoryViewRepresentation {
   private ApplicationDTO applicationDTO;
 
   @NotNull
-  @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}", message = "statehistory.error.parse.date")
-  private String creationDate;
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+  private Date creationDate;
 
   @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$", message = "statehistory.error.parse.date")
   private String feedbackDate;
@@ -53,7 +56,8 @@ public class StateHistoryViewRepresentation {
   @Min(value = 0, message = "statehistory.error.claim.negative")
   private Long claim;
 
-  private String dayOfStart;
+
+  private Date dayOfStart;
 
   private String stateFullName;
 

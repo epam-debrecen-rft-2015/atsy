@@ -11,6 +11,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+/**
+ * Super class of all the SateHistory* classes. Contains a certain state of a candidate,
+ * independently of the time. Also declares additional information about the candidate and his
+ * application.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
