@@ -213,3 +213,7 @@ form > .button-panel {
 form > .button-panel > .btn {
     margin-right: 1em;
 }
+
+.resizeable {
+  resize: both;
+}

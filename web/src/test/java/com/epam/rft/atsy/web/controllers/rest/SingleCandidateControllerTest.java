@@ -12,13 +12,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
+import com.epam.rft.atsy.web.messageresolution.MessageKeyResolverImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.context.MessageSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.Locale;
@@ -79,7 +79,7 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   private CandidateService candidateService;
 
   @Mock
-  private MessageSource messageSource;
+  private MessageKeyResolverImpl messageKeyResolver;
 
   @InjectMocks
   private SingleCandidateController singleCandidateController;
@@ -108,7 +108,10 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
 
     // always return the message key so we don't have to mock each call to return
     // a message key specific error message
-    given(messageSource.getMessage(anyString(), any(Object[].class), any(Locale.class)))
+    given(messageKeyResolver.resolveMessageOrDefault(anyString()))
+        .willAnswer(i -> i.getArgumentAt(0, String.class));
+
+    given(messageKeyResolver.getMessage(anyString(), any(Object[].class), any(Locale.class)))
         .willAnswer(i -> i.getArgumentAt(0, String.class));
 
     baseCandidateDto = CandidateDTO.builder().name(correctName).email(correctEmail).build();
@@ -123,7 +126,7 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   protected LocalValidatorFactoryBean localValidatorFactoryBean() {
     LocalValidatorFactoryBean validatorFactoryBean = new LocalValidatorFactoryBean();
 
-    validatorFactoryBean.setValidationMessageSource(messageSource);
+    validatorFactoryBean.setValidationMessageSource(messageKeyResolver);
 
     return validatorFactoryBean;
   }
