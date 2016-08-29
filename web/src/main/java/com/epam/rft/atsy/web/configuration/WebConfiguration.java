@@ -118,7 +118,7 @@ public class WebConfiguration extends DelegatingWebMvcConfiguration {
     exceptionResolvers.add(1, new UncheckedExceptionResolver(mappingJackson2JsonView()));
   }
 
-  @Bean()
+  @Bean
   public CommonsMultipartResolver multipartResolver() {
     return new CommonsMultipartResolver();
   }
