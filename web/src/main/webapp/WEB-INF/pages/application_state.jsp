@@ -208,11 +208,14 @@
                               <select required class="stateInput hidden" id="recommendedPositionLevelInput"
                                 data-bind="valueWithInit: 'recommendedPositionLevel'"
                                 data-error="${errorRecommendedPositionLevelRangeMessage}">
-                                  <option disabled <c:if test="${data.recommendedPositionLevel eq null}"> selected="selected" </c:if>>
-                                                                          <spring:message code="common.pleaseChoose"/></option>
+                                <option disabled ${data.recommendedPositionLevel eq null ? 'selected="selected"' : ''}>
+                                    <spring:message code="common.pleaseChoose" var="commonPleaseChooseMessage"/>
+                                </option>
                                   <c:forEach begin="0" end="5" step="1" var="index">
-                                      <option value="${index}" <c:if
-                                              test="${index eq data.recommendedPositionLevel}"> selected="selected" </c:if>>${index}</option>
+                                        <option value="${index}"
+                                            ${index eq data.recommendedPositionLevel ? 'selected="selected"' : ''}>
+                                                ${index}
+                                        </option>
                                   </c:forEach>
                               </select>
                               </select>
@@ -231,11 +234,14 @@
                               <select required class="stateInput hidden" id="recommendedPositionLevelInput"
                                 data-bind="valueWithInit: 'recommendedPositionLevel'"
                                 data-error="<spring:message code='statehistory.error.recommendedPositionLevel.range'/>">
-                                  <option disabled <c:if test="${data.recommendedPositionLevel eq null}"> selected="selected" </c:if>>
-                                                                          <spring:message code="common.pleaseChoose"/></option>
+                                  <option disabled ${data.recommendedPositionLevel eq null ? 'selected="selected"' : ''}>
+                                    <spring:message code="common.pleaseChoose"/>
+                                  </option>
                                   <c:forEach begin="0" end="5" step="1" var="index">
-                                      <option value="${index}" <c:if
-                                              test="${index eq data.recommendedPositionLevel}"> selected="selected" </c:if>>${index}</option>
+                                      <option value="${index}"
+                                        ${index eq data.recommendedPositionLevel ? 'selected="selected"' : ''}>
+                                            ${index}
+                                      </option>
                                   </c:forEach>
                               </select>
                               </select>
