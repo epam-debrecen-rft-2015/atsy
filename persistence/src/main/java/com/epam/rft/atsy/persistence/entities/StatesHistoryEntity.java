@@ -25,7 +25,6 @@ import lombok.ToString;
 @Table(name = "states_history", schema = "atsy")
 public class StatesHistoryEntity extends SuperEntity {
 
-
   @OneToOne
   @JoinColumn(name = "application_id")
   private ApplicationEntity applicationEntity;
@@ -67,14 +66,6 @@ public class StatesHistoryEntity extends SuperEntity {
   @JoinColumn(name = "state_id")
   private StatesEntity statesEntity;
 
-  @OneToOne
-  @JoinColumn(name = "position_id")
-  private PositionEntity positionEntity;
-
-  @OneToOne
-  @JoinColumn(name = "channel_id")
-  private ChannelEntity channelEntity;
-
   @Builder
   public StatesHistoryEntity(Long id, ApplicationEntity applicationEntity, Date creationDate,
                              Short languageSkill, String description, Short result,
@@ -83,9 +74,7 @@ public class StatesHistoryEntity extends SuperEntity {
                              Boolean recommendation,
                              String reviewerName,
                              Short recommendedPositionLevel,
-                             StatesEntity statesEntity,
-                             PositionEntity positionEntity,
-                             ChannelEntity channelEntity) {
+                             StatesEntity statesEntity) {
     super(id);
     this.applicationEntity = applicationEntity;
     this.creationDate = creationDate;
@@ -100,8 +89,6 @@ public class StatesHistoryEntity extends SuperEntity {
     this.reviewerName = reviewerName;
     this.recommendedPositionLevel = recommendedPositionLevel;
     this.statesEntity = statesEntity;
-    this.positionEntity = positionEntity;
-    this.channelEntity = channelEntity;
   }
 }
 
