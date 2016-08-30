@@ -18,6 +18,9 @@ public interface ApplicationsService {
    */
   List<ApplicationDTO> getApplicationsByCandidateDTO(CandidateDTO candidateDTO);
 
+  //TODO: Add java doc. Add test.
+  void deleteApplicationsByCandidateDTO(CandidateDTO candidateDTO);
+
   /**
    * Saves an application to the database and returns it's id.
    * @param applicationDTO the application

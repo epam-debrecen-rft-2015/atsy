@@ -50,6 +50,21 @@ public class ApplicationsServiceImpl implements ApplicationsService {
     return converterService.convert(applicationEntities, ApplicationDTO.class);
   }
 
+  @Transactional(readOnly = false)
+  @Override
+  public void deleteApplicationsByCandidateDTO(CandidateDTO candidateDTO) {
+    List<ApplicationEntity>
+        applicationEntities =
+        converterService
+            .convert(getApplicationsByCandidateDTO(candidateDTO), ApplicationEntity.class);
+
+    for (ApplicationEntity applicationEntity : applicationEntities) {
+      statesHistoryService.deleteStateHistoriesByApplication(
+          converterService.convert(applicationEntity, ApplicationDTO.class));
+      applicationsRepository.delete(applicationEntity);
+    }
+  }
+
   @Transactional
   @Override
   public Long saveOrUpdate(ApplicationDTO applicationDTO) {

@@ -10,6 +10,7 @@ import com.epam.rft.atsy.persistence.repositories.StatesHistoryRepository;
 import com.epam.rft.atsy.persistence.repositories.StatesRepository;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StatesHistoryService;
+import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
@@ -61,6 +62,17 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
         .sorted((m1, m2) -> m2.getModificationDate().compareTo(m1.getModificationDate()))
         .collect(Collectors.toList());
   }
+
+  @Override
+  public void deleteStateHistoriesByApplication(ApplicationDTO applicationDTO) {
+    List<StatesHistoryEntity>
+        statesHistoryEntities =
+        statesHistoryRepository.findByApplicationEntityOrderByCreationDateDesc(
+            applicationsRepository.getOne(applicationDTO.getId()));
+
+    statesHistoryRepository.delete(statesHistoryEntities);
+  }
+
 
   @Transactional
   @Override

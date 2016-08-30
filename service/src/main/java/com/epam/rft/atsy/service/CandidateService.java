@@ -24,6 +24,9 @@ public interface CandidateService {
    */
   Collection<CandidateDTO> getAllCandidate(FilterRequest sortingRequest);
 
+  //TODO:Add java doc. Add test.
+  void deletePositionsByCandidate(CandidateDTO candidateDTO);
+
   /**
    * Saves a candidate to the database and returns it's id.
    * @param candidate the candidate
