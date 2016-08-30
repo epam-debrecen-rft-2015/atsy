@@ -300,7 +300,7 @@ public class StatesHistoryServiceImplTest {
     then(statesHistoryRepository).should()
         .findByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity);
   }
-
+/*
   @Test(expected = IllegalArgumentException.class)
   public void saveStateShouldThrowIllegalArgumentExceptionWhenApplicationIdIsNull() {
     // Given
@@ -389,7 +389,7 @@ public class StatesHistoryServiceImplTest {
 
     then(applicationsRepository).should().findOne(SECOND_ID);
     then(statesHistoryRepository).should().save(firstStatesHistoryEntity);
-  }
+  }*/
 
   @Test(expected = IllegalArgumentException.class)
   public void getCandidateApplicationsByCandidateIdOrderByModificationDateDescShouldThrowIllegalArgumentExceptionWhenCandidateIdIsNull() {
