@@ -4,6 +4,7 @@ import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-
 import javax.validation.Valid;
 
 /**
@@ -29,13 +29,10 @@ import javax.validation.Valid;
 public class SingleCandidateController {
   private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
 
-
   @Autowired
   private CandidateService candidateService;
 
-
   @Autowired
-
   private MessageKeyResolver messageKeyResolver;
 
   /**
@@ -48,33 +45,23 @@ public class SingleCandidateController {
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity saveOrUpdate(@Valid @RequestBody CandidateDTO candidateDTO,
                                      BindingResult result, Locale locale) {
-
     if (!result.hasErrors()) {
-
       Long candidateId = candidateService.saveOrUpdate(candidateDTO);
       return new ResponseEntity<>(Collections.singletonMap("id", candidateId), HttpStatus.OK);
-
-
     } else {
       RestResponse restResponse = parseValidationErrors(result.getFieldErrors(), locale);
-
       return new ResponseEntity<>(restResponse, HttpStatus.BAD_REQUEST);
     }
   }
 
   private RestResponse parseValidationErrors(List<FieldError> fieldErrors, Locale locale) {
-
-    String errorMessage =
-        messageKeyResolver.resolveMessageOrDefault(COMMON_INVALID_INPUT_MESSAGE_KEY);
-
+    String errorMessage = messageKeyResolver.resolveMessageOrDefault(COMMON_INVALID_INPUT_MESSAGE_KEY);
     RestResponse restResponse = new RestResponse(errorMessage);
 
     for (FieldError fieldError : fieldErrors) {
       restResponse.addField(fieldError.getField(),
-
           messageKeyResolver.resolveMessageOrDefault(fieldError.getDefaultMessage()));
     }
-
     return restResponse;
   }
 }
