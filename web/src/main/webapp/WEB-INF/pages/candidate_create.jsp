@@ -24,13 +24,17 @@
                 <c:choose>
                     <c:when test="${not empty candidate.id}">
                         <p class="showValue">
-                            <spring:message code="candidate.show.title" arguments="<small>${candidate.name}</small>"
-                                            htmlEscape="false"/>
+                            <spring:message code="candidate.show.title"/>
+                            <small>
+                              <c:out value="${candidate.name}"/>
+                            </small>
                         </p>
 
                         <p class="edit">
-                            <spring:message code="candidate.edit.title" arguments="<small>${candidate.name}</small>"
-                                            htmlEscape="false"/>
+                            <spring:message code="candidate.edit.title"/>
+                            <small>
+                              <c:out value="${candidate.name}"/>
+                             </small>
                         </p>
                     </c:when>
                     <c:otherwise>
@@ -62,14 +66,14 @@
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
                                 <input type="text" class="input form-control " name="name" id="name" data-bind="valueWithInit: 'name'"
-                                       value="${candidate.name}"
+                                       value="<c:out value="${candidate.name}"/>"
                                        placeholder="${i18nname}"
                                        data-error="<spring:message
                                                code="candidate.error.name.empty"/>"
                                        required maxlength="100">
 
                                 <div id="name-errors" class="help-block with-errors"></div>
-                                <p class="showValue form-control-static">${candidate.name}</p>
+                                <p class="showValue form-control-static"><c:out value="${candidate.name}"/></p>
                             </div>
 
                         </div>
@@ -82,10 +86,10 @@
 
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <input type="text" class="input form-control" name="referer" id="referer" data-bind="valueWithInit: 'referer'"
-                                       value="${candidate.referer}"
+                                       value="<c:out value="${candidate.referer}"/>"
                                        placeholder="${i18nplace}" maxlength="20">
 
-                                <p class="showValue form-control-static">${candidate.referer}</p>
+                                <p class="showValue form-control-static"><c:out value = "${candidate.referer}"/></p>
                             </div>
 
                         </div>
@@ -113,7 +117,7 @@
                                 <p class="showValue form-control-static">
                                     <a href="mailto:${candidate.email}"><span class="glyphicon glyphicon-envelope"
                                                                               title="E-mail küldése"></span></a>
-                                        ${candidate.email}</p>
+                                        <c:out value = "${candidate.email}"/></p>
                             </div>
 
                         </div>
@@ -134,7 +138,7 @@
                                     </c:forEach>
                                 </select>
 
-                                <p class="showValue form-control-static">${candidate.languageSkill}</p>
+                                <p class="showValue form-control-static"><c:out value = "${candidate.languageSkill}"/></p>
                             </div>
                         </div>
                         <div class="error col-lg-12 col-md-12 col-sm-12">
@@ -155,7 +159,7 @@
 
                                 <div id="phone-errors" class="help-block with-errors"></div>
 
-                                <p class="showValue form-control-static">${candidate.phone}</p>
+                                <p class="showValue form-control-static"><c:out value ="${candidate.phone}"/></p>
                             </div>
 
                         </div>
@@ -170,9 +174,9 @@
 
                             <div class="col-lg-10 col-md-10 col-sm-10">
                                 <textarea rows="4" cols="4" class="input form-control" id="description" data-bind="valueWithInit: 'description'"
-                                          placeholder="${i18ndescription}">${candidate.description}</textarea>
+                                          placeholder="${i18ndescription}"><c:out value = "${candidate.description}"/></textarea>
 
-                                <p class="showValue form-control-static">${candidate.description}</p>
+                                <p class="showValue form-control-static"><c:out value = "${candidate.description}"/></p>
                             </div>
                         </div>
                         <div class="text-right col-lg-12 col-md-12 col-sm-12">
@@ -207,7 +211,7 @@
                 <%--table--%>
                 <div id="application_table">
                         <table class="table table-hover" id="applications_table"  data-toggle="table" data-url="../applications/${candidate.id}" data-height="500"
-                               data-sort-name="name">
+                               data-sort-name="name" data-escape="true">
                             <thead>
                             <tr>
                                 <th data-field="positionName" data-align="left"><spring:message

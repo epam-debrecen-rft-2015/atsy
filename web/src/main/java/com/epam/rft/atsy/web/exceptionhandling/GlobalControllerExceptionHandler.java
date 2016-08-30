@@ -6,8 +6,8 @@ import com.epam.rft.atsy.service.exception.DuplicateCandidateException;
 import com.epam.rft.atsy.service.exception.DuplicateChannelException;
 import com.epam.rft.atsy.service.exception.DuplicatePositionException;
 import com.epam.rft.atsy.service.exception.DuplicateRecordException;
+import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -29,7 +29,7 @@ public class GlobalControllerExceptionHandler {
   private static final String TECHNICAL_ERROR_MESSAGE_KEY = "technical.error.message";
 
   @Resource
-  private MessageSource messageSource;
+  private MessageKeyResolver messageKeyResolver;
 
   @Autowired
   private MappingJackson2JsonView jsonView;
@@ -55,7 +55,7 @@ public class GlobalControllerExceptionHandler {
         messageKey =
         duplicateRecordMessageKeyMap.getOrDefault(ex.getClass(), TECHNICAL_ERROR_MESSAGE_KEY);
 
-    String message = messageSource.getMessage(messageKey, new Object[]{ex.getName()}, locale);
+    String message = messageKeyResolver.resolveMessageOrDefault(messageKey, ex.getName());
 
     RestResponse restResponse = new RestResponse(message);
 

@@ -1,0 +1,19 @@
+version: "2"
+services:
+  database:
+    image: mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_USER: atsy
+      MYSQL_PASSWORD: atsy
+      MYSQL_DATABASE: atsy
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+  app:
+    image: atsy:latest
+    links:
+      - "database"
+    ports:
+      - "${PORT_MAPPING}"
+    command: /wait-for-it.sh database:3306 -t 120 -- catalina.sh run
+    environment:
+      spring.profiles.active: ${PROFILE}

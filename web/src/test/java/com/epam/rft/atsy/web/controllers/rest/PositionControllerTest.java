@@ -1,36 +1,31 @@
 package com.epam.rft.atsy.web.controllers.rest;
 
-import com.epam.rft.atsy.service.PositionService;
-import com.epam.rft.atsy.service.domain.PositionDTO;
-import com.epam.rft.atsy.web.MediaTypes;
-import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.context.MessageSource;
-
-import java.util.Collections;
-import java.util.Locale;
-
 import static com.jayway.jsonassert.impl.matcher.IsCollectionWithSize.hasSize;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.epam.rft.atsy.service.PositionService;
+import com.epam.rft.atsy.service.domain.PositionDTO;
+import com.epam.rft.atsy.web.MediaTypes;
+import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
+import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.Collections;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PositionControllerTest extends AbstractControllerTest {
@@ -45,7 +40,7 @@ public class PositionControllerTest extends AbstractControllerTest {
   private PositionDTO positionDTOWithEmptyPositionName = PositionDTO.builder().id(1L).name(StringUtils.EMPTY).build();
 
   @Mock
-  private MessageSource messageSource;
+  private MessageKeyResolver messageKeyResolver;
   @Mock
   private PositionService positionService;
   @InjectMocks
@@ -119,7 +114,7 @@ public class PositionControllerTest extends AbstractControllerTest {
   @Test
   public void saveOrUpdateShouldRespondWithValidationErrorWhenNameIsTheEmptyString() throws Exception {
     objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-    given(messageSource.getMessage(eq(EMPTY_POSITION_NAME_MESSAGE_KEY), isNull(Object[].class), any(Locale.class)))
+    given(messageKeyResolver.resolveMessageOrDefault(EMPTY_POSITION_NAME_MESSAGE_KEY))
         .willReturn(VALIDATION_ERROR_MESSAGE);
 
     this.mockMvc.perform(post(REQUEST_URL)
@@ -145,6 +140,7 @@ public class PositionControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$.fields").isEmpty());
 
     then(positionService).should().saveOrUpdate(positionDTOWithCorrectPositionName);
-    verifyZeroInteractions(messageSource);
+
+    verifyZeroInteractions(messageKeyResolver);
   }
 }

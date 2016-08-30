@@ -16,6 +16,7 @@ import com.epam.rft.atsy.persistence.entities.StatesHistoryEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.persistence.repositories.StatesHistoryRepository;
+import com.epam.rft.atsy.persistence.repositories.StatesRepository;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
@@ -37,10 +38,10 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class StatesHistoryServiceImplTest {
 
+  private static final Long MINUS_FIRST_ID = -1L;
   private static final Long FIRST_ID = 1L;
   private static final Long SECOND_ID = 2L;
   private static final Long THIRD_ID = 3L;
-//  private static final Type STATE_HISTORY_VIEW_DTO_LIST_TYPE = new TypeToken<List<StateHistoryViewDTO>>() {}.getType();
 
   private static final String FIRST_POSITION_ENTITY_NAME = "First position";
   private static final String SECOND_POSITION_ENTITY_NAME = "Second position";
@@ -195,6 +196,9 @@ public class StatesHistoryServiceImplTest {
   @Mock
   private CandidateRepository candidateRepository;
 
+  @Mock
+  private StatesRepository statesRepository;
+
   @InjectMocks
   private StatesHistoryServiceImpl statesHistoryService;
 
@@ -252,9 +256,8 @@ public class StatesHistoryServiceImplTest {
     given(statesHistoryRepository
         .findByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity))
         .willReturn(statesHistoryEntityListWithSingleElement);
-    given(
-        converterService
-            .convert(statesHistoryEntityListWithSingleElement, StateHistoryViewDTO.class))
+    given(converterService
+        .convert(statesHistoryEntityListWithSingleElement, StateHistoryViewDTO.class))
         .willReturn(stateViewHistoryDTOListWithSingleElement);
 
     // When
@@ -279,9 +282,8 @@ public class StatesHistoryServiceImplTest {
     given(statesHistoryRepository
         .findByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity))
         .willReturn(statesHistoryEntityListWithThreeElements);
-    given(
-        converterService
-            .convert(statesHistoryEntityListWithThreeElements, StateHistoryViewDTO.class))
+    given(converterService
+        .convert(statesHistoryEntityListWithThreeElements, StateHistoryViewDTO.class))
         .willReturn(stateViewHistoryDTOListWithThreeElements);
 
     // When
@@ -319,6 +321,53 @@ public class StatesHistoryServiceImplTest {
     // Then
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void saveStateShouldThrowIllegalArgumentExceptionWhenStateDtoIsNull() {
+    // Given
+    StateHistoryDTO stateHistoryDTO = StateHistoryDTO.builder().stateDTO(null).build();
+
+    // When
+    statesHistoryService.saveStateHistory(stateHistoryDTO, FIRST_ID);
+
+    // Then
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void saveStateShouldThrowIllegalArgumentExceptionWhenStateDtoIdIsNull() {
+    // Given
+    StateDTO stateDTO = StateDTO.builder().id(null).build();
+    StateHistoryDTO stateHistoryDTO = StateHistoryDTO.builder().stateDTO(stateDTO).build();
+
+    // When
+    statesHistoryService.saveStateHistory(stateHistoryDTO, FIRST_ID);
+
+    //Then
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void saveStateShouldThrowIllegalArgumentExceptionWhenApplicationIdIsANegativeNumber() {
+    // Given
+    given(applicationsRepository.findOne(MINUS_FIRST_ID)).willReturn(null);
+
+    // When
+    statesHistoryService.saveStateHistory(stateHistoryDTO, MINUS_FIRST_ID);
+
+    // Then
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void saveStateShouldThrowIllegalArgumentExceptionWhenStateDtoIdIsANegativeNumber() {
+    // Given
+    StateDTO stateDTO = StateDTO.builder().id(MINUS_FIRST_ID).build();
+    StateHistoryDTO stateHistoryDTO = StateHistoryDTO.builder().stateDTO(stateDTO).build();
+    given(statesRepository.findOne(MINUS_FIRST_ID)).willReturn(null);
+
+    // When
+    statesHistoryService.saveStateHistory(stateHistoryDTO, FIRST_ID);
+
+    // Then
+  }
+
   @Test
   public void saveStateShouldBeSuccessSaving() {
     // Given
@@ -327,6 +376,8 @@ public class StatesHistoryServiceImplTest {
     given(applicationsRepository.findOne(SECOND_ID)).willReturn(secondApplicationEntity);
     given(statesHistoryRepository.save(firstStatesHistoryEntity))
         .willReturn(firstStatesHistoryEntity);
+
+    given(statesRepository.findOne(FIRST_ID)).willReturn(firstStateEntity);
 
     // When
     Long resultId = statesHistoryService.saveStateHistory(stateHistoryDTO, SECOND_ID);
