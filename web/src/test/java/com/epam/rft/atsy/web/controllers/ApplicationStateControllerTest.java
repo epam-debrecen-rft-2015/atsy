@@ -64,6 +64,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   private static final String STATE_NAME_CODING = "Coding";
 
   private static final Long APPLICATION_ID = 1L;
+  private static final Long NON_EXISTENT_APPLICATION_ID = 3L;
 
   private StateDTO
       stateDTOWithStateNameNewApply =
@@ -178,6 +179,23 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     verifyZeroInteractions(stateFlowService, stateService, messageKeyResolver, converterService);
   }
 
+  @Test
+  public void loadPageShouldRespondInternalServerErrorWhenParamApplicationIdIsNonExistent()
+      throws Exception {
+    given(candidateService.getCandidateByApplicationID(NON_EXISTENT_APPLICATION_ID))
+        .willReturn(null);
+
+    this.mockMvc.perform(
+        get(REQUEST_URL).param(PARAM_APPLICATION_ID, NON_EXISTENT_APPLICATION_ID.toString()))
+        .andExpect(status().isInternalServerError())
+        .andExpect(view().name(ERROR_VIEW_NAME))
+        .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
+
+    then(statesHistoryService).should()
+        .getStateHistoriesByApplicationId(NON_EXISTENT_APPLICATION_ID);
+    verifyZeroInteractions(stateFlowService, stateService, messageKeyResolver);
+  }
+
 
   @Test
   public void loadPageShouldRespondInternalServerErrorWhenParamClickedStateIsAnEmptyString()
@@ -228,6 +246,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     then(stateService).should().getStateDtoByName(TEXT);
     verifyZeroInteractions(stateFlowService, messageKeyResolver);
   }
+
 
   @Test
   @SuppressWarnings("unchecked")

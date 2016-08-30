@@ -1,6 +1,5 @@
 package com.epam.rft.atsy.web.controllers;
 
-import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StateFlowService;
@@ -44,9 +43,6 @@ public class ApplicationStateController {
 
   @Resource
   private StateFlowService stateFlowService;
-
-  @Resource
-  private ApplicationsService applicationsService;
 
   @Resource
   private CandidateService candidateService;

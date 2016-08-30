@@ -52,11 +52,12 @@ public class CandidateServiceImpl implements CandidateService {
     ApplicationEntity applicationEntity =
         applicationsRepository.findOne(applicationID);
 
-    CandidateEntity
-        candidateEntity =
-        (applicationEntity != null ? applicationEntity.getCandidateEntity() : null);
+    CandidateDTO
+        candidateDTO =
+        (applicationEntity != null ? converterService
+            .convert(applicationEntity.getCandidateEntity(), CandidateDTO.class) : null);
 
-    return converterService.convert(candidateEntity, CandidateDTO.class);
+    return candidateDTO;
   }
 
   @Transactional(readOnly = true)

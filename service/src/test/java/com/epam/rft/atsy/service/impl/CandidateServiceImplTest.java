@@ -139,10 +139,7 @@ public class CandidateServiceImplTest {
   @Test
   public void getCandidateByApplicationIdShouldReturnNullWhenThereIsNoApplicationWithTheGivenId() {
     // Given
-    given(applicationsRepository.findOne(APPLICATION_ID))
-        .willReturn(dummyApplicationEntity);
-    given(converterService.convert(dummyCandidateEntity, CandidateDTO.class))
-        .willReturn(dummyCandidateDto);
+    given(applicationsRepository.findOne(NON_EXISTENT_APPLICATION_ID)).willReturn(null);
 
     // When
     CandidateDTO
