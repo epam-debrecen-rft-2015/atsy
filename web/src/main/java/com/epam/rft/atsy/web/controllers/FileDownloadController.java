@@ -50,7 +50,7 @@ public class FileDownloadController {
 
     CandidateDTO candidateDTO = candidateService.getCandidate(candidateId);
     String candidateCVFilename = candidateDTO.getCvFilename();
-    if (candidateCVFilename != null && StringUtils.isNotEmpty(candidateCVFilename)) {
+    if (StringUtils.isNotBlank(candidateCVFilename)) {
 
       try {
         File file = candidateCVFileHandler

@@ -67,7 +67,7 @@ public class FileUploadController {
     try {
       CandidateDTO candidateDTO = candidateService.getCandidate(candidateId);
       String candidateCVFilename = candidateDTO.getCvFilename();
-      if (candidateCVFilename != null && StringUtils.isNotEmpty(candidateCVFilename)) {
+      if (StringUtils.isNotBlank(candidateCVFilename)) {
         throw new CandidateAlreadyHasCVFileException();
       }
 
