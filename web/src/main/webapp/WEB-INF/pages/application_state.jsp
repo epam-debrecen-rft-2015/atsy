@@ -4,13 +4,14 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@page contentType="text/html;charset=UTF-8" %>
 <spring:url value="/secure/application_state" var="application_state"/>
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
-        <script src="<c:url value="/resources/js/atsy-statehistory.js" />"></script>
-        <script src="<c:url value="/resources/js/atsy-statehistory-create.js" />"></script>
-        <script src="<c:url value="/resources/thirdparty/bootstrap-validator/validator.js" />"
+        <c:url value="/resources/js/atsy-statehistory.js" var="urlValue" /><script src="${urlValue}"></script>
+        <c:url value="/resources/js/atsy-statehistory-create.js" var="urlValue" /><script src="${urlValue}"></script>
+       <c:url value="/resources/thirdparty/bootstrap-validator/validator.js" var="srcValue" /> <script src="${srcValue}"
                         type="text/javascript"></script>
     </jsp:attribute>
   <jsp:body>
@@ -112,7 +113,7 @@
                           <div class="col-sm-8">
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value = "${data.position.name}"/></p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput hidden" type="text" name="position.name" id="positionNameInput" value="<c:out value = "${data.position.name}"/>"
+                                 <input class="stateInput hidden" type="text" name="position.name" id="positionNameInput" value="${data.position.name}"
                                     data-bind="valueWithInit: 'name'">
                               </c:if>
                           </div>
@@ -122,7 +123,7 @@
                           <div class="col-sm-8">
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value = "${data.channel.name}"/></p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput hidden" type="text" name="channel.name" id="channelNameInput" value="<c:out value = "${data.channel.name}"/>"
+                                  <input class="stateInput hidden" type="text" name="channel.name" id="channelNameInput" value="${fn:escapeXml(data.channel.name)}"
                                     data-bind="valueWithInit: 'channelName'">
                               </c:if>
                           </div>
@@ -144,7 +145,7 @@
                               <c:if test="${stat.first}">
                                   <spring:message code="candidate.error.language.incorrect" var="errorLanguageIncorrectMessage"/>
 
-                                  <input class="stateInput hidden" type="number" name="languageSkill" id="languageSkillInput" value="${data.languageSkill}"
+                                  <input class="stateInput hidden" type="number" name="languageSkill" id="languageSkillInput" value="${fn:escapeXml(data.languageSkill)}"
                                   data-error="${errorLanguageIncorrectMessage}"
                                   data-bind="valueWithInit: 'languageSkill'"
                                   max="10" min="0">

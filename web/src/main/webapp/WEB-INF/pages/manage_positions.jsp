@@ -7,7 +7,7 @@
 <spring:url value="/secure/positions" var="positions"/>
 <atsy:secure_page>
  <jsp:attribute name="pageJs">
-     <script src="<c:url value="/resources/js/atsy-settings.js" />"></script>
+     <c:url value="/resources/js/atsy-settings.js" var="urlValue"/><script src="${urlValue}"></script>
      <script type="text/javascript">
          window.messages['settings.positions.error.empty'] = '<spring:message code="settings.positions.error.empty"/>';
      </script>

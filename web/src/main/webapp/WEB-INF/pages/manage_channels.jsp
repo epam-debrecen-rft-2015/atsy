@@ -7,7 +7,7 @@
 <spring:url value="/secure/channels" var="channels"/>
 <atsy:secure_page>
  <jsp:attribute name="pageJs">
-     <script src="<c:url value="/resources/js/atsy-settings.js" />"></script>
+     <c:url value="/resources/js/atsy-settings.js" var="urlValue"/><script src="${urlValue}"></script>
      <script type="text/javascript">
          window.messages['settings.channels.error.empty'] = '<spring:message code="settings.channels.error.empty"/>';
      </script>

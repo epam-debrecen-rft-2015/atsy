@@ -14,12 +14,12 @@
 
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
-        <script src="<c:url value="/resources/thirdparty/bootstrap-validator/validator.js" />"
+       <c:url value="/resources/thirdparty/bootstrap-validator/validator.js" var="urlValue" /> <script src="${urlValue}"
                 type="text/javascript"></script>
-        <script src="<c:url value="/resources/js/atsy-candidate-create.js" />"></script>
+       <c:url value="/resources/js/atsy-candidate-create.js" var="urlValue"/> <script src="${urlValue}"></script>
     </jsp:attribute>
     <jsp:body>
-        <div id="candidate_creation" data-bind="<c:if test="${not empty candidate.id}">initDisplay: value</c:if>, css: { display: modify() == true }">
+        <div id="candidate_creation" data-bind=${not empty candidate.id ? 'initDisplay: value, ' : ''}>
             <h1 class="page-header">
                 <c:choose>
                     <c:when test="${not empty candidate.id}">
@@ -66,14 +66,13 @@
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
                                 <input type="text" class="input form-control " name="name" id="name" data-bind="valueWithInit: 'name'"
-                                       value="<c:out value="${candidate.name}"/>"
+                                       value="${fn:escapeXml(candidate.name)}"
                                        placeholder="${i18nname}"
-                                       data-error="<spring:message
-                                               code="candidate.error.name.empty"/>"
+                                      <spring:message code="candidate.error.name.empty" var="errorValue"/> data-error="${errorValue}"
                                        required maxlength="100">
 
                                 <div id="name-errors" class="help-block with-errors"></div>
-                                <p class="showValue form-control-static"><c:out value="${candidate.name}"/></p>
+                                <p class="showValue form-control-static"><c:out value="${candidate.name}"/><p>
                             </div>
 
                         </div>
@@ -86,7 +85,7 @@
 
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <input type="text" class="input form-control" name="referer" id="referer" data-bind="valueWithInit: 'referer'"
-                                       value="<c:out value="${candidate.referer}"/>"
+                                       value="${fn:escapeXml(candidate.referer})"
                                        placeholder="${i18nplace}" maxlength="20">
 
                                 <p class="showValue form-control-static"><c:out value = "${candidate.referer}"/></p>
@@ -106,11 +105,9 @@
                                 <input type="text" class="input form-control" name="email" id="email" data-bind="valueWithInit: 'email'"
                                        value="${candidate.email}"
                                        placeholder="${i18nemail}"
-                                       data-error="<spring:message
-                                    code="candidate.error.email.empty"/>"
+                                       <spring:message code="candidate.error.email.empty" var="messValue"/>data-error="${messValue}"
                                        data-pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
-                                       data-pattern-error="<spring:message
-                                    code="candidate.error.email.incorrect"/>"
+                                      <spring:message code="candidate.error.email.incorrect" var="codeValue"/> data-pattern-error="${codeValue}"
                                        required maxlength="255">
                                 <span id="email-errors" class="help-block with-errors"></span>
 
@@ -153,8 +150,8 @@
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
                                 <input type="text" class="input form-control" name="phone" id="phone" data-bind="valueWithInit: 'phone'"
                                        value="${candidate.phone}"
-                                       placeholder="${i18nphone}" data-error="<spring:message
-                                    code="candidate.error.phone.incorrect"/>"
+                                      <spring:message
+                                                                          code="candidate.error.phone.incorrect" var="messCode"/> placeholder="${i18nphone}" data-error="${messCode}"
                                        pattern="^\+?[0-9]+" maxlength="20">
 
                                 <div id="phone-errors" class="help-block with-errors"></div>
