@@ -227,6 +227,29 @@
                         <div class="help-block with-errors"></div>
                       </div>
                   </c:when>
+                  <c:when test="${data.stateName == 'clientInterview'}">
+                    <div class="form-group">
+                      <label for="recommendedPositionLevelInput"  class="control-label col-sm-4"><spring:message code="statehistory.field.recommendedPositionLevel"/></label>
+                      <div class="col-sm-8">
+                        <p class="form-control-static ${stat.first ? 'stateData' : ''}">L${data.recommendedPositionLevel}</p>
+                        <c:if test="${stat.first}">
+                            <spring:message code="statehistory.error.recommendedPositionLevel.range" var="errorRecommendedPositionLevelRangeMessage"/>
+
+                            <select required class="stateInput hidden" id="recommendedPositionLevelInput"
+                              data-bind="valueWithInit: 'recommendedPositionLevel'"
+                              data-error="${errorRecommendedPositionLevelRangeMessage}">
+                                <option disabled ${data.recommendedPositionLevel eq null ? "selected" : " "}>
+                                                                        <spring:message code="common.pleaseChoose"/></option>
+                                <c:forEach begin="0" end="5" step="1" var="index">
+                                    <option value="${index}" ${index eq data.recommendedPositionLevel ? "selected" : "" }>${index}</option>
+                                </c:forEach>
+                            </select>
+                            </select>
+                        </c:if>
+                      </div>
+                      <div class="help-block with-errors"></div>
+                    </div>
+                  </c:when>
                   <c:when test="${data.stateName == 'wageOffer'}">
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.offeredMoney"/></label>
