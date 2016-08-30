@@ -5,13 +5,18 @@ import com.epam.rft.atsy.web.exceptionhandling.UncheckedExceptionResolver;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolverImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
@@ -23,13 +28,28 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import java.io.File;
 import java.util.List;
 import java.util.Locale;
 
+import javax.annotation.PostConstruct;
+
 @Configuration
 @ComponentScan("com.epam.rft.atsy.web")
+@PropertySource("classpath:file_storage.properties")
 @Import({ServiceConfiguration.class})
 public class WebConfiguration extends DelegatingWebMvcConfiguration {
+
+  @Value("${upload_location_cv}")
+  private String uploadLocation;
+
+  @PostConstruct
+  public void init() {
+    File folder = new File(uploadLocation);
+    if (!folder.exists()) {
+      folder.mkdir();
+    }
+  }
 
   @Bean
   public ViewResolver viewResolver() {
@@ -96,5 +116,16 @@ public class WebConfiguration extends DelegatingWebMvcConfiguration {
 
     // The index is 1, in order to add it after the ExceptionHandlerExceptionResolver
     exceptionResolvers.add(1, new UncheckedExceptionResolver(mappingJackson2JsonView()));
+  }
+
+  @Bean
+  public CommonsMultipartResolver multipartResolver() {
+    return new CommonsMultipartResolver();
+  }
+
+  //To resolve ${} in @Value
+  @Bean
+  public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
+    return new PropertySourcesPlaceholderConfigurer();
   }
 }

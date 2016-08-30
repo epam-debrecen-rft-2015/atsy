@@ -26,5 +26,4 @@ public class UserDTO implements Serializable {
 
   @NotNull
   private String password;
-
 }

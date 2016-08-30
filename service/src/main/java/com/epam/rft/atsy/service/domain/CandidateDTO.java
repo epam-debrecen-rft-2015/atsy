@@ -46,4 +46,6 @@ public class CandidateDTO {
 
   private String description;
 
+  private String cvFilename;
+
 }
