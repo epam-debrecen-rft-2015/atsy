@@ -86,7 +86,7 @@
 
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <input type="text" class="input form-control" name="referer" id="referer" data-bind="valueWithInit: 'referer'"
-                                       value="${fn:escapeXml(candidate.referer})"
+                                       value="${fn:escapeXml(candidate.referer)}"
                                        placeholder="${i18nplace}" maxlength="20">
 
                                 <p class="showValue form-control-static"><c:out value = "${candidate.referer}"/></p>
