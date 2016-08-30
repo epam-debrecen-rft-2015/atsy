@@ -48,7 +48,7 @@ public class CandidateCreationStepDefs {
 
   private static final long TIMEOUT = 60L;
 
-  private static List<CandidateTableRow> candidates;
+  private List<CandidateTableRow> candidates;
 
   @Given("^there are existing candidates:$")
   public void there_are_existing_candidates(List<CandidateTableRow> candidates) {

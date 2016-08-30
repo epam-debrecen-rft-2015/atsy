@@ -6,8 +6,8 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(format = {"json:target/report.json"}, features = {
+@CucumberOptions(format = {"json:target/report.json", "pretty"}, features = {
     "src/test/resources/com/epam/rft/atsy/cucumber/CandidateApplication.feature"}, glue = {
-    "com.epam.rft.atsy.cucumber.candidate", "com.epam.rft.atsy.cucumber.util"})
+    "com.epam.rft.atsy.cucumber.candidate.application", "com.epam.rft.atsy.cucumber.util"})
 public class CandidateApplicationIT {
 }

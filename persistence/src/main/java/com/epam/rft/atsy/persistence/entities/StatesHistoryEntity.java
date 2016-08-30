@@ -13,7 +13,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-
+/**
+ * Represents information about the different states of an application, in the database.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -9,7 +9,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-
+/**
+ * Represents information about the different states of an application.
+ * See: {@link com.epam.rft.atsy.persistence.entities.StatesHistoryEntity}.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,7 +32,8 @@ public class StateHistoryDTO extends AbstractStateHistoryDTO {
   }
 
 
-  public static class StateDTOBuilder extends AbstractStateBuilder<StateDTOBuilder, StateHistoryDTO> {
+  public static class StateDTOBuilder
+      extends AbstractStateBuilder<StateDTOBuilder, StateHistoryDTO> {
 
     private StateDTOBuilder(StateHistoryDTO stateHistoryDTO) {
       super("StateDTOBuilder", stateHistoryDTO);

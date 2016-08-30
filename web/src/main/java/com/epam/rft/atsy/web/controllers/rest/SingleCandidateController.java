@@ -3,7 +3,7 @@ package com.epam.rft.atsy.web.controllers.rest;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
-import org.springframework.context.MessageSource;
+import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -19,6 +19,9 @@ import java.util.Locale;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
+/**
+ * Controller for creating a new candidate.
+ */
 @RestController
 @RequestMapping(value = "/secure/candidate")
 public class SingleCandidateController {
@@ -28,8 +31,15 @@ public class SingleCandidateController {
   private CandidateService candidateService;
 
   @Resource
-  private MessageSource messageSource;
+  private MessageKeyResolver messageKeyResolver;
 
+  /**
+   * Saves or updates and existing candidate.
+   * @param candidateDTO an object which wraps the data of a candidate
+   * @param result an object used to check if any error occurs
+   * @param locale language of the response
+   * @return a ResponseEntity object, which contains HTTP status code and error message if it occurs
+   */
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity saveOrUpdate(@Valid @RequestBody CandidateDTO candidateDTO,
                                      BindingResult result, Locale locale) {
@@ -45,13 +55,14 @@ public class SingleCandidateController {
   }
 
   private RestResponse parseValidationErrors(List<FieldError> fieldErrors, Locale locale) {
-    String errorMessage = messageSource.getMessage(COMMON_INVALID_INPUT_MESSAGE_KEY, null, locale);
+    String errorMessage =
+        messageKeyResolver.resolveMessageOrDefault(COMMON_INVALID_INPUT_MESSAGE_KEY);
 
     RestResponse restResponse = new RestResponse(errorMessage);
 
     for (FieldError fieldError : fieldErrors) {
       restResponse.addField(fieldError.getField(),
-          messageSource.getMessage(fieldError.getDefaultMessage(), new Object[0], locale));
+          messageKeyResolver.resolveMessageOrDefault(fieldError.getDefaultMessage()));
     }
 
     return restResponse;

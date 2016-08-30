@@ -14,6 +14,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 
+/**
+ * This entity class stores all the information about an application of a candidate.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -31,19 +31,19 @@ $(document).ready(function() {
 
     function positionValidator() {
         if (positionRef.prop('selectedIndex') === 0) {
-            positionErrorRef.html(positionRef.val());
+            positionErrorRef.text(positionRef.val());
             return false;
         }
-        positionErrorRef.html('');
+        positionErrorRef.text('');
         return true;
        }
 
     function applicationSourceValidator() {
         if (applicationSourceRef.prop('selectedIndex') === 0) {
-            applicationSourceErrorRef.html(applicationSourceRef.val());
+            applicationSourceErrorRef.text(applicationSourceRef.val());
             return false;
         }
-        applicationSourceErrorRef.html('');
+        applicationSourceErrorRef.text('');
         return true;
        }
 });
