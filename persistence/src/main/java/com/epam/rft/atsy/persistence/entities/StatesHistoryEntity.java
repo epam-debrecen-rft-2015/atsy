@@ -67,6 +67,13 @@ public class StatesHistoryEntity extends SuperEntity {
   @JoinColumn(name = "state_id")
   private StatesEntity statesEntity;
 
+  @OneToOne
+  @JoinColumn(name = "position_id")
+  private PositionEntity positionEntity;
+
+  @OneToOne
+  @JoinColumn(name = "channel_id")
+  private ChannelEntity channelEntity;
 
   @Builder
   public StatesHistoryEntity(Long id, ApplicationEntity applicationEntity, Date creationDate,
@@ -76,7 +83,9 @@ public class StatesHistoryEntity extends SuperEntity {
                              Boolean recommendation,
                              String reviewerName,
                              Short recommendedPositionLevel,
-                             StatesEntity statesEntity) {
+                             StatesEntity statesEntity,
+                             PositionEntity positionEntity,
+                             ChannelEntity channelEntity) {
     super(id);
     this.applicationEntity = applicationEntity;
     this.creationDate = creationDate;
@@ -91,6 +100,8 @@ public class StatesHistoryEntity extends SuperEntity {
     this.reviewerName = reviewerName;
     this.recommendedPositionLevel = recommendedPositionLevel;
     this.statesEntity = statesEntity;
+    this.positionEntity = positionEntity;
+    this.channelEntity = channelEntity;
   }
 }
 
