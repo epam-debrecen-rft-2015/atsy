@@ -231,9 +231,10 @@
                         <div class="col-sm-8">
                           <p class="form-control-static <c:if test='${stat.first}'>stateData</c:if>" id="reviewerNameP">L${data.recommendedPositionLevel}</p>
                           <c:if test="${stat.first}">
+                              <spring:message code="statehistory.error.recommendedPositionLevel.range" var="errorRecommendedPositionLevelOutOfRange"/>
                               <select required class="stateInput hidden" id="recommendedPositionLevelInput"
                                 data-bind="valueWithInit: 'recommendedPositionLevel'"
-                                data-error="<spring:message code='statehistory.error.recommendedPositionLevel.range'/>">
+                                data-error="${errorRecommendedPositionLevelOutOfRange}">
                                   <option disabled ${data.recommendedPositionLevel eq null ? 'selected="selected"' : ''}>
                                     <spring:message code="common.pleaseChoose"/>
                                   </option>
