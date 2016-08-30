@@ -72,7 +72,7 @@ public class FileUploadController {
       }
 
       fileValidator.validate(multipartFile);
-      File file = createFile(candidateDTO, fileName);
+      File file = createFile(candidateId, fileName);
       FileCopyUtils.copy(multipartFile.getBytes(), file);
 
       redirectAttributes.addFlashAttribute(FILE, fileName);
@@ -94,12 +94,12 @@ public class FileUploadController {
     return modelAndView;
   }
 
-  protected File createFile(CandidateDTO candidateDTO, String filename) throws FileValidationException, IOException {
-    if (!candidateCVFileHandler.existCandidateFolderOnFolderLocation(uploadLocation, candidateDTO)) {
-      candidateCVFileHandler.createCandidateFolderOnFolderLocation(uploadLocation, candidateDTO);
+  protected File createFile(Long candidateId, String filename) throws FileValidationException, IOException {
+    if (!candidateCVFileHandler.existCandidateFolderOnFolderLocation(uploadLocation, candidateId)) {
+      candidateCVFileHandler.createCandidateFolderOnFolderLocation(uploadLocation, candidateId);
     }
     File file = candidateCVFileHandler
-        .createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(uploadLocation, candidateDTO, filename);
+        .createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(uploadLocation, candidateId, filename);
     if (file.exists()) {
       throw new FileAlreadyExistsValidationException();
     }

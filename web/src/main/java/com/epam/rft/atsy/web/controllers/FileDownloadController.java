@@ -54,7 +54,7 @@ public class FileDownloadController {
 
       try {
         File file = candidateCVFileHandler
-            .createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(uploadLocation, candidateDTO, candidateCVFilename);
+            .createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(uploadLocation, candidateId, candidateCVFilename);
         if (!file.exists()) {
           throw new IOException();
         }

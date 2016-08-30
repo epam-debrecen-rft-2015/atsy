@@ -1,8 +1,6 @@
 package com.epam.rft.atsy.web.util;
 
 
-import com.epam.rft.atsy.service.domain.CandidateDTO;
-
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -12,34 +10,28 @@ import java.io.IOException;
 
 @Component
 public class CandidateCVFileHandler {
-  public static final String SEPARATOR = "-";
 
-  public File createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(String folderLocation, CandidateDTO candidateDTO, String cvFilename) {
+  public File createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(String folderLocation, Long candidateId,
+                                                                         String cvFilename) {
     Assert.notNull(folderLocation);
+    Assert.notNull(candidateId);
     Assert.notNull(cvFilename);
-    return new File(folderLocation + File.separator + getCandidateFolderNameFromCandidateDto(candidateDTO) + File.separator + cvFilename);
+    return new File(folderLocation + File.separator + candidateId + File.separator + cvFilename);
   }
 
-  public void createCandidateFolderOnFolderLocation(String folderLocation, CandidateDTO candidateDTO) throws IOException {
+  public void createCandidateFolderOnFolderLocation(String folderLocation, Long candidateId) throws IOException {
     Assert.notNull(folderLocation);
-    String candidateFolderName = getCandidateFolderNameFromCandidateDto(candidateDTO);
-    FileUtils.forceMkdir(new File(folderLocation + File.separator + candidateFolderName));
+    Assert.notNull(candidateId);
+    FileUtils.forceMkdir(new File(folderLocation + File.separator + candidateId));
   }
 
-  public boolean existCandidateFolderOnFolderLocation(String folderLocation, CandidateDTO candidateDTO) throws IOException {
+  public boolean existCandidateFolderOnFolderLocation(String folderLocation, Long candidateId) throws IOException {
     Assert.notNull(folderLocation);
+    Assert.notNull(candidateId);
     File originalFolder = new File(folderLocation);
     if (!originalFolder.exists()) {
       throw new IOException();
     }
-    String candidateFolderName = getCandidateFolderNameFromCandidateDto(candidateDTO);
-    return new File(folderLocation + File.separator + candidateFolderName).exists();
-  }
-
-  public String getCandidateFolderNameFromCandidateDto(CandidateDTO candidateDTO) {
-    Assert.notNull(candidateDTO);
-    Assert.notNull(candidateDTO.getId());
-    Assert.notNull(candidateDTO.getName());
-    return candidateDTO.getId() + SEPARATOR + candidateDTO.getName();
+    return new File(folderLocation + File.separator + candidateId).exists();
   }
 }

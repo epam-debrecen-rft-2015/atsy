@@ -1,13 +1,7 @@
 package com.epam.rft.atsy.util;
 
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-
-import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.util.CandidateCVFileHandler;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
@@ -17,28 +11,21 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 public class CandidateCVFileHandlerTest {
 
+  private static final long CANDIDATE_ID_NON_EXISTENT_FOLDER = 2L;
   private static final long CANDIDATE_ID = 1L;
-  private static final String CANDIDATE_NAME = "Candidate A";
-  private static final String CANDIDATE_NAME_WITHOUT_FOLDER = "Candidate X";
-  private static final String CANDIDATE_FOLDER_NAME =
-      CANDIDATE_ID + CandidateCVFileHandler.SEPARATOR + CANDIDATE_NAME;
   private static final String TEST_FOLDER_LOCATION = "folder";
   private static final String CV_FILENAME = "hungry_cat.pdf";
   private static final File TEST_FOLDER = new File(TEST_FOLDER_LOCATION);
-  private static final File
-      CANDIDATE_FOLDER =
-      new File(TEST_FOLDER_LOCATION + File.separator + CANDIDATE_FOLDER_NAME);
-
-  private CandidateDTO candidateDTOWithNullId =
-      CandidateDTO.builder().id(null).name(CANDIDATE_NAME).build();
-  private CandidateDTO candidateDTOWithNullName =
-      CandidateDTO.builder().id(CANDIDATE_ID).name(null).build();
-  private CandidateDTO candidateDTOWithoutFolder =
-      CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME_WITHOUT_FOLDER).build();
-  private CandidateDTO candidateDTOValid =
-      CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).build();
+  private static final File CANDIDATE_FOLDER =
+      new File(TEST_FOLDER_LOCATION + File.separator + CANDIDATE_ID);
 
   private CandidateCVFileHandler candidateCVFileHandler = new CandidateCVFileHandler();
 
@@ -56,8 +43,7 @@ public class CandidateCVFileHandlerTest {
   @Test(expected = IllegalArgumentException.class)
   public void createCVFileFromFolderLocationAndCandidateDtoAndCVFilenameShouldThrowIllegalArgumentExceptionWhenFolderLocationIsNull() {
     candidateCVFileHandler
-        .createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(null, candidateDTOValid,
-            CV_FILENAME);
+        .createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(null, CANDIDATE_ID, CV_FILENAME);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -71,16 +57,16 @@ public class CandidateCVFileHandlerTest {
   public void createCVFileFromFolderLocationAndCandidateDtoAndCVFilenameShouldThrowIllegalArgumentExceptionWhenCVFilenameIsNull() {
     candidateCVFileHandler
         .createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(TEST_FOLDER_LOCATION,
-            candidateDTOValid, null);
+            CANDIDATE_ID, null);
   }
 
   @Test
   public void createCVFileFromFolderLocationAndCandidateDtoAndCVFilenameShouldReturnFileWhenAllParamIsValid() {
     File actualFile = candidateCVFileHandler
         .createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(TEST_FOLDER_LOCATION,
-            candidateDTOValid, CV_FILENAME);
+            CANDIDATE_ID, CV_FILENAME);
     File expectedFile =
-        new File(TEST_FOLDER_LOCATION + File.separator + CANDIDATE_FOLDER_NAME + File.separator
+        new File(TEST_FOLDER_LOCATION + File.separator + CANDIDATE_ID + File.separator
             + CV_FILENAME);
 
     assertThat(actualFile, equalTo(expectedFile));
@@ -90,7 +76,7 @@ public class CandidateCVFileHandlerTest {
   public void createCandidateFolderOnFolderLocationShouldThrowIllegalArgumentExceptionWhenFolderLocationIsNull()
       throws
       IOException {
-    candidateCVFileHandler.createCandidateFolderOnFolderLocation(null, candidateDTOValid);
+    candidateCVFileHandler.createCandidateFolderOnFolderLocation(null, CANDIDATE_ID);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -103,10 +89,10 @@ public class CandidateCVFileHandlerTest {
   public void createCandidateFolderOnFolderLocationShouldCreateWhenAllParamIsValid()
       throws IOException {
     candidateCVFileHandler
-        .createCandidateFolderOnFolderLocation(TEST_FOLDER_LOCATION, candidateDTOValid);
+        .createCandidateFolderOnFolderLocation(TEST_FOLDER_LOCATION, CANDIDATE_ID);
     String
         createdCandidateFolderPath =
-        TEST_FOLDER_LOCATION + File.separator + CANDIDATE_FOLDER_NAME;
+        TEST_FOLDER_LOCATION + File.separator + CANDIDATE_ID;
     File actualFile = new File(createdCandidateFolderPath);
 
     assertThat(actualFile, notNullValue());
@@ -117,7 +103,7 @@ public class CandidateCVFileHandlerTest {
   @Test(expected = IllegalArgumentException.class)
   public void existCandidateFolderOnFolderLocationShouldThrowIllegalArgumentExceptionWhenFolderLocationIsNull()
       throws IOException {
-    candidateCVFileHandler.existCandidateFolderOnFolderLocation(null, candidateDTOValid);
+    candidateCVFileHandler.existCandidateFolderOnFolderLocation(null, CANDIDATE_ID);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -130,7 +116,7 @@ public class CandidateCVFileHandlerTest {
   public void existCandidateFolderOnFolderLocationShouldThrowIOExceptionWhenFolderLocationNotExists()
       throws IOException {
     candidateCVFileHandler
-        .existCandidateFolderOnFolderLocation(StringUtils.EMPTY, candidateDTOValid);
+        .existCandidateFolderOnFolderLocation(StringUtils.EMPTY, CANDIDATE_ID);
   }
 
   @Test
@@ -139,7 +125,7 @@ public class CandidateCVFileHandlerTest {
     boolean
         actual =
         candidateCVFileHandler
-            .existCandidateFolderOnFolderLocation(TEST_FOLDER_LOCATION, candidateDTOWithoutFolder);
+            .existCandidateFolderOnFolderLocation(TEST_FOLDER_LOCATION, CANDIDATE_ID_NON_EXISTENT_FOLDER);
 
     assertFalse(actual);
   }
@@ -150,32 +136,10 @@ public class CandidateCVFileHandlerTest {
     boolean
         actual =
         candidateCVFileHandler
-            .existCandidateFolderOnFolderLocation(TEST_FOLDER_LOCATION, candidateDTOValid);
+            .existCandidateFolderOnFolderLocation(TEST_FOLDER_LOCATION, CANDIDATE_ID);
 
     assertTrue(actual);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void getCandidateFolderNameFromCandidateDtoShouldThrowIllegalArgumentExceptionWhenCandidateDtoIsNull() {
-    candidateCVFileHandler.getCandidateFolderNameFromCandidateDto(null);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void getCandidateFolderNameFromCandidateDtoShouldThrowIllegalArgumentExceptionWhenCandidateIdIsNull() {
-    candidateCVFileHandler.getCandidateFolderNameFromCandidateDto(candidateDTOWithNullId);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void getCandidateFolderNameFromCandidateDtoShouldThrowIllegalArgumentExceptionWhenCandidateNameIsNull() {
-    candidateCVFileHandler.getCandidateFolderNameFromCandidateDto(candidateDTOWithNullName);
-  }
-
-  @Test
-  public void getCandidateFolderNameFromCandidateDtoShouldReturnCandidateFolderNameWhenAllParamIsValid() {
-    String candidateFolderName =
-        candidateCVFileHandler.getCandidateFolderNameFromCandidateDto(candidateDTOValid);
-
-    assertThat(candidateFolderName, equalTo(CANDIDATE_FOLDER_NAME));
-  }
 
 }
