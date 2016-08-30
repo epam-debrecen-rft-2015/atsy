@@ -2,10 +2,12 @@ package com.epam.rft.atsy.service.impl;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
+import com.epam.rft.atsy.persistence.entities.StatesEntity;
 import com.epam.rft.atsy.persistence.entities.StatesHistoryEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.persistence.repositories.StatesHistoryRepository;
+import com.epam.rft.atsy.persistence.repositories.StatesRepository;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
@@ -36,6 +38,9 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
   @Autowired
   private CandidateRepository candidateRepository;
 
+  @Autowired
+  private StatesRepository statesRepository;
+
   @Transactional(readOnly = true)
   @Override
   public Collection<CandidateApplicationDTO> getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(
@@ -62,13 +67,23 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
   public Long saveStateHistory(StateHistoryDTO state, Long applicationId) {
     Assert.notNull(state);
     Assert.notNull(applicationId);
+    Assert.notNull(state.getStateDTO());
+    Assert.notNull(state.getStateDTO().getId());
+
+    ApplicationEntity applicationEntity = applicationsRepository.findOne(applicationId);
+    Assert.notNull(applicationEntity);
+
+    Long stateId = state.getStateDTO().getId();
+    StatesEntity statesEntity = statesRepository.findOne(stateId);
+    Assert.notNull(statesEntity);
 
     StatesHistoryEntity
         statesHistoryEntity =
         converterService.convert(state, StatesHistoryEntity.class);
+
     statesHistoryEntity
         .setCreationDate(state.getCreationDate() == null ? new Date() : state.getCreationDate());
-    statesHistoryEntity.setApplicationEntity(applicationsRepository.findOne(applicationId));
+    statesHistoryEntity.setApplicationEntity(applicationEntity);
 
     return statesHistoryRepository.save(statesHistoryEntity).getId();
   }
@@ -85,5 +100,4 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
 
     return converterService.convert(statesHistoryEntities, StateHistoryViewDTO.class);
   }
-
 }

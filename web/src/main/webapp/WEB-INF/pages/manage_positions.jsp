@@ -22,7 +22,9 @@
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <table data-toggle="table" id="positions" data-url="${positions}" data-height="299"
                                    data-sort-name="name"
-                                   data-sort-order="desc">
+                                   data-sort-order="desc"
+                                   data-escape="true"
+                                   >
                                 <thead>
                                 <tr>
                                     <th data-field="name" data-align="left" data-sortable="true"><spring:message

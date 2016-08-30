@@ -3,8 +3,6 @@ package com.epam.rft.atsy.web.controllers.rest;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -16,6 +14,7 @@ import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.web.MediaTypes;
 import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
+import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +22,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.context.MessageSource;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDate;
@@ -32,7 +30,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Locale;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CandidateApplicationControllerTest extends AbstractControllerTest {
@@ -62,7 +59,7 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
   private StatesHistoryService statesHistoryService;
 
   @Mock
-  private MessageSource messageSource;
+  private MessageKeyResolver messageKeyResolver;
 
   @InjectMocks
   private CandidateApplicationController candidateApplicationController;
@@ -98,14 +95,16 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
 
     candidateApplicationCollection = Arrays.asList(developerApplicationDto, sysadminApplicationDto);
 
-    given(messageSource.getMessage(Matchers.anyString(), Matchers.any(Object[].class),
-        Matchers.any(Locale.class))).willReturn(LOCALIZED_STATE_TYPE);
+    given(messageKeyResolver
+        .resolveMessageOrDefault(Matchers.anyString(), Matchers.any(Object[].class)))
+        .willReturn(LOCALIZED_STATE_TYPE);
   }
 
   @Test
   public void loadApplicationsShouldRespondWithEmptyCollectionWhenThereAreNoApplications()
       throws Exception {
-    given(statesHistoryService.getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID)).willReturn(
+    given(statesHistoryService
+        .getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID)).willReturn(
         Collections.emptyList());
 
     mockMvc.perform(
@@ -115,15 +114,17 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$").isArray())
         .andExpect(jsonPath("$").isEmpty());
 
-    then(statesHistoryService).should().getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID);
+    then(statesHistoryService).should()
+        .getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID);
 
-    verifyZeroInteractions(messageSource);
+    verifyZeroInteractions(messageKeyResolver);
   }
 
   @Test
   public void loadApplicationsShouldRespondWithSingleElementArrayWhenThereIsOnlyOneApplication()
       throws Exception {
-    given(statesHistoryService.getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID))
+    given(statesHistoryService
+        .getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID))
         .willReturn(Collections.singletonList(developerApplicationDto));
 
     ResultActions resultActions = mockMvc.perform(
@@ -136,17 +137,18 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
 
     assertApplicationResponse(resultActions, 0, developerApplicationDto);
 
-    then(statesHistoryService).should().getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID);
+    then(statesHistoryService).should()
+        .getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID);
 
-    then(messageSource).should()
-        .getMessage(eq(APPLICATION_STATE + RAW_STATE_TYPE), eq(new Object[]{RAW_STATE_TYPE}),
-            any(Locale.class));
+    then(messageKeyResolver).should()
+        .resolveMessageOrDefault(APPLICATION_STATE + RAW_STATE_TYPE, RAW_STATE_TYPE);
   }
 
   @Test
   public void loadApplicationsShouldRespondWithTwoElementArrayWhenThereAreTwoApplications()
       throws Exception {
-    given(statesHistoryService.getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID))
+    given(statesHistoryService
+        .getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID))
         .willReturn(candidateApplicationCollection);
 
     ResultActions resultActions = mockMvc.perform(
@@ -162,11 +164,11 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
 
     assertApplicationResponse(resultActions, 1, sysadminApplicationDto);
 
-    then(statesHistoryService).should().getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID);
+    then(statesHistoryService).should()
+        .getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID);
 
-    then(messageSource).should(times(2))
-        .getMessage(eq(APPLICATION_STATE + RAW_STATE_TYPE), eq(new Object[]{RAW_STATE_TYPE}),
-            any(Locale.class));
+    then(messageKeyResolver).should(times(2))
+        .resolveMessageOrDefault(APPLICATION_STATE + RAW_STATE_TYPE, RAW_STATE_TYPE);
   }
 
   private void assertApplicationResponse(ResultActions resultActions, int index,
@@ -175,13 +177,14 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
 
     resultActions
         .andExpect(jsonPath(basePath + "lastStateId",
-                   equalTo(applicationDto.getLastStateId().intValue())))
+            equalTo(applicationDto.getLastStateId().intValue())))
         .andExpect(jsonPath(basePath + "applicationId",
-                   equalTo(applicationDto.getApplicationId().intValue())))
+            equalTo(applicationDto.getApplicationId().intValue())))
         .andExpect(jsonPath(basePath + "positionName", equalTo(applicationDto.getPositionName())))
-        .andExpect(jsonPath(basePath + "creationDate", equalTo(applicationDto.getCreationDate().getTime())))
+        .andExpect(jsonPath(basePath + "creationDate",
+            equalTo(applicationDto.getCreationDate().getTime())))
         .andExpect(jsonPath(basePath + "modificationDate",
-                   equalTo(applicationDto.getModificationDate().getTime())))
+            equalTo(applicationDto.getModificationDate().getTime())))
         .andExpect(jsonPath(basePath + "stateType", equalTo(LOCALIZED_STATE_TYPE)));
   }
 

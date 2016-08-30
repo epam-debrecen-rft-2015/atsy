@@ -11,8 +11,8 @@ function isNewState() {
 }
 
 function editLatestStateOnClick() {
-    $('.stateInput').show();
-    $('.stateData').hide();
+    $('.stateInput').toggleClass("hidden");
+    $('.stateData').toggleClass("hidden");
     $('#latestStateEditButton').hide();
     $('div.button-panel > form.form-inline div.btn-group > a').addClass("disabled");
 }
@@ -26,8 +26,8 @@ function cancelButtonOnClick() {
         window.location.assign(window.location.href.replace(/\?[^]*/, "?" + applicationIdParam));
     }
 
-    $('.stateInput').hide();
-    $('.stateData').show();
+    $('.stateInput').toggleClass("hidden");
+    $('.stateData').toggleClass("hidden");
     $('#latestStateEditButton').show();
     $('div.button-panel > form.form-inline div.btn-group > a').removeClass("disabled");
     $('#create-state-form').validator('destroy');

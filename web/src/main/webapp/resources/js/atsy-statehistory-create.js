@@ -84,8 +84,16 @@ function StateHistoryModel() {
      return (pos >= "0" && pos <= "5");
    });
 
+   self.isDayOfStartValid = ko.pureComputed(function () {
+    var date = typeof self.dayOfStart !== 'undefined' ? self.dayOfStart() : "0000-00-00";
+
+    return date.match(/^\d{4}\-\d{2}\-\d{2}$/) !== null;
+   });
+
    self.canSave = ko.pureComputed(function() {
-     return self.isRecommendationValid() && self.isRecommendationPositionLevelValid();
+     return self.isRecommendationValid()
+            && self.isRecommendationPositionLevelValid()
+            && self.isDayOfStartValid();
    });
 }
 
