@@ -6,7 +6,6 @@ import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StateFlowService;
 import com.epam.rft.atsy.service.StateService;
 import com.epam.rft.atsy.service.StatesHistoryService;
-import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
@@ -94,9 +93,7 @@ public class ApplicationStateController {
           .build());
     }
 
-    ApplicationDTO applicationDTO = applicationsService.getApplication(applicationId);
-
-    CandidateDTO candidateDTO = candidateService.getCandidate(applicationDTO.getCandidateId());
+    CandidateDTO candidateDTO = candidateService.getCandidateByApplicationID(applicationId);
 
     for (StateHistoryViewRepresentation stateHistoryViewRepresentation : stateHistoryViewRepresentations) {
       stateHistoryViewRepresentation.setLanguageSkill(candidateDTO.getLanguageSkill());
