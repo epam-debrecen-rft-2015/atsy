@@ -27,19 +27,29 @@ public class ApplicationsServiceImpl implements ApplicationsService {
   private ConverterService converterService;
 
 
+  @Override
+  public ApplicationDTO getApplicationDtoById(Long applicationId) {
+    Assert.notNull(applicationId);
+    ApplicationEntity applicationEntity = applicationsRepository.findOne(applicationId);
+    if (applicationEntity != null) {
+      return converterService.convert(applicationEntity, ApplicationDTO.class);
+    }
+    return null;
+  }
+
   @Transactional
   @Override
-  public Long saveOrUpdate(ApplicationDTO applicationDTO) {
+  public ApplicationDTO saveOrUpdate(ApplicationDTO applicationDTO) {
     Assert.notNull(applicationDTO);
     Assert.notNull(applicationDTO.getCandidateId());
     Assert.notNull(applicationDTO.getPositionId());
     Assert.notNull(applicationDTO.getChannelId());
 
-    ApplicationEntity
-        applicationEntity =
+    ApplicationEntity applicationEntity =
         converterService.convert(applicationDTO, ApplicationEntity.class);
+    ApplicationEntity savedOrUpdateApplicationEntity = applicationsRepository.saveAndFlush(applicationEntity);
 
-    return applicationsRepository.save(applicationEntity).getId();
+    return converterService.convert(savedOrUpdateApplicationEntity, ApplicationDTO.class);
   }
 
   @Transactional
@@ -47,9 +57,10 @@ public class ApplicationsServiceImpl implements ApplicationsService {
   public Long saveApplication(ApplicationDTO applicationDTO, StateHistoryDTO stateHistoryDTO) {
     Assert.notNull(stateHistoryDTO);
 
-    Long applicationId = saveOrUpdate(applicationDTO);
-    statesHistoryService.saveStateHistory(stateHistoryDTO, applicationId);
-    return applicationId;
+    ApplicationDTO savedOrUpdatedApplicationDto = saveOrUpdate(applicationDTO);
+    stateHistoryDTO.setApplicationDTO(savedOrUpdatedApplicationDto);
+    statesHistoryService.saveStateHistory(stateHistoryDTO);
+    return savedOrUpdatedApplicationDto.getId();
   }
 
 }
