@@ -1,9 +1,16 @@
 package com.epam.rft.atsy.service.impl;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Matchers.isNull;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
@@ -81,6 +88,46 @@ public class ApplicationsServiceImplTest {
 
   @InjectMocks
   private ApplicationsServiceImpl applicationsService;
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getApplicationDtoByIdShouldThrowIllegalArgumentExceptionWhenApplicationIdIsNull() {
+    // Given
+
+    // When
+    applicationsService.getApplicationDtoById(null);
+
+    // Then
+  }
+
+  @Test
+  public void getApplicationDtoByIdShouldReturnNullWhenApplicationDtoNotExists() {
+    // Given
+    given(applicationsRepository.findOne(APPLICATION_ID)).willReturn(null);
+
+    // When
+    ApplicationDTO returnedApplicationDto = applicationsService.getApplicationDtoById(APPLICATION_ID);
+    assertThat(returnedApplicationDto, is(nullValue()));
+
+    // Then
+    then(applicationsRepository).should().findOne(APPLICATION_ID);
+    verifyZeroInteractions(converterService);
+  }
+
+  @Test
+  public void getApplicationDtoByIdShouldReturnExistingApplicationDtoWhenApplicationEntityExists() {
+    // Given
+    given(applicationsRepository.findOne(APPLICATION_ID)).willReturn(applicationEntity);
+    given(converterService.convert(applicationEntity, ApplicationDTO.class)).willReturn(applicationDTO);
+
+    // When
+    ApplicationDTO returnedApplicationDto = applicationsService.getApplicationDtoById(APPLICATION_ID);
+    assertThat(returnedApplicationDto, notNullValue());
+    assertThat(returnedApplicationDto, equalTo(applicationDTO));
+
+    // Then
+    then(applicationsRepository).should().findOne(APPLICATION_ID);
+    then(converterService).should().convert(applicationEntity, ApplicationDTO.class);
+  }
 
   /*@Test
   public void saveOrUpdateShouldSaveAProperApplicationDTO() {
