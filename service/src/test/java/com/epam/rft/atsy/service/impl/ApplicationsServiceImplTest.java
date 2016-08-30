@@ -81,7 +81,7 @@ public class ApplicationsServiceImplTest {
 
   @InjectMocks
   private ApplicationsServiceImpl applicationsService;
-  
+
   @Test
   public void saveOrUpdateShouldSaveAProperApplicationDTO() {
 

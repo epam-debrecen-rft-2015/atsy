@@ -8,7 +8,9 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
+import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
@@ -36,6 +38,8 @@ import java.util.Collection;
 @RunWith(MockitoJUnitRunner.class)
 public class CandidateServiceImplTest {
   private static final Long ID = 1L;
+  private static final Long APPLICATION_ID = 1L;
+  private static final Long NON_EXISTENT_APPLICATION_ID = 2L;
   private static final String NAME = "John Doe";
   private static final String EMAIL = "john@doe.com";
   private static final String PHONE = "123456";
@@ -55,11 +59,15 @@ public class CandidateServiceImplTest {
   @Mock
   private CandidateRepository candidateRepository;
 
+  @Mock
+  private ApplicationsRepository applicationsRepository;
+
   @InjectMocks
   private CandidateServiceImpl candidateService;
 
   private CandidateEntity dummyCandidateEntity;
   private CandidateDTO dummyCandidateDto;
+  private ApplicationEntity dummyApplicationEntity;
   private FilterRequest ascendingFilterRequest;
   private FilterRequest descendingFilterRequest;
   private Sort ascendingSort;
@@ -69,6 +77,10 @@ public class CandidateServiceImplTest {
     dummyCandidateEntity = CandidateEntity.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
         .referer(REFERER).languageSkill(LANGUAGE_SKILL)
         .description(DESCRIPTION).build();
+
+    dummyApplicationEntity =
+        ApplicationEntity.builder().id(APPLICATION_ID).candidateEntity(dummyCandidateEntity)
+            .build();
 
     dummyCandidateDto = CandidateDTO.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
         .referer(REFERER).languageSkill(LANGUAGE_SKILL)
@@ -114,6 +126,46 @@ public class CandidateServiceImplTest {
 
     // When
     CandidateDTO candidate = candidateService.getCandidate(ID);
+
+    // Then
+    assertThat(candidate, equalTo(dummyCandidateDto));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getCandidateByApplicationIDShouldThrowIllegalArgumentExceptionWhenApplicationIDIsNull() {
+    // When
+    candidateService.getCandidateByApplicationID(null);
+  }
+
+  @Test
+  public void getCandidateByApplicationIdShouldReturnNullWhenThereIsNoApplicationWithTheGivenId() {
+    // Given
+    given(applicationsRepository.findOne(APPLICATION_ID))
+        .willReturn(dummyApplicationEntity);
+    given(converterService.convert(dummyCandidateEntity, CandidateDTO.class))
+        .willReturn(dummyCandidateDto);
+
+    // When
+    CandidateDTO
+        candidate =
+        candidateService.getCandidateByApplicationID(NON_EXISTENT_APPLICATION_ID);
+
+    // Then
+    assertThat(candidate, nullValue());
+  }
+
+  @Test
+  public void getCandidateByApplicationIdShouldReturnCandidateDTOWhenThereIsApplicationWithTheGivenId() {
+    // Given
+    given(applicationsRepository.findOne(APPLICATION_ID))
+        .willReturn(dummyApplicationEntity);
+    given(converterService.convert(dummyCandidateEntity, CandidateDTO.class))
+        .willReturn(dummyCandidateDto);
+
+    // When
+    CandidateDTO
+        candidate =
+        candidateService.getCandidateByApplicationID(APPLICATION_ID);
 
     // Then
     assertThat(candidate, equalTo(dummyCandidateDto));

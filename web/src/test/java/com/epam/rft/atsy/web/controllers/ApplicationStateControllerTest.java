@@ -63,6 +63,8 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   private static final String STATE_NAME_CV = "CV";
   private static final String STATE_NAME_CODING = "Coding";
 
+  private static final Long APPLICATION_ID = 1L;
+
   private StateDTO
       stateDTOWithStateNameNewApply =
       StateDTO.builder().id(1L).name(CLICKED_STATE_NAME_NEW_APPLY).build();
@@ -238,8 +240,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
         .convert(emptyStateHistoryViewDTOList, StateHistoryViewRepresentation.class))
         .willReturn(emptyStateHistoryViewRepresentationList);
 
-    given(applicationsService.getApplication(1L)).willReturn(applicationDTO);
-    given(candidateService.getCandidate(applicationDTO.getCandidateId())).willReturn(candidateDTO);
+    given(candidateService.getCandidateByApplicationID(APPLICATION_ID)).willReturn(candidateDTO);
 
     given(stateService.getStateDtoByName(CLICKED_STATE_NAME_NEW_APPLY))
         .willReturn(stateDTOWithStateNameNewApply);
@@ -291,8 +292,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     given(stateFlowService.getStateFlowDTOByFromStateDTO(stateDTOWithStateNameCoding))
         .willReturn(stateFlowDTOListWithSingleElement);
 
-    given(applicationsService.getApplication(1L)).willReturn(applicationDTO);
-    given(candidateService.getCandidate(applicationDTO.getCandidateId())).willReturn(candidateDTO);
+    given(candidateService.getCandidateByApplicationID(APPLICATION_ID)).willReturn(candidateDTO);
 
     given(messageKeyResolver
         .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_APPLY,
