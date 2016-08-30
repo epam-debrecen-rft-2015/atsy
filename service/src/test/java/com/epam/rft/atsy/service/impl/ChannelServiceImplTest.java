@@ -9,6 +9,7 @@ import static org.mockito.BDDMockito.then;
 
 import com.epam.rft.atsy.persistence.entities.ChannelEntity;
 import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
+import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.exception.DuplicateChannelException;
 import org.hamcrest.CoreMatchers;
@@ -22,11 +23,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,17 +39,20 @@ public class ChannelServiceImplTest {
   private static final Long CHANNEL_ID_LINKEDIN = 3L;
   private static final String CHANNEL_NAME_LINKEDIN = "linkedin hírdetés";
   private static final List<ChannelEntity> EMPTY_CHANNEL_ENTITY_LIST = Collections.emptyList();
-  private static final Collection<ChannelDTO> EMPTY_CHANNEL_DTO_LIST = Collections.emptyList();
-  private static final Type CHANNEL_DTO_LIST_TYPE = new TypeToken<List<ChannelDTO>>() {
-  }.getType();
+  private static final List<ChannelDTO> EMPTY_CHANNEL_DTO_LIST = Collections.emptyList();
+
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
-  @InjectMocks
-  private ChannelServiceImpl channelService;
+
   @Mock
-  private ModelMapper modelMapper;
+  private ConverterService converterService;
+
   @Mock
   private ChannelRepository channelRepository;
+
+  @InjectMocks
+  private ChannelServiceImpl channelService;
+
   private ChannelDTO facebookDto;
   private ChannelEntity facebookEntity;
   private ChannelDTO dtkDto;
@@ -59,7 +60,7 @@ public class ChannelServiceImplTest {
   private ChannelDTO linkedinDto;
   private ChannelEntity linkedinEntity;
   private List<ChannelEntity> expectedChannelEntityList;
-  private Collection<ChannelDTO> expectedChannelDTOList;
+  private List<ChannelDTO> expectedChannelDTOList;
 
   @Before
   public void init() {
@@ -79,7 +80,7 @@ public class ChannelServiceImplTest {
   public void getAllChannelsShouldReturnEmptyListWhenThereAreNoChannels() {
     // Given
     given(channelRepository.findAll()).willReturn(EMPTY_CHANNEL_ENTITY_LIST);
-    given(modelMapper.map(EMPTY_CHANNEL_ENTITY_LIST, CHANNEL_DTO_LIST_TYPE))
+    given(converterService.convert(EMPTY_CHANNEL_ENTITY_LIST, ChannelDTO.class))
         .willReturn(EMPTY_CHANNEL_DTO_LIST);
 
     // When
@@ -90,7 +91,7 @@ public class ChannelServiceImplTest {
     assertTrue(channels.isEmpty());
 
     then(channelRepository).should().findAll();
-    then(modelMapper).should().map(EMPTY_CHANNEL_ENTITY_LIST, CHANNEL_DTO_LIST_TYPE);
+    then(converterService).should().convert(EMPTY_CHANNEL_ENTITY_LIST, ChannelDTO.class);
   }
 
 
@@ -99,10 +100,10 @@ public class ChannelServiceImplTest {
     // Given
     List<ChannelEntity> channels = Arrays.asList(facebookEntity);
 
-    Collection<ChannelDTO> expected = Arrays.asList(facebookDto);
+    List<ChannelDTO> expected = Arrays.asList(facebookDto);
 
     given(channelRepository.findAll()).willReturn(channels);
-    given(modelMapper.map(channels, CHANNEL_DTO_LIST_TYPE)).willReturn(expected);
+    given(converterService.convert(channels, ChannelDTO.class)).willReturn(expected);
 
     // When
     Collection<ChannelDTO> result = channelService.getAllChannels();
@@ -111,14 +112,14 @@ public class ChannelServiceImplTest {
     assertEquals(result, expected);
 
     then(channelRepository).should().findAll();
-    then(modelMapper).should().map(channels, CHANNEL_DTO_LIST_TYPE);
+    then(converterService).should().convert(channels, ChannelDTO.class);
   }
 
   @Test
   public void getAllChannelsShouldReturnThreeElementListWhenThereAreThreeChannels() {
     // Given
     given(channelRepository.findAll()).willReturn(expectedChannelEntityList);
-    given(modelMapper.map(expectedChannelEntityList, CHANNEL_DTO_LIST_TYPE))
+    given(converterService.convert(expectedChannelEntityList, ChannelDTO.class))
         .willReturn(expectedChannelDTOList);
 
     // When
@@ -128,14 +129,14 @@ public class ChannelServiceImplTest {
     assertEquals(result, expectedChannelDTOList);
 
     then(channelRepository).should().findAll();
-    then(modelMapper).should().map(expectedChannelEntityList, CHANNEL_DTO_LIST_TYPE);
+    then(converterService).should().convert(expectedChannelEntityList, ChannelDTO.class);
   }
 
   @Test
   public void saveOrUpdateShouldThrowDREAfterCatchingConstraintViolationException()
       throws DuplicateChannelException {
     // Given
-    given(modelMapper.map(facebookDto, ChannelEntity.class)).willReturn(facebookEntity);
+    given(converterService.convert(facebookDto, ChannelEntity.class)).willReturn(facebookEntity);
 
     given(channelRepository.saveAndFlush(facebookEntity))
         .willThrow(ConstraintViolationException.class);
@@ -152,7 +153,7 @@ public class ChannelServiceImplTest {
   public void saveOrUpdateShouldThrowDREAfterCatchingDataIntegrityViolationException()
       throws DuplicateChannelException {
     // Given
-    given(modelMapper.map(facebookDto, ChannelEntity.class)).willReturn(facebookEntity);
+    given(converterService.convert(facebookDto, ChannelEntity.class)).willReturn(facebookEntity);
 
     given(channelRepository.saveAndFlush(facebookEntity))
         .willThrow(DataIntegrityViolationException.class);
@@ -168,7 +169,7 @@ public class ChannelServiceImplTest {
   @Test
   public void saveOrUpdateShouldSaveValidChannelDTO() {
     // Given
-    given(modelMapper.map(facebookDto, ChannelEntity.class)).willReturn(facebookEntity);
+    given(converterService.convert(facebookDto, ChannelEntity.class)).willReturn(facebookEntity);
 
     given(channelRepository.saveAndFlush(facebookEntity)).willReturn(facebookEntity);
 

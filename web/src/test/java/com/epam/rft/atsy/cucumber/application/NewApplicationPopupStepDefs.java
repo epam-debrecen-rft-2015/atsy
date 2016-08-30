@@ -1,7 +1,11 @@
 package com.epam.rft.atsy.cucumber.application;
 
-import com.epam.rft.atsy.cucumber.util.DriverProvider;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 
+import com.epam.rft.atsy.cucumber.util.DriverProvider;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -14,21 +18,17 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.greaterThan;
-
 public class NewApplicationPopupStepDefs {
 
   private static WebDriver webDriver = DriverProvider.getDriver();
-  private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss");
+  private static final SimpleDateFormat
+      SIMPLE_DATE_FORMAT =
+      new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss");
 
   private static final String POP_UP_CONTENT = "pop_up_content";
   private static final String APPLICATIONS_TABLE = "applications_table";
@@ -60,7 +60,8 @@ public class NewApplicationPopupStepDefs {
 
   @Then("^the Application page appears$")
   public void the_application_page_appears$() throws Throwable {
-    assertThat(webDriver.getCurrentUrl(), equalTo("http://localhost:8080/atsy/secure/application?candidateId=1"));
+    assertThat(webDriver.getCurrentUrl(),
+        equalTo("http://localhost:8080/atsy/secure/application?candidateId=1"));
   }
 
   @And("^the New application popup appears$")
@@ -98,7 +99,9 @@ public class NewApplicationPopupStepDefs {
 
   @And("^position (.*) exists$")
   public void position_developer_exists(String positionName) throws Throwable {
-    List<String> existPositionNameList = convertWebElementsToStringList(webDriver.findElements(By.id(POSITION)));
+    List<String>
+        existPositionNameList =
+        convertWebElementsToStringList(webDriver.findElements(By.id(POSITION)));
     assertThat(isContainsAKeyword(positionName, existPositionNameList), is(true));
   }
 
@@ -148,7 +151,9 @@ public class NewApplicationPopupStepDefs {
     Date presentDate = currentDateMinus(25);
     String positionName = lastRowInTheTable.get(COLUMN_ZEROTH).getText();
     Date addedDate = SIMPLE_DATE_FORMAT.parse(lastRowInTheTable.get(COLUMN_FIRST).getText());
-    Date lastModifiedDate = SIMPLE_DATE_FORMAT.parse(lastRowInTheTable.get(COLUMN_SECOND).getText());
+    Date
+        lastModifiedDate =
+        SIMPLE_DATE_FORMAT.parse(lastRowInTheTable.get(COLUMN_SECOND).getText());
     String stateName = lastRowInTheTable.get(COLUMN_THIRD).getText();
 
     assertThat(positionName, equalTo(DEVELOPER_IN_HUN));
@@ -169,7 +174,8 @@ public class NewApplicationPopupStepDefs {
   }
 
   @Then("^the (.*) message appears under the position selector$")
-  public void the_position_message_appears_under_the_position_selector(String positionMessage) throws Throwable {
+  public void the_position_message_appears_under_the_position_selector(String positionMessage)
+      throws Throwable {
     String positionDropDownErrorMessage = webDriver.findElement(By.id("position_error")).getText();
     assertThat(positionDropDownErrorMessage, equalTo(positionMessage));
   }
@@ -180,9 +186,12 @@ public class NewApplicationPopupStepDefs {
   }
 
   @Then("^the (.*) message appears under the source selector$")
-  public void the_application_source_message_appears_under_the_source_selector(String applicationSourceMessage)
+  public void the_application_source_message_appears_under_the_source_selector(
+      String applicationSourceMessage)
       throws Throwable {
-    String applicationSourceDropDownErrorMessage = webDriver.findElement(By.id("application_source_error")).getText();
+    String
+        applicationSourceDropDownErrorMessage =
+        webDriver.findElement(By.id("application_source_error")).getText();
     assertThat(applicationSourceDropDownErrorMessage, equalTo(applicationSourceMessage));
   }
 

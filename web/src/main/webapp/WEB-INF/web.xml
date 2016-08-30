@@ -15,7 +15,7 @@
             <param-value>true</param-value>
         </init-param>
     </filter>
-
+    
     <filter-mapping>
         <filter-name>encoding-filter</filter-name>
         <url-pattern>/*</url-pattern>
@@ -23,5 +23,7 @@
     <context-param>
         <param-name>spring.profiles.default</param-name>
         <param-value>production</param-value>
+        <param-name>defaultHtmlEscape</param-name>
+        <param-value>true</param-value>
     </context-param>
 </web-app>

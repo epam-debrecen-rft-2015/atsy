@@ -6,9 +6,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -19,6 +16,7 @@ import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.web.MediaTypes;
 import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
+import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
@@ -27,11 +25,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.context.MessageSource;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ChannelControllerTest extends AbstractControllerTest {
@@ -53,7 +49,7 @@ public class ChannelControllerTest extends AbstractControllerTest {
   private ChannelService channelService;
 
   @Mock
-  private MessageSource messageSource;
+  private MessageKeyResolver messageKeyResolver;
 
   @InjectMocks
   private ChannelController channelController;
@@ -149,9 +145,7 @@ public class ChannelControllerTest extends AbstractControllerTest {
     // not to include null fields in the JSON
     objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-    given(
-        messageSource.getMessage(eq(EMPTY_POSITION_NAME_MESSAGE_KEY), isNull(Object[].class),
-            any(Locale.class)))
+    given(messageKeyResolver.resolveMessageOrDefault(EMPTY_POSITION_NAME_MESSAGE_KEY))
         .willReturn(VALIDATION_ERROR_MESSAGE);
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, emptyPostedDto))
@@ -173,6 +167,6 @@ public class ChannelControllerTest extends AbstractControllerTest {
 
     then(channelService).should().saveOrUpdate(correctPostedDto);
 
-    verifyZeroInteractions(messageSource);
+    verifyZeroInteractions(messageKeyResolver);
   }
 }

@@ -12,6 +12,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * Represents a user in the database, who can log in to the site and manage candidates.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
