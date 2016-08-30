@@ -1,5 +1,6 @@
 package com.epam.rft.atsy.service.impl;
 
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -75,16 +76,14 @@ public class CandidateServiceImplTest {
   @Before
   public void setUp() {
     dummyCandidateEntity = CandidateEntity.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
-        .referer(REFERER).languageSkill(LANGUAGE_SKILL)
-        .description(DESCRIPTION).build();
+        .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).build();
 
     dummyApplicationEntity =
         ApplicationEntity.builder().id(APPLICATION_ID).candidateEntity(dummyCandidateEntity)
             .build();
 
     dummyCandidateDto = CandidateDTO.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
-        .referer(REFERER).languageSkill(LANGUAGE_SKILL)
-        .description(DESCRIPTION).build();
+        .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).build();
 
     ascendingFilterRequest =
         FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
