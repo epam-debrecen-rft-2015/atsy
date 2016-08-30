@@ -25,20 +25,7 @@ public class ApplicationsServiceImpl implements ApplicationsService {
 
   @Autowired
   private ConverterService converterService;
-
-  @Override
-  public ApplicationDTO getApplication(Long applicationId) {
-    Assert.notNull(applicationId);
-
-    ApplicationDTO
-        applicationDTO =
-        converterService
-            .convert(applicationsRepository.findOne(applicationId), ApplicationDTO.class);
-
-    return applicationDTO;
-
-  }
-
+  
   @Transactional
   @Override
   public Long saveOrUpdate(ApplicationDTO applicationDTO) {

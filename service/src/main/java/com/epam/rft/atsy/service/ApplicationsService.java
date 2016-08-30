@@ -9,13 +9,6 @@ import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 public interface ApplicationsService {
 
   /**
-   * Returns the requested {@link ApplicationDTO}.
-   * @param applicationId the id of the application
-   * @return the application
-   */
-  ApplicationDTO getApplication(Long applicationId);
-
-  /**
    * Saves an application to the database and returns it's id.
    * @param applicationDTO the application
    * @return the id of application

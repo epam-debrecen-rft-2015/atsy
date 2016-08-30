@@ -1,11 +1,7 @@
 package com.epam.rft.atsy.service.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -85,45 +81,7 @@ public class ApplicationsServiceImplTest {
 
   @InjectMocks
   private ApplicationsServiceImpl applicationsService;
-
-  @Test(expected = IllegalArgumentException.class)
-  public void getApplicationShouldThrowIllegalArgumentExceptionWhenIdIsNull() {
-    //Given
-
-    //When
-    ApplicationDTO result = applicationsService.getApplication(null);
-
-    //Then
-  }
-
-  @Test
-  public void getApplicationShouldReturnNullWhenThereIsNoApplicationWithTheGivenId() {
-    //Given
-    given(applicationsRepository.findOne(APPLICATION_ID)).willReturn(applicationEntity);
-
-    //When
-    ApplicationDTO result = applicationsService.getApplication(APPLICATION_ID);
-
-    //Then
-    assertThat(result, nullValue());
-
-  }
-
-  @Test
-  public void getApplicationShouldReturnApplicationDTOWhenThereIsAnApplicationWithTheGivenId() {
-    //Given
-    given(applicationsRepository.findOne(APPLICATION_ID)).willReturn(applicationEntity);
-    given(converterService.convert(applicationEntity, ApplicationDTO.class))
-        .willReturn(applicationDTO);
-
-    //When
-    ApplicationDTO result = applicationsService.getApplication(APPLICATION_ID);
-
-    //Then
-    assertThat(result, notNullValue());
-    assertThat(result, is(applicationDTO));
-  }
-
+  
   @Test
   public void saveOrUpdateShouldSaveAProperApplicationDTO() {
 
