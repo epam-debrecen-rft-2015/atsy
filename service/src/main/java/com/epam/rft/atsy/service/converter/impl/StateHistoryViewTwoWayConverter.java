@@ -43,6 +43,7 @@ public class StateHistoryViewTwoWayConverter
         .claim(source.getClaim())
         .feedbackDate(source.getFeedbackDate())
         .dayOfStart(source.getDayOfStart())
+        .dateOfEnter(source.getDateOfEnter())
         .stateDTO(source.getStatesEntity() != null ?
             converterService.convert(source.getStatesEntity(), StateDTO.class) : null)
         .creationDate(source.getCreationDate())
@@ -67,6 +68,7 @@ public class StateHistoryViewTwoWayConverter
         .claim(source.getClaim())
         .feedbackDate(source.getFeedbackDate())
         .dayOfStart(source.getDayOfStart())
+        .dateOfEnter(source.getDateOfEnter())
         .statesEntity(source.getStateDTO() != null ?
             converterService.convert(source.getStateDTO(), StatesEntity.class) : null)
         .recommendation(source.getRecommendation())
