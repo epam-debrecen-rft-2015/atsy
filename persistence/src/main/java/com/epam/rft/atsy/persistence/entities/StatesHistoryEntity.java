@@ -54,6 +54,9 @@ public class StatesHistoryEntity extends SuperEntity {
   @Column(name = "day_of_start")
   private Date dayOfStart;
 
+  @Column(name = "date_of_enter")
+  private Date dateOfEnter;
+
   @Column(name = "recommendation")
   private Boolean recommendation;
 
