@@ -2,6 +2,7 @@ Feature: Welcome
 
   Background:
     Given The user signed in
+    Given The Applications of the candidate with id 1 are deleted
 
   Scenario: the Candidates page appears
     Given the user clicks on the Főoldal button
