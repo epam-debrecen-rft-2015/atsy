@@ -81,6 +81,7 @@ public class StateHistoryController {
       try {
         stateHistoryDTO = StateHistoryDTO.builder()
             .id(stateHistoryViewRepresentation.getId())
+            .applicationDTO(applicationsService.getApplicationDtoById(applicationId))
             .candidateId(stateHistoryViewRepresentation.getCandidateId())
             .languageSkill(stateHistoryViewRepresentation.getLanguageSkill())
             .description(stateHistoryViewRepresentation.getDescription())
@@ -104,7 +105,6 @@ public class StateHistoryController {
         return new ResponseEntity<>(restResponse, HttpStatus.BAD_REQUEST);
       }
 
-      stateHistoryDTO.setApplicationDTO(applicationsService.getApplicationDtoById(applicationId));
       if (stateId != null && stateId == 1) {
         stateHistoryDTO.getApplicationDTO().setChannelId(channelService.getChannelDtoByName(stateHistoryViewRepresentation.getChannelName()).getId());
         stateHistoryDTO.getApplicationDTO().setPositionId(positionService.getPositionDtoByName(stateHistoryViewRepresentation.getPositionName()).getId());
