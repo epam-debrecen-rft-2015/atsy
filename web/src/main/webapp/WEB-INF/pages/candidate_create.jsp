@@ -73,7 +73,7 @@
                                        required maxlength="100">
 
                                 <div id="name-errors" class="help-block with-errors"></div>
-                                <p class="showValue form-control-static"><c:out value="${candidate.name}"/><p>
+                                <p class="showValue form-control-static"><c:out value="${candidate.name}"/></p>
                             </div>
 
                         </div>
