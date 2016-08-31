@@ -1,17 +1,5 @@
 package com.epam.rft.atsy.service.impl;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Matchers.isNull;
-import static org.mockito.Mockito.verifyZeroInteractions;
-
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.entities.ChannelEntity;
@@ -24,6 +12,7 @@ import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -31,6 +20,15 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Date;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationsServiceImplTest {
@@ -75,7 +73,6 @@ public class ApplicationsServiceImplTest {
 
   private final StateHistoryDTO
       stateHistoryDTO = StateHistoryDTO.builder().stateDTO(new StateDTO(1L, "newstate")).build();
-
 
   @Mock
   private ConverterService converterService;
@@ -197,39 +194,50 @@ public class ApplicationsServiceImplTest {
 
     // Then
   }
-/*
+
   @Test
   public void saveApplicationShouldSaveAProperApplicationDTOAndStateDTO() {
+    // Given
     final StateHistoryDTO stateHistoryDTO =
         StateHistoryDTO.builder().channel(new ChannelDTO(8L, null)).candidateId(1L)
             .position(new PositionDTO(1L, null)).description("sss")
             .stateDTO(new StateDTO(1L, "newstate")).build();
 
-    // Given
-    given(converterService.convert(applicationDTO, ApplicationEntity.class))
-        .willReturn(applicationEntity);
-    given(applicationsRepository.save(applicationEntity)).willReturn(this.applicationEntity);
+    given(converterService.convert(applicationDTO, ApplicationEntity.class)).willReturn(applicationEntity);
+    given(applicationsRepository.saveAndFlush(applicationEntity)).willReturn(this.applicationEntity);
+    given(converterService.convert(applicationEntity, ApplicationDTO.class)).willReturn(applicationDTO);
+
     // When
     Long result = applicationsService.saveApplication(applicationDTO, stateHistoryDTO);
 
     // Then
-    assertNotNull(result);
-    assertEquals(APPLICATION_ID, result);
+    assertThat(result, notNullValue());
+    assertThat(result, equalTo(APPLICATION_ID));
+    assertThat(stateHistoryDTO.getApplicationDTO(), equalTo(applicationDTO));
 
-    //then(statesHistoryService).should().saveStateHistory(stateHistoryDTO, APPLICATION_ID);
     then(converterService).should().convert(applicationDTO, ApplicationEntity.class);
-    then(applicationsRepository).should().save(applicationEntity);
-  }*/
+    then(applicationsRepository).should().saveAndFlush(applicationEntity);
+    then(converterService).should().convert(applicationEntity, ApplicationDTO.class);
+    then(statesHistoryService).should().saveStateHistory(stateHistoryDTO);
+  }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveApplicationWithApplicationDTONullShouldThrowIllegalArgumentException() {
+    // Given
+
     // When
     applicationsService.saveApplication(null, stateHistoryDTO);
+
+    // Then
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveApplicationWithStateDTONullShouldThrowIllegalArgumentException() {
+    // Given
+
     // When
     applicationsService.saveApplication(applicationDTO, null);
+
+    // Then
   }
 }
