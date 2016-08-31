@@ -20,7 +20,7 @@
        <c:url value="/resources/js/atsy-candidate-create.js" var="urlValue"/> <script src="${urlValue}"></script>
     </jsp:attribute>
     <jsp:body>
-        <div id="candidate_creation" data-bind=${not empty candidate.id ? 'initDisplay: value, ' : ''}>
+        <div id="candidate_creation" data-bind="${not empty candidate.id ? 'initDisplay: value, ' : ''} css: { display: modify() == true }">
             <h1 class="page-header">
                 <c:choose>
                     <c:when test="${not empty candidate.id}">
