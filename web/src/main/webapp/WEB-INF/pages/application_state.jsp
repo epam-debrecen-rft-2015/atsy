@@ -132,7 +132,7 @@
                        <div class="form-group">
                           <label for="recommendedPositionLevelInput"  class="control-label col-sm-4"><spring:message code="statehistory.field.recommendedPositionLevel"/></label>
                           <div class="col-sm-8">
-                            <p class="form-control-static ${stat.first ? 'stateData' : ''}" <c:out value = "L${data.recommendedPositionLevel}"/></p>
+                            <p class="form-control-static ${stat.first ? 'stateData' : ''}"> <c:out value = "L${data.recommendedPositionLevel}"/></p>
                             <c:if test="${stat.first}">
                                 <spring:message code="statehistory.error.recommendedPositionLevel.range" var="errorRecommendedPositionLevelOutOfRange"/>
                                 <select required class="stateInput hidden" id="recommendedPositionLevelInput"
