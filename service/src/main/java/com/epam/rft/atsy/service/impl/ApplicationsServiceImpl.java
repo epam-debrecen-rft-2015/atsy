@@ -26,7 +26,7 @@ public class ApplicationsServiceImpl implements ApplicationsService {
   @Autowired
   private ConverterService converterService;
 
-
+  @Transactional(readOnly = true)
   @Override
   public ApplicationDTO getApplicationDtoById(Long applicationId) {
     Assert.notNull(applicationId);

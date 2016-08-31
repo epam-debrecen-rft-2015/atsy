@@ -129,61 +129,75 @@ public class ApplicationsServiceImplTest {
     then(converterService).should().convert(applicationEntity, ApplicationDTO.class);
   }
 
-  /*@Test
+  @Test
   public void saveOrUpdateShouldSaveAProperApplicationDTO() {
-
     // Given
     given(converterService.convert(applicationDTO, ApplicationEntity.class))
         .willReturn(applicationEntity);
-    given(applicationsRepository.save(applicationEntity)).willReturn(this.applicationEntity);
+    given(applicationsRepository.saveAndFlush(applicationEntity)).willReturn(this.applicationEntity);
+    given(converterService.convert(applicationEntity, ApplicationDTO.class)).willReturn(applicationDTO);
 
     // When
-    Long result = applicationsService.saveOrUpdate(applicationDTO);
+    ApplicationDTO result = applicationsService.saveOrUpdate(applicationDTO);
 
     // Then
-    assertNotNull(result);
-    assertEquals(APPLICATION_ID, result);
+    assertThat(result, notNullValue());
+    assertThat(result, equalTo(applicationDTO));
 
     then(converterService).should().convert(applicationDTO, ApplicationEntity.class);
-    then(applicationsRepository).should().save(applicationEntity);
+    then(applicationsRepository).should().saveAndFlush(applicationEntity);
+    then(converterService).should().convert(applicationEntity, ApplicationDTO.class);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveOrUpdateWithApplicationDTONullShouldThrowIllegalArgumentException() {
+    // Given
+
     // When
     applicationsService.saveOrUpdate(null);
+
+    // Then
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveOrUpdateWithApplicationDTOsCandidateIDNullShouldThrowIllegalArgumentException() {
+    // Given
     final ApplicationDTO applicationDTO =
         ApplicationDTO.builder().id(APPLICATION_ID).creationDate(new Date()).candidateId(null)
             .positionId(POSITION_ID).channelId(CHANNEL_ID).build();
 
     // When
     applicationsService.saveOrUpdate(applicationDTO);
+
+    // Then
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveOrUpdateWithApplicationDTOsPositionIDNullShouldThrowIllegalArgumentException() {
+    // Given
     final ApplicationDTO applicationDTO =
         ApplicationDTO.builder().id(APPLICATION_ID).creationDate(new Date())
             .candidateId(CANDIDATE_ID).positionId(null).channelId(CHANNEL_ID).build();
 
     // When
     applicationsService.saveOrUpdate(applicationDTO);
+
+    // Then
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveOrUpdateWithApplicationDTOsChannelIDNullShouldThrowIllegalArgumentException() {
+    // Given
     final ApplicationDTO applicationDTO =
         ApplicationDTO.builder().id(APPLICATION_ID).creationDate(new Date())
             .candidateId(CANDIDATE_ID).positionId(POSITION_ID).channelId(null).build();
 
     // When
     applicationsService.saveOrUpdate(applicationDTO);
-  }
 
+    // Then
+  }
+/*
   @Test
   public void saveApplicationShouldSaveAProperApplicationDTOAndStateDTO() {
     final StateHistoryDTO stateHistoryDTO =
