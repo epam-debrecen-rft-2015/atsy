@@ -6,10 +6,15 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.epam.rft.atsy.service.ApplicationsService;
+import com.epam.rft.atsy.service.ChannelService;
+import com.epam.rft.atsy.service.PositionService;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
@@ -72,7 +77,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   private static final Long ID = 1L;
 
   private static final Date CREATION_DATE =
-    new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
+      new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
 
   private static final String FEEDBACK_DATE_STRING = "2016-08-15 14:00:00";
 
@@ -96,7 +101,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
   private static final String STATE_FULL_NAME = "full name";
 
-  private static final Long STATE_ID = 1L;
+  private static final Long STATE_ID = 2L;
 
   private static final String STATE_NAME = "name";
 
@@ -104,6 +109,15 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
   @Mock
   private StatesHistoryService statesHistoryService;
+
+  @Mock
+  private ApplicationsService applicationsService;
+
+  @Mock
+  private ChannelService channelService;
+
+  @Mock
+  private PositionService positionService;
 
   @Mock
   private FieldErrorResponseComposer fieldErrorResponseComposer;
@@ -157,7 +171,6 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .build();
   }
 
-  /*
   @Test
   public void saveOrUpdateShouldRespondWithErrorJSONWhenFeedbackDateIsMalformed() throws Exception {
     StateHistoryViewRepresentation stateHistoryViewRepresentation =
@@ -240,7 +253,8 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
     verifyZeroInteractions(statesHistoryService);
   }
 
-  /*@Test
+
+  @Test
   public void saveOrUpdateShouldRespondWithApplicationIdWhenPostHasNoErrors() throws Exception {
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, dummyStateHistory))
         .andExpect(status().isOk())
@@ -248,12 +262,9 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
     ArgumentCaptor<StateHistoryDTO> historyCaptor = ArgumentCaptor.forClass(StateHistoryDTO.class);
 
-    then(statesHistoryService).should()
-        .saveStateHistory(historyCaptor.capture(), eq(APPLICATION_ID));
-
+    verify(statesHistoryService).saveStateHistory(historyCaptor.capture());
     assertThat(historyCaptor.getValue(), equalTo(dummyStateHistoryDto));
-  }*/
-
+  }
 
   private ResponseEntity<RestResponse> composeResponseFromField(String fieldName,
                                                                 String fieldValue) {

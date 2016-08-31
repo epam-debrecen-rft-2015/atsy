@@ -13,6 +13,7 @@ import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,9 +68,10 @@ public class StateHistoryController {
                                      @Valid @RequestBody StateHistoryViewRepresentation stateHistoryViewRepresentation,
                                      BindingResult bindingResult, Locale locale) {
 
-    StateHistoryDTO stateHistoryDTO = null;
+    StateHistoryDTO stateHistoryDTO;
+    Long stateId = stateHistoryViewRepresentation.getStateId();
 
-    if (stateHistoryViewRepresentation.getStateId() == 1) {
+    if (stateId != null && stateId == 1) {
       validateNewState(stateHistoryViewRepresentation, bindingResult);
     }
 
@@ -103,7 +105,7 @@ public class StateHistoryController {
       }
 
       stateHistoryDTO.setApplicationDTO(applicationsService.getApplicationDtoById(applicationId));
-      if (stateHistoryViewRepresentation.getStateId() == 1) {
+      if (stateId != null && stateId == 1) {
         stateHistoryDTO.getApplicationDTO().setChannelId(channelService.getChannelDtoByName(stateHistoryViewRepresentation.getChannelName()).getId());
         stateHistoryDTO.getApplicationDTO().setPositionId(positionService.getPositionDtoByName(stateHistoryViewRepresentation.getPositionName()).getId());
       }
