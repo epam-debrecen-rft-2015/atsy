@@ -76,6 +76,7 @@ public class StatesHistoryEntity extends SuperEntity {
                              Short languageSkill, String description, Short result,
                              Long offeredMoney,
                              Long claim, Date feedbackDate, Date dayOfStart,
+                             Date dateOfEnter,
                              Boolean recommendation,
                              String reviewerName,
                              Short recommendedPositionLevel,
@@ -90,6 +91,7 @@ public class StatesHistoryEntity extends SuperEntity {
     this.claim = claim;
     this.feedbackDate = feedbackDate;
     this.dayOfStart = dayOfStart;
+    this.dateOfEnter = dateOfEnter;
     this.recommendation = recommendation;
     this.reviewerName = reviewerName;
     this.recommendedPositionLevel = recommendedPositionLevel;
