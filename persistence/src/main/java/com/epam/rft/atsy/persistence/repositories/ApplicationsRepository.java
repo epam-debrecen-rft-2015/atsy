@@ -17,7 +17,4 @@ public interface ApplicationsRepository extends JpaRepository<ApplicationEntity,
    * @return the list of ApplicationEntities
    */
   List<ApplicationEntity> findByCandidateEntity(CandidateEntity candidateEntity);
-
-  //TODO:Add java doc.
-  void delete(Iterable<? extends ApplicationEntity> iterable);
 }

@@ -18,7 +18,6 @@ public interface ApplicationsService {
    */
   List<ApplicationDTO> getApplicationsByCandidateDTO(CandidateDTO candidateDTO);
 
-  //TODO: Add java doc. Add test.
   void deleteApplicationsByCandidateDTO(CandidateDTO candidateDTO);
 
   /**

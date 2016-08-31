@@ -26,7 +26,4 @@ public interface StatesHistoryRepository extends JpaRepository<StatesHistoryEnti
    */
   StatesHistoryEntity findTopByApplicationEntityOrderByCreationDateDesc(
       ApplicationEntity applicationEntity);
-
-  //TODO: Add javadoc.
-  void delete(Iterable<? extends StatesHistoryEntity> iterable);
 }

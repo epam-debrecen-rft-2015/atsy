@@ -9,7 +9,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 
-//TODO: Add java doc. Add test.
 @Controller
 @RequestMapping(value = "/secure/deleteApplications")
 public class DeleteApplicationsController {
@@ -19,7 +18,6 @@ public class DeleteApplicationsController {
   @Resource
   private CandidateService candidateService;
 
-  //TODO: Add java doc.
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView deleteApplications(@RequestParam Long candidateId) {
     candidateService.deletePositionsByCandidate(candidateService.getCandidate(candidateId));

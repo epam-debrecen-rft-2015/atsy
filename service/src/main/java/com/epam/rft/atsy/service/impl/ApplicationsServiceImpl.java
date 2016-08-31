@@ -37,7 +37,6 @@ public class ApplicationsServiceImpl implements ApplicationsService {
   @Transactional(readOnly = true)
   @Override
   public List<ApplicationDTO> getApplicationsByCandidateDTO(CandidateDTO candidateDTO) {
-
     Assert.notNull(candidateDTO);
     Assert.notNull(candidateDTO.getId());
 
@@ -53,6 +52,9 @@ public class ApplicationsServiceImpl implements ApplicationsService {
   @Transactional(readOnly = false)
   @Override
   public void deleteApplicationsByCandidateDTO(CandidateDTO candidateDTO) {
+    Assert.notNull(candidateDTO);
+    Assert.notNull(candidateDTO.getId());
+
     List<ApplicationEntity>
         applicationEntities =
         converterService
