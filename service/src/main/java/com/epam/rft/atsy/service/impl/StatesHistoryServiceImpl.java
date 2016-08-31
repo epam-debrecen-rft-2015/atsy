@@ -74,16 +74,14 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
     Assert.notNull(state.getStateDTO());
     Assert.notNull(state.getStateDTO().getId());
 
-    Long stateId = state.getStateDTO().getId();
-    StatesEntity statesEntity = statesRepository.findOne(stateId);
+    StatesEntity statesEntity = statesRepository.findOne(state.getStateDTO().getId());
     Assert.notNull(statesEntity);
 
     StatesHistoryEntity statesHistoryEntity = converterService.convert(state, StatesHistoryEntity.class);
-
     statesHistoryEntity.setCreationDate(state.getCreationDate() == null ? new Date() : state.getCreationDate());
 
     applicationsService.saveOrUpdate(state.getApplicationDTO());
-    return statesHistoryRepository.save(statesHistoryEntity).getId();
+    return statesHistoryRepository.saveAndFlush(statesHistoryEntity).getId();
   }
 
   @Transactional(readOnly = true)
