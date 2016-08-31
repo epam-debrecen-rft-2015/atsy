@@ -1,21 +1,5 @@
 package com.epam.rft.atsy.web.controllers.rest;
 
-import com.epam.rft.atsy.service.CandidateService;
-import com.epam.rft.atsy.service.request.FilterRequest;
-import com.epam.rft.atsy.service.request.SearchOptions;
-import com.epam.rft.atsy.service.request.SortingRequest;
-import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
-
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import lombok.val;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.then;
@@ -23,6 +7,19 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.epam.rft.atsy.service.CandidateService;
+import com.epam.rft.atsy.service.request.FilterRequest;
+import com.epam.rft.atsy.service.request.SearchOptions;
+import com.epam.rft.atsy.service.request.SortingRequest;
+import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CandidateControllerTest extends AbstractControllerTest {

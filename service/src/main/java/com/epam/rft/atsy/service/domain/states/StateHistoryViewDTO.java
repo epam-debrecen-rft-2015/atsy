@@ -3,7 +3,6 @@ package com.epam.rft.atsy.service.domain.states;
 import com.epam.rft.atsy.service.domain.states.builder.AbstractStateBuilder;
 
 import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

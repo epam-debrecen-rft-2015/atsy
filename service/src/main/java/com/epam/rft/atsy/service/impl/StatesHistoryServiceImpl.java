@@ -65,10 +65,12 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
 
   @Override
   public void deleteStateHistoriesByApplication(ApplicationDTO applicationDTO) {
+    Assert.notNull(applicationDTO);
+    Assert.notNull(applicationDTO.getId());
     List<StatesHistoryEntity>
         statesHistoryEntities =
         statesHistoryRepository.findByApplicationEntityOrderByCreationDateDesc(
-            applicationsRepository.getOne(applicationDTO.getId()));
+            applicationsRepository.findOne(applicationDTO.getId()));
 
     statesHistoryRepository.delete(statesHistoryEntities);
   }

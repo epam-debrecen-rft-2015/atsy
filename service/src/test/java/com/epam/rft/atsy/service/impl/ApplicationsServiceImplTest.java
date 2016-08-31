@@ -7,6 +7,8 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
@@ -14,6 +16,7 @@ import com.epam.rft.atsy.persistence.entities.ChannelEntity;
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
+import com.epam.rft.atsy.persistence.repositories.StatesHistoryRepository;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
@@ -31,7 +34,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationsServiceImplTest {
@@ -54,15 +59,25 @@ public class ApplicationsServiceImplTest {
   private static final Long CHANNEL_ID = 8L;
   private static final String CHANNEL_NAME = "állásbörze";
 
+  private final Set<String> positionsSet = new HashSet<>(Arrays.asList(POSITION_NAME));
+
   private final ApplicationDTO applicationDTO =
       ApplicationDTO.builder().id(APPLICATION_ID).creationDate(APPLICATION_CREATION_DATE)
           .candidateId(CANDIDATE_ID)
           .positionId(POSITION_ID).channelId(CHANNEL_ID).build();
 
+  private final List<ApplicationDTO> applicationDTOs = Arrays.asList(applicationDTO);
+
   private final CandidateEntity candidateEntity =
       CandidateEntity.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).email(CANDIDATE_EMAIL)
           .phone(CANDIDATE_PHONE).description(CANDIDATE_DESCRIPTION).referer(CANDIDATE_REFERRER)
           .languageSkill(CANDIDATE_LANG_SKILL).build();
+
+  private final CandidateDTO
+      candidateDTO =
+      CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).email(CANDIDATE_EMAIL)
+          .phone(CANDIDATE_PHONE).description(CANDIDATE_DESCRIPTION).referer(CANDIDATE_REFERRER)
+          .languageSkill(CANDIDATE_LANG_SKILL).positions(positionsSet).build();
 
   private final PositionEntity positionEntity =
       PositionEntity.builder().id(POSITION_ID).name(POSITION_NAME).build();
@@ -75,8 +90,11 @@ public class ApplicationsServiceImplTest {
           .candidateEntity(candidateEntity).positionEntity(positionEntity)
           .channelEntity(channelEntity).build();
 
+  private final List<ApplicationEntity> applicationEntities = Arrays.asList(applicationEntity);
+
   private final StateHistoryDTO
       stateHistoryDTO = StateHistoryDTO.builder().stateDTO(new StateDTO(1L, "newstate")).build();
+
 
   @Mock
   private ConverterService converterService;
@@ -89,6 +107,9 @@ public class ApplicationsServiceImplTest {
 
   @Mock
   private CandidateRepository candidateRepository;
+
+  @Mock
+  private StatesHistoryRepository statesHistoryRepository;
 
   @InjectMocks
   private ApplicationsServiceImpl applicationsService;
@@ -179,6 +200,42 @@ public class ApplicationsServiceImplTest {
     assertThat(result, equalTo(applicationDTOs));
 
   }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void deleteApplicationsByCandidateDTOShouldThrowIllegalArgumentExceptionWhenCandidateDTOIsNull() {
+    // When
+    applicationsService.deleteApplicationsByCandidateDTO(null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void deleteApplicationsByCandidateDTOShouldThrowIllegalArgumentExceptionWhenCandidateDTOsIdIsNull() {
+    CandidateDTO candidateDTO = CandidateDTO.builder().id(null).build();
+
+    // When
+    applicationsService.deleteApplicationsByCandidateDTO(candidateDTO);
+  }
+
+  @Test
+  public void deleteApplicationsByCandidateDTOShouldDeleteApplicationsOfTheGivenCandidateDTO() {
+    // Given
+    CandidateDTO candidateDTO = CandidateDTO.builder().id(1L).build();
+
+    given(applicationsService.getApplicationsByCandidateDTO(candidateDTO))
+        .willReturn(applicationDTOs);
+    given(converterService.convert(applicationDTOs, ApplicationEntity.class))
+        .willReturn(applicationEntities);
+    given(converterService.convert(applicationEntity, ApplicationDTO.class))
+        .willReturn(applicationDTO);
+
+    // When
+    applicationsService.deleteApplicationsByCandidateDTO(candidateDTO);
+
+    // Then
+    verify(statesHistoryService, atLeastOnce()).deleteStateHistoriesByApplication(applicationDTO);
+    verify(applicationsRepository, atLeastOnce()).delete(applicationEntity);
+
+  }
+
 
   @Test
   public void saveOrUpdateShouldSaveAProperApplicationDTO() {
