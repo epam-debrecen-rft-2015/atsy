@@ -64,6 +64,34 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
   private static final String CHANNEL_NOT_FOUND_MESSAGE_KEY = "channel.not.found.error.message";
 
+  private static final String JSON_PATH_ERROR_MESSAGE = "$.errorMessage";
+
+  private static final String JSON_PATH_APPLICATION_ID = "$.applicationId";
+
+  private static final String JSON_PATH_FEEDBACK_DATE = "$.fields.feedbackDate";
+
+  private static final String JSON_PATH_FIELD_LANGUAGE_SKILL = "$.fields.languageSkill";
+
+  private static final String JSON_PATH_FIELD_CLAIM = "$.fields.claim";
+
+  private static final String JSON_PATH_FIELD_OFFERED_MONEY = "$.fields.offeredMoney";
+
+  private static final String JSON_PATH_FIELD_POSITION_NAME = "$.fields.positionName";
+
+  private static final String JSON_PATH_FIELD_CHANNEL_NAME = "$.fields.channelName";
+
+  private static final String FIELD_FEEDBACK_DATE = "feedbackDate";
+
+  private static final String FIELD_LANGUAGE_SKILL = "languageSkill";
+
+  private static final String FIELD_CLAIM = "claim";
+
+  private static final String FIELD_OFFERED_MONEY = "offeredMoney";
+
+  private static final String FIELD_NAME_CHANNEL = "channelName";
+
+  private static final String FIELD_NAME_POSITION = "positionName";
+
   private static final String MALFORMED_DATE = "malformed";
 
   private static final Short LOWER_LANGUAGE_SKILL = -1;
@@ -255,12 +283,12 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         StateHistoryViewRepresentation.builder().feedbackDate(MALFORMED_DATE).build();
 
     given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
-        .willReturn(composeResponseFromField("feedbackDate", DATE_PARSE_ERROR_MESSAGE_KEY));
+        .willReturn(composeResponseFromField(FIELD_FEEDBACK_DATE, DATE_PARSE_ERROR_MESSAGE_KEY));
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.errorMessage").value(COMMON_INVALID_INPUT_MESSAGE_KEY))
-        .andExpect(jsonPath("$.fields.feedbackDate").value(DATE_PARSE_ERROR_MESSAGE_KEY));
+        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
+        .andExpect(jsonPath(JSON_PATH_FEEDBACK_DATE).value(DATE_PARSE_ERROR_MESSAGE_KEY));
 
     verifyZeroInteractions(statesHistoryService, channelService, positionService, applicationsService);
   }
@@ -272,12 +300,12 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
     given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
         .willReturn(
-            composeResponseFromField("languageSkill", LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
+            composeResponseFromField(FIELD_LANGUAGE_SKILL, LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.errorMessage").value(COMMON_INVALID_INPUT_MESSAGE_KEY))
-        .andExpect(jsonPath("$.fields.languageSkill").value(LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
+        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
+        .andExpect(jsonPath(JSON_PATH_FIELD_LANGUAGE_SKILL).value(LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
 
     verifyZeroInteractions(statesHistoryService, channelService, positionService, applicationsService);
   }
@@ -289,12 +317,12 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
     given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
         .willReturn(
-            composeResponseFromField("languageSkill", LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
+            composeResponseFromField(FIELD_LANGUAGE_SKILL, LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.errorMessage").value(COMMON_INVALID_INPUT_MESSAGE_KEY))
-        .andExpect(jsonPath("$.fields.languageSkill").value(LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
+        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
+        .andExpect(jsonPath(JSON_PATH_FIELD_LANGUAGE_SKILL).value(LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
 
     verifyZeroInteractions(statesHistoryService, channelService, positionService, applicationsService);
   }
@@ -305,12 +333,12 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         StateHistoryViewRepresentation.builder().claim(NEGATIVE_CLAIM).build();
 
     given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
-        .willReturn(composeResponseFromField("claim", CLAIM_NEGATIVE_MESSAGE_KEY));
+        .willReturn(composeResponseFromField(FIELD_CLAIM, CLAIM_NEGATIVE_MESSAGE_KEY));
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.errorMessage").value(COMMON_INVALID_INPUT_MESSAGE_KEY))
-        .andExpect(jsonPath("$.fields.claim").value(CLAIM_NEGATIVE_MESSAGE_KEY));
+        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
+        .andExpect(jsonPath(JSON_PATH_FIELD_CLAIM).value(CLAIM_NEGATIVE_MESSAGE_KEY));
 
     verifyZeroInteractions(statesHistoryService, channelService, positionService, applicationsService);
   }
@@ -321,12 +349,12 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         StateHistoryViewRepresentation.builder().offeredMoney(NEGATIVE_OFFERED_MONEY).build();
 
     given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
-        .willReturn(composeResponseFromField("offeredMoney", OFFERED_MONEY_NEGATIVE_MESSAGE_KEY));
+        .willReturn(composeResponseFromField(FIELD_OFFERED_MONEY, OFFERED_MONEY_NEGATIVE_MESSAGE_KEY));
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.errorMessage").value(COMMON_INVALID_INPUT_MESSAGE_KEY))
-        .andExpect(jsonPath("$.fields.offeredMoney").value(OFFERED_MONEY_NEGATIVE_MESSAGE_KEY));
+        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
+        .andExpect(jsonPath(JSON_PATH_FIELD_OFFERED_MONEY).value(OFFERED_MONEY_NEGATIVE_MESSAGE_KEY));
 
     verifyZeroInteractions(statesHistoryService, channelService, positionService, applicationsService);
   }
@@ -337,7 +365,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, dummyStateHistory))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.applicationId").value(APPLICATION_ID.intValue()));
+        .andExpect(jsonPath(JSON_PATH_APPLICATION_ID).value(APPLICATION_ID.intValue()));
 
     ArgumentCaptor<StateHistoryDTO> historyCaptor = ArgumentCaptor.forClass(StateHistoryDTO.class);
 
@@ -357,12 +385,12 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
     given(positionService.getPositionDtoByName(POSITION_NAME_NON_EXISTENT)).willReturn(null);
     given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
-        .willReturn(composeResponseFromField("positionName", POSITION_NOT_FOUND_MESSAGE_KEY));
+        .willReturn(composeResponseFromField(FIELD_NAME_POSITION, POSITION_NOT_FOUND_MESSAGE_KEY));
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.errorMessage").value(COMMON_INVALID_INPUT_MESSAGE_KEY))
-        .andExpect(jsonPath("$.fields.positionName").value(POSITION_NOT_FOUND_MESSAGE_KEY));
+        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
+        .andExpect(jsonPath(JSON_PATH_FIELD_POSITION_NAME).value(POSITION_NOT_FOUND_MESSAGE_KEY));
 
     then(positionService).should().getPositionDtoByName(POSITION_NAME_NON_EXISTENT);
     then(channelService).should().getChannelDtoByName(any(String.class));
@@ -379,12 +407,12 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
     given(channelService.getChannelDtoByName(CHANNEL_NAME_NON_EXISTENT)).willReturn(null);
     given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
-        .willReturn(composeResponseFromField("channelName", CHANNEL_NOT_FOUND_MESSAGE_KEY));
+        .willReturn(composeResponseFromField(FIELD_NAME_CHANNEL, CHANNEL_NOT_FOUND_MESSAGE_KEY));
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.errorMessage").value(COMMON_INVALID_INPUT_MESSAGE_KEY))
-        .andExpect(jsonPath("$.fields.channelName").value(CHANNEL_NOT_FOUND_MESSAGE_KEY));
+        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
+        .andExpect(jsonPath(JSON_PATH_FIELD_CHANNEL_NAME).value(CHANNEL_NOT_FOUND_MESSAGE_KEY));
 
     then(positionService).should().getPositionDtoByName(any(String.class));
     then(channelService).should().getChannelDtoByName(CHANNEL_NAME_NON_EXISTENT);
@@ -402,14 +430,14 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
     given(positionService.getPositionDtoByName(POSITION_NAME_NON_EXISTENT)).willReturn(null);
     given(channelService.getChannelDtoByName(CHANNEL_NAME_NON_EXISTENT)).willReturn(null);
     given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
-        .willReturn(composeResponseFromField("positionName", POSITION_NOT_FOUND_MESSAGE_KEY,
-            "channelName", CHANNEL_NOT_FOUND_MESSAGE_KEY));
+        .willReturn(composeResponseFromField(FIELD_NAME_POSITION, POSITION_NOT_FOUND_MESSAGE_KEY,
+            FIELD_NAME_CHANNEL, CHANNEL_NOT_FOUND_MESSAGE_KEY));
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.errorMessage").value(COMMON_INVALID_INPUT_MESSAGE_KEY))
-        .andExpect(jsonPath("$.fields.positionName").value(POSITION_NOT_FOUND_MESSAGE_KEY))
-        .andExpect(jsonPath("$.fields.channelName").value(CHANNEL_NOT_FOUND_MESSAGE_KEY));
+        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
+        .andExpect(jsonPath(JSON_PATH_FIELD_POSITION_NAME).value(POSITION_NOT_FOUND_MESSAGE_KEY))
+        .andExpect(jsonPath(JSON_PATH_FIELD_CHANNEL_NAME).value(CHANNEL_NOT_FOUND_MESSAGE_KEY));
 
     then(positionService).should().getPositionDtoByName(POSITION_NAME_NON_EXISTENT);
     then(channelService).should().getChannelDtoByName(CHANNEL_NAME_NON_EXISTENT);
@@ -426,7 +454,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, dummyStateHistoryWithNewState))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.applicationId").value(APPLICATION_ID.intValue()));
+        .andExpect(jsonPath(JSON_PATH_APPLICATION_ID).value(APPLICATION_ID.intValue()));
 
     ArgumentCaptor<StateHistoryDTO> historyCaptor = ArgumentCaptor.forClass(StateHistoryDTO.class);
     verify(statesHistoryService).saveStateHistory(historyCaptor.capture());
