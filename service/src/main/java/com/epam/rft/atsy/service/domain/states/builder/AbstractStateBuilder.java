@@ -77,6 +77,11 @@ public abstract class AbstractStateBuilder<B extends AbstractStateBuilder<B, T>,
     return (B) this;
   }
 
+  public B dayOfEnter(Date dateOfEnter) {
+    object.setDateOfEnter(dateOfEnter);
+    return (B) this;
+  }
+
   public B stateDTO(StateDTO stateDTO) {
     object.setStateDTO(stateDTO);
     return (B) this;
