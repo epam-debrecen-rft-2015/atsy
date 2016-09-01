@@ -106,14 +106,14 @@
                                     code="candidate.email.label"/></label>
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
-                            <spring:message code="candidate.error.email.empty" var="errEmailEmptyValue"/>
-                            <spring:message code="candidate.error.email.incorrect" var="InCorrectEmailValue"/>
+                            <spring:message code="candidate.error.email.empty" var="emailEmptyValue"/>
+                            <spring:message code="candidate.error.email.incorrect" var="emailIncorrectValue"/>
                                 <input type="text" class="input form-control" name="email" id="email" data-bind="valueWithInit: 'email'"
                                        value="${candidate.email}"
                                        placeholder="${i18nemail}"
-                                       data-error="${errEmailEmptyValue}"
+                                       data-error="${emailEmptyValue}"
                                        data-pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
-                                      data-pattern-error="${InCorrectEmailValue}"
+                                      data-pattern-error="${emailIncorrectValue}"
                                        required maxlength="255">
                                 <span id="email-errors" class="help-block with-errors"></span>
 
@@ -156,10 +156,10 @@
                                     code="candidate.phone.label"/></label>
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
-                            <spring:message code="candidate.error.phone.incorrect" var="phoneIncValue"/>
+                            <spring:message code="candidate.error.phone.incorrect" var="phoneIncorrectValue"/>
                                 <input type="text" class="input form-control" name="phone" id="phone" data-bind="valueWithInit: 'phone'"
                                        value="${candidate.phone}"
-                                       placeholder="${i18nphone}" data-error="${phoneIncValue}"
+                                       placeholder="${i18nphone}" data-error="${phoneIncorrectValue}"
                                        pattern="^\+?[0-9]+" maxlength="20">
 
                                 <div id="phone-errors" class="help-block with-errors"></div>
