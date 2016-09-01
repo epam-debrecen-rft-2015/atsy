@@ -54,10 +54,7 @@ public class LoginStepDefs {
 
   @Then("^(.*) message appears above the (.*) field$")
   public void fieldMessageAppearance(String message, String fieldName) {
-    WebElement messageElement = driverProvider.getDriver()
-            .findElement(By.id(fieldName))
-            .findElement(By.xpath("..")) //parent
-            .findElement(By.tagName("span"));
+    WebElement messageElement = driverProvider.getDriver().findElement(By.id(fieldName)).findElement(By.xpath("..")) //parent.findElement(By.tagName("span"));
     assertThat(messageElement.isDisplayed(), is(true));
     assertThat(messageElement.getText(), is(message));
   }
