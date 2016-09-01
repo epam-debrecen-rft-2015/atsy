@@ -4,18 +4,14 @@ import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.PositionService;
 import com.epam.rft.atsy.service.converter.AbstractOneWayConverter;
-import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
-import com.epam.rft.atsy.service.domain.PositionDTO;
 import org.springframework.util.Assert;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-/**
- * Created by ui2016 on 2016.08.23..
- */
 public class CandidateOneWayConverter
     extends AbstractOneWayConverter<CandidateEntity, CandidateDTO> {
 
@@ -48,16 +44,19 @@ public class CandidateOneWayConverter
 
     Set<String> positions = new HashSet<>();
 
-    List<ApplicationDTO>
-        applicationDTOs =
-        applicationsService.getApplicationsByCandidateDTO(candidateDTO);
+    List<Long> positionIds =
+        applicationsService.getApplicationsByCandidateDTO(candidateDTO).stream()
+            .map(application -> application.getPositionId())
+            .distinct()
+            .collect(Collectors.toList());
 
-    for (ApplicationDTO applicationDTO : applicationDTOs) {
-
-      PositionDTO positionDTO = positionService.getPositionById(applicationDTO.getPositionId());
-
-      positions.add(positionDTO.getName());
-
+    if (!positionIds.isEmpty()) {
+      List<String>
+          positionNames =
+          positionService.getPositionsById(positionIds).stream()
+              .map(position -> position.getName())
+              .collect(Collectors.toList());
+      positions.addAll(positionNames);
     }
 
     candidateDTO.setPositions(positions);

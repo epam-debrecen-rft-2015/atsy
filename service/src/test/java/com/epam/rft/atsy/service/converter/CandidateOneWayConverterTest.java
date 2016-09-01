@@ -25,9 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by ui2016 on 2016.08.23..
- */
 
 @RunWith(MockitoJUnitRunner.class)
 public class CandidateOneWayConverterTest {
@@ -134,9 +131,7 @@ public class CandidateOneWayConverterTest {
 
   @Before
   public void setUp() {
-
     candidateOneWayConverter = new CandidateOneWayConverter(applicationsService, positionService);
-
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -148,29 +143,26 @@ public class CandidateOneWayConverterTest {
     CandidateDTO candidateDTO = candidateOneWayConverter.firstTypeToSecondType(null);
 
     // Then
-
   }
 
   @Test
   public void firstTypeToSecondTypeShouldReturnCorrectCandidateDTO() {
-
     // Given
+    List<Long> positionIds = Arrays.asList(developerApplication.getPositionId(),
+        testerApplication.getPositionId(), designerApplication.getPositionId());
+    List<PositionDTO>
+        positionDTOs =
+        Arrays.asList(developerPosition, designerPosition, testerPosition);
+
     given(applicationsService.getApplicationsByCandidateDTO(any(CandidateDTO.class)))
         .willReturn(applicationsList);
-    given(positionService.getPositionById(developerApplication.getPositionId()))
-        .willReturn(developerPosition);
-    given(positionService.getPositionById(testerApplication.getPositionId()))
-        .willReturn(testerPosition);
-    given(positionService.getPositionById(designerApplication.getPositionId()))
-        .willReturn(designerPosition);
+
+    given(positionService.getPositionsById(positionIds)).willReturn(positionDTOs);
 
     // When
     CandidateDTO result = candidateOneWayConverter.firstTypeToSecondType(candidateEntity);
 
     // Then
     assertThat(result, equalTo(candidateDTO));
-
   }
-
-
 }

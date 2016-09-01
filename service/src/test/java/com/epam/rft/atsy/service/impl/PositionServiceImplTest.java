@@ -1,11 +1,10 @@
 package com.epam.rft.atsy.service.impl;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -41,6 +40,7 @@ public class PositionServiceImplTest {
   private static final Long NON_EXISTENT_ID = 2L;
   private static final List<PositionEntity> EMPTY_POSITION_ENTITY_LIST = Collections.emptyList();
   private static final List<PositionDTO> EMPTY_POSITION_DTO_LIST = Collections.emptyList();
+  private static final List<Long> EMPTY_POSITION_ID_LIST = Collections.emptyList();
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -71,45 +71,40 @@ public class PositionServiceImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void getPositionByIdShouldThrowIllegalArgumentExceptionWhenIdIsNull() {
+  public void getPositionsByIdShouldThrowIllegalArgumentsExceptionWhenTheListOfIdsIsNull() {
+    // When
+    positionService.getPositionsById(null);
+  }
 
+
+  @Test
+  public void getPositionsByIdShouldReturnEmptyListWhenNoPositionsFoundWithTheGivenIds() {
     // Given
+    List<Long> ids = Arrays.asList(NON_EXISTENT_ID);
+    given(positionRepository.findAll(ids)).willReturn(EMPTY_POSITION_ENTITY_LIST);
 
     // When
-    PositionDTO positionDTO = positionService.getPositionById(null);
+    List<PositionDTO> positionDTOs = positionService.getPositionsById(ids);
 
     // Then
-
+    assertTrue(positionDTOs.isEmpty());
   }
 
   @Test
-  public void getPositionByIdShouldReturnNullWhenPositionIdIsNotFound() {
-
+  public void getPositionsByIdShouldReturnAListOfPositionsWhenThereArePositionsWithTheGivenId() {
     // Given
-    given(positionRepository.findOne(NON_EXISTENT_ID)).willReturn(null);
+    List<Long> ids = Arrays.asList(DEVELOPER_ID, DEVELOPER_ID, DEVELOPER_ID);
+    given(positionRepository.findAll(ids)).willReturn(expectedPositionEntityList);
+    given(converterService.convert(expectedPositionEntityList, PositionDTO.class))
+        .willReturn(expectedPositionDtoList);
 
     // When
-    PositionDTO positionDTO = positionService.getPositionById(NON_EXISTENT_ID);
+    List<PositionDTO> actualPositionDtoList = positionService.getPositionsById(ids);
 
     // Then
-    assertThat(positionDTO, nullValue());
-
+    assertEquals(actualPositionDtoList, expectedPositionDtoList);
   }
 
-  @Test
-  public void getPositionByIdShouldReturnPositionDTOWhenThereIsAPositionWithTheGivenId() {
-
-    // Given
-    given(positionRepository.findOne(DEVELOPER_ID)).willReturn(developerEntity);
-    given(converterService.convert(developerEntity, PositionDTO.class)).willReturn(developerDto);
-
-    // When
-    PositionDTO positionDTO = positionService.getPositionById(DEVELOPER_ID);
-
-    // Then
-    assertThat(positionDTO, equalTo(developerDto));
-
-  }
 
   @Test
   public void getAllPositionsShouldReturnEmptyListWhenThereAreNoPositions() {

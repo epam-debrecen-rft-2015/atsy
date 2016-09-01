@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,12 +30,14 @@ public class PositionServiceImpl implements PositionService {
 
   @Transactional(readOnly = true)
   @Override
-  public PositionDTO getPositionById(Long id) {
+  public List<PositionDTO> getPositionsById(List<Long> ids) {
+    Assert.notNull(ids);
 
-    Assert.notNull(id);
+    List<PositionEntity> positionEntities = positionRepository.findAll(ids);
+    List<PositionDTO> emptyList = Collections.emptyList();
 
-    return converterService.convert(positionRepository.findOne(id), PositionDTO.class);
-
+    return positionEntities.isEmpty() ? emptyList
+        : converterService.convert(positionEntities, PositionDTO.class);
   }
 
   @Transactional(readOnly = true)
