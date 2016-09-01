@@ -72,7 +72,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   private static final Long ID = 1L;
 
   private static final Date CREATION_DATE =
-    new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
+      new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
 
   private static final String FEEDBACK_DATE_STRING = "2016-08-15 14:00:00";
 
@@ -82,6 +82,10 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
   private static final Date
       DAY_OF_START =
+      new GregorianCalendar(2016, 8 - 1, 15, 0, 0, 0).getTime();
+
+  private static final Date
+      DATE_OF_ENTER =
       new GregorianCalendar(2016, 8 - 1, 15, 0, 0, 0).getTime();
 
   private static final Short LANGUAGE_SKILL = 10;
@@ -131,6 +135,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .offeredMoney(OFFERED_MONEY)
         .claim(CLAIM)
         .dayOfStart(DAY_OF_START)
+        .dateOfEnter(DATE_OF_ENTER)
         .stateFullName(STATE_FULL_NAME)
         .stateId(STATE_ID)
         .stateName(STATE_NAME)
@@ -152,6 +157,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .offeredMoney(OFFERED_MONEY)
         .claim(CLAIM)
         .dayOfStart(DAY_OF_START)
+        .dateOfEnter(DATE_OF_ENTER)
         .stateDTO(dummyStateDto)
         .recommendation(RECOMMENDATION_YES_BOOL)
         .build();
