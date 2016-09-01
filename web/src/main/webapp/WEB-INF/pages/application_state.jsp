@@ -6,14 +6,16 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html;charset=UTF-8" %>
 <spring:url value="/secure/application_state" var="application_state"/>
+<c:url value="/resources/thirdparty/bootstrap-datepicker/bootstrap-datepicker.js" var="bootstrap_datepicker_js"/>
+<c:url value="/resources/thirdparty/bootstrap-datepicker/bootstrap-datepicker.css" var="bootstrap_datepicker_css"/>
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
         <script src="<c:url value="/resources/js/atsy-statehistory.js" />"></script>
         <script src="<c:url value="/resources/js/atsy-statehistory-create.js" />"></script>
         <script src="<c:url value="/resources/thirdparty/bootstrap-validator/validator.js" />"
                         type="text/javascript"></script>
-        <script src="<c:url value="/resources/thirdparty/bootstrap-datepicker/bootstrap-datepicker.js" />" type="text/javascript"></script>
-        <link href="<c:url value="/resources/thirdparty/bootstrap-datepicker/bootstrap-datepicker.css" />" rel="stylesheet" type="text/css">
+        <script src="${bootstrap_datepicker_js}" type="text/javascript"></script>
+        <link href="${bootstrap_datepicker_css}" rel="stylesheet" type="text/css">
     </jsp:attribute>
   <jsp:body>
       <div class="page-header">
