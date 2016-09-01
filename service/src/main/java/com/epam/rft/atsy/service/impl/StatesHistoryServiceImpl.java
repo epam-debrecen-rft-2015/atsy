@@ -75,7 +75,6 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
     statesHistoryRepository.delete(statesHistoryEntities);
   }
 
-
   @Transactional
   @Override
   public Long saveStateHistory(StateHistoryDTO state, Long applicationId) {

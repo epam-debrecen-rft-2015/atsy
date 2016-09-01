@@ -67,7 +67,7 @@ function actionFormatter(value, row, index) {
 }
 
 function positionFormatter(value) {
-  return value.join(", ");
-}
+   return value.join(", ");
+ }
 
 

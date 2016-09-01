@@ -51,7 +51,7 @@
                             </th>
                             <th data-field="phone" data-align="left" data-sortable="true"><spring:message
                                     code="welcome.candidates.table.phone.title"/></th>
-                            <th data-field="positions" data-align="left" data-sortable="true">
+                            <th data-field="positions" data-align="left" data-sortable="true" data-formatter="positionFormatter">
                               <spring:message code="welcome.candidates.table.positions.title"/>
                             </th>
                             <th data-field="actions" data-align="left" data-formatter="actionFormatter">
