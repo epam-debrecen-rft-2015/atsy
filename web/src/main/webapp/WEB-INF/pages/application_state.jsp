@@ -12,6 +12,8 @@
         <script src="<c:url value="/resources/js/atsy-statehistory-create.js" />"></script>
         <script src="<c:url value="/resources/thirdparty/bootstrap-validator/validator.js" />"
                         type="text/javascript"></script>
+        <script src="<c:url value="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js" />" type="text/javascript"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css" rel="stylesheet" type="text/css">
     </jsp:attribute>
   <jsp:body>
       <div class="page-header">
@@ -306,6 +308,19 @@
                               <c:if test="${stat.first}">
                                   <input class="stateInput hidden" type="date" name="dayOfStart" id="dayOfStartInput" value="${formattedDayOfStart}"
                                   data-bind="valueWithInit: 'dayOfStart'" required>
+                              </c:if>
+                          </div>
+                      </div>
+                  </c:when>
+                  <c:when test="${data.stateName == 'accept'}">
+                      <div class="form-group">
+                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.dateOfEnter"/></label>
+                          <div class="col-sm-8">
+                              <fmt:formatDate value="${data.dateOfEnter}" type="date" pattern="yyyy-MM-dd" var="formattedDateOfEnter"/>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedDateOfEnter}</p>
+                              <c:if test="${stat.first}">
+                                  <input class="stateInput hidden" type="date" name="dateOfEnter" id="dateOfEnterInput" value="${formattedDateOfEnter}"
+                                  data-bind="valueWithInit: 'dateOfEnter'" required>
                               </c:if>
                           </div>
                       </div>

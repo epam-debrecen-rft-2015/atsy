@@ -8,6 +8,10 @@ $(document).ready(function() {
         return false;
       }
   }));
+  $('#dateOfEnterInput').datepicker({
+      format: 'yyyy-mm-dd',
+      autoclose: true
+  });
 });
 
 
@@ -90,10 +94,17 @@ function StateHistoryModel() {
     return date.match(/^\d{4}\-\d{2}\-\d{2}$/) !== null;
    });
 
+   self.isDateOfEnterValid = ko.pureComputed(function () {
+    var date = typeof self.dateOfEnter !== 'undefined' ? self.dateOfEnter() : "0000-00-00";
+
+    return date.match(/^\d{4}\-\d{2}\-\d{2}$/) !== null;
+   });
+
    self.canSave = ko.pureComputed(function() {
      return self.isRecommendationValid()
             && self.isRecommendationPositionLevelValid()
-            && self.isDayOfStartValid();
+            && self.isDayOfStartValid()
+            && self.isDateOfEnterValid();
    });
 }
 
