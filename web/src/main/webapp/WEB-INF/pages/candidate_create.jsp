@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <spring:url value="/secure/positions" var="positions"/>
 <spring:url value="/secure/channels" var="channels"/>
 <spring:url value="/secure/welcome" var="welcome"/>
 <spring:url value="/secure/candidate" var="candidateURL"/>
 <spring:url value="/secure/application" var="application"/>
+<spring:url value="/secure/candidate/fileUpload" var="fileUpload"/>
 
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
        <c:url value="/resources/thirdparty/bootstrap-validator/validator.js" var="urlValue" /> <script src="${urlValue}"
                 type="text/javascript"></script>
-       <c:url value="/resources/js/atsy-candidate-create.js" var="urlValue"/> <script src="${urlValue}"></script>
+        <c:url value="/resources/js/atsy-candidate-create.js" var="urlValue" /><script src="${urlValue}"></script>
     </jsp:attribute>
     <jsp:body>
-        <div id="candidate_creation" data-bind="${not empty candidate.id ? 'initDisplay: value, ' : ''} css: { display: modify() == true }">
+
+         <div id="candidate_creation" data-bind="${not empty candidate.id ? 'initDisplay: value, ' : ''} css: { display: modify() == true }">
             <h1 class="page-header">
                 <c:choose>
                     <c:when test="${not empty candidate.id}">
@@ -60,16 +62,17 @@
                         <div class="form-group"
                              id="nameDiv">
                             <input type="hidden" name="candidateId" id="candidateId" data-bind="valueWithInit: 'id'" value="${candidate.id}" >
+                            <input type="hidden" name="cvFilename" id="cvFilename" data-bind="valueWithInit: 'cvFilename'" value="${candidate.cvFilename}" >
                             <spring:message code="candidate.name.field" var="i18nname"/>
                             <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
                                    for="name"><spring:message
                                     code="candidate.name.label"/></label>
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
-                                <input type="text" class="input form-control " name="name" id="name" data-bind="valueWithInit: 'name'"
-                                       value="${fn:escapeXml(candidate.name)}"
+                               <spring:message code="candidate.error.name.empty" var="messValue"/> <input type="text" class="input form-control " name="name" id="name" data-bind="valueWithInit: 'name'"
+                                      value="${fn:escapeXml(candidate.name)}"
                                        placeholder="${i18nname}"
-                                      <spring:message code="candidate.error.name.empty" var="errorValue"/> data-error="${errorValue}"
+                                       data-error="${messValue}"
                                        required maxlength="100">
 
                                 <div id="name-errors" class="help-block with-errors"></div>
@@ -139,6 +142,8 @@
                                 <p class="showValue form-control-static"><c:out value = "${candidate.languageSkill}"/></p>
                             </div>
                         </div>
+
+
                         <div class="error col-lg-12 col-md-12 col-sm-12">
                         </div>
                         <div class="form-group"
@@ -151,8 +156,7 @@
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
                                 <input type="text" class="input form-control" name="phone" id="phone" data-bind="valueWithInit: 'phone'"
                                        value="${candidate.phone}"
-                                      <spring:message
-                                                                          code="candidate.error.phone.incorrect" var="messCode"/> placeholder="${i18nphone}" data-error="${messCode}"
+                                      <spring:message code="candidate.error.phone.incorrect" var="messValue"/> placeholder="${i18nphone}" data-error="${messValue}"
                                        pattern="^\+?[0-9]+" maxlength="20">
 
                                 <div id="phone-errors" class="help-block with-errors"></div>
@@ -177,6 +181,7 @@
                                 <p class="showValue form-control-static"><c:out value = "${candidate.description}"/></p>
                             </div>
                         </div>
+
                         <div class="text-right col-lg-12 col-md-12 col-sm-12">
                             <a class="btn btn-default showValue" href="${welcome}" id="cancelButton"><spring:message
                                     code="back.button"/></a>
@@ -200,6 +205,58 @@
                 </div>
             </div>
         </div>
+
+        <c:if test="${not empty candidateId}">
+            <form:form method="POST" action="${fileUpload}/${candidateId}" enctype="multipart/form-data">
+                <c:if test="${not empty validationSuccessKey}">
+                    <div id="globalMessage" class="alert alert-success" role="alert">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="false"></span>
+                        <spring:message code="${validationSuccessKey}"/>
+                    </div>
+                </c:if>
+
+                <c:if test="${not empty validationErrorKey}">
+                    <div id="globalMessage" class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
+                        <spring:message code="${validationErrorKey}"/>
+                    </div>
+                </c:if>
+
+                <c:if test="${not empty fileErrorMessage}">
+                    <div id="globalMessage" class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
+                        <spring:message code="${fileErrorMessage}"/>
+                    </div>
+                </c:if>
+
+                <c:if test="${empty candidate.cvFilename}">
+                    <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="name">
+                        <spring:message code="cv"/>
+                    </label>
+
+                    <div class="form-group">
+                        <input type="file" name="file" />
+                        <button type="submit" class="btn btn-link"><spring:message code="upload.button"/></button>
+                    </div>
+                </c:if>
+
+                <c:if test="${not empty candidate.cvFilename}">
+                    <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="name">
+                        <spring:message code="cv"/>
+                    </label>
+
+                    <label class="control-label col-lg-2 col-md-4 col-sm-4 text-left" for="name">
+                       <c:url value='/secure/candidate/fileDownload/${candidateId}' var="urlValue" /> <a href="$urlValue">
+                            <c:out value="${candidate.cvFilename}"/>
+                        </a>
+                    </label>
+                </c:if>
+
+
+            </form:form>
+        </c:if>
+
+
         <c:choose>
             <c:when test="${not empty candidate.id}">
                 <div id="new_application" class="text-right">

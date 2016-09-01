@@ -1,0 +1,1 @@
+ALTER TABLE states_history DROP COLUMN language_skill;

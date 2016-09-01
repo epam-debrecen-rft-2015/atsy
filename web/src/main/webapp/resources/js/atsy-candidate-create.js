@@ -45,7 +45,8 @@ function CandidateCreateModel(){
                 email: self.email(),
                 languageSkill: self.languageSkill(),
                 phone: self.phone(),
-                description: self.description()
+                description: self.description(),
+                cvFilename: self.cvFilename()
             })
         }).done(function (xhr) {
             window.location = form.attr('action')+ '/' + xhr.id;
