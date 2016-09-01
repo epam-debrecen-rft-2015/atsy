@@ -69,10 +69,10 @@
                                     code="candidate.name.label"/></label>
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
-                               <spring:message code="candidate.error.name.empty" var="messValue"/> <input type="text" class="input form-control " name="name" id="name" data-bind="valueWithInit: 'name'"
+                               <spring:message code="candidate.error.name.empty" var="nameEmptyValue"/> <input type="text" class="input form-control " name="name" id="name" data-bind="valueWithInit: 'name'"
                                       value="${fn:escapeXml(candidate.name)}"
                                        placeholder="${i18nname}"
-                                       data-error="${messValue}"
+                                       data-error="${nameEmptyValue}"
                                        required maxlength="100">
 
                                 <div id="name-errors" class="help-block with-errors"></div>
@@ -106,12 +106,14 @@
                                     code="candidate.email.label"/></label>
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <spring:message code="candidate.error.email.empty" var="errEmailEmptyValue"/>
+                            <spring:message code="candidate.error.email.incorrect" var="InCorrectEmailValue"/>
                                 <input type="text" class="input form-control" name="email" id="email" data-bind="valueWithInit: 'email'"
                                        value="${candidate.email}"
                                        placeholder="${i18nemail}"
-                                       <spring:message code="candidate.error.email.empty" var="messValue"/>data-error="${messValue}"
+                                       data-error="${errEmailEmptyValue}"
                                        data-pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
-                                      <spring:message code="candidate.error.email.incorrect" var="codeValue"/> data-pattern-error="${codeValue}"
+                                      data-pattern-error="${InCorrectEmailValue}"
                                        required maxlength="255">
                                 <span id="email-errors" class="help-block with-errors"></span>
 
@@ -154,9 +156,10 @@
                                     code="candidate.phone.label"/></label>
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <spring:message code="candidate.error.phone.incorrect" var="phoneIncValue"/>
                                 <input type="text" class="input form-control" name="phone" id="phone" data-bind="valueWithInit: 'phone'"
                                        value="${candidate.phone}"
-                                      <spring:message code="candidate.error.phone.incorrect" var="messValue"/> placeholder="${i18nphone}" data-error="${messValue}"
+                                       placeholder="${i18nphone}" data-error="${phoneIncValue}"
                                        pattern="^\+?[0-9]+" maxlength="20">
 
                                 <div id="phone-errors" class="help-block with-errors"></div>
@@ -246,7 +249,7 @@
                     </label>
 
                     <label class="control-label col-lg-2 col-md-4 col-sm-4 text-left" for="name">
-                       <c:url value='/secure/candidate/fileDownload/${candidateId}' var="urlValue" /> <a href="$urlValue">
+                       <c:url value='/secure/candidate/fileDownload/${candidateId}' var="urlValue" /> <a href="${urlValue}">
                             <c:out value="${candidate.cvFilename}"/>
                         </a>
                     </label>

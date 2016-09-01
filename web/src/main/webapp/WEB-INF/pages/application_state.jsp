@@ -113,7 +113,7 @@
                           <div class="col-sm-8">
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value = "${data.position.name}"/></p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput hidden" type="text" name="position.name" id="positionNameInput" value="${data.position.name}"
+                                  <input class="stateInput hidden" type="text" name="position.name" id="positionNameInput" value="${fn:escapeXml(data.position.name)}"
                                     data-bind="valueWithInit: 'name'">
                               </c:if>
                           </div>
@@ -214,7 +214,7 @@
                           <c:if test="${stat.first}">
                             <spring:message code="statehistory.error.reviewerName.length" var="errorReviewerNameLengthMessage" />
 
-                            <input type="text " class="stateInput hidden" id="reviwerNameInput"  value="${data.reviewerName}"
+                            <input type="text " class="stateInput hidden" id="reviwerNameInput"  value="${fn:escapeXml(data.reviewerName)}"
                               data-bind="valueWithInit: 'reviewerName'"
                               data-error="${errorReviewerNameLengthMessage}"
                               pattern="^.{3,100}$" required />
@@ -276,7 +276,7 @@
                               <c:if test="${stat.first}">
                                   <spring:message code="statehistory.error.offeredMoney.negative" var="errorOfferedMoneyNegativeMessage"/>
 
-                                  <input class="stateInput hidden" type="number" name="offeredMoney" id="offeredMoneyInput"  value="${data.offeredMoney}"
+                                  <input class="stateInput hidden" type="number" name="offeredMoney" id="offeredMoneyInput"  value="${fn:escapeXml(data.offeredMoney)}"
                                   data-error="${errorOfferedMoneyNegativeMessage}"
                                   data-bind="valueWithInit: 'offeredMoney'"
                                   min="0">
@@ -291,7 +291,7 @@
                               <c:if test="${stat.first}">
                                   <spring:message code="statehistory.error.claim.negative" var="errorClaimNegativeMessage"/>
 
-                                  <input class="stateInput hidden" type="number" name="claim" id="claimInput" value="${data.claim}"
+                                  <input class="stateInput hidden" type="number" name="claim" id="claimInput" value="${fn:escapeXml(data.claim)}"
                                   data-error="${errorClaimNegativeMessage}"
                                   data-bind="valueWithInit: 'claim'"
                                   min="0">
@@ -306,7 +306,7 @@
                               <c:if test="${stat.first}">
                                   <spring:message code="statehistory.error.parse.date" var="errorParseDateMessage"/>
 
-                                  <input class="stateInput hidden" type="text" name="feedbackDate" id="feedbackDateInput" value="${data.feedbackDate}"
+                                  <input class="stateInput hidden" type="text" name="feedbackDate" id="feedbackDateInput" value="${fn:escapeXml(data.feedbackDate)}"
                                   data-error="${errorParseDateMessage}"
                                   data-bind="valueWithInit: 'feedbackDate'"
                                   pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$">
@@ -319,10 +319,10 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.dayOfStart"/></label>
                           <div class="col-sm-8">
-                              <fmt:formatDate value="${data.dayOfStart}" type="date" pattern="yyyy-MM-dd" var="formattedDayOfStart"/>
+                              <fmt:formatDate value="${fn:escapeXml(data.dayOfStart)}" type="date" pattern="yyyy-MM-dd" var="formattedDayOfStart"/>
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedDayOfStart}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput hidden" type="date" name="dayOfStart" id="dayOfStartInput" value="${formattedDayOfStart}"
+                                  <input class="stateInput hidden" type="date" name="dayOfStart" id="dayOfStartInput" value="${fn:escapeXml(formattedDayOfStart)}"
                                   data-bind="valueWithInit: 'dayOfStart'" required>
                               </c:if>
                           </div>
