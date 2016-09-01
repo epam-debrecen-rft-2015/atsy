@@ -36,7 +36,6 @@ public class StateHistoryTwoWayConverter
                 ChannelDTO.class) : null)
         .applicationDTO(source.getApplicationEntity() != null ?
             converterService.convert(source.getApplicationEntity(), ApplicationDTO.class) : null)
-        .languageSkill(source.getLanguageSkill())
         .description(source.getDescription())
         .result(source.getResult())
         .offeredMoney(source.getOfferedMoney())
@@ -60,7 +59,6 @@ public class StateHistoryTwoWayConverter
         .applicationEntity(source.getApplicationDTO() != null ?
             converterService.convert(source.getApplicationDTO(), ApplicationEntity.class) : null)
         .creationDate(source.getCreationDate())
-        .languageSkill(source.getLanguageSkill())
         .description(source.getDescription())
         .result(source.getResult())
         .offeredMoney(source.getOfferedMoney())

@@ -72,7 +72,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   private static final Long ID = 1L;
 
   private static final Date CREATION_DATE =
-    new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
+      new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
 
   private static final String FEEDBACK_DATE_STRING = "2016-08-15 14:00:00";
 
@@ -146,7 +146,6 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .id(ID)
         .candidateId(CANDIDATE_ID)
         .feedbackDate(FEEDBACK_DATE)
-        .languageSkill(LANGUAGE_SKILL)
         .description(DESCRIPTION)
         .result(RESULT)
         .offeredMoney(OFFERED_MONEY)
@@ -172,40 +171,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
     verifyZeroInteractions(statesHistoryService);
   }
-
-  @Test
-  public void saveOrUpdateShouldRespondWithErrorJSONWhenLanguageSkillIsLower() throws Exception {
-    StateHistoryViewRepresentation stateHistoryViewRepresentation =
-        StateHistoryViewRepresentation.builder().languageSkill(LOWER_LANGUAGE_SKILL).build();
-
-    given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
-        .willReturn(
-            composeResponseFromField("languageSkill", LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
-
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.errorMessage").value(COMMON_INVALID_INPUT_MESSAGE_KEY))
-        .andExpect(jsonPath("$.fields.languageSkill").value(LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
-
-    verifyZeroInteractions(statesHistoryService);
-  }
-
-  @Test
-  public void saveOrUpdateShouldRespondWithErrorJSONWhenLanguageSkillIsHigher() throws Exception {
-    StateHistoryViewRepresentation stateHistoryViewRepresentation =
-        StateHistoryViewRepresentation.builder().languageSkill(HIGHER_LANGUAGE_SKILL).build();
-
-    given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
-        .willReturn(
-            composeResponseFromField("languageSkill", LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
-
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.errorMessage").value(COMMON_INVALID_INPUT_MESSAGE_KEY))
-        .andExpect(jsonPath("$.fields.languageSkill").value(LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
-
-    verifyZeroInteractions(statesHistoryService);
-  }
+  
 
   @Test
   public void saveOrUpdateShouldRespondWithErrorJSONWhenClaimIsNegative() throws Exception {

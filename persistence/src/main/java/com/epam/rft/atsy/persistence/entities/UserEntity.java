@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,7 +30,6 @@ public class UserEntity extends SuperEntity implements java.io.Serializable {
 
   @Column(name = "user_pwd", nullable = false, length = 255, table = "users")
   private String userPassword;
-
 
   @Builder
   public UserEntity(Long id, String userName, String userPassword) {
