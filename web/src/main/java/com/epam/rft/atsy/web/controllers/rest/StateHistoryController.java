@@ -67,6 +67,7 @@ public class StateHistoryController {
                 && !stateHistoryViewRepresentation.getFeedbackDate().isEmpty() ? DATE_FORMAT
                 .parse(stateHistoryViewRepresentation.getFeedbackDate()) : null)
             .dayOfStart(stateHistoryViewRepresentation.getDayOfStart())
+            .dateOfEnter(stateHistoryViewRepresentation.getDateOfEnter())
             .creationDate(null)
             .stateDTO(StateDTO.builder().id(stateHistoryViewRepresentation.getStateId())
                 .name(stateHistoryViewRepresentation.getStateName()).build())
