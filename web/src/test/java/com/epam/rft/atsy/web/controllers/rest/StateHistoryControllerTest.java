@@ -1,5 +1,6 @@
 package com.epam.rft.atsy.web.controllers.rest;
 
+
 import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.PositionService;
@@ -52,9 +53,6 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
   private static final String DATE_PARSE_ERROR_MESSAGE_KEY = "statehistory.error.parse.date";
 
-  private static final String LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY =
-      "candidate.error.language.incorrect";
-
   private static final String CLAIM_NEGATIVE_MESSAGE_KEY = "statehistory.error.claim.negative";
 
   private static final String OFFERED_MONEY_NEGATIVE_MESSAGE_KEY =
@@ -70,8 +68,6 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
   private static final String JSON_PATH_FEEDBACK_DATE = "$.fields.feedbackDate";
 
-  private static final String JSON_PATH_FIELD_LANGUAGE_SKILL = "$.fields.languageSkill";
-
   private static final String JSON_PATH_FIELD_CLAIM = "$.fields.claim";
 
   private static final String JSON_PATH_FIELD_OFFERED_MONEY = "$.fields.offeredMoney";
@@ -82,8 +78,6 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
   private static final String FIELD_FEEDBACK_DATE = "feedbackDate";
 
-  private static final String FIELD_LANGUAGE_SKILL = "languageSkill";
-
   private static final String FIELD_CLAIM = "claim";
 
   private static final String FIELD_OFFERED_MONEY = "offeredMoney";
@@ -93,10 +87,6 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   private static final String FIELD_NAME_POSITION = "positionName";
 
   private static final String MALFORMED_DATE = "malformed";
-
-  private static final Short LOWER_LANGUAGE_SKILL = -1;
-
-  private static final Short HIGHER_LANGUAGE_SKILL = 11;
 
   private static final Long NEGATIVE_CLAIM = -1L;
 
@@ -123,6 +113,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   private static final Long ID = 1L;
 
   private static final Date CREATION_DATE =
+
       new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
 
   private static final String FEEDBACK_DATE_STRING = "2016-08-15 14:00:00";
@@ -146,6 +137,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   private static final Long CLAIM = 1L;
 
   private static final String STATE_FULL_NAME = "full name";
+
 
   private static final Long STATE_ID = 2L;
 
@@ -251,7 +243,6 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .applicationDTO(dummyApplicationDto)
         .candidateId(CANDIDATE_ID)
         .feedbackDate(FEEDBACK_DATE)
-        .languageSkill(LANGUAGE_SKILL)
         .description(DESCRIPTION)
         .result(RESULT)
         .offeredMoney(OFFERED_MONEY)
@@ -266,7 +257,6 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .applicationDTO(dummyApplicationDto)
         .candidateId(CANDIDATE_ID)
         .feedbackDate(FEEDBACK_DATE)
-        .languageSkill(LANGUAGE_SKILL)
         .description(DESCRIPTION)
         .result(RESULT)
         .offeredMoney(OFFERED_MONEY)
@@ -283,46 +273,14 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         StateHistoryViewRepresentation.builder().feedbackDate(MALFORMED_DATE).build();
 
     given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
+
         .willReturn(composeResponseFromField(FIELD_FEEDBACK_DATE, DATE_PARSE_ERROR_MESSAGE_KEY));
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
+
         .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
         .andExpect(jsonPath(JSON_PATH_FEEDBACK_DATE).value(DATE_PARSE_ERROR_MESSAGE_KEY));
-
-    verifyZeroInteractions(statesHistoryService, channelService, positionService, applicationsService);
-  }
-
-  @Test
-  public void saveOrUpdateShouldRespondWithErrorJSONWhenLanguageSkillIsLower() throws Exception {
-    StateHistoryViewRepresentation stateHistoryViewRepresentation =
-        StateHistoryViewRepresentation.builder().languageSkill(LOWER_LANGUAGE_SKILL).build();
-
-    given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
-        .willReturn(
-            composeResponseFromField(FIELD_LANGUAGE_SKILL, LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
-
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
-        .andExpect(jsonPath(JSON_PATH_FIELD_LANGUAGE_SKILL).value(LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
-
-    verifyZeroInteractions(statesHistoryService, channelService, positionService, applicationsService);
-  }
-
-  @Test
-  public void saveOrUpdateShouldRespondWithErrorJSONWhenLanguageSkillIsHigher() throws Exception {
-    StateHistoryViewRepresentation stateHistoryViewRepresentation =
-        StateHistoryViewRepresentation.builder().languageSkill(HIGHER_LANGUAGE_SKILL).build();
-
-    given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
-        .willReturn(
-            composeResponseFromField(FIELD_LANGUAGE_SKILL, LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
-
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
-        .andExpect(jsonPath(JSON_PATH_FIELD_LANGUAGE_SKILL).value(LANGUAGE_SKILL_INCORRECT_MESSAGE_KEY));
 
     verifyZeroInteractions(statesHistoryService, channelService, positionService, applicationsService);
   }
@@ -333,10 +291,12 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         StateHistoryViewRepresentation.builder().claim(NEGATIVE_CLAIM).build();
 
     given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
+
         .willReturn(composeResponseFromField(FIELD_CLAIM, CLAIM_NEGATIVE_MESSAGE_KEY));
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
+
         .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
         .andExpect(jsonPath(JSON_PATH_FIELD_CLAIM).value(CLAIM_NEGATIVE_MESSAGE_KEY));
 
@@ -349,10 +309,12 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         StateHistoryViewRepresentation.builder().offeredMoney(NEGATIVE_OFFERED_MONEY).build();
 
     given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
+
         .willReturn(composeResponseFromField(FIELD_OFFERED_MONEY, OFFERED_MONEY_NEGATIVE_MESSAGE_KEY));
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
+
         .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
         .andExpect(jsonPath(JSON_PATH_FIELD_OFFERED_MONEY).value(OFFERED_MONEY_NEGATIVE_MESSAGE_KEY));
 
@@ -365,6 +327,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, dummyStateHistory))
         .andExpect(status().isOk())
+
         .andExpect(jsonPath(JSON_PATH_APPLICATION_ID).value(APPLICATION_ID.intValue()));
 
     ArgumentCaptor<StateHistoryDTO> historyCaptor = ArgumentCaptor.forClass(StateHistoryDTO.class);

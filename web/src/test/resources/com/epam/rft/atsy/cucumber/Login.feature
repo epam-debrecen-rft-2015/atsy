@@ -39,3 +39,8 @@ Feature: Login in
     And the password field is not filled in
     When the user clicks on Bejelentkezés button
     Then Add meg a jelszavad! message appears above the password field
+
+  Scenario: username inputfield is automatically in focus
+
+    Given the user is on the login page
+    Then the username field is in focus

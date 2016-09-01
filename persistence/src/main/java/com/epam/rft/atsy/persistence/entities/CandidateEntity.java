@@ -45,10 +45,13 @@ public class CandidateEntity extends SuperEntity implements Serializable {
   @Column(name = "language_skill")
   private Short languageSkill;
 
+  @Column(name = "cv_file_name")
+  private String cvFilename;
+
 
   @Builder
   public CandidateEntity(Long id, String name, String email, String phone, String description,
-                         String referer, Short languageSkill) {
+                         String referer, Short languageSkill, String cvFilename) {
     super(id);
     this.name = name;
     this.email = email;
@@ -56,5 +59,6 @@ public class CandidateEntity extends SuperEntity implements Serializable {
     this.description = description;
     this.referer = referer;
     this.languageSkill = languageSkill;
+    this.cvFilename = cvFilename;
   }
 }

@@ -7,17 +7,16 @@ import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import javax.annotation.Resource;
-
 @Service
 public class ApplicationsServiceImpl implements ApplicationsService {
 
-  @Resource
+  @Autowired
   private StatesHistoryService statesHistoryService;
 
   @Autowired
@@ -56,7 +55,7 @@ public class ApplicationsServiceImpl implements ApplicationsService {
   @Override
   public Long saveApplication(ApplicationDTO applicationDTO, StateHistoryDTO stateHistoryDTO) {
     Assert.notNull(stateHistoryDTO);
-
+    
     ApplicationDTO savedOrUpdatedApplicationDto = saveOrUpdate(applicationDTO);
     stateHistoryDTO.setApplicationDTO(savedOrUpdatedApplicationDto);
     statesHistoryService.saveStateHistory(stateHistoryDTO);

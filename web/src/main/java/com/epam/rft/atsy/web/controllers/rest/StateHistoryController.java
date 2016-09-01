@@ -83,7 +83,6 @@ public class StateHistoryController {
             .id(stateHistoryViewRepresentation.getId())
             .applicationDTO(applicationsService.getApplicationDtoById(applicationId))
             .candidateId(stateHistoryViewRepresentation.getCandidateId())
-            .languageSkill(stateHistoryViewRepresentation.getLanguageSkill())
             .description(stateHistoryViewRepresentation.getDescription())
             .result(stateHistoryViewRepresentation.getResult())
             .offeredMoney(stateHistoryViewRepresentation.getOfferedMoney())
