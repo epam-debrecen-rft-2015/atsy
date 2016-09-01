@@ -251,10 +251,11 @@
                     </div>
                   </c:when>
                   <c:when test="${data.stateName == 'wageOffer'}">
+                      <spring:message code="common.thousand.huf" var="thousandHUF"/>
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.offeredMoney"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.offeredMoney}</p>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value="${data.offeredMoney} asd"/></p>
                               <c:if test="${stat.first}">
                                   <spring:message code="statehistory.error.offeredMoney.negative" var="errorOfferedMoneyNegativeMessage"/>
 
