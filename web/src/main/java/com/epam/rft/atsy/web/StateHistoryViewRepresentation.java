@@ -56,6 +56,8 @@ public class StateHistoryViewRepresentation {
 
   private Date dayOfStart;
 
+  private Date dateOfEnter;
+
   private String stateFullName;
 
   private Long stateId;

@@ -6,12 +6,16 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html;charset=UTF-8" %>
 <spring:url value="/secure/application_state" var="application_state"/>
+<c:url value="/resources/thirdparty/bootstrap-datepicker/bootstrap-datepicker.js" var="bootstrap_datepicker_js"/>
+<c:url value="/resources/thirdparty/bootstrap-datepicker/bootstrap-datepicker.css" var="bootstrap_datepicker_css"/>
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
         <script src="<c:url value="/resources/js/atsy-statehistory.js" />"></script>
         <script src="<c:url value="/resources/js/atsy-statehistory-create.js" />"></script>
         <script src="<c:url value="/resources/thirdparty/bootstrap-validator/validator.js" />"
                         type="text/javascript"></script>
+        <script src="${bootstrap_datepicker_js}" type="text/javascript"></script>
+        <link href="${bootstrap_datepicker_css}" rel="stylesheet" type="text/css">
     </jsp:attribute>
   <jsp:body>
       <div class="page-header">
@@ -377,6 +381,19 @@
                               <c:if test="${stat.first}">
                                   <input class="stateInput hidden" type="date" name="dayOfStart" id="dayOfStartInput" value="${formattedDayOfStart}"
                                   data-bind="valueWithInit: 'dayOfStart'" required>
+                              </c:if>
+                          </div>
+                      </div>
+                  </c:when>
+                  <c:when test="${data.stateName == 'accept'}">
+                      <div class="form-group">
+                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.dateOfEnter"/></label>
+                          <div class="col-sm-8">
+                              <fmt:formatDate value="${data.dateOfEnter}" type="date" pattern="yyyy-MM-dd" var="formattedDateOfEnter"/>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedDateOfEnter}</p>
+                              <c:if test="${stat.first}">
+                                  <input class="stateInput hidden" type="date" name="dateOfEnter" id="dateOfEnterInput" value="${formattedDateOfEnter}"
+                                  data-bind="valueWithInit: 'dateOfEnter'" required>
                               </c:if>
                           </div>
                       </div>
