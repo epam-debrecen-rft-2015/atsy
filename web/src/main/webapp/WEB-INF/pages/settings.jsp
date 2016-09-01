@@ -9,7 +9,7 @@
 <spring:url value="/secure/password/manage" var="password"/>
 <atsy:secure_page>
  <jsp:attribute name="pageJs">
-     <script src="<c:url value="/resources/js/atsy-settings.js" />"></script>
+     <c:url value="/resources/js/atsy-settings.js" var="urlValue"/><script src="${urlValue}"></script>
     </jsp:attribute>
     <jsp:body>
         <div id="settings">
