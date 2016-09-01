@@ -1,9 +1,11 @@
 package com.epam.rft.atsy.web.controllers;
 
+import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StateFlowService;
 import com.epam.rft.atsy.service.StateService;
 import com.epam.rft.atsy.service.StatesHistoryService;
+import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
@@ -41,6 +43,9 @@ public class ApplicationStateController {
 
   @Resource
   private StateFlowService stateFlowService;
+
+  @Resource
+  private CandidateService candidateService;
 
   @Resource
   private StateService stateService;
@@ -84,7 +89,10 @@ public class ApplicationStateController {
           .build());
     }
 
+    CandidateDTO candidateDTO = candidateService.getCandidateByApplicationID(applicationId);
+
     for (StateHistoryViewRepresentation stateHistoryViewRepresentation : stateHistoryViewRepresentations) {
+      stateHistoryViewRepresentation.setLanguageSkill(candidateDTO.getLanguageSkill());
       String stateType = stateHistoryViewRepresentation.getStateName();
 
       stateType =
