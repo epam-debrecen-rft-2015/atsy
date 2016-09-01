@@ -181,34 +181,6 @@
                           <div class="help-block with-errors"></div>
                       </div>
                   </c:when>
-
-                  <c:when test ="${data.stateName == 'tech'}">
-                     <div class="form-group">
-                        <label for="recommendedPositionLevelInput"  class="control-label col-sm-4"><spring:message code="statehistory.field.recommendedPositionLevel"/></label>
-                        <div class="col-sm-8">
-                          <p class="form-control-static ${stat.first ? 'stateData' : ''}" <c:out value = "L${data.recommendedPositionLevel}"/></p>
-                          <c:if test="${stat.first}">
-                              <spring:message code="statehistory.error.recommendedPositionLevel.range" var="errorRecommendedPositionLevelOutOfRange"/>
-                              <select required class="stateInput hidden" id="recommendedPositionLevelInput"
-                                data-bind="valueWithInit: 'recommendedPositionLevel'"
-                                data-error="${errorRecommendedPositionLevelOutOfRange}">
-                                  <option disabled ${data.recommendedPositionLevel eq null ? 'selected="selected"' : ''}>
-                                    <spring:message code="common.pleaseChoose"/>
-                                  </option>
-                                  <c:forEach begin="0" end="5" step="1" var="index">
-                                      <option value="${index}"
-                                        ${index eq data.recommendedPositionLevel ? 'selected="selected"' : ''}>
-                                            ${index}
-                                      </option>
-                                  </c:forEach>
-                              </select>
-                              </select>
-                          </c:if>
-                        </div>
-                        <div class="help-block with-errors"></div>
-                        </div>
-                  </c:when>
-
                   <c:when test="${data.stateName == 'firstTest'}">
                       <div class="form-group">
                           <label for="resultInput" class="control-label col-sm-4"><spring:message code="statehistory.field.result"/></label>
