@@ -3,11 +3,11 @@ Feature: Welcome
   Background:
     Given The user signed in
     Given The following application positions exist for candidates:
-      | name        | position  | id |
-      | Candidate A |           | 1  |
-      | Candidate B |           | 2  |
-      | Candidate C | Fejlesztő | 3  |
-    Given The applications of <candidate> are deleted
+      | Candidate name | Candidate ID | Position  |
+      | Candidate A    | 1            | Fejlesztő |
+      | Candidate B    | 2            |           |
+      | Candidate C    | 3            | Fejlszető |
+    Given The applications of Candidate A are deleted.
 
   Scenario: the Candidates page appears
     Given the user clicks on the Főoldal button

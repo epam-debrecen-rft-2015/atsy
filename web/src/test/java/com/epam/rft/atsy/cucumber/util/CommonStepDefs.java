@@ -16,10 +16,4 @@ public class CommonStepDefs {
     getDriver().findElement(By.id("password")).sendKeys("pass3");
     waitForPageLoadAfter(event -> getDriver().findElement(By.id("loginButton")).click());
   }
-
-  @Given("The Applications of the candidate with id //d are deleted")
-  public void deleteApplications(Long applicationId) {
-    getDriver()
-        .get("http://localhost:8080/atsy/secure/deleteApplications?candidateId=" + applicationId);
-  }
 }

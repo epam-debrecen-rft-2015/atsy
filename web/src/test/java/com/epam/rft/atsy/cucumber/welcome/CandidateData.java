@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CandidateData {
-  String name;
+  String candidateName;
+  Long candidateID;
   String position;
-  Long id;
 }
