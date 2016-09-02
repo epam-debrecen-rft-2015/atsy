@@ -17,8 +17,16 @@ public interface CandidateService {
    */
   CandidateDTO getCandidate(Long candidateID);
 
+
   /**
-   * Returns a collection of candidates, whome fits the filter.
+   * Returns the candidate object wich has an application with the given id.
+   * @param applicationID the id of the application
+   * @return the candidate object
+   */
+  CandidateDTO getCandidateByApplicationID(Long applicationID);
+
+  /**
+   * Returns a collection of candidates, whom fits the filter.
    * @param sortingRequest the filter
    * @return the collection of candidates
    */

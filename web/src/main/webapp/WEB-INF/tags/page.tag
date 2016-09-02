@@ -5,9 +5,9 @@
 <%@attribute name="refs" fragment="true" %>
 <html>
 <head>
-    <link rel="stylesheet" href="<c:url value="/resources/thirdparty/bootstrap/css/bootstrap.min.css" />">
+   <c:url value="/resources/thirdparty/bootstrap/css/bootstrap.min.css" var="urlValue" /> <link rel="stylesheet" href="${urlValue}">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/bootstrap-table.min.css">
-    <link rel="stylesheet" href="<c:url value="/resources/css/atsy.css" />">
+    <c:url value="/resources/css/atsy.css" var="urValue" /><link rel="stylesheet" href="${urValue}">
 
 </head>
 <body>
@@ -23,13 +23,13 @@
         <jsp:invoke fragment="footer"/>
     </div>
 </div>
-<script src="<c:url value="/resources/thirdparty/jquery/jquery-1.11.3.min.js" />"></script>
-<script src="<c:url value="/resources/thirdparty/bootstrap/js/bootstrap.min.js" />"></script>
-<script src="<c:url value="/resources/js/atsy.js" />"></script>
+<c:url value="/resources/thirdparty/jquery/jquery-1.11.3.min.js" var="urlValue" /><script src="${urlValue}"></script>
+<c:url value="/resources/thirdparty/bootstrap/js/bootstrap.min.js" var="urlValue"/><script src="${urlValue}"></script>
+<c:url value="/resources/js/atsy.js" var="urlValue"/><script src="${urlValue}"></script>
 <!-- Latest compiled and minified JavaScript -->
-<script src="<c:url value="/resources/thirdparty/bootstrap-table/bootstrap-table.min.js" />"></script>
-<script src="<c:url value="/resources/thirdparty/bootstrap-table/locale/bootstrap-table-${pageContext.response.locale}.min.js" />"></script>
-<script src="<c:url value="/resources/thirdparty/knockout-3.4.0/knockout-3.4.0.js" />"></script>
+<c:url value="/resources/thirdparty/bootstrap-table/bootstrap-table.min.js" var="urlValue"/><script src="${urlValue}"></script>
+<c:url value="/resources/thirdparty/bootstrap-table/locale/bootstrap-table-${pageContext.response.locale}.min.js" var="urlValue"/><script src="${urlValue}"></script>
+<c:url value="/resources/thirdparty/knockout-3.4.0/knockout-3.4.0.js" var="urlValue"/><script src="${urlValue}"></script>
 <!-- Latest compiled and minified Locales -->
 
 <jsp:invoke fragment="refs"/>

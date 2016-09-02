@@ -27,7 +27,7 @@
                                 <spring:message code="uname.field" var="i18nUname"/>
                                 <span id="missingUsername"><spring:message
                                         code="login.frontend.missingUsername"/></span>
-                                <input type="text" class="form-control" name="username" id="name"
+                                <input type="text" class="form-control" name="username" id="name" autofocus="autofocus"
                                        placeholder="${i18nUname}">
                             </div>
                             <div class="form-group <c:if test="${not empty loginErrorKey}">has-error </c:if>"

@@ -32,7 +32,7 @@ public class ApplicationsServiceImpl implements ApplicationsService {
 
   @Autowired
   private CandidateRepository candidateRepository;
-  
+
   @Transactional(readOnly = true)
   @Override
   public List<ApplicationDTO> getApplicationsByCandidateDTO(CandidateDTO candidateDTO) {

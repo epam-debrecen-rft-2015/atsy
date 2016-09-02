@@ -1,6 +1,8 @@
 package com.epam.rft.atsy.service.impl;
 
+import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
+import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.CandidateService;
@@ -32,6 +34,9 @@ public class CandidateServiceImpl implements CandidateService {
   private ApplicationsService applicationsService;
 
   @Autowired
+  private ApplicationsRepository applicationsRepository;
+
+  @Autowired
   private ConverterService converterService;
 
   @Transactional(readOnly = true)
@@ -41,6 +46,22 @@ public class CandidateServiceImpl implements CandidateService {
 
     CandidateEntity candidateEntity = candidateRepository.findOne(id);
     return converterService.convert(candidateEntity, CandidateDTO.class);
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public CandidateDTO getCandidateByApplicationID(Long applicationID) {
+    Assert.notNull(applicationID);
+
+    ApplicationEntity applicationEntity =
+        applicationsRepository.findOne(applicationID);
+
+    CandidateDTO
+        candidateDTO =
+        (applicationEntity != null ? converterService
+            .convert(applicationEntity.getCandidateEntity(), CandidateDTO.class) : null);
+
+    return candidateDTO;
   }
 
   @Transactional(readOnly = true)

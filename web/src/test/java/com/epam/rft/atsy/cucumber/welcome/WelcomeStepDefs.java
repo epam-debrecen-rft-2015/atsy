@@ -44,11 +44,11 @@ public class WelcomeStepDefs {
   }
 
 
-  @When("the user clicks on the Főoldal button")
+  @When("the user clicks on the logo")
   public void homeClicked() {
     waitForPageLoadAfter(
-        driver -> driver.findElement(By.cssSelector(".navbar .navbar-nav :first-child > a"))
-            .click());
+      driver -> driver.findElement(By.cssSelector(".navbar .navbar-brand .img-rounded"))
+        .click());
   }
 
   @Then("the Candidates page appears")

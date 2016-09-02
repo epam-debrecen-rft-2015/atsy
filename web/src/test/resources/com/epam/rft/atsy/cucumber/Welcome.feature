@@ -10,7 +10,7 @@ Feature: Welcome
     Given The applications of Candidate A are deleted.
 
   Scenario: the Candidates page appears
-    Given the user clicks on the Főoldal button
+    Given the user clicks on the logo
     Then the Candidates page appears
     And the list of candidates appears with the columns: Név, E-Mail, Telefonszám, Pályázott pozíciók
 
@@ -20,7 +20,7 @@ Feature: Welcome
       | Candidate A | candidate.a@atsy.com | +36105555555 |           |
       | Candidate B | candidate.b@atsy.com | +36106666666 |           |
       | Candidate C | candidate.c@atsy.com | +36107777777 | Fejlesztő |
-    When the user clicks on the Főoldal button
+    When the user clicks on the logo
     Then the Candidates page appears
     And the list of candidates shown in order
       | name        | email                | phone        | positions |
@@ -34,7 +34,7 @@ Feature: Welcome
       | Candidate A | candidate.a@atsy.com | +36105555555 |           |
       | Candidate B | candidate.b@atsy.com | +36106666666 |           |
       | Candidate C | candidate.c@atsy.com | +36107777777 | Fejlesztő |
-    When the user clicks on the Főoldal button
+    When the user clicks on the logo
     Then the Candidates page appears
     When the user changes the order field to <field>, <order>
     And the list of candidates shown ordered by <field> as <order>

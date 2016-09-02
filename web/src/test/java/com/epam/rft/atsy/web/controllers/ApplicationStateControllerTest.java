@@ -12,10 +12,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import com.epam.rft.atsy.service.ApplicationsService;
+import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StateFlowService;
 import com.epam.rft.atsy.service.StateService;
 import com.epam.rft.atsy.service.StatesHistoryService;
+import com.epam.rft.atsy.service.domain.ApplicationDTO;
+import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateFlowDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
@@ -59,12 +63,24 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   private static final String STATE_NAME_CV = "CV";
   private static final String STATE_NAME_CODING = "Coding";
 
+  private static final Long APPLICATION_ID = 1L;
+  private static final Long NON_EXISTENT_APPLICATION_ID = 3L;
+
   private StateDTO
       stateDTOWithStateNameNewApply =
       StateDTO.builder().id(1L).name(CLICKED_STATE_NAME_NEW_APPLY).build();
   private StateDTO
       stateDTOWithStateNameCoding =
       StateDTO.builder().id(3L).name(CLICKED_STATE_NAME_CODING).build();
+
+  private ApplicationDTO
+      applicationDTO =
+      ApplicationDTO.builder().id(1L).candidateId(1L).channelId(1L).positionId(1L).build();
+
+  private CandidateDTO
+      candidateDTO =
+      CandidateDTO.builder().id(1L).languageSkill((short) 1).build();
+
 
   private StateHistoryViewRepresentation actualFirstStateHistoryViewRepresentation =
       StateHistoryViewRepresentation.builder().stateId(1L).stateName(CLICKED_STATE_NAME_NEW_APPLY)
@@ -121,6 +137,10 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   private MessageKeyResolver messageKeyResolver;
   @Mock
   private ConverterService converterService;
+  @Mock
+  private ApplicationsService applicationsService;
+  @Mock
+  private CandidateService candidateService;
 
   @InjectMocks
   private ApplicationStateController applicationStateController;
@@ -157,6 +177,23 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
 
     then(statesHistoryService).should().getStateHistoriesByApplicationId(-1L);
     verifyZeroInteractions(stateFlowService, stateService, messageKeyResolver, converterService);
+  }
+
+  @Test
+  public void loadPageShouldRespondInternalServerErrorWhenParamApplicationIdIsNonExistent()
+      throws Exception {
+    given(candidateService.getCandidateByApplicationID(NON_EXISTENT_APPLICATION_ID))
+        .willReturn(null);
+
+    this.mockMvc.perform(
+        get(REQUEST_URL).param(PARAM_APPLICATION_ID, NON_EXISTENT_APPLICATION_ID.toString()))
+        .andExpect(status().isInternalServerError())
+        .andExpect(view().name(ERROR_VIEW_NAME))
+        .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
+
+    then(statesHistoryService).should()
+        .getStateHistoriesByApplicationId(NON_EXISTENT_APPLICATION_ID);
+    verifyZeroInteractions(stateFlowService, stateService, messageKeyResolver);
   }
 
 
@@ -210,6 +247,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     verifyZeroInteractions(stateFlowService, messageKeyResolver);
   }
 
+
   @Test
   @SuppressWarnings("unchecked")
   public void pageLoadShouldRespondModelAndViewWhenParamApplicationIdAndSParamClickedStateAreCorrectAndStateHistoryViewRepresentationListContainsSingleElement()
@@ -220,6 +258,8 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     given(converterService
         .convert(emptyStateHistoryViewDTOList, StateHistoryViewRepresentation.class))
         .willReturn(emptyStateHistoryViewRepresentationList);
+
+    given(candidateService.getCandidateByApplicationID(APPLICATION_ID)).willReturn(candidateDTO);
 
     given(stateService.getStateDtoByName(CLICKED_STATE_NAME_NEW_APPLY))
         .willReturn(stateDTOWithStateNameNewApply);
@@ -270,6 +310,8 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
         .willReturn(stateDTOWithStateNameCoding);
     given(stateFlowService.getStateFlowDTOByFromStateDTO(stateDTOWithStateNameCoding))
         .willReturn(stateFlowDTOListWithSingleElement);
+
+    given(candidateService.getCandidateByApplicationID(APPLICATION_ID)).willReturn(candidateDTO);
 
     given(messageKeyResolver
         .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_APPLY,
