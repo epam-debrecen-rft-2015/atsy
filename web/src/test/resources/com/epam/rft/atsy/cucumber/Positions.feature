@@ -12,13 +12,8 @@ Feature: As the user
   Scenario: user can list existing positions
     Then the list filled with positions appears on the page
 
-  Scenario: user can add new position
-    When the Új pozíció button clicked
-    Then the title field cleared
-
   Scenario Outline: user can save new position
-    When the Új pozíció button clicked
-    And user enters "<title>" into the title
+    When user enters "<title>" into the title
     And the Mentés button clicked
     Then the new position called <title> appears in the list of positions
     Examples:
@@ -26,8 +21,7 @@ Feature: As the user
       | Új pozíció |
 
   Scenario Outline: user can save new position
-    When the Új pozíció button clicked
-    And user enters "<title>" into the title
+    When user enters "<title>" into the title
     And the Mentés button clicked
     Then error message appears <message>
     Examples:
@@ -36,8 +30,7 @@ Feature: As the user
       |            | Név megadása kötelező! |
 
   Scenario: user cancels new position creation
-    Given the Új pozíció button clicked
-    And the list saved
+    Given the list saved
     When the Mégsem button clicked
     Then the list of positions left unchanged
 
