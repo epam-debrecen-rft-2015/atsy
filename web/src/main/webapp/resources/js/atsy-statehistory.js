@@ -53,12 +53,12 @@ function disablePositionAndChannelDropDown() {
 
 $.getJSON('/atsy/secure/positions', { get_param: 'value' }, function(data) {
     $.each(data, function(index, element) {
-        $('#positionSelector').append($('<option value="'+element.name+'">'+element.name+'</option>'));
+        $('#positionSelector').append($('<option value="'+element.name+'"></option>').text(element.name));
     });
 });
 
 $.getJSON('/atsy/secure/channels', { get_param: 'value' }, function(data) {
     $.each(data, function(index, element) {
-        $('#channelSelector').append($('<option value="'+element.name+'">'+element.name+'</option>'));
+        $('#channelSelector').append($('<option value="'+element.name+'"></option>').text(element.name));
     });
 });
