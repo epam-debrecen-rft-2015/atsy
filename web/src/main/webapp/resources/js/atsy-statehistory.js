@@ -11,6 +11,8 @@ function isNewState() {
 }
 
 function editLatestStateOnClick() {
+
+    //TODO: stateDataPostFix
     $('.stateInput').toggleClass("hidden");
     $('.stateData').toggleClass("hidden");
     $('#latestStateEditButton').hide();

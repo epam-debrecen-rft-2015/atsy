@@ -255,15 +255,16 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.offeredMoney"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value="${data.offeredMoney} asd"/></p>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value="${data.offeredMoney} ${thousandHUF}"/></p>
                               <c:if test="${stat.first}">
                                   <spring:message code="statehistory.error.offeredMoney.negative" var="errorOfferedMoneyNegativeMessage"/>
-
                                   <input class="stateInput hidden" type="number" name="offeredMoney" id="offeredMoneyInput"  value="${data.offeredMoney}"
                                   data-error="${errorOfferedMoneyNegativeMessage}"
                                   data-bind="valueWithInit: 'offeredMoney'"
                                   min="0">
+                                  <span class="stateInput hidden" >${thousandHUF}</span>
                               </c:if>
+
                           </div>
                           <div class="help-block with-errors"></div>
                       </div>
