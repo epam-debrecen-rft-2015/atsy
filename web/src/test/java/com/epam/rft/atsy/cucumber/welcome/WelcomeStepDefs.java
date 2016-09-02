@@ -21,6 +21,23 @@ import cucumber.api.java.en.When;
 
 public class WelcomeStepDefs {
   private List<CandidateTableRow> expectedCandidates;
+  private List<CandidateData> expectedPositions;
+
+  @Given("The following application positions exist for candidates:")
+  public void showApplications(List<CandidateData> expectedPositions) {
+    this.expectedPositions = expectedPositions;
+  }
+
+  @Given("^The applications of (.*) are deleted$")
+  public void theApplicationsOfCandidateAreDeleted(String name) {
+    for (CandidateData candidateData : expectedPositions) {
+      if (candidateData.getPosition() == null) {
+        getDriver()
+            .get("http://localhost:8080/atsy/secure/deleteApplications?candidateId=" + candidateData
+                .getId());
+      }
+    }
+  }
 
   @When("the user clicks on the Főoldal button")
   public void homeClicked() {
