@@ -66,11 +66,6 @@ public class PositionsStepDefs {
     assertThat(elementCount, greaterThan(0));
   }
 
-  @When("^the Új pozíció button clicked$")
-  public void the_new_position_button_clicked() throws Throwable {
-    getDriver().findElement(By.linkText("Új pozíció")).click();
-  }
-
   @When("^the Mentés button clicked$")
   public void the_mentes_button_clicked() throws Throwable {
     getDriver().findElement(By.cssSelector("#position-form .btn-success")).click();
