@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
@@ -91,6 +92,8 @@ public class StateHistoryViewTwoWayConverterTest {
   private StatesHistoryEntity statesHistoryEntity = StatesHistoryEntity.builder()
       .id(STATE_HISTORY_ID)
       .applicationEntity(applicationEntity)
+      .channelEntity(channelEntity)
+      .positionEntity(positionEntity)
       .creationDate(APPLICATION_CREATION_DATE)
       .description(STATE_HISTORY_DESCRIPTION)
       .result(STATE_HISTORY_RESULT)
@@ -170,13 +173,17 @@ public class StateHistoryViewTwoWayConverterTest {
     given(converterService.convert(statesEntity, StateDTO.class)).willReturn(stateDTO);
 
     //When
-    StateHistoryViewDTO
-        result =
+    StateHistoryViewDTO result =
         stateHistoryViewTwoWayConverter.firstTypeToSecondType(statesHistoryEntity);
 
     //Then
     assertThat(result, notNullValue());
     assertThat(result, is(stateHistoryViewDTO));
+
+    then(converterService).should().convert(applicationEntity, ApplicationDTO.class);
+    then(converterService).should().convert(channelEntity, ChannelDTO.class);
+    then(converterService).should().convert(positionEntity, PositionDTO.class);
+    then(converterService).should().convert(statesEntity, StateDTO.class);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -194,16 +201,21 @@ public class StateHistoryViewTwoWayConverterTest {
     //Given
     given(converterService.convert(applicationDTO, ApplicationEntity.class))
         .willReturn(applicationEntity);
+    given(converterService.convert(channelDTO, ChannelEntity.class)).willReturn(channelEntity);
+    given(converterService.convert(positionDTO, PositionEntity.class)).willReturn(positionEntity);
     given(converterService.convert(stateDTO, StatesEntity.class)).willReturn(statesEntity);
 
     //When
-    StatesHistoryEntity
-        result =
+    StatesHistoryEntity result =
         stateHistoryViewTwoWayConverter.secondTypeToFirstType(stateHistoryViewDTO);
 
     //Then
     assertThat(result, notNullValue());
     assertThat(result, is(statesHistoryEntity));
-  }
 
+    then(converterService).should().convert(applicationDTO, ApplicationEntity.class);
+    then(converterService).should().convert(channelDTO, ChannelEntity.class);
+    then(converterService).should().convert(positionDTO, PositionEntity.class);
+    then(converterService).should().convert(stateDTO, StatesEntity.class);
+  }
 }
