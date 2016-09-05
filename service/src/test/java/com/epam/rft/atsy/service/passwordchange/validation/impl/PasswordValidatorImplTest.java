@@ -1,10 +1,13 @@
 package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verifyZeroInteractions;
+
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordValidationException;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidationRule;
-import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,12 +16,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import static org.junit.Assert.assertTrue;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PasswordValidatorImplTest {

@@ -217,3 +217,7 @@ form > .button-panel > .btn {
 .resizeable {
   resize: both;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}

@@ -2,7 +2,6 @@ package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordAllFieldFilledValidationException;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
