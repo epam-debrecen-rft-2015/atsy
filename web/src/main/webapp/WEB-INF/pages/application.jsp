@@ -10,8 +10,8 @@
 
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
-        <script src="<c:url value="/resources/js/atsy-application.js" />"></script>
-        <script type="text/javascript" src="<c:url value="/resources/js/atsy-new-application-popup.js" />"></script>
+       <c:url value="/resources/js/atsy-application.js" var="urlValue" /> <script src="${urlValue}"></script>
+       <c:url value="/resources/js/atsy-new-application-popup.js" var="urlValue" /> <script type="text/javascript" src="${urlValue}"></script>
     </jsp:attribute>
     <jsp:body>
         <div id="application_page">

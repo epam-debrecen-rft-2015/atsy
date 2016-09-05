@@ -26,13 +26,13 @@ public abstract class AbstractStateHistoryDTO implements Serializable {
   private PositionDTO position;
   private ChannelDTO channel;
   private ApplicationDTO applicationDTO;
-  private Short languageSkill;
   private String description;
   private Short result;
   private Long offeredMoney;
   private Long claim;
   private Date feedbackDate;
   private Date dayOfStart;
+  private Date dateOfEnter;
   private StateDTO stateDTO;
   private Boolean recommendation;
   private String reviewerName;

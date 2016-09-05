@@ -25,8 +25,7 @@ public class ApplicationsServiceImpl implements ApplicationsService {
 
   @Autowired
   private ConverterService converterService;
-
-
+  
   @Transactional
   @Override
   public Long saveOrUpdate(ApplicationDTO applicationDTO) {

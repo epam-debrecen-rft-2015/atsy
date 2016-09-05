@@ -7,7 +7,7 @@
 <spring:url value="/secure/positions" var="positions"/>
 <atsy:secure_page>
  <jsp:attribute name="pageJs">
-     <script src="<c:url value="/resources/js/atsy-settings.js" />"></script>
+     <c:url value="/resources/js/atsy-settings.js" var="urlValue"/><script src="${urlValue}"></script>
      <script type="text/javascript">
          window.messages['settings.positions.error.empty'] = '<spring:message code="settings.positions.error.empty"/>';
      </script>
@@ -37,10 +37,6 @@
                                 </tr>
                                 </thead>
                             </table>
-                            <div class="button-panel clearfix add">
-                                <a href="javasript:void(0)" class="btn btn-primary btn-add"><spring:message
-                                        code="settings.positions.new"/></a>
-                            </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <fieldset>

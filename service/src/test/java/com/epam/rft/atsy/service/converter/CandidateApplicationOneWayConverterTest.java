@@ -84,7 +84,6 @@ public class CandidateApplicationOneWayConverterTest {
       .id(STATE_HISTORY_ID)
       .applicationEntity(applicationEntity)
       .creationDate(APPLICATION_CREATION_DATE)
-      .languageSkill(CANDIDATE_LANGUAGE_SKILL)
       .description(CANDIDATE_DESCRIPTION)
       .statesEntity(statesEntity)
       .build();

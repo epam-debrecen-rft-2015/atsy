@@ -42,11 +42,6 @@ public abstract class AbstractStateBuilder<B extends AbstractStateBuilder<B, T>,
     return (B) this;
   }
 
-  public B languageSkill(Short languageSkill) {
-    object.setLanguageSkill(languageSkill);
-    return (B) this;
-  }
-
   public B description(String description) {
     object.setDescription(description);
     return (B) this;
@@ -74,6 +69,11 @@ public abstract class AbstractStateBuilder<B extends AbstractStateBuilder<B, T>,
 
   public B dayOfStart(Date dayOfStart) {
     object.setDayOfStart(dayOfStart);
+    return (B) this;
+  }
+
+  public B dateOfEnter(Date dateOfEnter) {
+    object.setDateOfEnter(dateOfEnter);
     return (B) this;
   }
 

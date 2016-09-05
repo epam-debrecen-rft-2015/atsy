@@ -12,13 +12,8 @@ Feature: As the user
   Scenario: user can list existing channels
     Then the list filled with channels appears on the page
 
-  Scenario: user can add new channel
-    When the Új csatorna button clicked
-    Then the title field cleared
-
   Scenario Outline: user can save new channel
-    When the Új csatorna button clicked
-    And user enters "<title>" into the title
+    When user enters "<title>" into the title
     And the Mentés button clicked
     Then the new channel called <title> appears in the list of channels
     Examples:
@@ -26,8 +21,7 @@ Feature: As the user
       | Új csatorna |
 
   Scenario Outline: user cannot save new channel if channel name exists
-    When the Új csatorna button clicked
-    And user enters "<title>" into the title
+    When user enters "<title>" into the title
     And the Mentés button clicked
     Then error message appears <message>
     Examples:
@@ -36,8 +30,7 @@ Feature: As the user
       |             | Név megadása kötelező! |
 
   Scenario: user cancels new channel creation
-    Given the Új csatorna button clicked
-    And the list saved
+    Given the list saved
     When the Mégsem button clicked
     Then the list of channels left unchanged
 
