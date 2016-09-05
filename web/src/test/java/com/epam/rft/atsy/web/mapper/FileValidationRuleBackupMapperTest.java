@@ -9,13 +9,13 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class FileValidationRuleMapperTest {
+public class FileValidationRuleBackupMapperTest {
 
   private static final Exception EXCEPTION = new Exception();
   private static final Exception FILE_IS_IN_WRONG_EXTENSION_VALIDATION_EXCEPTION =
       new FileIsInWrongExtensionValidationException();
-  private static final FileValidationRule FILE_IS_IN_WRONG_EXTENSION_RULE =
-      FileValidationRule.FILE_IS_IN_WRONG_EXTENSION_RULE;
+  private static final FileValidationRule_Backup FILE_IS_IN_WRONG_EXTENSION_RULE =
+      FileValidationRule_Backup.FILE_IS_IN_WRONG_EXTENSION_RULE;
   private static final String FILE_IS_IN_WRONG_EXTENSION_VALIDATION_MESSAGE_KEY = "file.is.in.wrong.extension";
 
   private FileValidationRuleMapper fileValidationRuleMapper;
@@ -39,10 +39,10 @@ public class FileValidationRuleMapperTest {
 
   @Test
   public void mapByExceptionWhenExceptionIsValid() throws IllegalArgumentException {
-    FileValidationRule fileValidationRule =
+    FileValidationRule_Backup fileValidationRuleBackup =
         fileValidationRuleMapper.mapByException(FILE_IS_IN_WRONG_EXTENSION_VALIDATION_EXCEPTION);
 
-    assertThat(fileValidationRule, equalTo(FILE_IS_IN_WRONG_EXTENSION_RULE));
+    assertThat(fileValidationRuleBackup, equalTo(FILE_IS_IN_WRONG_EXTENSION_RULE));
   }
 
   @Test(expected = IllegalArgumentException.class)

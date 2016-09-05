@@ -9,11 +9,12 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class PasswordValidationRuleMapperTest {
+public class PasswordValidationRuleBackupMapperTest {
 
   private static final Exception EXCEPTION = new Exception();
   private static final Exception PASSWORD_LENGTH_VALIDATION_EXCEPTION = new PasswordLengthValidationException();
-  private static final PasswordValidationRule PASSWORD_LENGTH_VALIDATION_RULE = PasswordValidationRule.LENGTH_RULE;
+  private static final PasswordValidationRule_Backup
+      PASSWORD_LENGTH_VALIDATION_RULE = PasswordValidationRule_Backup.LENGTH_RULE;
   private static final String PASSWORD_LENGTH_VALIDATION_MESSAGE_KEY = "passwordchange.validation.length";
 
   private PasswordValidationRuleMapper passwordValidationRuleExceptionEnumMapper;
@@ -37,10 +38,10 @@ public class PasswordValidationRuleMapperTest {
 
   @Test
   public void mapByExceptionWhenExceptionIsValid() throws IllegalArgumentException {
-    PasswordValidationRule passwordValidationRule =
+    PasswordValidationRule_Backup passwordValidationRuleBackup =
         passwordValidationRuleExceptionEnumMapper.mapByException(PASSWORD_LENGTH_VALIDATION_EXCEPTION);
 
-    assertThat(passwordValidationRule, equalTo(PASSWORD_LENGTH_VALIDATION_RULE));
+    assertThat(passwordValidationRuleBackup, equalTo(PASSWORD_LENGTH_VALIDATION_RULE));
   }
 
   @Test(expected = IllegalArgumentException.class)

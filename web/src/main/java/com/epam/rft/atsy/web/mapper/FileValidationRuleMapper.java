@@ -5,14 +5,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 @Component
-public class FileValidationRuleMapper implements ExceptionEnumMapper<FileValidationRule> {
+public class FileValidationRuleMapper implements ExceptionEnumMapper<FileValidationRule_Backup> {
 
   @Override
-  public FileValidationRule mapByException(Exception e) throws IllegalArgumentException {
+  public FileValidationRule_Backup mapByException(Exception e) throws IllegalArgumentException {
     Assert.notNull(e);
     Class exceptionClass = e.getClass();
 
-    for (FileValidationRule fileUploadValidationRule : FileValidationRule.values()) {
+    for (FileValidationRule_Backup fileUploadValidationRule : FileValidationRule_Backup.values()) {
       if (fileUploadValidationRule.getExceptionClass().equals(exceptionClass)) {
         return fileUploadValidationRule;
       }

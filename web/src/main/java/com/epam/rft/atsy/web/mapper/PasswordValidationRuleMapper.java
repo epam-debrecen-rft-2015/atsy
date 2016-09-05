@@ -5,16 +5,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 @Component
-public class PasswordValidationRuleMapper implements ExceptionEnumMapper<PasswordValidationRule> {
+public class PasswordValidationRuleMapper implements ExceptionEnumMapper<PasswordValidationRule_Backup> {
 
   @Override
-  public PasswordValidationRule mapByException(Exception e) throws IllegalArgumentException {
+  public PasswordValidationRule_Backup mapByException(Exception e) throws IllegalArgumentException {
     Assert.notNull(e);
 
     Class exceptionClass = e.getClass();
-    for (PasswordValidationRule passwordValidationRule : PasswordValidationRule.values()) {
-      if (passwordValidationRule.getExceptionClass().equals(exceptionClass)) {
-        return passwordValidationRule;
+    for (PasswordValidationRule_Backup passwordValidationRuleBackup : PasswordValidationRule_Backup.values()) {
+      if (passwordValidationRuleBackup.getExceptionClass().equals(exceptionClass)) {
+        return passwordValidationRuleBackup;
       }
     }
     throw new IllegalArgumentException();
