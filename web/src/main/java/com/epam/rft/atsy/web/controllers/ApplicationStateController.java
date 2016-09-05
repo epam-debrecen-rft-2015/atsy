@@ -1,10 +1,14 @@
 package com.epam.rft.atsy.web.controllers;
 
+import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.CandidateService;
+import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.ConverterService;
+import com.epam.rft.atsy.service.PositionService;
 import com.epam.rft.atsy.service.StateFlowService;
 import com.epam.rft.atsy.service.StateService;
 import com.epam.rft.atsy.service.StatesHistoryService;
+import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
@@ -56,6 +60,15 @@ public class ApplicationStateController {
   @Autowired
   private ConverterService converterService;
 
+  @Autowired
+  private ApplicationsService applicationsService;
+
+  @Autowired
+  private ChannelService channelService;
+
+  @Autowired
+  private PositionService positionService;
+
 
   /**
    * Creates the application state page and fills it with all the state information of the given
@@ -77,16 +90,25 @@ public class ApplicationStateController {
             .convert(statesHistoryService.getStateHistoriesByApplicationId(applicationId),
                 StateHistoryViewRepresentation.class);
 
+
     if (clickedState != null) {
+      ApplicationDTO applicationDTO = applicationsService.getApplicationDtoById(applicationId);
       StateDTO clickedStateDTO = stateService.getStateDtoByName(clickedState);
 
       Assert.notNull(clickedStateDTO);
 
-      stateHistoryViewRepresentations.add(0, StateHistoryViewRepresentation.builder()
+      StateHistoryViewRepresentation representation = StateHistoryViewRepresentation.builder()
           .creationDate(new Date())
           .stateId(clickedStateDTO.getId())
           .stateName(clickedStateDTO.getName())
-          .build());
+          .build();
+
+      if (clickedStateDTO.getId() == 1) {
+        representation.setChannelName(channelService.getChannelDtoById(applicationDTO.getChannelId()).getName());
+        representation.setPositionName(positionService.getPositionDtoById(applicationDTO.getPositionId()).getName());
+      }
+
+      stateHistoryViewRepresentations.add(0, representation);
     }
 
     CandidateDTO candidateDTO = candidateService.getCandidateByApplicationID(applicationId);

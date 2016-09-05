@@ -82,6 +82,8 @@ public class StateHistoryController {
         stateHistoryDTO = StateHistoryDTO.builder()
             .id(stateHistoryViewRepresentation.getId())
             .applicationDTO(applicationsService.getApplicationDtoById(applicationId))
+            .channel(channelService.getChannelDtoByName(stateHistoryViewRepresentation.getChannelName()))
+            .position(positionService.getPositionDtoByName(stateHistoryViewRepresentation.getPositionName()))
             .candidateId(stateHistoryViewRepresentation.getCandidateId())
             .description(stateHistoryViewRepresentation.getDescription())
             .result(stateHistoryViewRepresentation.getResult())
