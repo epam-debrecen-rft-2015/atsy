@@ -22,7 +22,7 @@ import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateFlowDTO;
-import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import org.apache.commons.lang3.StringUtils;
@@ -89,15 +89,15 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
       StateHistoryViewRepresentation.builder().stateId(2L).stateName(CLICKED_STATE_NAME_CV).build();
 
 
-  private List<StateHistoryViewDTO> emptyStateHistoryViewDTOList = Collections.emptyList();
+  private List<StateHistoryDTO> emptyStateHistoryDTOList = Collections.emptyList();
   private List<StateHistoryViewRepresentation>
       emptyStateHistoryViewRepresentationList =
       new LinkedList<>();
   private List<StateFlowDTO>
       stateFlowDTOListWithSingleElement =
       Collections.singletonList(new StateFlowDTO());
-  private List<StateHistoryViewDTO> stateHistoryViewDTOListWithTwoElements =
-      Collections.nCopies(2, new StateHistoryViewDTO());
+  private List<StateHistoryDTO> stateHistoryDTOListWithTwoElements =
+      Collections.nCopies(2, new StateHistoryDTO());
 
 
   private StateHistoryViewRepresentation expectedFirstStateHistoryViewRepresentation =
@@ -201,10 +201,10 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   public void loadPageShouldRespondInternalServerErrorWhenParamClickedStateIsAnEmptyString()
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(1L))
-        .willReturn(emptyStateHistoryViewDTOList);
+        .willReturn(emptyStateHistoryDTOList);
 
     given(converterService
-        .convert(emptyStateHistoryViewDTOList, StateHistoryViewRepresentation.class))
+        .convert(emptyStateHistoryDTOList, StateHistoryViewRepresentation.class))
         .willReturn(emptyStateHistoryViewRepresentationList);
 
     given(stateService.getStateDtoByName(StringUtils.EMPTY)).willReturn(null);
@@ -226,10 +226,10 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   public void pageLoadShouldRespondInternalServerErrorWhenParamClickedStateIsAWrongText()
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(1L))
-        .willReturn(emptyStateHistoryViewDTOList);
+        .willReturn(emptyStateHistoryDTOList);
 
     given(converterService
-        .convert(emptyStateHistoryViewDTOList, StateHistoryViewRepresentation.class))
+        .convert(emptyStateHistoryDTOList, StateHistoryViewRepresentation.class))
         .willReturn(emptyStateHistoryViewRepresentationList);
 
     given(stateService.getStateDtoByName(TEXT)).willReturn(null);
@@ -253,10 +253,10 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   public void pageLoadShouldRespondModelAndViewWhenParamApplicationIdAndSParamClickedStateAreCorrectAndStateHistoryViewRepresentationListContainsSingleElement()
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(1L))
-        .willReturn(emptyStateHistoryViewDTOList);
+        .willReturn(emptyStateHistoryDTOList);
 
     given(converterService
-        .convert(emptyStateHistoryViewDTOList, StateHistoryViewRepresentation.class))
+        .convert(emptyStateHistoryDTOList, StateHistoryViewRepresentation.class))
         .willReturn(emptyStateHistoryViewRepresentationList);
 
     given(candidateService.getCandidateByApplicationID(APPLICATION_ID)).willReturn(candidateDTO);
@@ -302,9 +302,9 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   public void pageLoadShouldRespondModelAndViewWhenParamApplicationIdAndParamClickedStateAreCorrectAndStateHistoryViewRepresentationListContainsThreeElements()
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(1L))
-        .willReturn(stateHistoryViewDTOListWithTwoElements);
+        .willReturn(stateHistoryDTOListWithTwoElements);
     given(converterService
-        .convert(stateHistoryViewDTOListWithTwoElements, StateHistoryViewRepresentation.class))
+        .convert(stateHistoryDTOListWithTwoElements, StateHistoryViewRepresentation.class))
         .willReturn(actualStateHistoryViewRepresentationListWithTwoElements);
     given(stateService.getStateDtoByName(CLICKED_STATE_NAME_CODING))
         .willReturn(stateDTOWithStateNameCoding);
@@ -343,7 +343,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
 
     then(statesHistoryService).should().getStateHistoriesByApplicationId(1L);
     then(converterService).should()
-        .convert(stateHistoryViewDTOListWithTwoElements, StateHistoryViewRepresentation.class);
+        .convert(stateHistoryDTOListWithTwoElements, StateHistoryViewRepresentation.class);
     then(stateService).should().getStateDtoByName(CLICKED_STATE_NAME_CODING);
     then(stateFlowService).should().getStateFlowDTOByFromStateDTO(stateDTOWithStateNameCoding);
 
