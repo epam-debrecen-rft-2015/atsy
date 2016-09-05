@@ -4,6 +4,8 @@ import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.PositionService;
 import com.epam.rft.atsy.service.StatesHistoryService;
+import com.epam.rft.atsy.service.domain.ChannelDTO;
+import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.web.FieldErrorResponseComposer;
@@ -82,8 +84,6 @@ public class StateHistoryController {
         stateHistoryDTO = StateHistoryDTO.builder()
             .id(stateHistoryViewRepresentation.getId())
             .applicationDTO(applicationsService.getApplicationDtoById(applicationId))
-            .channel(channelService.getChannelDtoByName(stateHistoryViewRepresentation.getChannelName()))
-            .position(positionService.getPositionDtoByName(stateHistoryViewRepresentation.getPositionName()))
             .candidateId(stateHistoryViewRepresentation.getCandidateId())
             .description(stateHistoryViewRepresentation.getDescription())
             .result(stateHistoryViewRepresentation.getResult())
@@ -107,8 +107,14 @@ public class StateHistoryController {
       }
 
       if (stateId != null && stateId == 1) {
-        stateHistoryDTO.getApplicationDTO().setChannelId(channelService.getChannelDtoByName(stateHistoryViewRepresentation.getChannelName()).getId());
-        stateHistoryDTO.getApplicationDTO().setPositionId(positionService.getPositionDtoByName(stateHistoryViewRepresentation.getPositionName()).getId());
+        ChannelDTO channelDTO = channelService.getChannelDtoByName(stateHistoryViewRepresentation.getChannelName());
+        PositionDTO positionDTO = positionService.getPositionDtoByName(stateHistoryViewRepresentation.getPositionName());
+
+        stateHistoryDTO.getApplicationDTO().setChannelId(channelDTO.getId());
+        stateHistoryDTO.getApplicationDTO().setPositionId(positionDTO.getId());
+
+        stateHistoryDTO.setChannel(channelDTO);
+        stateHistoryDTO.setPosition(positionDTO);
       }
 
       statesHistoryService.saveStateHistory(stateHistoryDTO);
