@@ -12,9 +12,9 @@ function isNewState() {
 
 function editLatestStateOnClick() {
 
-    //TODO: stateDataPostFix
     $('.stateInput').toggleClass("hidden");
     $('.stateData').toggleClass("hidden");
+    $('.stateDataPostfix').toggleClass("hidden");
     $('#latestStateEditButton').hide();
     $('div.button-panel > form.form-inline div.btn-group > a').addClass("disabled");
 }
@@ -30,6 +30,7 @@ function cancelButtonOnClick() {
 
     $('.stateInput').toggleClass("hidden");
     $('.stateData').toggleClass("hidden");
+    $('.stateDataPostfix').toggleClass("hidden");
     $('#latestStateEditButton').show();
     $('div.button-panel > form.form-inline div.btn-group > a').removeClass("disabled");
     $('#create-state-form').validator('destroy');

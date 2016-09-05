@@ -258,11 +258,11 @@
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value="${data.offeredMoney} ${thousandHUF}"/></p>
                               <c:if test="${stat.first}">
                                   <spring:message code="statehistory.error.offeredMoney.negative" var="errorOfferedMoneyNegativeMessage"/>
-                                  <input class="stateInput hidden" type="number" name="offeredMoney" id="offeredMoneyInput"  value="${data.offeredMoney}"
+                                  <input required class="stateInput hidden" type="number" name="offeredMoney" id="offeredMoneyInput"  value="${data.offeredMoney}"
                                   data-error="${errorOfferedMoneyNegativeMessage}"
                                   data-bind="valueWithInit: 'offeredMoney'"
                                   min="0">
-                                  <span class="stateInput hidden" >${thousandHUF}</span>
+                                  <span class="stateDataPostfix hidden" ><c:out value="${thousandHUF}"/></span>
                               </c:if>
 
                           </div>
@@ -271,14 +271,15 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.claim"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.claim}</p>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value="${data.claim} ${thousandHUF}"/></p>
                               <c:if test="${stat.first}">
                                   <spring:message code="statehistory.error.claim.negative" var="errorClaimNegativeMessage"/>
 
-                                  <input class="stateInput hidden" type="number" name="claim" id="claimInput" value="${data.claim}"
+                                  <input required class="stateInput hidden" type="number" name="claim" id="claimInput" value="${data.claim}"
                                   data-error="${errorClaimNegativeMessage}"
                                   data-bind="valueWithInit: 'claim'"
                                   min="0">
+                                  <span class="stateDataPostfix hidden" ><c:out value="${thousandHUF}"/></span>
                               </c:if>
                           </div>
                           <div class="help-block with-errors"></div>

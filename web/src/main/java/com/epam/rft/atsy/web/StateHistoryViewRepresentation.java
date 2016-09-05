@@ -36,6 +36,7 @@ public class StateHistoryViewRepresentation {
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
   private Date creationDate;
 
+  //TODO: Refactor
   @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$", message = "statehistory.error.parse.date")
   private String feedbackDate;
 
