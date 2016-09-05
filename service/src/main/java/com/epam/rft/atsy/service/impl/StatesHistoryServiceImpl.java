@@ -13,7 +13,6 @@ import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
-import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,7 +102,7 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<StateHistoryViewDTO> getStateHistoriesByApplicationId(Long applicationId) {
+  public List<StateHistoryDTO> getStateHistoriesByApplicationId(Long applicationId) {
     Assert.notNull(applicationId);
     ApplicationEntity applicationEntity = applicationsRepository.findOne(applicationId);
 
@@ -111,6 +110,6 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
     List<StatesHistoryEntity> statesHistoryEntities =
         statesHistoryRepository.findByApplicationEntityOrderByCreationDateDesc(applicationEntity);
 
-    return converterService.convert(statesHistoryEntities, StateHistoryViewDTO.class);
+    return converterService.convert(statesHistoryEntities, StateHistoryDTO.class);
   }
 }

@@ -14,7 +14,6 @@ import com.epam.rft.atsy.service.converter.impl.CandidateApplicationOneWayConver
 import com.epam.rft.atsy.service.converter.impl.CandidateOneWayConverter;
 import com.epam.rft.atsy.service.converter.impl.StateFlowTwoWayConverter;
 import com.epam.rft.atsy.service.converter.impl.StateHistoryTwoWayConverter;
-import com.epam.rft.atsy.service.converter.impl.StateHistoryViewTwoWayConverter;
 import com.epam.rft.atsy.service.impl.ModelMapperConverterServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -52,7 +51,6 @@ public class ConverterConfiguration {
   public void converterAdapters() {
     List<BaseConverter> customConverters = Arrays.asList(
         new StateHistoryTwoWayConverter(converterService),
-        new StateHistoryViewTwoWayConverter(converterService),
         new StateFlowTwoWayConverter(converterService),
         new ApplicationTwoWayConverter(candidateRepository, positionRepository, channelRepository),
         new CandidateApplicationOneWayConverter(statesHistoryRepository),
