@@ -1,13 +1,12 @@
 package com.epam.rft.atsy.web.mapper;
 
 
-import com.epam.rft.atsy.service.exception.passwordchange.PasswordLengthValidationException;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import com.epam.rft.atsy.service.exception.passwordchange.PasswordLengthValidationException;
+import org.junit.Before;
+import org.junit.Test;
 
 public class PasswordValidationRuleMapperTest {
 

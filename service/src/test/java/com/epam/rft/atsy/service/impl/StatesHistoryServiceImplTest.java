@@ -7,6 +7,8 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
@@ -18,6 +20,7 @@ import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.persistence.repositories.StatesHistoryRepository;
 import com.epam.rft.atsy.persistence.repositories.StatesRepository;
 import com.epam.rft.atsy.service.ConverterService;
+import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
@@ -202,7 +205,6 @@ public class StatesHistoryServiceImplTest {
   @InjectMocks
   private StatesHistoryServiceImpl statesHistoryService;
 
-
   @Test(expected = IllegalArgumentException.class)
   public void getStatesByApplicationIdShouldThrowIllegalArgumentExceptionWhenApplicationIdIsNull() {
     // Given
@@ -299,6 +301,37 @@ public class StatesHistoryServiceImplTest {
     then(applicationsRepository).should().findOne(FIRST_ID);
     then(statesHistoryRepository).should()
         .findByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void deleteStateHistoriesByApplicationShouldThrowIllegalArgumentExceptionWhenTheGivenApplicationIsNull() {
+    // When
+    statesHistoryService.deleteStateHistoriesByApplication(null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void deleteStateHistoriesByApplicationShouldThrowIllegalArgumentExceptionWhenTheGivenApplicationsIdIsNull() {
+    // When
+    ApplicationDTO applicationDTO = ApplicationDTO.builder().id(null).build();
+
+    statesHistoryService.deleteStateHistoriesByApplication(applicationDTO);
+  }
+
+  @Test
+  public void deleteStateHistoriesByApplicationShouldDeleteTheCorrespondingStateHistories() {
+    // Given
+    ApplicationDTO applicationDTO = ApplicationDTO.builder().id(FIRST_ID).build();
+    given(applicationsRepository.findOne(applicationDTO.getId()))
+        .willReturn(firstApplicationEntity);
+    given(statesHistoryRepository
+        .findByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity))
+        .willReturn(statesHistoryEntityListWithSingleElement);
+
+    // When
+    statesHistoryService.deleteStateHistoriesByApplication(applicationDTO);
+
+    // Then
+    verify(statesHistoryRepository, atLeastOnce()).delete(statesHistoryEntityListWithSingleElement);
   }
 
   @Test(expected = IllegalArgumentException.class)

@@ -1,5 +1,6 @@
 package com.epam.rft.atsy.service.domain;
 
+import java.util.Set;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -46,6 +47,6 @@ public class CandidateDTO {
 
   private String description;
 
+  private Set<String> positions;
   private String cvFilename;
-
 }

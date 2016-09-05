@@ -1,11 +1,12 @@
 package com.epam.rft.atsy.service.passwordchange.validation.impl;
 
+import static org.mockito.BDDMockito.given;
+
 import com.epam.rft.atsy.service.AuthenticationService;
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.exception.UserNotLoggedInException;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordOldMatchValidationException;
 import com.epam.rft.atsy.service.security.UserDetailsAdapter;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,8 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PasswordOldPasswordMatchesRuleTest {

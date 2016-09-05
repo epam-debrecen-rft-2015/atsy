@@ -1,5 +1,6 @@
 package com.epam.rft.atsy.service;
 
+import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
@@ -17,7 +18,10 @@ public interface StatesHistoryService {
    * @param id the candidate's id
    * @return the collection of applications
    */
-  Collection<CandidateApplicationDTO> getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(Long id);
+  Collection<CandidateApplicationDTO> getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(
+      Long id);
+
+  void deleteStateHistoriesByApplication(ApplicationDTO applicationDTO);
 
   /**
    * Saves a state of the given application and returns it's id.
