@@ -334,7 +334,7 @@
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value="${data.offeredMoney} ${thousandHUF}"/></p>
                               <c:if test="${stat.first}">
                                   <spring:message code="statehistory.error.offeredMoney.negative" var="errorOfferedMoneyNegativeMessage"/>
-                                  <input required class="stateInput hidden" type="number" name="offeredMoney" id="offeredMoneyInput"  value="${fn:escapeXml(data.offeredMoney)}"
+                                  <input required class="stateInput hidden" type="number" name="offeredMoney" id="offeredMoneyInput"  value="${data.offeredMoney}"
                                   data-error="${errorOfferedMoneyNegativeMessage}"
                                   data-bind="valueWithInit: 'offeredMoney'"
                                   min="0">
@@ -350,7 +350,7 @@
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value="${data.claim} ${thousandHUF}"/></p>
                               <c:if test="${stat.first}">
                                   <spring:message code="statehistory.error.claim.negative" var="errorClaimNegativeMessage"/>
-                                  <input required class="stateInput hidden" type="number" name="claim" id="claimInput" value="${fn:escapeXml(data.claim)}"
+                                  <input required class="stateInput hidden" type="number" name="claim" id="claimInput" value="${data.claim}"
                                   data-error="${errorClaimNegativeMessage}"
                                   data-bind="valueWithInit: 'claim'"
                                   min="0">
@@ -365,8 +365,13 @@
                               <fmt:formatDate value="${data.feedbackDate}" type="date" pattern="yyyy-MM-dd" var="formattedFeedbackDate"/>
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedFeedbackDate}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput hidden" type="date" name="feedbackDate" id="feedbackDateInput" value="${fn:escapeXml(formattedFeedbackDate)}"
-                                  data-bind="valueWithInit: 'feedbackDate'">
+                                  <div class='input-group date' id='feedbackDateInput'>
+                                      <input type='text' class="form-control stateInput hidden" name="feedbackDate"
+                                          id="feedbackDateInput" value="${formattedFeedbackDate}" data-bind="valueWithInit: 'feedbackDate'"/>
+                                          <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                          </span>
+                                  </div>
                               </c:if>
                           </div>
                           <div class="help-block with-errors"></div>
