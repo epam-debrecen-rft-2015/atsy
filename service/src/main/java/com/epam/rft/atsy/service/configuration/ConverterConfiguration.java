@@ -5,13 +5,12 @@ import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
 import com.epam.rft.atsy.persistence.repositories.StatesHistoryRepository;
 import com.epam.rft.atsy.service.ConverterService;
-import com.epam.rft.atsy.service.converter.impl.ApplicationTwoWayConverter;
 import com.epam.rft.atsy.service.converter.BaseConverter;
-import com.epam.rft.atsy.service.converter.impl.CandidateApplicationOneWayConverter;
 import com.epam.rft.atsy.service.converter.ConverterAdapter;
+import com.epam.rft.atsy.service.converter.impl.ApplicationTwoWayConverter;
+import com.epam.rft.atsy.service.converter.impl.CandidateApplicationOneWayConverter;
 import com.epam.rft.atsy.service.converter.impl.StateFlowTwoWayConverter;
 import com.epam.rft.atsy.service.converter.impl.StateHistoryTwoWayConverter;
-import com.epam.rft.atsy.service.converter.impl.StateHistoryViewTwoWayConverter;
 import com.epam.rft.atsy.service.impl.ModelMapperConverterServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +49,6 @@ public class ConverterConfiguration {
   private List<ConverterAdapter> converterAdapters(ConverterService converterService) {
     List<BaseConverter> customConverters = Arrays.asList(
         new StateHistoryTwoWayConverter(converterService),
-        new StateHistoryViewTwoWayConverter(converterService),
         new StateFlowTwoWayConverter(converterService),
         new ApplicationTwoWayConverter(candidateRepository, positionRepository, channelRepository),
         new CandidateApplicationOneWayConverter(statesHistoryRepository)
