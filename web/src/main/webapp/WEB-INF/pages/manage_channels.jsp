@@ -36,10 +36,6 @@
                                 </tr>
                                 </thead>
                             </table>
-                            <div class="button-panel clearfix add">
-                                <a href="javasript:void(0)" class="btn btn-primary btn-add"><spring:message
-                                        code="settings.channels.new"/></a>
-                            </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <fieldset>

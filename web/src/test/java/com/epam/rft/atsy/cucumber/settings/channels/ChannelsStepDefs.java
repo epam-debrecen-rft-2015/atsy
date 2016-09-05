@@ -68,11 +68,6 @@ public class ChannelsStepDefs {
     assertThat(elementCount, greaterThan(0));
   }
 
-  @When("^the Új csatorna button clicked$")
-  public void the_new_channel_button_clicked() throws Throwable {
-    getDriver().findElement(By.linkText("Új csatorna")).click();
-  }
-
   @When("^the Mentés button clicked$")
   public void the_mentes_button_clicked() throws Throwable {
     getDriver().findElement(By.cssSelector("#channel-form .btn-success")).click();
