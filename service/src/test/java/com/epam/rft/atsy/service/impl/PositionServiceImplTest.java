@@ -40,6 +40,7 @@ import java.util.List;
 public class PositionServiceImplTest {
 
   private static final Long DEVELOPER_ID = 1L;
+  private static final Long POSITION_ID_NON_EXISTENT = -1L;
   private static final String DEVELOPER_NAME = "Developer";
   private static final String POSITION_NAME_NON_EXISTENT = "Table tennis instructor";
   private static final List<PositionEntity> EMPTY_POSITION_ENTITY_LIST = Collections.emptyList();
@@ -71,6 +72,48 @@ public class PositionServiceImplTest {
     expectedPositionEntityList = Arrays.asList(developerEntity, developerEntity, developerEntity);
 
     expectedPositionDtoList = Arrays.asList(developerDto, developerDto, developerDto);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getPositionDtoByIdShouldThrowIllegalArgumentExceptionWhenPositionIdIsNull() {
+    // Given
+
+    // When
+    positionService.getPositionDtoById(null);
+
+    // Then
+  }
+
+  @Test
+  public void getPositionDtoByIdShouldReturnNullPositionDtoWhenPositionIdIsNonExistent() {
+    // Given
+    given(positionRepository.findOne(POSITION_ID_NON_EXISTENT)).willReturn(null);
+
+    // When
+    PositionDTO positionDTO = positionService.getPositionDtoById(POSITION_ID_NON_EXISTENT);
+
+    // Then
+    assertThat(positionDTO, nullValue());
+
+    then(positionRepository).should().findOne(POSITION_ID_NON_EXISTENT);
+    verifyZeroInteractions(converterService);
+  }
+
+  @Test
+  public void getPositionDtoByIdShouldReturnExistingPositionDtoWhenPositionIdIsExisting() {
+    // Given
+    given(positionRepository.findOne(DEVELOPER_ID)).willReturn(developerEntity);
+    given(converterService.convert(developerEntity, PositionDTO.class)).willReturn(developerDto);
+
+    // When
+    PositionDTO positionDTO = positionService.getPositionDtoById(DEVELOPER_ID);
+
+    // Then
+    assertThat(positionDTO, notNullValue());
+    assertThat(positionDTO, equalTo(developerDto));
+
+    then(positionRepository).should().findOne(DEVELOPER_ID);
+    then(converterService).should().convert(developerEntity, PositionDTO.class);
   }
 
   @Test

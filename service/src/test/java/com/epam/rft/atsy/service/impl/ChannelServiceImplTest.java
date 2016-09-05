@@ -45,6 +45,7 @@ public class ChannelServiceImplTest {
   private static final Long CHANNEL_ID_DTK = 2L;
   private static final String CHANNEL_NAME_DTK = "dtk";
   private static final Long CHANNEL_ID_LINKEDIN = 3L;
+  private static final Long CHANNDEL_ID_NON_EXISTENT = -1L;
   private static final String CHANNEL_NAME_LINKEDIN = "linkedin hírdetés";
   private static final String CHANNEL_NAME_NON_EXISTENT = "Olympiad";
   private static final List<ChannelEntity> EMPTY_CHANNEL_ENTITY_LIST = Collections.emptyList();
@@ -84,6 +85,48 @@ public class ChannelServiceImplTest {
         ChannelEntity.builder().id(CHANNEL_ID_LINKEDIN).name(CHANNEL_NAME_LINKEDIN).build();
     expectedChannelDTOList = Arrays.asList(facebookDto, dtkDto, linkedinDto);
     expectedChannelEntityList = Arrays.asList(facebookEntity, dtkEntity, linkedinEntity);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getChannelDtoByIdShouldThrowIllegalArgumentExceptionWhenChannelIdIsNull() {
+    // Given
+
+    // When
+    channelService.getChannelDtoById(null);
+
+    // Then
+  }
+
+  @Test
+  public void getChannelDtoByIdShouldReturnNullChannelDtoWhenChannelIdIsNonExistent() {
+    // Given
+    given(channelRepository.findOne(CHANNDEL_ID_NON_EXISTENT)).willReturn(null);
+
+    // When
+    ChannelDTO channelDTO = channelService.getChannelDtoById(CHANNDEL_ID_NON_EXISTENT);
+
+    // Then
+    assertThat(channelDTO, nullValue());
+
+    then(channelRepository).should().findOne(CHANNDEL_ID_NON_EXISTENT);
+    verifyZeroInteractions(converterService);
+  }
+
+  @Test
+  public void getChannelDtoByIdShouldReturnExistingChannelDtoWhenChannelIdIsExisting() {
+    // Given
+    given(channelRepository.findOne(CHANNEL_ID_FACEBOOK)).willReturn(facebookEntity);
+    given(converterService.convert(facebookEntity, ChannelDTO.class)).willReturn(facebookDto);
+
+    // When
+    ChannelDTO channelDTO = channelService.getChannelDtoById(CHANNEL_ID_FACEBOOK);
+
+    // Then
+    assertThat(channelDTO, notNullValue());
+    assertThat(channelDTO, equalTo(facebookDto));
+
+    then(channelRepository).should().findOne(CHANNEL_ID_FACEBOOK);
+    then(converterService).should().convert(facebookEntity, ChannelDTO.class);
   }
 
   @Test
