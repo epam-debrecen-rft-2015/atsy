@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import javafx.geometry.Pos;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -63,6 +65,14 @@ public class StatesHistoryEntity extends SuperEntity {
   @JoinColumn(name = "state_id")
   private StatesEntity statesEntity;
 
+  @OneToOne
+  @JoinColumn(name = "channel_id")
+  private ChannelEntity channelEntity;
+
+  @OneToOne
+  @JoinColumn(name = "position_id")
+  private PositionEntity positionEntity;
+
   @Builder
   public StatesHistoryEntity(Long id, ApplicationEntity applicationEntity, Date creationDate,
                              String description, Short result,
@@ -71,7 +81,7 @@ public class StatesHistoryEntity extends SuperEntity {
                              Boolean recommendation,
                              String reviewerName,
                              Short recommendedPositionLevel,
-                             StatesEntity statesEntity) {
+                             StatesEntity statesEntity, ChannelEntity channelEntity, PositionEntity positionEntity) {
     super(id);
     this.applicationEntity = applicationEntity;
     this.creationDate = creationDate;
@@ -85,6 +95,8 @@ public class StatesHistoryEntity extends SuperEntity {
     this.reviewerName = reviewerName;
     this.recommendedPositionLevel = recommendedPositionLevel;
     this.statesEntity = statesEntity;
+    this.channelEntity = channelEntity;
+    this.positionEntity = positionEntity;
   }
 }
 
