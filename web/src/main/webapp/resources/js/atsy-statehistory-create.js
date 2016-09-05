@@ -13,7 +13,7 @@ $(document).ready(function() {
       autoclose: true
   });
   $('#feedbackDateInput').datetimepicker(
-    console.log("fut")
+
   );
 });
 

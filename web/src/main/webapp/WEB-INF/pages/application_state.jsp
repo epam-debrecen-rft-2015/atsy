@@ -369,9 +369,10 @@
                           <div class="col-sm-8">
                               <fmt:formatDate value="${data.feedbackDate}" type="date" pattern="yyyy-MM-dd" var="formattedFeedbackDate"/>
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedFeedbackDate}</p>
+                               Hello ${formattedFeedbackDate}
                               <c:if test="${stat.first}">
                                   <div class='input-group date' id='feedbackDateInput'>
-                                      <input type='text' class="form-control" />
+                                      <input type='text' class="form-control" name="feedbackDate" value="${formattedFeedbackDate}" data-bind="valueWithInit: 'feedbackDate'"/>
                                       <span class="input-group-addon">
                                           <span class="glyphicon glyphicon-calendar"></span>
                                       </span>
