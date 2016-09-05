@@ -7,7 +7,7 @@ services:
       MYSQL_USER: atsy
       MYSQL_PASSWORD: atsy
       MYSQL_DATABASE: atsy
-    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci ${MYSQL_OPTS}
     mem_limit: ${DB_MEM_LIMIT}
     memswap_limit: ${DB_MEMSWAP_LIMIT}
   app:

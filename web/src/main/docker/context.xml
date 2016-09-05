@@ -1,6 +1,6 @@
 <Context>
     <Resource name="jdbc/database" auth="Container" type="javax.sql.DataSource"
-              maxTotal="100" maxIdle="3" maxWaitMillis="10000"
+              maxTotal="10" maxIdle="3" maxWaitMillis="10000"
               username="atsy" password="atsy" driverClassName="com.mysql.jdbc.Driver"
               validationQuery="SELECT 1" testWhileIdle="true"
               url="jdbc:mysql://database:3306/atsy?useUnicode=true&amp;characterEncoding=utf8"/>
