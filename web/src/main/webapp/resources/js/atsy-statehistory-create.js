@@ -12,7 +12,9 @@ $(document).ready(function() {
       format: 'yyyy-mm-dd',
       autoclose: true
   });
-  $('#feedbackDateInput').datetimepicker();
+  $('#feedbackDateInput').datetimepicker(
+    console.log("fut")
+  );
 });
 
 function StateHistoryModel() {

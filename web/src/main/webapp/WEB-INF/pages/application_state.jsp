@@ -9,6 +9,8 @@
 <spring:url value="/secure/application_state" var="application_state"/>
 <c:url value="/resources/thirdparty/bootstrap-datepicker/bootstrap-datepicker.js" var="bootstrap_datepicker_js"/>
 <c:url value="/resources/thirdparty/bootstrap-datepicker/bootstrap-datepicker.css" var="bootstrap_datepicker_css"/>
+<c:url value="/resources/thirdparty/bootstrap-datetimepicker/bootstrap-datetimepicker.js" var="bootstrap_datetimepicker_js"/>
+<c:url value="/resources/thirdparty/bootstrap-datetimepicker/moment-with-locales.js" var="moment_js"/>
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
         <c:url value="/resources/js/atsy-statehistory.js" var="urlValue"/><script src="${urlValue}"></script>
@@ -17,6 +19,8 @@
                         type="text/javascript"></script>
         <script src="${bootstrap_datepicker_js}" type="text/javascript"></script>
         <link href="${bootstrap_datepicker_css}" rel="stylesheet" type="text/css">
+        <script src="${moment_js}" type="text/javascript"></script>
+        <script src="${bootstrap_datetimepicker_js}" type="text/javascript"></script>
     </jsp:attribute>
   <jsp:body>
       <div class="page-header">
@@ -359,6 +363,7 @@
                           </div>
                           <div class="help-block with-errors"></div>
                       </div>
+
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.feedbackDate"/></label>
                           <div class="col-sm-8">
@@ -366,11 +371,10 @@
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedFeedbackDate}</p>
                               <c:if test="${stat.first}">
                                   <div class='input-group date' id='feedbackDateInput'>
-                                      <input type='text' class="form-control stateInput hidden" name="feedbackDate"
-                                          id="feedbackDateInput" value="${formattedFeedbackDate}" data-bind="valueWithInit: 'feedbackDate'"/>
-                                          <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                          </span>
+                                      <input type='text' class="form-control" />
+                                      <span class="input-group-addon">
+                                          <span class="glyphicon glyphicon-calendar"></span>
+                                      </span>
                                   </div>
                               </c:if>
                           </div>
