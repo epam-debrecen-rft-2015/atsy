@@ -1,6 +1,8 @@
 package com.epam.rft.atsy.service.converter.impl;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
+import com.epam.rft.atsy.persistence.entities.ChannelEntity;
+import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.entities.StatesEntity;
 import com.epam.rft.atsy.persistence.entities.StatesHistoryEntity;
 import com.epam.rft.atsy.service.ConverterService;
@@ -10,6 +12,7 @@ import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+
 import org.springframework.util.Assert;
 
 public class StateHistoryTwoWayConverter
@@ -28,14 +31,12 @@ public class StateHistoryTwoWayConverter
     return StateHistoryDTO.builder()
         .id(source.getId())
         .candidateId(source.getApplicationEntity().getCandidateEntity().getId())
-        .position(source.getApplicationEntity().getPositionEntity() != null ?
-            converterService.convert(source.getApplicationEntity().getPositionEntity(),
-                PositionDTO.class) : null)
-        .channel(source.getApplicationEntity().getChannelEntity() != null ?
-            converterService.convert(source.getApplicationEntity().getChannelEntity(),
-                ChannelDTO.class) : null)
         .applicationDTO(source.getApplicationEntity() != null ?
             converterService.convert(source.getApplicationEntity(), ApplicationDTO.class) : null)
+        .channel(source.getChannelEntity() != null ?
+            converterService.convert(source.getChannelEntity(), ChannelDTO.class) : null)
+        .position(source.getPositionEntity() != null ?
+            converterService.convert(source.getPositionEntity(), PositionDTO.class) : null)
         .description(source.getDescription())
         .result(source.getResult())
         .offeredMoney(source.getOfferedMoney())
@@ -58,6 +59,10 @@ public class StateHistoryTwoWayConverter
         .id(source.getId())
         .applicationEntity(source.getApplicationDTO() != null ?
             converterService.convert(source.getApplicationDTO(), ApplicationEntity.class) : null)
+        .channelEntity(source.getChannel() != null ?
+            converterService.convert(source.getChannel(), ChannelEntity.class) : null)
+        .positionEntity(source.getPosition() != null ?
+            converterService.convert(source.getPosition(), PositionEntity.class) : null)
         .creationDate(source.getCreationDate())
         .description(source.getDescription())
         .result(source.getResult())
