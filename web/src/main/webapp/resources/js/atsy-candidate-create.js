@@ -1,3 +1,14 @@
+$('.table').bootstrapTable({
+    onClickRow: function (row, $element) {
+      window.location.href = "../application_state?applicationId=" + row.applicationId;
+    }
+});
+
+//$('.table').bootstrapTable({
+//    onHover: function (row, $element) {
+//  console.log("TESTING THIS ONE HERE");
+//}});
+
 function actionFormatter(value, row, index) {
     return [
         '<a class="edit ml10" href="../application_state?applicationId=' + row.applicationId + '" title="Edit">',
