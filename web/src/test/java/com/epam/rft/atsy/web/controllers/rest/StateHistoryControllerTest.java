@@ -255,6 +255,8 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
     dummyStateHistoryDtoWithNewState = StateHistoryDTO.builder()
         .id(ID)
         .applicationDTO(dummyApplicationDto)
+        .channel(channelDTO)
+        .position(positionDTO)
         .candidateId(CANDIDATE_ID)
         .feedbackDate(FEEDBACK_DATE)
         .description(DESCRIPTION)

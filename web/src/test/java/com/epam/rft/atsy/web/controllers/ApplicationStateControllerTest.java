@@ -14,12 +14,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.CandidateService;
+import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.ConverterService;
+import com.epam.rft.atsy.service.PositionService;
 import com.epam.rft.atsy.service.StateFlowService;
 import com.epam.rft.atsy.service.StateService;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
+import com.epam.rft.atsy.service.domain.ChannelDTO;
+import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateFlowDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
@@ -65,6 +69,16 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
 
   private static final Long APPLICATION_ID = 1L;
   private static final Long NON_EXISTENT_APPLICATION_ID = 3L;
+  private static final Long CHANNEL_ID = 1L;
+  private static final Long POSITION_ID = 1L;
+
+  private static final String CHANNEL_NAME = "facebook";
+  private static final String POSITION_NAME = "Developer";
+
+  private ChannelDTO channelDTO = ChannelDTO.builder().id(CHANNEL_ID).name(CHANNEL_NAME).build();
+  private PositionDTO
+      positionDTO =
+      PositionDTO.builder().id(POSITION_ID).name(POSITION_NAME).build();
 
   private StateDTO
       stateDTOWithStateNameNewApply =
@@ -84,7 +98,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
 
   private StateHistoryViewRepresentation actualFirstStateHistoryViewRepresentation =
       StateHistoryViewRepresentation.builder().stateId(1L).stateName(CLICKED_STATE_NAME_NEW_APPLY)
-          .build();
+          .channelName(CHANNEL_NAME).positionName(POSITION_NAME).build();
   private StateHistoryViewRepresentation actualSecondStateHistoryViewRepresentation =
       StateHistoryViewRepresentation.builder().stateId(2L).stateName(CLICKED_STATE_NAME_CV).build();
 
@@ -102,7 +116,8 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
 
   private StateHistoryViewRepresentation expectedFirstStateHistoryViewRepresentation =
       StateHistoryViewRepresentation.builder().stateId(1L).stateName(CLICKED_STATE_NAME_NEW_APPLY)
-          .stateFullName(STATE_NAME_NEW_APPLY).build();
+          .stateFullName(STATE_NAME_NEW_APPLY).channelName(CHANNEL_NAME).positionName(POSITION_NAME)
+          .build();
   private StateHistoryViewRepresentation expectedSecondStateHistoryViewRepresentation =
       StateHistoryViewRepresentation.builder().stateId(2L).stateName(CLICKED_STATE_NAME_CV)
           .stateFullName(STATE_NAME_CV).build();
@@ -139,6 +154,10 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   private ConverterService converterService;
   @Mock
   private ApplicationsService applicationsService;
+  @Mock
+  private ChannelService channelService;
+  @Mock
+  private PositionService positionService;
   @Mock
   private CandidateService candidateService;
 
@@ -259,8 +278,10 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
         .convert(emptyStateHistoryViewDTOList, StateHistoryViewRepresentation.class))
         .willReturn(emptyStateHistoryViewRepresentationList);
 
+    given(applicationsService.getApplicationDtoById(APPLICATION_ID)).willReturn(applicationDTO);
+    given(channelService.getChannelDtoById(CHANNEL_ID)).willReturn(channelDTO);
+    given(positionService.getPositionDtoById(POSITION_ID)).willReturn(positionDTO);
     given(candidateService.getCandidateByApplicationID(APPLICATION_ID)).willReturn(candidateDTO);
-
     given(stateService.getStateDtoByName(CLICKED_STATE_NAME_NEW_APPLY))
         .willReturn(stateDTOWithStateNameNewApply);
     given(messageKeyResolver
@@ -289,7 +310,9 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
         expectedStateHistoryViewRepresentationListWithSingleElement);
 
     then(statesHistoryService).should().getStateHistoriesByApplicationId(1L);
-
+    then(applicationsService).should().getApplicationDtoById(APPLICATION_ID);
+    then(channelService).should().getChannelDtoById(CHANNEL_ID);
+    then(positionService).should().getPositionDtoById(POSITION_ID);
     then(stateService).should().getStateDtoByName(CLICKED_STATE_NAME_NEW_APPLY);
     then(messageKeyResolver).should()
         .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_APPLY,
@@ -310,7 +333,6 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
         .willReturn(stateDTOWithStateNameCoding);
     given(stateFlowService.getStateFlowDTOByFromStateDTO(stateDTOWithStateNameCoding))
         .willReturn(stateFlowDTOListWithSingleElement);
-
     given(candidateService.getCandidateByApplicationID(APPLICATION_ID)).willReturn(candidateDTO);
 
     given(messageKeyResolver
@@ -355,6 +377,8 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     then(messageKeyResolver).should()
         .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_CODING,
             CLICKED_STATE_NAME_CODING);
+
+    verifyZeroInteractions(applicationsService, channelService, positionService);
   }
 
   private void assertStateHistoryViewRepresentationList(
@@ -381,5 +405,10 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
 
     assertThat(actualRepresentation.getStateFullName(),
         equalTo(expectedRepresentation.getStateFullName()));
+
+    assertThat(actualRepresentation.getChannelName(),
+        equalTo(expectedRepresentation.getChannelName()));
+    assertThat(actualRepresentation.getPositionName(),
+        equalTo(expectedRepresentation.getPositionName()));
   }
 }

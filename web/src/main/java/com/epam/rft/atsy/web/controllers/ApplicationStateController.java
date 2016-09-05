@@ -92,7 +92,6 @@ public class ApplicationStateController {
 
 
     if (clickedState != null) {
-      ApplicationDTO applicationDTO = applicationsService.getApplicationDtoById(applicationId);
       StateDTO clickedStateDTO = stateService.getStateDtoByName(clickedState);
 
       Assert.notNull(clickedStateDTO);
@@ -104,6 +103,7 @@ public class ApplicationStateController {
           .build();
 
       if (clickedStateDTO.getId() == 1) {
+        ApplicationDTO applicationDTO = applicationsService.getApplicationDtoById(applicationId);
         representation.setChannelName(channelService.getChannelDtoById(applicationDTO.getChannelId()).getName());
         representation.setPositionName(positionService.getPositionDtoById(applicationDTO.getPositionId()).getName());
       }
