@@ -4,19 +4,6 @@ $('.table').bootstrapTable({
     }
 });
 
-//$('.table').bootstrapTable({
-//    onHover: function (row, $element) {
-//  console.log("TESTING THIS ONE HERE");
-//}});
-
-function actionFormatter(value, row, index) {
-    return [
-        '<a class="edit ml10" href="../application_state?applicationId=' + row.applicationId + '" title="Edit">',
-        '<i class="glyphicon glyphicon-edit"></i>',
-        '</a>'
-    ].join('');
-}
-
 function CandidateCreateModel(){
     var self = this;
 
