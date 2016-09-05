@@ -29,6 +29,18 @@ public class ChannelServiceImpl implements ChannelService {
 
   @Transactional(readOnly = true)
   @Override
+  public ChannelDTO getChannelDtoById(Long channelId) {
+    Assert.notNull(channelId);
+    ChannelEntity channelEntity = channelRepository.findOne(channelId);
+
+    if (channelEntity != null) {
+      return converterService.convert(channelEntity, ChannelDTO.class);
+    }
+    return null;
+  }
+
+  @Transactional(readOnly = true)
+  @Override
   public Collection<ChannelDTO> getAllChannels() {
     List<ChannelEntity> ChannelEntities = channelRepository.findAll();
     return converterService.convert(ChannelEntities, ChannelDTO.class);

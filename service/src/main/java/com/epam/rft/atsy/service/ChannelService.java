@@ -9,6 +9,8 @@ import java.util.Collection;
  */
 public interface ChannelService {
 
+  ChannelDTO getChannelDtoById(Long channelId);
+
   /**
    * Returns a collection of channels.
    * @return the collection of channels

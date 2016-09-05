@@ -9,6 +9,8 @@ import java.util.Collection;
  */
 public interface PositionService {
 
+  PositionDTO getPositionDtoById(Long positionId);
+
   /**
    * Returns a collection of positions.
    * @return the collection of positions
