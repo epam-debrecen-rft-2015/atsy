@@ -12,8 +12,12 @@ $(document).ready(function() {
       format: 'yyyy-mm-dd',
       autoclose: true
   });
-});
 
+  $('#feedbackDateInput').datetpicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true
+  });
+});
 
 function StateHistoryModel() {
   var self = this;

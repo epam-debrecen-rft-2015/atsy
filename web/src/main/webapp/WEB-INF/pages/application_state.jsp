@@ -362,14 +362,11 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.feedbackDate"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.feedbackDate}</p>
+                              <fmt:formatDate value="${data.feedbackDate}" type="date" pattern="yyyy-MM-dd" var="formattedFeedbackDate"/>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedFeedbackDate}</p>
                               <c:if test="${stat.first}">
-                                  <spring:message code="statehistory.error.parse.date" var="errorParseDateMessage"/>
-
-                                  <input class="stateInput hidden" type="text" name="feedbackDate" id="feedbackDateInput" value="${fn:escapeXml(data.feedbackDate)}"
-                                  data-error="${errorParseDateMessage}"
-                                  data-bind="valueWithInit: 'feedbackDate'"
-                                  pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$">
+                                  <input class="stateInput hidden" type="date" name="feedbackDate" id="feedbackDateInput" value="${fn:escapeXml(formattedFeedbackDate)}"
+                                  data-bind="valueWithInit: 'feedbackDate'">
                               </c:if>
                           </div>
                           <div class="help-block with-errors"></div>
