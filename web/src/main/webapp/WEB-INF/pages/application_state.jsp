@@ -107,31 +107,34 @@
               <c:choose>
 
                   <c:when test="${data.stateName == 'newstate'}">
-                      <div class="form-group">
-                          <label id="positionLabel" class="control-label col-lg-4 col-md-4 col-sm-4 text-right">
-                              <spring:message code="statehistory.field.position"/>
-                          </label>
-                          <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="dropSource">
-                              <select class="input form-control" name="positionSelector" id="positionSelector" data-bind="valueWithInit: 'positionName'" disabled="disabled">
-                                  <option selected disabled value="${data.positionName}">
-                                       <c:out value="${data.positionName}"/>
-                                  </option>
-                              </select>
-                          </div>
-                      </div>
+                       <div class="form-group">
+                            <label for="positionSelector"  class="control-label col-sm-4"><spring:message code="statehistory.field.position"/></label>
+                            <div class="col-sm-8">
+                                <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.positionName}</p>
+                                  <c:if test="${stat.first}">
+                                      <select required class="stateInput hidden" id="positionSelector" data-bind="valueWithInit: 'positionName'">
+                                          <option disabled="disabled" selected="selected">
+                                               <c:out value="${data.positionName}"/>
+                                           </option>
+                                      </select>
+                                  </c:if>
+                             </div>
+                       </div>
 
-                      <div class="form-group">
-                          <label id="sourceLabel" class="control-label col-lg-4 col-md-4 col-sm-4 text-right">
-                               <spring:message code="statehistory.field.channel"/>
-                          </label>
-                          <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="dropSource">
-                              <select class="input form-control" name="channelSelector" id="channelSelector" data-bind="valueWithInit: 'channelName'" disabled="disabled">
-                                  <option selected disabled value="${data.channelName}">
-                                      <c:out value="${data.channelName}"/>
-                                  </option>
-                              </select>
-                          </div>
-                      </div>
+                       <div class="form-group">
+                           <label for="channelSelector"  class="control-label col-sm-4"><spring:message code="statehistory.field.channel"/></label>
+                            <div class="col-sm-8">
+                                 <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.channelName}</p>
+                                 <c:if test="${stat.first}">
+                                     <select required class="stateInput hidden" id="channelSelector" data-bind="valueWithInit: 'channelName'">
+                                         <option disabled="disabled" selected="selected">
+                                             <c:out value="${data.channelName}"/>
+                                         </option>
+                                     </select>
+                                 </c:if>
+                           </div>
+                       </div>
+
                   </c:when>
                     <c:when test ="${data.stateName == 'coding'}">
                        <div class="form-group">
