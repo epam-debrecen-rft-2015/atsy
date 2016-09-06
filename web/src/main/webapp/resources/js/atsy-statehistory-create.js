@@ -4,7 +4,7 @@ $(document).ready(function() {
         //nothing
       } else {
         stateHistoryModel.ajaxCall();
-
+        console.log(stateHistoryModel);
         return false;
       }
   }));
@@ -12,9 +12,9 @@ $(document).ready(function() {
       format: 'yyyy-mm-dd',
       autoclose: true
   });
-  $('#feedbackDateInput').datetimepicker(
-
-  );
+  $('#feedbackDateInput').datetimepicker({
+    format: 'YYYY-MM-DD HH:mm',
+  });
 });
 
 function StateHistoryModel() {
@@ -29,10 +29,21 @@ function StateHistoryModel() {
               if (!ko.isWriteableObservable(data[property])) {
                   data[property] = ko.observable();
               }
-
               data[property](value);
-
               ko.applyBindingsToNode(element, { value: data[property] });
+          }
+      };
+
+
+  ko.bindingHandlers.datetimepickerBinding = {
+          init: function(element, valueAccessor, allBindingsAccessor, data) {
+              var property = valueAccessor()
+              if (!ko.isWriteableObservable(data[property])) {
+                 data[property] = ko.observable();
+              }
+                  $(element).parent().on("dp.change", function(event){
+                    data[property](event.date.format('YYYY-MM-DD HH:mm'));
+                  });
           }
       };
 
@@ -121,3 +132,4 @@ StateHistoryModel.prototype.redirectWithoutState = function() {
 var stateHistoryModel = new StateHistoryModel();
 
 ko.applyBindings(stateHistoryModel);
+

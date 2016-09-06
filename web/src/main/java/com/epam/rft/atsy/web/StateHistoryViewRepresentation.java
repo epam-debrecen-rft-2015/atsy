@@ -35,7 +35,7 @@ public class StateHistoryViewRepresentation {
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
   private Date creationDate;
 
-  @JsonFormat(pattern = "yyyy-MM-dd")
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
   private Date feedbackDate;
 
   private Short languageSkill;

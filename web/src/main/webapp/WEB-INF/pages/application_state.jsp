@@ -367,13 +367,12 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.feedbackDate"/></label>
                           <div class="col-sm-8">
-                              <fmt:formatDate value="${data.feedbackDate}" type="date" pattern="yyyy-MM-dd" var="formattedFeedbackDate"/>
+                              <fmt:formatDate value="${data.feedbackDate}" type="date" pattern="yyyy-MM-dd HH:mm" var="formattedFeedbackDate"/>
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedFeedbackDate}</p>
-                               Hello ${formattedFeedbackDate}
                               <c:if test="${stat.first}">
-                                  <div class='input-group date' id='feedbackDateInput'>
-                                      <input type='text' class="form-control" name="feedbackDate" value="${formattedFeedbackDate}" data-bind="valueWithInit: 'feedbackDate'"/>
-                                      <span class="input-group-addon">
+                                  <div class='input-group date' name='feedbackDate' id='feedbackDateInput' >
+                                      <input type='text' class="form-control stateInput hidden" data-bind="datetimepickerBinding: 'feedbackDate'" />
+                                      <span class="input-group-addon stateInput hidden">
                                           <span class="glyphicon glyphicon-calendar"></span>
                                       </span>
                                   </div>
