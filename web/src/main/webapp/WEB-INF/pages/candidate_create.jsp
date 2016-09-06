@@ -130,7 +130,7 @@
                                    for="drop"><spring:message
                                     code="candidate.english.label"/></label>
 
-                            <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="drop">
+                            <div class="selectContainer col-lg-4 col-md-4 col-sm-4">
                                 <select class="input form-control" name="languageSkill" id="languageSkill" data-bind="valueWithInit: 'languageSkill'">
                                     <option value=0 <c:if
                                             test="${0 eq candidate.languageSkill}"> selected="selected" </c:if>>
