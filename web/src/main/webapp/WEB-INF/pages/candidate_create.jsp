@@ -87,7 +87,7 @@
                                    for="referer"><spring:message
                                     code="candidate.place.label"/></label>
 
-                            <div class="col-lg-4 col-md-4 col-sm-4">
+                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
                                 <input type="text" class="input form-control" name="referer" id="referer" data-bind="valueWithInit: 'referer'"
                                        value="${fn:escapeXml(candidate.referer)}"
                                        placeholder="${i18nplace}" maxlength="20">
