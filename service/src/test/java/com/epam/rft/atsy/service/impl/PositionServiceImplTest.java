@@ -1,22 +1,11 @@
 package com.epam.rft.atsy.service.impl;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verifyZeroInteractions;
-
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
 import com.epam.rft.atsy.service.ConverterService;
-import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.exception.DuplicatePositionException;
+
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.hibernate.exception.ConstraintViolationException;
@@ -28,7 +17,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.omg.PortableInterceptor.NON_EXISTENT;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.Arrays;
@@ -36,12 +24,25 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verifyZeroInteractions;
+
 @RunWith(MockitoJUnitRunner.class)
 public class PositionServiceImplTest {
 
   private static final Long DEVELOPER_ID = 1L;
   private static final Long POSITION_ID_NON_EXISTENT = -1L;
   private static final String DEVELOPER_NAME = "Developer";
+  private static final Long NON_EXISTENT_ID = 2L;
   private static final String POSITION_NAME_NON_EXISTENT = "Table tennis instructor";
   private static final List<PositionEntity> EMPTY_POSITION_ENTITY_LIST = Collections.emptyList();
   private static final List<PositionDTO> EMPTY_POSITION_DTO_LIST = Collections.emptyList();
@@ -72,6 +73,40 @@ public class PositionServiceImplTest {
     expectedPositionEntityList = Arrays.asList(developerEntity, developerEntity, developerEntity);
 
     expectedPositionDtoList = Arrays.asList(developerDto, developerDto, developerDto);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getPositionsByIdShouldThrowIllegalArgumentsExceptionWhenTheListOfIdsIsNull() {
+    // When
+    positionService.getPositionsById(null);
+  }
+
+  @Test
+  public void getPositionsByIdShouldReturnEmptyListWhenNoPositionsFoundWithTheGivenIds() {
+    // Given
+    List<Long> ids = Arrays.asList(NON_EXISTENT_ID);
+    given(positionRepository.findAll(ids)).willReturn(EMPTY_POSITION_ENTITY_LIST);
+
+    // When
+    List<PositionDTO> positionDTOs = positionService.getPositionsById(ids);
+
+    // Then
+    assertTrue(positionDTOs.isEmpty());
+  }
+
+  @Test
+  public void getPositionsByIdShouldReturnAListOfPositionsWhenThereArePositionsWithTheGivenId() {
+    // Given
+    List<Long> ids = Arrays.asList(DEVELOPER_ID, DEVELOPER_ID, DEVELOPER_ID);
+    given(positionRepository.findAll(ids)).willReturn(expectedPositionEntityList);
+    given(converterService.convert(expectedPositionEntityList, PositionDTO.class))
+        .willReturn(expectedPositionDtoList);
+
+    // When
+    List<PositionDTO> actualPositionDtoList = positionService.getPositionsById(ids);
+
+    // Then
+    assertEquals(actualPositionDtoList, expectedPositionDtoList);
   }
 
   @Test(expected = IllegalArgumentException.class)

@@ -11,9 +11,9 @@ import com.epam.rft.atsy.persistence.repositories.StatesRepository;
 import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StatesHistoryService;
+import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
-import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,8 +69,22 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
 
   @Transactional
   @Override
+  public void deleteStateHistoriesByApplication(ApplicationDTO applicationDTO) {
+    Assert.notNull(applicationDTO);
+    Assert.notNull(applicationDTO.getId());
+    List<StatesHistoryEntity>
+        statesHistoryEntities =
+        statesHistoryRepository.findByApplicationEntityOrderByCreationDateDesc(
+            applicationsRepository.findOne(applicationDTO.getId()));
+
+    statesHistoryRepository.delete(statesHistoryEntities);
+  }
+
+  @Transactional
+  @Override
   public Long saveStateHistory(StateHistoryDTO state) {
     Assert.notNull(state);
+
     Assert.notNull(state.getStateDTO());
     Assert.notNull(state.getStateDTO().getId());
 
@@ -86,7 +100,7 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<StateHistoryViewDTO> getStateHistoriesByApplicationId(Long applicationId) {
+  public List<StateHistoryDTO> getStateHistoriesByApplicationId(Long applicationId) {
     Assert.notNull(applicationId);
     ApplicationEntity applicationEntity = applicationsRepository.findOne(applicationId);
 
@@ -94,6 +108,6 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
     List<StatesHistoryEntity> statesHistoryEntities =
         statesHistoryRepository.findByApplicationEntityOrderByCreationDateDesc(applicationEntity);
 
-    return converterService.convert(statesHistoryEntities, StateHistoryViewDTO.class);
+    return converterService.convert(statesHistoryEntities, StateHistoryDTO.class);
   }
 }

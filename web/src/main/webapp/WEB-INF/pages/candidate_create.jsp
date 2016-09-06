@@ -5,6 +5,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <spring:url value="/secure/positions" var="positions"/>
 <spring:url value="/secure/channels" var="channels"/>
@@ -15,13 +16,13 @@
 
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
-        <script src="<c:url value="/resources/thirdparty/bootstrap-validator/validator.js" />"
+       <c:url value="/resources/thirdparty/bootstrap-validator/validator.js" var="urlValue" /> <script src="${urlValue}"
                 type="text/javascript"></script>
-        <script src="<c:url value="/resources/js/atsy-candidate-create.js" />"></script>
+        <c:url value="/resources/js/atsy-candidate-create.js" var="urlValue" /><script src="${urlValue}"></script>
     </jsp:attribute>
     <jsp:body>
 
-        <div id="candidate_creation" data-bind="<c:if test="${not empty candidate.id}">initDisplay: value</c:if>, css: { display: modify() == true }">
+         <div id="candidate_creation" data-bind="${not empty candidate.id ? 'initDisplay: value, ' : ''} css: { display: modify() == true }">
             <h1 class="page-header">
                 <c:choose>
                     <c:when test="${not empty candidate.id}">
@@ -68,11 +69,10 @@
                                     code="candidate.name.label"/></label>
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
-                                <input type="text" class="input form-control " name="name" id="name" data-bind="valueWithInit: 'name'"
-                                       value="<c:out value="${candidate.name}"/>"
+                               <spring:message code="candidate.error.name.empty" var="nameEmptyValue"/> <input type="text" class="input form-control " name="name" id="name" data-bind="valueWithInit: 'name'"
+                                      value="${fn:escapeXml(candidate.name)}"
                                        placeholder="${i18nname}"
-                                       data-error="<spring:message
-                                               code="candidate.error.name.empty"/>"
+                                       data-error="${nameEmptyValue}"
                                        required maxlength="100">
 
                                 <div id="name-errors" class="help-block with-errors"></div>
@@ -89,7 +89,7 @@
 
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <input type="text" class="input form-control" name="referer" id="referer" data-bind="valueWithInit: 'referer'"
-                                       value="<c:out value="${candidate.referer}"/>"
+                                       value="${fn:escapeXml(candidate.referer)}"
                                        placeholder="${i18nplace}" maxlength="20">
 
                                 <p class="showValue form-control-static"><c:out value = "${candidate.referer}"/></p>
@@ -106,14 +106,14 @@
                                     code="candidate.email.label"/></label>
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <spring:message code="candidate.error.email.empty" var="emailEmptyValue"/>
+                            <spring:message code="candidate.error.email.incorrect" var="emailIncorrectValue"/>
                                 <input type="text" class="input form-control" name="email" id="email" data-bind="valueWithInit: 'email'"
                                        value="${candidate.email}"
                                        placeholder="${i18nemail}"
-                                       data-error="<spring:message
-                                    code="candidate.error.email.empty"/>"
+                                       data-error="${emailEmptyValue}"
                                        data-pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
-                                       data-pattern-error="<spring:message
-                                    code="candidate.error.email.incorrect"/>"
+                                      data-pattern-error="${emailIncorrectValue}"
                                        required maxlength="255">
                                 <span id="email-errors" class="help-block with-errors"></span>
 
@@ -156,10 +156,10 @@
                                     code="candidate.phone.label"/></label>
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <spring:message code="candidate.error.phone.incorrect" var="phoneIncorrectValue"/>
                                 <input type="text" class="input form-control" name="phone" id="phone" data-bind="valueWithInit: 'phone'"
                                        value="${candidate.phone}"
-                                       placeholder="${i18nphone}" data-error="<spring:message
-                                    code="candidate.error.phone.incorrect"/>"
+                                       placeholder="${i18nphone}" data-error="${phoneIncorrectValue}"
                                        pattern="^\+?[0-9]+" maxlength="20">
 
                                 <div id="phone-errors" class="help-block with-errors"></div>
@@ -249,7 +249,7 @@
                     </label>
 
                     <label class="control-label col-lg-2 col-md-4 col-sm-4 text-left" for="name">
-                        <a href="<c:url value='/secure/candidate/fileDownload/${candidateId}' />">
+                       <c:url value='/secure/candidate/fileDownload/${candidateId}' var="urlValue" /> <a href="${urlValue}">
                             <c:out value="${candidate.cvFilename}"/>
                         </a>
                     </label>
@@ -268,7 +268,7 @@
                 </div>
                 <%--table--%>
                 <div id="application_table">
-                        <table class="table table-hover" id="applications_table"  data-toggle="table" data-url="../applications/${candidate.id}" data-height="500"
+                        <table class="table table-hover cursor-pointer" id="applications_table"  data-toggle="table" data-url="../applications/${candidate.id}" data-height="500"
                                data-sort-name="name" data-escape="true">
                             <thead>
                             <tr>
@@ -282,10 +282,9 @@
                                         code="candidate.table.application.modified.date"/></th>
                                 <th data-field="stateType" data-align="left"><spring:message
                                         code="candidate.table.application.state"/></th>
-                                <th data-field="actions" data-align="left" data-formatter="actionFormatter">
-                                    <spring:message code="candidate.table.application.action"/>
-                                </th>
+
                             </tr>
+
                             </thead>
                         </table>
                     </div>

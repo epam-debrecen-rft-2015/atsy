@@ -17,7 +17,6 @@ public interface CandidateService {
    */
   CandidateDTO getCandidate(Long candidateID);
 
-
   /**
    * Returns the candidate object wich has an application with the given id.
    * @param applicationID the id of the application
@@ -31,6 +30,8 @@ public interface CandidateService {
    * @return the collection of candidates
    */
   Collection<CandidateDTO> getAllCandidate(FilterRequest sortingRequest);
+
+  void deletePositionsByCandidate(CandidateDTO candidateDTO);
 
   /**
    * Saves a candidate to the database and returns it's id.

@@ -10,7 +10,7 @@
 
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
-     <script src="<c:url value="/resources/js/atsy-candidate.js" />"></script>
+     <c:url value="/resources/js/atsy-candidate.js" var="urlValue"/><script src="${urlValue}"></script>
     </jsp:attribute>
     <jsp:body>
         <div id="welcome">
@@ -51,8 +51,9 @@
                             </th>
                             <th data-field="phone" data-align="left" data-sortable="true"><spring:message
                                     code="welcome.candidates.table.phone.title"/></th>
-                            <th data-field="positions" data-align="left" data-sortable="true"><spring:message
-                                    code="welcome.candidates.table.positions.title"/></th>
+                            <th data-field="positions" data-align="left" data-sortable="true" data-formatter="positionFormatter">
+                              <spring:message code="welcome.candidates.table.positions.title"/>
+                            </th>
                             <th data-field="actions" data-align="left" data-formatter="actionFormatter">
                                 <spring:message code="welcome.candidates.table.actions.title"/>
                             </th>

@@ -4,18 +4,25 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@page contentType="text/html;charset=UTF-8" %>
 <spring:url value="/secure/application_state" var="application_state"/>
+<c:url value="/resources/thirdparty/bootstrap-datepicker/bootstrap-datepicker.js" var="bootstrap_datepicker_js"/>
+<c:url value="/resources/thirdparty/bootstrap-datepicker/bootstrap-datepicker.css" var="bootstrap_datepicker_css"/>
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
-        <script src="<c:url value="/resources/js/atsy-statehistory.js" />"></script>
-        <script src="<c:url value="/resources/js/atsy-statehistory-create.js" />"></script>
-        <script src="<c:url value="/resources/thirdparty/bootstrap-validator/validator.js" />"
+
+        <c:url value="/resources/js/atsy-statehistory.js" var="urlValue"/><script src="${urlValue}"></script>
+       <c:url value="/resources/js/atsy-statehistory-create.js" var="urlValue" /> <script src="${urlValue}"></script>
+       <c:url value="/resources/thirdparty/bootstrap-validator/validator.js" var="urlValue" /> <script src="${urlValue}"
                         type="text/javascript"></script>
+        <script src="${bootstrap_datepicker_js}" type="text/javascript"></script>
+        <link href="${bootstrap_datepicker_css}" rel="stylesheet" type="text/css">
     </jsp:attribute>
   <jsp:body>
       <div class="page-header">
           <h1><spring:message code="application.state.title"/>
+
               <small id="positionName"><c:out value = "${states[0].positionName}"/></small>
           </h1>
       </div>
@@ -70,6 +77,7 @@
           <form data-toggle="validator" class="form form-horizontal" role="form" method="POST" id="create-state-form" action="#">
               <c:if test="${stat.first}">
                 <input type="hidden" name="id" value="${data.id}" data-bind="valueWithInit: 'id'"/>
+
                 <input type="hidden" id="stateId" name="stateId" value="${data.stateId}" data-bind="valueWithInit: 'stateId'"/>
               </c:if>
 
@@ -120,7 +128,6 @@
                                   </c:if>
                              </div>
                        </div>
-
                        <div class="form-group">
                            <label for="channelSelector"  class="control-label col-sm-4"><spring:message code="statehistory.field.channel"/></label>
                             <div class="col-sm-8">
@@ -249,7 +256,8 @@
                           <c:if test="${stat.first}">
                             <spring:message code="statehistory.error.reviewerName.length" var="errorReviewerNameLengthMessage" />
 
-                            <input type="text " class="stateInput hidden" id="reviwerNameInput"  value="${data.reviewerName}"
+
+                            <input type="text " class="stateInput hidden" id="reviwerNameInput"  value="${fn:escapeXml(data.reviewerName)}"
                               data-bind="valueWithInit: 'reviewerName'"
                               data-error="${errorReviewerNameLengthMessage}"
                               pattern="^.{3,100}$" required />
@@ -337,7 +345,8 @@
                               <c:if test="${stat.first}">
                                   <spring:message code="statehistory.error.offeredMoney.negative" var="errorOfferedMoneyNegativeMessage"/>
 
-                                  <input class="stateInput hidden" type="number" name="offeredMoney" id="offeredMoneyInput"  value="${data.offeredMoney}"
+
+                                  <input class="stateInput hidden" type="number" name="offeredMoney" id="offeredMoneyInput"  value="${fn:escapeXml(data.offeredMoney)}"
                                   data-error="${errorOfferedMoneyNegativeMessage}"
                                   data-bind="valueWithInit: 'offeredMoney'"
                                   min="0">
@@ -352,7 +361,8 @@
                               <c:if test="${stat.first}">
                                   <spring:message code="statehistory.error.claim.negative" var="errorClaimNegativeMessage"/>
 
-                                  <input class="stateInput hidden" type="number" name="claim" id="claimInput" value="${data.claim}"
+ 
+                                  <input class="stateInput hidden" type="number" name="claim" id="claimInput" value="${fn:escapeXml(data.claim)}"
                                   data-error="${errorClaimNegativeMessage}"
                                   data-bind="valueWithInit: 'claim'"
                                   min="0">
@@ -367,7 +377,8 @@
                               <c:if test="${stat.first}">
                                   <spring:message code="statehistory.error.parse.date" var="errorParseDateMessage"/>
 
-                                  <input class="stateInput hidden" type="text" name="feedbackDate" id="feedbackDateInput" value="${data.feedbackDate}"
+
+                                  <input class="stateInput hidden" type="text" name="feedbackDate" id="feedbackDateInput" value="${fn:escapeXml(data.feedbackDate)}"
                                   data-error="${errorParseDateMessage}"
                                   data-bind="valueWithInit: 'feedbackDate'"
                                   pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$">
@@ -383,8 +394,22 @@
                               <fmt:formatDate value="${data.dayOfStart}" type="date" pattern="yyyy-MM-dd" var="formattedDayOfStart"/>
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedDayOfStart}</p>
                               <c:if test="${stat.first}">
-                                  <input class="stateInput hidden" type="date" name="dayOfStart" id="dayOfStartInput" value="${formattedDayOfStart}"
+
+                                  <input class="stateInput hidden" type="date" name="dayOfStart" id="dayOfStartInput" value="${fn:escapeXml(formattedDayOfStart)}"
                                   data-bind="valueWithInit: 'dayOfStart'" required>
+                              </c:if>
+                          </div>
+                      </div>
+                  </c:when>
+                  <c:when test="${data.stateName == 'accept'}">
+                      <div class="form-group">
+                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.dateOfEnter"/></label>
+                          <div class="col-sm-8">
+                              <fmt:formatDate value="${data.dateOfEnter}" type="date" pattern="yyyy-MM-dd" var="formattedDateOfEnter"/>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedDateOfEnter}</p>
+                              <c:if test="${stat.first}">
+                                  <input class="stateInput hidden" type="date" name="dateOfEnter" id="dateOfEnterInput" value="${formattedDateOfEnter}"
+                                  data-bind="valueWithInit: 'dateOfEnter'" required>
                               </c:if>
                           </div>
                       </div>
@@ -401,4 +426,5 @@
           </form>
       </c:forEach>
   </jsp:body>
+
 </atsy:secure_page>

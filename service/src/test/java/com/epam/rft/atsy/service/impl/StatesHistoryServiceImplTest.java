@@ -11,10 +11,10 @@ import com.epam.rft.atsy.persistence.repositories.StatesHistoryRepository;
 import com.epam.rft.atsy.persistence.repositories.StatesRepository;
 import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.ConverterService;
+import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
-import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,6 +36,8 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StatesHistoryServiceImplTest {
@@ -66,7 +68,8 @@ public class StatesHistoryServiceImplTest {
       EMPTY_STATE_HISTORY_ENTITY_LIST =
       Collections.emptyList();
 
-  private static final List<StateHistoryViewDTO>
+
+  private static final List<StateHistoryDTO>
       EMPTY_STATE_HISTORY_VIEW_DTO_LIST =
       Collections.emptyList();
 
@@ -124,16 +127,16 @@ public class StatesHistoryServiceImplTest {
           .statesEntity(thirdStateEntity)
           .creationDate(pastDate).build();
 
-  private final StateHistoryViewDTO
-      stateViewHistoryDTO =
-      StateHistoryViewDTO.builder().id(FIRST_ID).creationDate(presentDate).build();
+  private final StateHistoryDTO
+      stateHistoryDTOWithCreationDate =
+      StateHistoryDTO.builder().id(FIRST_ID).creationDate(presentDate).build();
 
   private final StateDTO
       firstStateDTO =
       StateDTO.builder().id(FIRST_ID).name(FIRST_STATE_TYPE_NAME).build();
 
   private final StateHistoryDTO
-      firstStateHistoryDto =
+      firstStateHistoryDtoWithStateDto =
       StateHistoryDTO.builder().id(FIRST_ID).stateDTO(firstStateDTO).build();
 
   private final List<ApplicationEntity> applicationEntityListWithSingleElement =
@@ -148,11 +151,12 @@ public class StatesHistoryServiceImplTest {
   private final List<StatesHistoryEntity> statesHistoryEntityListWithThreeElements =
       Arrays.asList(firstStatesHistoryEntity, secondStatesHistoryEntity, thirdStatesHistoryEntity);
 
-  private final List<StateHistoryViewDTO> stateViewHistoryDTOListWithSingleElement =
-      Collections.singletonList(stateViewHistoryDTO);
+  private final List<StateHistoryDTO> stateViewHistoryDTOListWithSingleElement =
+      Collections.singletonList(stateHistoryDTOWithCreationDate);
 
-  private final List<StateHistoryViewDTO> stateViewHistoryDTOListWithThreeElements =
-      Arrays.asList(stateViewHistoryDTO, stateViewHistoryDTO, stateViewHistoryDTO);
+  private final List<StateHistoryDTO> stateViewHistoryDTOListWithThreeElements =
+      Arrays.asList(stateHistoryDTOWithCreationDate, stateHistoryDTOWithCreationDate,
+          stateHistoryDTOWithCreationDate);
 
   private List<CandidateApplicationDTO> candidateApplicationDTOListWithSingleElement =
       Collections.singletonList(
@@ -202,7 +206,6 @@ public class StatesHistoryServiceImplTest {
   @InjectMocks
   private StatesHistoryServiceImpl statesHistoryService;
 
-
   @Test(expected = IllegalArgumentException.class)
   public void getStatesByApplicationIdShouldThrowIllegalArgumentExceptionWhenApplicationIdIsNull() {
     // Given
@@ -232,17 +235,18 @@ public class StatesHistoryServiceImplTest {
     given(statesHistoryRepository
         .findByApplicationEntityOrderByCreationDateDesc(APPLICATION_ENTITY_WITHOUT_STATE_HISTORY))
         .willReturn(EMPTY_STATE_HISTORY_ENTITY_LIST);
-    given(converterService.convert(EMPTY_STATE_HISTORY_ENTITY_LIST, StateHistoryViewDTO.class))
+
+    given(converterService.convert(EMPTY_STATE_HISTORY_ENTITY_LIST, StateHistoryDTO.class))
         .willReturn(EMPTY_STATE_HISTORY_VIEW_DTO_LIST);
 
     // When
-    List<StateHistoryViewDTO>
-        stateViewHistoryDTOList =
+    List<StateHistoryDTO>
+        stateHistoryDTOList =
         statesHistoryService.getStateHistoriesByApplicationId(FIRST_ID);
 
     // Then
-    assertThat(stateViewHistoryDTOList, notNullValue());
-    assertThat(stateViewHistoryDTOList.isEmpty(), is(true));
+    assertThat(stateHistoryDTOList, notNullValue());
+    assertThat(stateHistoryDTOList.isEmpty(), is(true));
 
     then(applicationsRepository).should().findOne(FIRST_ID);
     then(statesHistoryRepository).should()
@@ -257,18 +261,19 @@ public class StatesHistoryServiceImplTest {
         .findByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity))
         .willReturn(statesHistoryEntityListWithSingleElement);
     given(converterService
-        .convert(statesHistoryEntityListWithSingleElement, StateHistoryViewDTO.class))
+
+        .convert(statesHistoryEntityListWithSingleElement, StateHistoryDTO.class))
         .willReturn(stateViewHistoryDTOListWithSingleElement);
 
     // When
-    List<StateHistoryViewDTO>
-        stateViewHistoryDTOList =
+    List<StateHistoryDTO>
+        stateHistoryDTOList =
         statesHistoryService.getStateHistoriesByApplicationId(FIRST_ID);
 
     // Then
-    assertThat(stateViewHistoryDTOList, notNullValue());
-    assertThat(stateViewHistoryDTOList.isEmpty(), is(false));
-    assertThat(stateViewHistoryDTOList, equalTo(stateViewHistoryDTOListWithSingleElement));
+    assertThat(stateHistoryDTOList, notNullValue());
+    assertThat(stateHistoryDTOList.isEmpty(), is(false));
+    assertThat(stateHistoryDTOList, equalTo(stateViewHistoryDTOListWithSingleElement));
 
     then(applicationsRepository).should().findOne(FIRST_ID);
     then(statesHistoryRepository).should()
@@ -283,18 +288,19 @@ public class StatesHistoryServiceImplTest {
         .findByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity))
         .willReturn(statesHistoryEntityListWithThreeElements);
     given(converterService
-        .convert(statesHistoryEntityListWithThreeElements, StateHistoryViewDTO.class))
+
+        .convert(statesHistoryEntityListWithThreeElements, StateHistoryDTO.class))
         .willReturn(stateViewHistoryDTOListWithThreeElements);
 
     // When
-    List<StateHistoryViewDTO>
-        stateViewHistoryDTOList =
+    List<StateHistoryDTO>
+        stateHistoryDTOList =
         statesHistoryService.getStateHistoriesByApplicationId(FIRST_ID);
 
     // Then
-    assertThat(stateViewHistoryDTOList, notNullValue());
-    assertThat(stateViewHistoryDTOList.isEmpty(), is(false));
-    assertThat(stateViewHistoryDTOList, equalTo(stateViewHistoryDTOListWithThreeElements));
+    assertThat(stateHistoryDTOList, notNullValue());
+    assertThat(stateHistoryDTOList.isEmpty(), is(false));
+    assertThat(stateHistoryDTOList, equalTo(stateViewHistoryDTOListWithThreeElements));
 
     then(applicationsRepository).should().findOne(FIRST_ID);
     then(statesHistoryRepository).should()
@@ -302,7 +308,38 @@ public class StatesHistoryServiceImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void saveStateHistoryShouldThrowIllegalArgumentExceptionWhenStateHistoryDtoIsNull() {
+  public void deleteStateHistoriesByApplicationShouldThrowIllegalArgumentExceptionWhenTheGivenApplicationIsNull() {
+    // When
+    statesHistoryService.deleteStateHistoriesByApplication(null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void deleteStateHistoriesByApplicationShouldThrowIllegalArgumentExceptionWhenTheGivenApplicationsIdIsNull() {
+    // When
+    ApplicationDTO applicationDTO = ApplicationDTO.builder().id(null).build();
+
+    statesHistoryService.deleteStateHistoriesByApplication(applicationDTO);
+  }
+
+  @Test
+  public void deleteStateHistoriesByApplicationShouldDeleteTheCorrespondingStateHistories() {
+    // Given
+    ApplicationDTO applicationDTO = ApplicationDTO.builder().id(FIRST_ID).build();
+    given(applicationsRepository.findOne(applicationDTO.getId()))
+        .willReturn(firstApplicationEntity);
+    given(statesHistoryRepository
+        .findByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity))
+        .willReturn(statesHistoryEntityListWithSingleElement);
+
+    // When
+    statesHistoryService.deleteStateHistoriesByApplication(applicationDTO);
+
+    // Then
+    verify(statesHistoryRepository, atLeastOnce()).delete(statesHistoryEntityListWithSingleElement);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void saveStateShouldThrowIllegalArgumentExceptionWhenApplicationIdIsNull() {
     // Given
 
     // When
@@ -340,7 +377,7 @@ public class StatesHistoryServiceImplTest {
     given(statesRepository.findOne(FIRST_ID)).willReturn(null);
 
     // When
-    statesHistoryService.saveStateHistory(firstStateHistoryDto);
+    statesHistoryService.saveStateHistory(firstStateHistoryDtoWithStateDto);
 
     // Then
   }
@@ -349,13 +386,13 @@ public class StatesHistoryServiceImplTest {
   public void saveStateHistoryShouldThrowIllegalArgumentExceptionWhenApplicationDtoIsNotValid() {
     // Given
     given(statesRepository.findOne(FIRST_ID)).willReturn(firstStateEntity);
-    given(converterService.convert(firstStateHistoryDto, StatesHistoryEntity.class))
+    given(converterService.convert(firstStateHistoryDtoWithStateDto, StatesHistoryEntity.class))
         .willReturn(firstStatesHistoryEntity);
-    given(applicationsService.saveOrUpdate(firstStateHistoryDto.getApplicationDTO()))
+    given(applicationsService.saveOrUpdate(firstStateHistoryDtoWithStateDto.getApplicationDTO()))
         .willThrow(IllegalArgumentException.class);
 
     // When
-    statesHistoryService.saveStateHistory(firstStateHistoryDto);
+    statesHistoryService.saveStateHistory(firstStateHistoryDtoWithStateDto);
 
     // Then
   }
@@ -363,14 +400,14 @@ public class StatesHistoryServiceImplTest {
   @Test
   public void saveStateHistoryShouldSaveWhenAllParamIsRightAndCreationDateIsNull() {
     // Given
-    firstStateHistoryDto.setCreationDate(null);
+    firstStateHistoryDtoWithStateDto.setCreationDate(null);
     given(statesRepository.findOne(FIRST_ID)).willReturn(firstStateEntity);
-    given(converterService.convert(firstStateHistoryDto, StatesHistoryEntity.class))
+    given(converterService.convert(firstStateHistoryDtoWithStateDto, StatesHistoryEntity.class))
         .willReturn(firstStatesHistoryEntity);
     given(statesHistoryRepository.saveAndFlush(firstStatesHistoryEntity)).willReturn(firstStatesHistoryEntity);
 
     // When
-    Long result = statesHistoryService.saveStateHistory(firstStateHistoryDto);
+    Long result = statesHistoryService.saveStateHistory(firstStateHistoryDtoWithStateDto);
 
     // Then
     assertThat(result, notNullValue());
@@ -378,22 +415,22 @@ public class StatesHistoryServiceImplTest {
     assertThat(firstStatesHistoryEntity.getCreationDate(), greaterThan(currentDateMinusSeconds(5L)));
 
     then(statesRepository).should().findOne(FIRST_ID);
-    then(converterService).should().convert(firstStateHistoryDto, StatesHistoryEntity.class);
+    then(converterService).should().convert(firstStateHistoryDtoWithStateDto, StatesHistoryEntity.class);
     then(statesHistoryRepository).should().saveAndFlush(firstStatesHistoryEntity);
-    then(applicationsService).should().saveOrUpdate(firstStateHistoryDto.getApplicationDTO());
+    then(applicationsService).should().saveOrUpdate(firstStateHistoryDtoWithStateDto.getApplicationDTO());
   }
 
   @Test
   public void saveStateHistoryShouldSaveWhenAllParamIsRightAndCreationDateIsExisting() {
     // Given
-    firstStateHistoryDto.setCreationDate(presentDate);
+    firstStateHistoryDtoWithStateDto.setCreationDate(presentDate);
     given(statesRepository.findOne(FIRST_ID)).willReturn(firstStateEntity);
-    given(converterService.convert(firstStateHistoryDto, StatesHistoryEntity.class))
+    given(converterService.convert(firstStateHistoryDtoWithStateDto, StatesHistoryEntity.class))
         .willReturn(firstStatesHistoryEntity);
-    given(statesHistoryRepository.saveAndFlush(firstStatesHistoryEntity)).willReturn(firstStatesHistoryEntity);
 
+    given(statesHistoryRepository.saveAndFlush(firstStatesHistoryEntity)).willReturn(firstStatesHistoryEntity);
     // When
-    Long result = statesHistoryService.saveStateHistory(firstStateHistoryDto);
+    Long result = statesHistoryService.saveStateHistory(firstStateHistoryDtoWithStateDto);
 
     // Then
     assertThat(result, notNullValue());
@@ -401,9 +438,9 @@ public class StatesHistoryServiceImplTest {
     assertThat(firstStatesHistoryEntity.getCreationDate(), equalTo(presentDate));
 
     then(statesRepository).should().findOne(FIRST_ID);
-    then(converterService).should().convert(firstStateHistoryDto, StatesHistoryEntity.class);
+    then(converterService).should().convert(firstStateHistoryDtoWithStateDto, StatesHistoryEntity.class);
     then(statesHistoryRepository).should().saveAndFlush(firstStatesHistoryEntity);
-    then(applicationsService).should().saveOrUpdate(firstStateHistoryDto.getApplicationDTO());
+    then(applicationsService).should().saveOrUpdate(firstStateHistoryDtoWithStateDto.getApplicationDTO());
   }
 
   @Test(expected = IllegalArgumentException.class)

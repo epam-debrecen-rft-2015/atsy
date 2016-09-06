@@ -14,6 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -21,12 +22,33 @@ import cucumber.api.java.en.When;
 
 public class WelcomeStepDefs {
   private List<CandidateTableRow> expectedCandidates;
+  private List<CandidateData> expectedPositions;
 
-  @When("the user clicks on the Főoldal button")
+  @Given("^The following application positions exist for candidates:$")
+  public void showApplications(List<CandidateData> candidateDatas) {
+    expectedPositions = candidateDatas;
+  }
+
+  @Given("^The applications of (.*) are deleted.$")
+  public void deleteApplications(String name) {
+
+    List<Long> ids = expectedPositions.stream()
+        .filter(c -> c.getCandidateName() == name)
+        .map(c -> c.getCandidateID())
+        .collect(Collectors.toList());
+
+    for (Long id : ids) {
+      getDriver()
+          .get("http://localhost:8080/atsy/secure/deleteApplications?candidateId=" + id);
+    }
+  }
+
+
+  @When("the user clicks on the logo")
   public void homeClicked() {
     waitForPageLoadAfter(
-        driver -> driver.findElement(By.cssSelector(".navbar .navbar-nav :first-child > a"))
-            .click());
+      driver -> driver.findElement(By.cssSelector(".navbar .navbar-brand .img-rounded"))
+        .click());
   }
 
   @Then("the Candidates page appears")

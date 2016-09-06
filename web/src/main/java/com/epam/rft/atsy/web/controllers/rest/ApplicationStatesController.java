@@ -2,7 +2,7 @@ package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
-import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,18 +37,18 @@ public class ApplicationStatesController {
    * @return all the state histories of the given application
    */
   @RequestMapping(method = RequestMethod.GET)
-  public Collection<StateHistoryViewDTO> loadApplications(
+  public Collection<StateHistoryDTO> loadApplications(
       @PathVariable(value = "applicationId") Long applicationId, Locale locale) {
-    Collection<StateHistoryViewDTO>
+    Collection<StateHistoryDTO>
         applicationStates =
         statesHistoryService.getStateHistoriesByApplicationId(applicationId);
 
-    for (StateHistoryViewDTO stateHistoryViewDTO : applicationStates) {
-      String stateType = stateHistoryViewDTO.getStateDTO().getName();
+    for (StateHistoryDTO stateHistoryDTO : applicationStates) {
+      String stateType = stateHistoryDTO.getStateDTO().getName();
       stateType =
           messageKeyResolver.resolveMessageOrDefault(APPLICATION_STATE + stateType, stateType);
-      stateHistoryViewDTO
-          .setStateDTO(new StateDTO(stateHistoryViewDTO.getStateDTO().getId(), stateType));
+      stateHistoryDTO
+          .setStateDTO(new StateDTO(stateHistoryDTO.getStateDTO().getId(), stateType));
     }
 
     return applicationStates;

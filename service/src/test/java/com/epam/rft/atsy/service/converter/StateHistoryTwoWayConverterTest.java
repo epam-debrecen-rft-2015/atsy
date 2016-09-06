@@ -101,6 +101,7 @@ public class StateHistoryTwoWayConverterTest {
       .claim(STATE_HISTORY_CLAIM)
       .feedbackDate(APPLICATION_CREATION_DATE)
       .dayOfStart(APPLICATION_CREATION_DATE)
+      .dateOfEnter(APPLICATION_CREATION_DATE)
       .statesEntity(statesEntity)
       .build();
 
@@ -139,6 +140,7 @@ public class StateHistoryTwoWayConverterTest {
       .claim(STATE_HISTORY_CLAIM)
       .feedbackDate(APPLICATION_CREATION_DATE)
       .dayOfStart(APPLICATION_CREATION_DATE)
+      .dateOfEnter(APPLICATION_CREATION_DATE)
       .stateDTO(stateDTO)
       .creationDate(APPLICATION_CREATION_DATE)
       .build();
