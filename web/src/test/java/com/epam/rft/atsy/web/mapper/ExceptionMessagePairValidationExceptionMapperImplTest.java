@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RuleValidationExceptionMapperImplTest {
+public class ExceptionMessagePairValidationExceptionMapperImplTest {
 
   private static final Exception INVALID_EXCEPTION = new Exception();
   private static final Exception VALID_EXCEPTION = new PasswordUniqueValidationException();
@@ -20,10 +20,11 @@ public class RuleValidationExceptionMapperImplTest {
 
   @BeforeClass
   public static void setUp() {
-    Set<Rule> ruleSet = new HashSet<>();
-    ruleSet.add(new Rule("unique", PasswordUniqueValidationException.class));
+    Set<ExceptionMessagePair> exceptionMessagePairSet = new HashSet<>();
+    exceptionMessagePairSet.add(new ExceptionMessagePair("unique", PasswordUniqueValidationException.class));
     ruleValidationExceptionMapper = new RuleValidationExceptionMapperImpl();
-    ruleValidationExceptionMapper.ruleValidationExceptionSet = Collections.unmodifiableSet(ruleSet);
+    ruleValidationExceptionMapper.exceptionMessagePairValidationExceptionSet = Collections.unmodifiableSet(
+        exceptionMessagePairSet);
   }
 
   @Test(expected = IllegalArgumentException.class)

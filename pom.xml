@@ -203,7 +203,7 @@
                         <phase>post-integration-test</phase>
                         <configuration>
                             <rules>
-                                <rule>
+                                <exceptionMessagePair>
                                     <element>BUNDLE</element>
                                     <limits>
                                         <limit>
@@ -237,7 +237,7 @@
                                             <minimum>${jacoco.instructionRatio}</minimum>
                                         </limit>
                                     </limits>
-                                </rule>
+                                </exceptionMessagePair>
                             </rules>
                         </configuration>
                     </execution>

@@ -12,7 +12,7 @@ import com.epam.rft.atsy.service.exception.passwordchange.PasswordLengthValidati
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordNewMatchValidationException;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordOldMatchValidationException;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordUniqueValidationException;
-import com.epam.rft.atsy.web.mapper.Rule;
+import com.epam.rft.atsy.web.mapper.ExceptionMessagePair;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,39 +20,60 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This configuration class is responsible for the bean that stores all the validation exceptions
+ * along with their corresponding messages. The bean is filled with data here, so if some changes
+ * happen among the validation exceptions or the exception messages, this class must be adjusted
+ * according to the changes.
+ */
 @Configuration
 public class ExceptionMapperConfiguration {
 
+  /**
+   * Creates the bean that stores all the exception-message pairs. After it's filled with the data,
+   * the set becomes unmodifiable.
+   * @return an unmodifiable Set object filled with all the exception-message pairs.
+   */
   @Bean
-  public Set<Rule> ruleValidationExceptionSet() {
-    final Set<Rule> ruleValidationExceptionSet = new HashSet<>();
+  public Set<ExceptionMessagePair> ruleValidationExceptionSet() {
+    final Set<ExceptionMessagePair> exceptionMessagePairValidationExceptionSet = new HashSet<>();
 
     // add password validation rule exceptions
-    ruleValidationExceptionSet
-        .add(new Rule("allfieldfilled", PasswordAllFieldFilledValidationException.class));
-    ruleValidationExceptionSet.add(new Rule("contains", PasswordContainsValidationException.class));
-    ruleValidationExceptionSet.add(new Rule("length", PasswordLengthValidationException.class));
-    ruleValidationExceptionSet
-        .add(new Rule("newpasswordmatch", PasswordNewMatchValidationException.class));
-    ruleValidationExceptionSet
-        .add(new Rule("oldpasswordmatch", PasswordOldMatchValidationException.class));
-    ruleValidationExceptionSet.add(new Rule("unique", PasswordUniqueValidationException.class));
+    exceptionMessagePairValidationExceptionSet
+        .add(new ExceptionMessagePair("allfieldfilled",
+            PasswordAllFieldFilledValidationException.class));
+    exceptionMessagePairValidationExceptionSet
+        .add(new ExceptionMessagePair("contains", PasswordContainsValidationException.class));
+    exceptionMessagePairValidationExceptionSet
+        .add(new ExceptionMessagePair("length", PasswordLengthValidationException.class));
+    exceptionMessagePairValidationExceptionSet
+        .add(new ExceptionMessagePair("newpasswordmatch",
+            PasswordNewMatchValidationException.class));
+    exceptionMessagePairValidationExceptionSet
+        .add(new ExceptionMessagePair("oldpasswordmatch",
+            PasswordOldMatchValidationException.class));
+    exceptionMessagePairValidationExceptionSet
+        .add(new ExceptionMessagePair("unique", PasswordUniqueValidationException.class));
 
     // add file validation rule exceptions
-    ruleValidationExceptionSet
-        .add(new Rule("file.is.missing", FileIsMissingValidationException.class));
-    ruleValidationExceptionSet.add(new Rule("file.is.empty", FileIsEmptyValidationException.class));
-    ruleValidationExceptionSet
-        .add(new Rule("file.is.too.large", FileIsTooLargeValidationException.class));
-    ruleValidationExceptionSet.add(
-        new Rule("file.is.in.wrong.extension", FileIsInWrongExtensionValidationException.class));
-    ruleValidationExceptionSet.add(new Rule("file.contains.invalid.character",
-        FileContainsInvalidCharacterValidationException.class));
-    ruleValidationExceptionSet
-        .add(new Rule("file.already.exists", FileAlreadyExistsValidationException.class));
+    exceptionMessagePairValidationExceptionSet
+        .add(new ExceptionMessagePair("file.is.missing", FileIsMissingValidationException.class));
+    exceptionMessagePairValidationExceptionSet
+        .add(new ExceptionMessagePair("file.is.empty", FileIsEmptyValidationException.class));
+    exceptionMessagePairValidationExceptionSet
+        .add(
+            new ExceptionMessagePair("file.is.too.large", FileIsTooLargeValidationException.class));
+    exceptionMessagePairValidationExceptionSet.add(
+        new ExceptionMessagePair("file.is.in.wrong.extension",
+            FileIsInWrongExtensionValidationException.class));
+    exceptionMessagePairValidationExceptionSet
+        .add(new ExceptionMessagePair("file.contains.invalid.character",
+            FileContainsInvalidCharacterValidationException.class));
+    exceptionMessagePairValidationExceptionSet
+        .add(new ExceptionMessagePair("file.already.exists",
+            FileAlreadyExistsValidationException.class));
 
-    return Collections.unmodifiableSet(ruleValidationExceptionSet);
+    return Collections.unmodifiableSet(exceptionMessagePairValidationExceptionSet);
   }
-
-
-}
+  
+}//class
