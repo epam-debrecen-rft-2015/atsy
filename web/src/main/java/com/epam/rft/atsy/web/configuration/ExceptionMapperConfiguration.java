@@ -16,6 +16,7 @@ import com.epam.rft.atsy.web.mapper.Rule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,7 +51,7 @@ public class ExceptionMapperConfiguration {
     ruleValidationExceptionSet
         .add(new Rule("file.already.exists", FileAlreadyExistsValidationException.class));
 
-    return ruleValidationExceptionSet;
+    return Collections.unmodifiableSet(ruleValidationExceptionSet);
   }
 
 

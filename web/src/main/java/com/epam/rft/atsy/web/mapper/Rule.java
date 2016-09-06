@@ -8,6 +8,6 @@ import lombok.Getter;
 public class Rule {
 
   private String messageKey;
-  private Class<?> exceptionClass;
+  private Class<? extends Exception> exceptionClass;
 
 }

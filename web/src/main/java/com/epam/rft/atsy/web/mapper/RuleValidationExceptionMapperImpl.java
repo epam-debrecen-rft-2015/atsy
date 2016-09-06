@@ -9,16 +9,16 @@ import javax.annotation.Resource;
 @Component
 public class RuleValidationExceptionMapperImpl implements RuleValidationExceptionMapper {
 
-  @Resource(name = "ruleValidationExceptionMap")
+  @Resource(name = "ruleValidationExceptionSet")
   Set<Rule> ruleValidationExceptionSet;
 
   @Override
   public String getMessageKeyByException(Exception e) throws IllegalArgumentException {
     Assert.notNull(e);
-    Class<?> exceptionClass = e.getClass();
+    Class<? extends Exception> exceptionClass = e.getClass();
 
     for (Rule rule : ruleValidationExceptionSet) {
-      if (rule.getExceptionClass().equals(exceptionClass)) {
+      if (exceptionClass.equals(rule.getExceptionClass())) {
         return rule.getMessageKey();
       }
     }
