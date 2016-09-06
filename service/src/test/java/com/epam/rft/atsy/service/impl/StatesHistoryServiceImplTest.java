@@ -7,6 +7,8 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
@@ -18,10 +20,10 @@ import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.persistence.repositories.StatesHistoryRepository;
 import com.epam.rft.atsy.persistence.repositories.StatesRepository;
 import com.epam.rft.atsy.service.ConverterService;
+import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
-import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -65,7 +67,7 @@ public class StatesHistoryServiceImplTest {
       EMPTY_STATE_HISTORY_ENTITY_LIST =
       Collections.emptyList();
 
-  private static final List<StateHistoryViewDTO>
+  private static final List<StateHistoryDTO>
       EMPTY_STATE_HISTORY_VIEW_DTO_LIST =
       Collections.emptyList();
 
@@ -127,16 +129,16 @@ public class StatesHistoryServiceImplTest {
       StatesHistoryEntity.builder().id(FIRST_ID).applicationEntity(secondApplicationEntity)
           .statesEntity(firstStateEntity).creationDate(presentDate).build();
 
-  private final StateHistoryViewDTO
-      stateViewHistoryDTO =
-      StateHistoryViewDTO.builder().id(FIRST_ID).creationDate(presentDate).build();
+  private final StateHistoryDTO
+      stateHistoryDTOWithCreationDate =
+      StateHistoryDTO.builder().id(FIRST_ID).creationDate(presentDate).build();
 
   private final StateDTO
       firstStateDTO =
       StateDTO.builder().id(FIRST_ID).name(FIRST_STATE_TYPE_NAME).build();
 
   private final StateHistoryDTO
-      stateHistoryDTO =
+      stateHistoryDTOWithStateDTO =
       StateHistoryDTO.builder().id(FIRST_ID).stateDTO(firstStateDTO).build();
 
   private final List<ApplicationEntity> applicationEntityListWithSingleElement =
@@ -151,11 +153,12 @@ public class StatesHistoryServiceImplTest {
   private final List<StatesHistoryEntity> statesHistoryEntityListWithThreeElements =
       Arrays.asList(firstStatesHistoryEntity, secondStatesHistoryEntity, thirdStatesHistoryEntity);
 
-  private final List<StateHistoryViewDTO> stateViewHistoryDTOListWithSingleElement =
-      Collections.singletonList(stateViewHistoryDTO);
+  private final List<StateHistoryDTO> stateViewHistoryDTOListWithSingleElement =
+      Collections.singletonList(stateHistoryDTOWithCreationDate);
 
-  private final List<StateHistoryViewDTO> stateViewHistoryDTOListWithThreeElements =
-      Arrays.asList(stateViewHistoryDTO, stateViewHistoryDTO, stateViewHistoryDTO);
+  private final List<StateHistoryDTO> stateViewHistoryDTOListWithThreeElements =
+      Arrays.asList(stateHistoryDTOWithCreationDate, stateHistoryDTOWithCreationDate,
+          stateHistoryDTOWithCreationDate);
 
   private List<CandidateApplicationDTO> candidateApplicationDTOListWithSingleElement =
       Collections.singletonList(
@@ -202,7 +205,6 @@ public class StatesHistoryServiceImplTest {
   @InjectMocks
   private StatesHistoryServiceImpl statesHistoryService;
 
-
   @Test(expected = IllegalArgumentException.class)
   public void getStatesByApplicationIdShouldThrowIllegalArgumentExceptionWhenApplicationIdIsNull() {
     // Given
@@ -232,17 +234,17 @@ public class StatesHistoryServiceImplTest {
     given(statesHistoryRepository
         .findByApplicationEntityOrderByCreationDateDesc(APPLICATION_ENTITY_WITHOUT_STATE_HISTORY))
         .willReturn(EMPTY_STATE_HISTORY_ENTITY_LIST);
-    given(converterService.convert(EMPTY_STATE_HISTORY_ENTITY_LIST, StateHistoryViewDTO.class))
+    given(converterService.convert(EMPTY_STATE_HISTORY_ENTITY_LIST, StateHistoryDTO.class))
         .willReturn(EMPTY_STATE_HISTORY_VIEW_DTO_LIST);
 
     // When
-    List<StateHistoryViewDTO>
-        stateViewHistoryDTOList =
+    List<StateHistoryDTO>
+        stateHistoryDTOList =
         statesHistoryService.getStateHistoriesByApplicationId(FIRST_ID);
 
     // Then
-    assertThat(stateViewHistoryDTOList, notNullValue());
-    assertThat(stateViewHistoryDTOList.isEmpty(), is(true));
+    assertThat(stateHistoryDTOList, notNullValue());
+    assertThat(stateHistoryDTOList.isEmpty(), is(true));
 
     then(applicationsRepository).should().findOne(FIRST_ID);
     then(statesHistoryRepository).should()
@@ -257,18 +259,18 @@ public class StatesHistoryServiceImplTest {
         .findByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity))
         .willReturn(statesHistoryEntityListWithSingleElement);
     given(converterService
-        .convert(statesHistoryEntityListWithSingleElement, StateHistoryViewDTO.class))
+        .convert(statesHistoryEntityListWithSingleElement, StateHistoryDTO.class))
         .willReturn(stateViewHistoryDTOListWithSingleElement);
 
     // When
-    List<StateHistoryViewDTO>
-        stateViewHistoryDTOList =
+    List<StateHistoryDTO>
+        stateHistoryDTOList =
         statesHistoryService.getStateHistoriesByApplicationId(FIRST_ID);
 
     // Then
-    assertThat(stateViewHistoryDTOList, notNullValue());
-    assertThat(stateViewHistoryDTOList.isEmpty(), is(false));
-    assertThat(stateViewHistoryDTOList, equalTo(stateViewHistoryDTOListWithSingleElement));
+    assertThat(stateHistoryDTOList, notNullValue());
+    assertThat(stateHistoryDTOList.isEmpty(), is(false));
+    assertThat(stateHistoryDTOList, equalTo(stateViewHistoryDTOListWithSingleElement));
 
     then(applicationsRepository).should().findOne(FIRST_ID);
     then(statesHistoryRepository).should()
@@ -283,18 +285,18 @@ public class StatesHistoryServiceImplTest {
         .findByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity))
         .willReturn(statesHistoryEntityListWithThreeElements);
     given(converterService
-        .convert(statesHistoryEntityListWithThreeElements, StateHistoryViewDTO.class))
+        .convert(statesHistoryEntityListWithThreeElements, StateHistoryDTO.class))
         .willReturn(stateViewHistoryDTOListWithThreeElements);
 
     // When
-    List<StateHistoryViewDTO>
-        stateViewHistoryDTOList =
+    List<StateHistoryDTO>
+        stateHistoryDTOList =
         statesHistoryService.getStateHistoriesByApplicationId(FIRST_ID);
 
     // Then
-    assertThat(stateViewHistoryDTOList, notNullValue());
-    assertThat(stateViewHistoryDTOList.isEmpty(), is(false));
-    assertThat(stateViewHistoryDTOList, equalTo(stateViewHistoryDTOListWithThreeElements));
+    assertThat(stateHistoryDTOList, notNullValue());
+    assertThat(stateHistoryDTOList.isEmpty(), is(false));
+    assertThat(stateHistoryDTOList, equalTo(stateViewHistoryDTOListWithThreeElements));
 
     then(applicationsRepository).should().findOne(FIRST_ID);
     then(statesHistoryRepository).should()
@@ -302,11 +304,42 @@ public class StatesHistoryServiceImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
+  public void deleteStateHistoriesByApplicationShouldThrowIllegalArgumentExceptionWhenTheGivenApplicationIsNull() {
+    // When
+    statesHistoryService.deleteStateHistoriesByApplication(null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void deleteStateHistoriesByApplicationShouldThrowIllegalArgumentExceptionWhenTheGivenApplicationsIdIsNull() {
+    // When
+    ApplicationDTO applicationDTO = ApplicationDTO.builder().id(null).build();
+
+    statesHistoryService.deleteStateHistoriesByApplication(applicationDTO);
+  }
+
+  @Test
+  public void deleteStateHistoriesByApplicationShouldDeleteTheCorrespondingStateHistories() {
+    // Given
+    ApplicationDTO applicationDTO = ApplicationDTO.builder().id(FIRST_ID).build();
+    given(applicationsRepository.findOne(applicationDTO.getId()))
+        .willReturn(firstApplicationEntity);
+    given(statesHistoryRepository
+        .findByApplicationEntityOrderByCreationDateDesc(firstApplicationEntity))
+        .willReturn(statesHistoryEntityListWithSingleElement);
+
+    // When
+    statesHistoryService.deleteStateHistoriesByApplication(applicationDTO);
+
+    // Then
+    verify(statesHistoryRepository, atLeastOnce()).delete(statesHistoryEntityListWithSingleElement);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
   public void saveStateShouldThrowIllegalArgumentExceptionWhenApplicationIdIsNull() {
     // Given
 
     // When
-    statesHistoryService.saveStateHistory(stateHistoryDTO, null);
+    statesHistoryService.saveStateHistory(stateHistoryDTOWithStateDTO, null);
 
     // Then
   }
@@ -350,7 +383,7 @@ public class StatesHistoryServiceImplTest {
     given(applicationsRepository.findOne(MINUS_FIRST_ID)).willReturn(null);
 
     // When
-    statesHistoryService.saveStateHistory(stateHistoryDTO, MINUS_FIRST_ID);
+    statesHistoryService.saveStateHistory(stateHistoryDTOWithStateDTO, MINUS_FIRST_ID);
 
     // Then
   }
@@ -371,7 +404,7 @@ public class StatesHistoryServiceImplTest {
   @Test
   public void saveStateShouldBeSuccessSaving() {
     // Given
-    given(converterService.convert(stateHistoryDTO, StatesHistoryEntity.class))
+    given(converterService.convert(stateHistoryDTOWithStateDTO, StatesHistoryEntity.class))
         .willReturn(firstStatesHistoryEntity);
     given(applicationsRepository.findOne(SECOND_ID)).willReturn(secondApplicationEntity);
     given(statesHistoryRepository.save(firstStatesHistoryEntity))
@@ -380,7 +413,7 @@ public class StatesHistoryServiceImplTest {
     given(statesRepository.findOne(FIRST_ID)).willReturn(firstStateEntity);
 
     // When
-    Long resultId = statesHistoryService.saveStateHistory(stateHistoryDTO, SECOND_ID);
+    Long resultId = statesHistoryService.saveStateHistory(stateHistoryDTOWithStateDTO, SECOND_ID);
 
     // Then
     assertStateEntityWhenSavingStateEntity(firstStatesHistoryEntity, savedStatesHistoryEntity);

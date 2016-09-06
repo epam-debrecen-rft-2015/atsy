@@ -1,29 +1,5 @@
 package com.epam.rft.atsy.web.controllers;
 
-import com.epam.rft.atsy.service.PasswordChangeService;
-import com.epam.rft.atsy.service.UserService;
-import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
-import com.epam.rft.atsy.service.domain.PasswordHistoryDTO;
-import com.epam.rft.atsy.service.domain.UserDTO;
-import com.epam.rft.atsy.service.exception.passwordchange.PasswordValidationException;
-import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
-import com.epam.rft.atsy.service.security.UserDetailsAdapter;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
-import java.time.ZonedDateTime;
-import java.util.Date;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
@@ -39,6 +15,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import com.epam.rft.atsy.service.PasswordChangeService;
+import com.epam.rft.atsy.service.UserService;
+import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
+import com.epam.rft.atsy.service.domain.PasswordHistoryDTO;
+import com.epam.rft.atsy.service.domain.UserDTO;
+import com.epam.rft.atsy.service.exception.passwordchange.PasswordValidationException;
+import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
+import com.epam.rft.atsy.service.security.UserDetailsAdapter;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+
+import java.time.ZonedDateTime;
+import java.util.Date;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PasswordChangeControllerTest extends AbstractControllerTest {
