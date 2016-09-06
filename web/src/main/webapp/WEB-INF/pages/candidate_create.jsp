@@ -27,10 +27,7 @@
                 <c:choose>
                     <c:when test="${not empty candidate.id}">
                         <p class="showValue">
-                            <spring:message code="candidate.show.title"/>
-                            <small>
-                              <c:out value="${candidate.name}"/>
-                            </small>
+                            <c:out value="${candidate.name}"/>
                         </p>
 
                         <p class="edit">
