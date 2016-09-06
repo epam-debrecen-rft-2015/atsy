@@ -75,5 +75,5 @@ public class ExceptionMapperConfiguration {
 
     return Collections.unmodifiableSet(exceptionMessagePairValidationExceptionSet);
   }
-  
+
 }//class

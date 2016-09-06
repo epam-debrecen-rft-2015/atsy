@@ -23,7 +23,7 @@ public class ExceptionMessagePairValidationExceptionMapperImplTest {
     Set<ExceptionMessagePair> exceptionMessagePairSet = new HashSet<>();
     exceptionMessagePairSet.add(new ExceptionMessagePair("unique", PasswordUniqueValidationException.class));
     ruleValidationExceptionMapper = new RuleValidationExceptionMapperImpl();
-    ruleValidationExceptionMapper.exceptionMessagePairValidationExceptionSet = Collections.unmodifiableSet(
+    ruleValidationExceptionMapper.ruleValidationExceptionSet = Collections.unmodifiableSet(
         exceptionMessagePairSet);
   }
 

@@ -18,8 +18,8 @@ public class RuleValidationExceptionMapperImpl implements RuleValidationExceptio
   /**
    * Only package private instead or private to make the testing of this class easier.
    */
-  @Resource(name = "exceptionMessagePairValidationExceptionSet")
-  Set<ExceptionMessagePair> exceptionMessagePairValidationExceptionSet;
+  @Resource(name = "ruleValidationExceptionSet")
+  Set<ExceptionMessagePair> ruleValidationExceptionSet;
 
   /**
    * {@inheritDoc}
@@ -29,7 +29,7 @@ public class RuleValidationExceptionMapperImpl implements RuleValidationExceptio
     Assert.notNull(e);
     Class<? extends Exception> exceptionClass = e.getClass();
 
-    for (ExceptionMessagePair exceptionMessagePair : exceptionMessagePairValidationExceptionSet) {
+    for (ExceptionMessagePair exceptionMessagePair : ruleValidationExceptionSet) {
       if (exceptionClass.equals(exceptionMessagePair.getExceptionClass())) {
         return exceptionMessagePair.getMessageKey();
       }
