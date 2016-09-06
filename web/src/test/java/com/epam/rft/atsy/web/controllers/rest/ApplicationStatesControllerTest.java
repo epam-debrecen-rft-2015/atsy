@@ -16,7 +16,7 @@ import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
-import com.epam.rft.atsy.service.domain.states.StateHistoryViewDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import org.junit.Before;
@@ -88,7 +88,7 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
   @InjectMocks
   private ApplicationStatesController applicationStatesController;
 
-  private StateHistoryViewDTO dummyStateHistoryViewDto;
+  private StateHistoryDTO dummyStateHistoryDto;
 
   private ApplicationDTO dummyApplicationDto;
 
@@ -102,7 +102,7 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
 
   private StateDTO stateDtoC;
 
-  private List<StateHistoryViewDTO> dummyStateHistoryViewList;
+  private List<StateHistoryDTO> dummyStateHistoryList;
 
   @Before
   public void setUpTestData() {
@@ -120,17 +120,17 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
 
     List<StateDTO> stateDtoList = Arrays.asList(stateDtoA, stateDtoB, stateDtoC);
 
-    dummyStateHistoryViewList = new ArrayList<>();
+    dummyStateHistoryList = new ArrayList<>();
 
     for (StateDTO stateDto : stateDtoList) {
-      dummyStateHistoryViewList.add(constructDummyStateHistoryViewDto(stateDto));
+      dummyStateHistoryList.add(constructDummyStateHistoryDto(stateDto));
     }
 
-    dummyStateHistoryViewDto = constructDummyStateHistoryViewDto(stateDtoList.get(0));
+    dummyStateHistoryDto = constructDummyStateHistoryDto(stateDtoList.get(0));
   }
 
-  private StateHistoryViewDTO constructDummyStateHistoryViewDto(StateDTO stateDto) {
-    return StateHistoryViewDTO.builder()
+  private StateHistoryDTO constructDummyStateHistoryDto(StateDTO stateDto) {
+    return StateHistoryDTO.builder()
         .id(STATE_HISTORY_ID)
         .candidateId(CANDIDATE_ID)
         .position(dummyPositionDto)
@@ -172,7 +172,7 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
   public void loadApplicationsShouldRespondWithSingleElementCollectionWhenThereIsOneApplication()
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(APPLICATION_ID))
-        .willReturn(Collections.singletonList(dummyStateHistoryViewDto));
+        .willReturn(Collections.singletonList(dummyStateHistoryDto));
 
     given(messageKeyResolver
         .resolveMessageOrDefault(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoA.getName()),
@@ -185,7 +185,7 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$[0]").exists())
         .andExpect(jsonPath("$[1]").doesNotExist());
 
-    assertStateHistoryViewResponse(resultActions, 0, dummyStateHistoryViewDto,
+    assertStateHistoryViewResponse(resultActions, 0, dummyStateHistoryDto,
         STATE_A_LOCALIZED_NAME);
 
     then(statesHistoryService).should().getStateHistoriesByApplicationId(APPLICATION_ID);
@@ -201,7 +201,7 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
   public void loadApplicationsShouldRespondWithThreeElementCollectionWhenTherAreThreeApplications()
       throws Exception {
     given(statesHistoryService.getStateHistoriesByApplicationId(APPLICATION_ID))
-        .willReturn(dummyStateHistoryViewList);
+        .willReturn(dummyStateHistoryList);
 
     given(messageKeyResolver
         .resolveMessageOrDefault(eq(APPLICATION_STATE_MESSAGE_KEY_PREFIX + stateDtoA.getName()),
@@ -226,13 +226,13 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$[2]").exists())
         .andExpect(jsonPath("$[3]").doesNotExist());
 
-    assertStateHistoryViewResponse(resultActions, 0, dummyStateHistoryViewList.get(0),
+    assertStateHistoryViewResponse(resultActions, 0, dummyStateHistoryList.get(0),
         STATE_A_LOCALIZED_NAME);
 
-    assertStateHistoryViewResponse(resultActions, 1, dummyStateHistoryViewList.get(1),
+    assertStateHistoryViewResponse(resultActions, 1, dummyStateHistoryList.get(1),
         STATE_B_LOCALIZED_NAME);
 
-    assertStateHistoryViewResponse(resultActions, 2, dummyStateHistoryViewList.get(2),
+    assertStateHistoryViewResponse(resultActions, 2, dummyStateHistoryList.get(2),
         STATE_C_LOCALIZED_NAME);
 
     then(statesHistoryService).should().getStateHistoriesByApplicationId(APPLICATION_ID);
@@ -253,7 +253,7 @@ public class ApplicationStatesControllerTest extends AbstractControllerTest {
   }
 
   private void assertStateHistoryViewResponse(ResultActions resultActions, int index,
-                                              StateHistoryViewDTO historyViewDto,
+                                              StateHistoryDTO historyViewDto,
                                               String localizedStateName) throws Exception {
     String basePath = "$[" + index + "].";
 

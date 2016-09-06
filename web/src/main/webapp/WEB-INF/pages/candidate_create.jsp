@@ -268,7 +268,7 @@
                 </div>
                 <%--table--%>
                 <div id="application_table">
-                        <table class="table table-hover" id="applications_table"  data-toggle="table" data-url="../applications/${candidate.id}" data-height="500"
+                        <table class="table table-hover cursor-pointer" id="applications_table"  data-toggle="table" data-url="../applications/${candidate.id}" data-height="500"
                                data-sort-name="name" data-escape="true">
                             <thead>
                             <tr>
@@ -282,10 +282,9 @@
                                         code="candidate.table.application.modified.date"/></th>
                                 <th data-field="stateType" data-align="left"><spring:message
                                         code="candidate.table.application.state"/></th>
-                                <th data-field="actions" data-align="left" data-formatter="actionFormatter">
-                                    <spring:message code="candidate.table.application.action"/>
-                                </th>
+
                             </tr>
+
                             </thead>
                         </table>
                     </div>

@@ -377,7 +377,7 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.dayOfStart"/></label>
                           <div class="col-sm-8">
-                              <fmt:formatDate value="${fn:escapeXml(data.dayOfStart)}" type="date" pattern="yyyy-MM-dd" var="formattedDayOfStart"/>
+                              <fmt:formatDate value="${data.dayOfStart}" type="date" pattern="yyyy-MM-dd" var="formattedDayOfStart"/>
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedDayOfStart}</p>
                               <c:if test="${stat.first}">
                                   <input class="stateInput hidden" type="date" name="dayOfStart" id="dayOfStartInput" value="${fn:escapeXml(formattedDayOfStart)}"

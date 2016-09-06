@@ -1,10 +1,8 @@
-function actionFormatter(value, row, index) {
-    return [
-        '<a class="edit ml10" href="../application_state?applicationId=' + row.applicationId + '" title="Edit">',
-        '<i class="glyphicon glyphicon-edit"></i>',
-        '</a>'
-    ].join('');
-}
+$('.table').bootstrapTable({
+    onClickRow: function (row, $element) {
+      window.location.href = "../application_state?applicationId=" + row.applicationId;
+    }
+});
 
 function CandidateCreateModel(){
     var self = this;

@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableSet;
 
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordAllFieldFilledValidationException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;

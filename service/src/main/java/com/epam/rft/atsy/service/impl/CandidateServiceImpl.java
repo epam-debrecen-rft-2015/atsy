@@ -4,6 +4,7 @@ import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
+import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
@@ -28,6 +29,9 @@ public class CandidateServiceImpl implements CandidateService {
 
   @Autowired
   private CandidateRepository candidateRepository;
+
+  @Autowired
+  private ApplicationsService applicationsService;
 
   @Autowired
   private ApplicationsRepository applicationsRepository;
@@ -77,6 +81,13 @@ public class CandidateServiceImpl implements CandidateService {
             searchOptions.getName(), searchOptions.getEmail(), searchOptions.getPhone(), sort);
 
     return converterService.convert(candidateEntities, CandidateDTO.class);
+  }
+
+  @Transactional(readOnly = false)
+  @Override
+  public void deletePositionsByCandidate(CandidateDTO candidateDTO) {
+    candidateDTO.setPositions(null);
+    applicationsService.deleteApplicationsByCandidateDTO(candidateDTO);
   }
 
   @Transactional
