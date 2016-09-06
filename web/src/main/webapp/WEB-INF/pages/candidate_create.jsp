@@ -84,7 +84,7 @@
                                    for="referer"><spring:message
                                     code="candidate.place.label"/></label>
 
-                            <div class="col-lg-4 col-md-4 col-sm-4">
+                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
                                 <input type="text" class="input form-control" name="referer" id="referer" data-bind="valueWithInit: 'referer'"
                                        value="${fn:escapeXml(candidate.referer)}"
                                        placeholder="${i18nplace}" maxlength="20">
@@ -127,7 +127,7 @@
                                    for="drop"><spring:message
                                     code="candidate.english.label"/></label>
 
-                            <div class="selectContainer col-lg-4 col-md-4 col-sm-4" id="drop">
+                            <div class="selectContainer col-lg-4 col-md-4 col-sm-4">
                                 <select class="input form-control" name="languageSkill" id="languageSkill" data-bind="valueWithInit: 'languageSkill'">
                                     <option value=0 <c:if
                                             test="${0 eq candidate.languageSkill}"> selected="selected" </c:if>>
