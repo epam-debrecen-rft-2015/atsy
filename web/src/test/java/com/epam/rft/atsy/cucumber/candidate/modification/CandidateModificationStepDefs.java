@@ -68,7 +68,7 @@ public class CandidateModificationStepDefs {
       if (existingCandidates.stream()
           .anyMatch(c -> c.getEmail().equals(email) && c.getName().equals(candidateName))) {
         waitForPageLoadAfter(event ->
-            columns.get(columns.size() - 1).findElement(By.cssSelector("a > i")).click());
+            columns.get(columns.size() - 1).click());
         break;
       }
     }

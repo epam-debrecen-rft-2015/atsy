@@ -66,7 +66,6 @@ public class WelcomeStepDefs {
     assertThat(webElements.get(1).getText(), is("E-Mail cím"));
     assertThat(webElements.get(2).getText(), is("Telefonszám"));
     assertThat(webElements.get(3).getText(), is("Pozíciók"));
-    assertThat(webElements.get(4).getText(), is("Műveletek"));
   }
 
   @Given("there are existing candidates")
