@@ -60,12 +60,12 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   private static final String ID_FIRST_MINUS = "-1";
   private static final String ID_FIRST = "1";
 
-  private static final String CLICKED_STATE_NAME_NEW_APPLY = "new.apply";
   private static final String CLICKED_STATE_NAME_CV = "cv";
   private static final String CLICKED_STATE_NAME_CODING = "coding";
-  private static final String STATE_NAME_NEW_APPLY = "New apply";
+  private static final String CLICKED_STATE_NAME_NEW_STATE = "newstate";
   private static final String STATE_NAME_CV = "CV";
   private static final String STATE_NAME_CODING = "Coding";
+  private static final String STATE_NAME_NEW_STATE = "New state";
 
   private static final Long APPLICATION_ID = 1L;
   private static final Long NON_EXISTENT_APPLICATION_ID = 3L;
@@ -81,11 +81,11 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
       PositionDTO.builder().id(POSITION_ID).name(POSITION_NAME).build();
 
   private StateDTO
-      stateDTOWithStateNameNewApply =
-      StateDTO.builder().id(1L).name(CLICKED_STATE_NAME_NEW_APPLY).build();
-  private StateDTO
       stateDTOWithStateNameCoding =
       StateDTO.builder().id(3L).name(CLICKED_STATE_NAME_CODING).build();
+
+  private StateDTO stateDTOWithStateNameNewState =
+      StateDTO.builder().id(1L).name(CLICKED_STATE_NAME_NEW_STATE).build();
 
   private ApplicationDTO
       applicationDTO =
@@ -97,7 +97,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
 
 
   private StateHistoryViewRepresentation actualFirstStateHistoryViewRepresentation =
-      StateHistoryViewRepresentation.builder().stateId(1L).stateName(CLICKED_STATE_NAME_NEW_APPLY)
+      StateHistoryViewRepresentation.builder().stateId(1L).stateName(CLICKED_STATE_NAME_NEW_STATE)
           .channelName(CHANNEL_NAME).positionName(POSITION_NAME).build();
   private StateHistoryViewRepresentation actualSecondStateHistoryViewRepresentation =
       StateHistoryViewRepresentation.builder().stateId(2L).stateName(CLICKED_STATE_NAME_CV).build();
@@ -115,8 +115,8 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
 
 
   private StateHistoryViewRepresentation expectedFirstStateHistoryViewRepresentation =
-      StateHistoryViewRepresentation.builder().stateId(1L).stateName(CLICKED_STATE_NAME_NEW_APPLY)
-          .stateFullName(STATE_NAME_NEW_APPLY).channelName(CHANNEL_NAME).positionName(POSITION_NAME)
+      StateHistoryViewRepresentation.builder().stateId(1L).stateName(CLICKED_STATE_NAME_NEW_STATE)
+          .stateFullName(STATE_NAME_NEW_STATE).channelName(CHANNEL_NAME).positionName(POSITION_NAME)
           .build();
   private StateHistoryViewRepresentation expectedSecondStateHistoryViewRepresentation =
       StateHistoryViewRepresentation.builder().stateId(2L).stateName(CLICKED_STATE_NAME_CV)
@@ -282,18 +282,18 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     given(channelService.getChannelDtoById(CHANNEL_ID)).willReturn(channelDTO);
     given(positionService.getPositionDtoById(POSITION_ID)).willReturn(positionDTO);
     given(candidateService.getCandidateByApplicationID(APPLICATION_ID)).willReturn(candidateDTO);
-    given(stateService.getStateDtoByName(CLICKED_STATE_NAME_NEW_APPLY))
-        .willReturn(stateDTOWithStateNameNewApply);
+    given(stateService.getStateDtoByName(CLICKED_STATE_NAME_NEW_STATE))
+        .willReturn(stateDTOWithStateNameNewState);
     given(messageKeyResolver
-        .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_APPLY,
-            CLICKED_STATE_NAME_NEW_APPLY)).willReturn(STATE_NAME_NEW_APPLY);
-    given(stateFlowService.getStateFlowDTOByFromStateDTO(stateDTOWithStateNameNewApply))
+        .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_STATE,
+            CLICKED_STATE_NAME_NEW_STATE)).willReturn(STATE_NAME_NEW_STATE);
+    given(stateFlowService.getStateFlowDTOByFromStateDTO(stateDTOWithStateNameNewState))
         .willReturn(stateFlowDTOListWithSingleElement);
 
     MvcResult
         mvcResult =
         this.mockMvc.perform(get(REQUEST_URL).param(PARAM_APPLICATION_ID, ID_FIRST)
-            .param(PARAM_CLICKED_STATE, CLICKED_STATE_NAME_NEW_APPLY))
+            .param(PARAM_CLICKED_STATE, CLICKED_STATE_NAME_NEW_STATE))
             .andExpect(status().isOk())
             .andExpect(model().attributeExists(PARAM_APPLICATION_ID))
             .andExpect(model().attribute(PARAM_APPLICATION_ID, 1L))
@@ -313,11 +313,11 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     then(applicationsService).should().getApplicationDtoById(APPLICATION_ID);
     then(channelService).should().getChannelDtoById(CHANNEL_ID);
     then(positionService).should().getPositionDtoById(POSITION_ID);
-    then(stateService).should().getStateDtoByName(CLICKED_STATE_NAME_NEW_APPLY);
+    then(stateService).should().getStateDtoByName(CLICKED_STATE_NAME_NEW_STATE);
     then(messageKeyResolver).should()
-        .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_APPLY,
-            CLICKED_STATE_NAME_NEW_APPLY);
-    then(stateFlowService).should().getStateFlowDTOByFromStateDTO(stateDTOWithStateNameNewApply);
+        .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_STATE,
+            CLICKED_STATE_NAME_NEW_STATE);
+    then(stateFlowService).should().getStateFlowDTOByFromStateDTO(stateDTOWithStateNameNewState);
   }
 
   @Test
@@ -336,8 +336,8 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     given(candidateService.getCandidateByApplicationID(APPLICATION_ID)).willReturn(candidateDTO);
 
     given(messageKeyResolver
-        .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_APPLY,
-            CLICKED_STATE_NAME_NEW_APPLY)).willReturn(STATE_NAME_NEW_APPLY);
+        .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_STATE,
+            CLICKED_STATE_NAME_NEW_STATE)).willReturn(STATE_NAME_NEW_STATE);
     given(messageKeyResolver
         .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_CV, CLICKED_STATE_NAME_CV))
         .willReturn(STATE_NAME_CV);
@@ -370,8 +370,8 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     then(stateFlowService).should().getStateFlowDTOByFromStateDTO(stateDTOWithStateNameCoding);
 
     then(messageKeyResolver).should()
-        .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_APPLY,
-            CLICKED_STATE_NAME_NEW_APPLY);
+        .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_STATE,
+            CLICKED_STATE_NAME_NEW_STATE);
     then(messageKeyResolver).should()
         .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_CV, CLICKED_STATE_NAME_CV);
     then(messageKeyResolver).should()

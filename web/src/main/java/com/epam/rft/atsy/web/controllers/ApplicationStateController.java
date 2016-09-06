@@ -39,6 +39,7 @@ public class ApplicationStateController {
   private static final String APPLICATION_STATE = "candidate.table.state.";
   private static final String STATES_OBJECT_KEY = "states";
   private static final String STATE_FLOW_OBJECT_KEY = "stateflows";
+  private static final String NEW_STATE = "newstate";
 
   private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
 
@@ -69,7 +70,6 @@ public class ApplicationStateController {
   @Autowired
   private PositionService positionService;
 
-
   /**
    * Creates the application state page and fills it with all the state information of the given
    * application.
@@ -90,7 +90,6 @@ public class ApplicationStateController {
             .convert(statesHistoryService.getStateHistoriesByApplicationId(applicationId),
                 StateHistoryViewRepresentation.class);
 
-
     if (clickedState != null) {
       StateDTO clickedStateDTO = stateService.getStateDtoByName(clickedState);
 
@@ -102,7 +101,7 @@ public class ApplicationStateController {
           .stateName(clickedStateDTO.getName())
           .build();
 
-      if (clickedStateDTO.getId() == 1) {
+      if (clickedState.equals(NEW_STATE)) {
         ApplicationDTO applicationDTO = applicationsService.getApplicationDtoById(applicationId);
         representation.setChannelName(channelService.getChannelDtoById(applicationDTO.getChannelId()).getName());
         representation.setPositionName(positionService.getPositionDtoById(applicationDTO.getPositionId()).getName());

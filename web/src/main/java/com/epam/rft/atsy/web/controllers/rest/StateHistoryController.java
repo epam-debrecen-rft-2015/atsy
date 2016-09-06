@@ -40,6 +40,7 @@ public class StateHistoryController {
   private static final String CHANNEL_NOT_FOUND_MESSAGE_KEY = "channel.not.found.error.message";
   private static final String FIELD_POSITION_NAME = "positionName";
   private static final String FIELD_CHANNEL_NAME = "channelName";
+  private static final String NEW_STATE = "newstate";
 
   @Autowired
   private StatesHistoryService statesHistoryService;
@@ -71,9 +72,9 @@ public class StateHistoryController {
                                      BindingResult bindingResult, Locale locale) {
 
     StateHistoryDTO stateHistoryDTO;
-    Long stateId = stateHistoryViewRepresentation.getStateId();
+    String stateName = stateHistoryViewRepresentation.getStateName();
 
-    if (stateId != null && stateId == 1) {
+    if (isNewState(stateName)) {
       validateNewState(stateHistoryViewRepresentation, bindingResult);
     }
 
@@ -107,7 +108,7 @@ public class StateHistoryController {
         return new ResponseEntity<>(restResponse, HttpStatus.BAD_REQUEST);
       }
 
-      if (stateId != null && stateId == 1) {
+      if (isNewState(stateName)) {
         ChannelDTO channelDTO = channelService.getChannelDtoByName(stateHistoryViewRepresentation.getChannelName());
         PositionDTO positionDTO = positionService.getPositionDtoByName(stateHistoryViewRepresentation.getPositionName());
 
@@ -121,6 +122,10 @@ public class StateHistoryController {
       statesHistoryService.saveStateHistory(stateHistoryDTO);
       return new ResponseEntity<>(Collections.singletonMap("applicationId", applicationId), HttpStatus.OK);
     }
+  }
+
+  protected boolean isNewState(String stateName) {
+    return stateName != null && stateName.equals(NEW_STATE);
   }
 
   protected void validateNewState(StateHistoryViewRepresentation stateHistoryViewRepresentation, BindingResult bindingResult) {

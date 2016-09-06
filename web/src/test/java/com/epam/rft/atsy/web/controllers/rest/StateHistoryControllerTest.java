@@ -142,6 +142,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
   private static final String STATE_FULL_NAME = "full name";
 
+  private static final String STATE_NAME_NEW_STATE = "newstate";
 
   private static final Long STATE_ID = 2L;
 
@@ -234,7 +235,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .dayOfStart(DAY_OF_START)
         .stateFullName(STATE_FULL_NAME)
         .stateId(STATE_ID_FOR_NEW_STATE)
-        .stateName(STATE_NAME)
+        .stateName(STATE_NAME_NEW_STATE)
         .recommendation(RECOMMENDATION_YES_INTEGER)
         .build();
 
@@ -270,7 +271,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .offeredMoney(OFFERED_MONEY)
         .claim(CLAIM)
         .dayOfStart(DAY_OF_START)
-        .stateDTO(StateDTO.builder().id(STATE_ID_FOR_NEW_STATE).name(STATE_NAME).build())
+        .stateDTO(StateDTO.builder().id(STATE_ID_FOR_NEW_STATE).name(STATE_NAME_NEW_STATE).build())
         .recommendation(RECOMMENDATION_YES_BOOL)
         .build();
   }
@@ -351,7 +352,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   @Test
   public void saveOrUpdateShouldRespondWithErrorJSONWhenPositionNotExists() throws Exception {
     StateHistoryViewRepresentation stateHistoryViewRepresentation =
-        StateHistoryViewRepresentation.builder().stateId(STATE_ID_FOR_NEW_STATE)
+        StateHistoryViewRepresentation.builder().stateId(STATE_ID_FOR_NEW_STATE).stateName(STATE_NAME_NEW_STATE)
             .positionName(POSITION_NAME_NON_EXISTENT).build();
 
     given(positionService.getPositionDtoByName(POSITION_NAME_NON_EXISTENT)).willReturn(null);
@@ -373,7 +374,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   @Test
   public void saveOrUpdateShouldRespondWithErrorJSONWhenChannelNotExists() throws Exception {
     StateHistoryViewRepresentation stateHistoryViewRepresentation =
-        StateHistoryViewRepresentation.builder().stateId(STATE_ID_FOR_NEW_STATE)
+        StateHistoryViewRepresentation.builder().stateId(STATE_ID_FOR_NEW_STATE).stateName(STATE_NAME_NEW_STATE)
             .channelName(CHANNEL_NAME_NON_EXISTENT).build();
 
     given(channelService.getChannelDtoByName(CHANNEL_NAME_NON_EXISTENT)).willReturn(null);
@@ -395,7 +396,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   @Test
   public void saveOrUpdateShouldRespondWithErrorJSONWhenPositionAndChannelNotExist() throws Exception {
     StateHistoryViewRepresentation stateHistoryViewRepresentation =
-        StateHistoryViewRepresentation.builder().stateId(STATE_ID_FOR_NEW_STATE)
+        StateHistoryViewRepresentation.builder().stateId(STATE_ID_FOR_NEW_STATE).stateName(STATE_NAME_NEW_STATE)
             .positionName(POSITION_NAME_NON_EXISTENT).channelName(CHANNEL_NAME_NON_EXISTENT).build();
 
     given(positionService.getPositionDtoByName(POSITION_NAME_NON_EXISTENT)).willReturn(null);

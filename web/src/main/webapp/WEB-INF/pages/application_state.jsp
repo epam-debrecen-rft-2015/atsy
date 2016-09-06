@@ -77,8 +77,8 @@
           <form data-toggle="validator" class="form form-horizontal" role="form" method="POST" id="create-state-form" action="#">
               <c:if test="${stat.first}">
                 <input type="hidden" name="id" value="${data.id}" data-bind="valueWithInit: 'id'"/>
-
                 <input type="hidden" id="stateId" name="stateId" value="${data.stateId}" data-bind="valueWithInit: 'stateId'"/>
+                <input type="hidden" name="stateName" value="${data.stateName}" data-bind="valueWithInit: 'stateName'"/>
               </c:if>
 
               <div class="form-group col-sm-12 col-md-12 col-lg-12">
