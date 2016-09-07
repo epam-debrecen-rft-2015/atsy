@@ -28,10 +28,10 @@
              <div class="collapse navbar-collapse" id="atsy-navbar-collapse-1">
                  <ul class="nav navbar-nav navbar-right">
                      <li>
-                        <a href="${settings}"><span id="settings_link" class="glyphicon glyphicon-cog" aria-hidden="true"/><span class="visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline icon-text"><spring:message code="header.menu.settings"/></span></a>
+                        <a href="${settings}"><span id="settings_link" class="glyphicon glyphicon-cog" aria-hidden="true"></span><span class="visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline icon-text"><spring:message code="header.menu.settings"/></span></a>
                      </li>
                      <li>
-                        <a href="${logout}"><span id="logout_link" class="glyphicon glyphicon-log-out" aria-hidden="true"/><span class="visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline icon-text"><spring:message code="header.menu.logout"/></span></a>
+                        <a href="${logout}"><span id="logout_link" class="glyphicon glyphicon-log-out" aria-hidden="true"></span><span class="visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline icon-text"><spring:message code="header.menu.logout"/></span></a>
                      </li>
                  </ul>
              </div>

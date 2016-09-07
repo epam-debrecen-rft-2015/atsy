@@ -61,6 +61,8 @@ body {
 
 .icon-text {
     margin-left: 10px;
+    line-height: 26px;
+    vertical-align: top;
 }
 
 #positions_section .btn-add {
