@@ -9,7 +9,7 @@ import com.epam.rft.atsy.service.exception.passwordchange.PasswordValidationExce
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
 import com.epam.rft.atsy.service.security.UserDetailsAdapter;
 import com.epam.rft.atsy.web.CurrentUser;
-import com.epam.rft.atsy.web.mapper.PasswordValidationRuleMapper;
+import com.epam.rft.atsy.web.mapper.RuleValidationExceptionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +46,8 @@ public class PasswordChangeController {
   @Resource
   UserService userService;
 
-  @Resource
-  PasswordValidationRuleMapper passwordValidationRuleMapper;
+  @Autowired
+  RuleValidationExceptionMapper ruleValidationExceptionMapper;
 
   @Autowired
   PasswordValidator passwordValidator;
@@ -100,7 +100,8 @@ public class PasswordChangeController {
         model.addObject(VALIDATION_SUCCESS_KEY, PASSWORDCHANGE_VALIDATION_SUCCESS);
       } catch (PasswordValidationException e) {
         logger.error(e.getMessage(), e);
-        model.addObject(VALIDATION_ERROR_KEY, passwordValidationRuleMapper.getMessageKeyByException(e));
+        model.addObject(VALIDATION_ERROR_KEY,
+            ruleValidationExceptionMapper.getMessageKeyByException(e));
       }
     }
     return model;
