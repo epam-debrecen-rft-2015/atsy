@@ -59,6 +59,10 @@ body {
     font-size: 17px;
 }
 
+.icon-text {
+    margin-left: 10px;
+}
+
 #positions_section .btn-add {
     margin-top: 10px;
     margin-left: 10px;

@@ -6,6 +6,7 @@
 <spring:url value="/logout" var="logout"/>
 <spring:url value="/secure/settings" var="settings"/>
 <spring:url value="/secure/welcome" var="welcome"/>
+<spring:url value="/logout" var="logout"/>
 <atsy:page>
     <jsp:attribute name="refs">
          <jsp:invoke fragment="pageJs"/>
@@ -25,13 +26,13 @@
                  </a>
              </div>
              <div class="collapse navbar-collapse" id="atsy-navbar-collapse-1">
-                 <ul class="nav navbar-nav">
-                     <li><a href="${settings}"><span id="settings_link" class="glyphicon glyphicon-cog" aria-hidden="true"/><span class="visible-xs-inline"><spring:message code="header.menu.settings"/></span></a></li>
-                 </ul>
                  <ul class="nav navbar-nav navbar-right">
-                 <li>
-                 <a href="/atsy/logout"><span id="logout_link" class="glyphicon glyphicon-log-out" aria-hidden="true"/><span class="visible-xs-inline"><spring:message code="header.menu.logout"/></span></a>
-                 </li>
+                     <li>
+                        <a href="${settings}"><span id="settings_link" class="glyphicon glyphicon-cog" aria-hidden="true"/><span class="visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline icon-text"><spring:message code="header.menu.settings"/></span></a>
+                     </li>
+                     <li>
+                        <a href="${logout}"><span id="logout_link" class="glyphicon glyphicon-log-out" aria-hidden="true"/><span class="visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline icon-text"><spring:message code="header.menu.logout"/></span></a>
+                     </li>
                  </ul>
              </div>
          </div>
