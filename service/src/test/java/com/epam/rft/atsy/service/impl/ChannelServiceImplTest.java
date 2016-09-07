@@ -1,11 +1,18 @@
 package com.epam.rft.atsy.service.impl;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 import com.epam.rft.atsy.persistence.entities.ChannelEntity;
 import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
@@ -13,6 +20,7 @@ import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.exception.DuplicateChannelException;
 import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
@@ -37,9 +45,12 @@ public class ChannelServiceImplTest {
   private static final Long CHANNEL_ID_DTK = 2L;
   private static final String CHANNEL_NAME_DTK = "dtk";
   private static final Long CHANNEL_ID_LINKEDIN = 3L;
+  private static final Long CHANNDEL_ID_NON_EXISTENT = -1L;
   private static final String CHANNEL_NAME_LINKEDIN = "linkedin hírdetés";
+  private static final String CHANNEL_NAME_NON_EXISTENT = "Olympiad";
   private static final List<ChannelEntity> EMPTY_CHANNEL_ENTITY_LIST = Collections.emptyList();
   private static final List<ChannelDTO> EMPTY_CHANNEL_DTO_LIST = Collections.emptyList();
+
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -74,6 +85,48 @@ public class ChannelServiceImplTest {
         ChannelEntity.builder().id(CHANNEL_ID_LINKEDIN).name(CHANNEL_NAME_LINKEDIN).build();
     expectedChannelDTOList = Arrays.asList(facebookDto, dtkDto, linkedinDto);
     expectedChannelEntityList = Arrays.asList(facebookEntity, dtkEntity, linkedinEntity);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getChannelDtoByIdShouldThrowIllegalArgumentExceptionWhenChannelIdIsNull() {
+    // Given
+
+    // When
+    channelService.getChannelDtoById(null);
+
+    // Then
+  }
+
+  @Test
+  public void getChannelDtoByIdShouldReturnNullChannelDtoWhenChannelIdIsNonExistent() {
+    // Given
+    given(channelRepository.findOne(CHANNDEL_ID_NON_EXISTENT)).willReturn(null);
+
+    // When
+    ChannelDTO channelDTO = channelService.getChannelDtoById(CHANNDEL_ID_NON_EXISTENT);
+
+    // Then
+    assertThat(channelDTO, nullValue());
+
+    then(channelRepository).should().findOne(CHANNDEL_ID_NON_EXISTENT);
+    verifyZeroInteractions(converterService);
+  }
+
+  @Test
+  public void getChannelDtoByIdShouldReturnExistingChannelDtoWhenChannelIdIsExisting() {
+    // Given
+    given(channelRepository.findOne(CHANNEL_ID_FACEBOOK)).willReturn(facebookEntity);
+    given(converterService.convert(facebookEntity, ChannelDTO.class)).willReturn(facebookDto);
+
+    // When
+    ChannelDTO channelDTO = channelService.getChannelDtoById(CHANNEL_ID_FACEBOOK);
+
+    // Then
+    assertThat(channelDTO, notNullValue());
+    assertThat(channelDTO, equalTo(facebookDto));
+
+    then(channelRepository).should().findOne(CHANNEL_ID_FACEBOOK);
+    then(converterService).should().convert(facebookEntity, ChannelDTO.class);
   }
 
   @Test
@@ -130,6 +183,48 @@ public class ChannelServiceImplTest {
 
     then(channelRepository).should().findAll();
     then(converterService).should().convert(expectedChannelEntityList, ChannelDTO.class);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getChannelDtoByNameShouldThrowIllegalArgumentExceptionWhenChannelNameIsNull() {
+    // Given
+
+    // When
+    channelService.getChannelDtoByName(null);
+
+    // Then
+  }
+
+  @Test
+  public void getChannelDtoByNameShouldReturnNullChannelDtoWhenChannelNameIsNonExistent() {
+    // Given
+    given(channelRepository.findByName(CHANNEL_NAME_NON_EXISTENT)).willReturn(null);
+
+    // When
+    ChannelDTO channelDTO = channelService.getChannelDtoByName(CHANNEL_NAME_NON_EXISTENT);
+
+    // Then
+    assertThat(channelDTO, nullValue());
+
+    then(channelRepository).should().findByName(CHANNEL_NAME_NON_EXISTENT);
+    verifyZeroInteractions(converterService);
+  }
+
+  @Test
+  public void getChannelDtoByNameShouldReturnExistingChannelDtoWhenChannelNameIsExisting() {
+    // Given
+    given(channelRepository.findByName(CHANNEL_NAME_FACEBOOK)).willReturn(facebookEntity);
+    given(converterService.convert(facebookEntity, ChannelDTO.class)).willReturn(facebookDto);
+
+    // When
+    ChannelDTO channelDTO = channelService.getChannelDtoByName(CHANNEL_NAME_FACEBOOK);
+
+    // Then
+    assertThat(channelDTO, notNullValue());
+    assertThat(channelDTO, equalTo(facebookDto));
+
+    then(channelRepository).should().findByName(CHANNEL_NAME_FACEBOOK);
+    then(converterService).should().convert(facebookEntity, ChannelDTO.class);
   }
 
   @Test

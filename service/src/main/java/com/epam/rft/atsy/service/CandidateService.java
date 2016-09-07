@@ -17,7 +17,6 @@ public interface CandidateService {
    */
   CandidateDTO getCandidate(Long candidateID);
 
-
   /**
    * Returns the candidate object wich has an application with the given id.
    * @param applicationID the id of the application

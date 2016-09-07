@@ -1,19 +1,11 @@
 package com.epam.rft.atsy.service.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.times;
-
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.exception.DuplicatePositionException;
+
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.hibernate.exception.ConstraintViolationException;
@@ -32,15 +24,28 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verifyZeroInteractions;
+
 @RunWith(MockitoJUnitRunner.class)
 public class PositionServiceImplTest {
 
   private static final Long DEVELOPER_ID = 1L;
+  private static final Long POSITION_ID_NON_EXISTENT = -1L;
   private static final String DEVELOPER_NAME = "Developer";
   private static final Long NON_EXISTENT_ID = 2L;
+  private static final String POSITION_NAME_NON_EXISTENT = "Table tennis instructor";
   private static final List<PositionEntity> EMPTY_POSITION_ENTITY_LIST = Collections.emptyList();
   private static final List<PositionDTO> EMPTY_POSITION_DTO_LIST = Collections.emptyList();
-  private static final List<Long> EMPTY_POSITION_ID_LIST = Collections.emptyList();
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -76,7 +81,6 @@ public class PositionServiceImplTest {
     positionService.getPositionsById(null);
   }
 
-
   @Test
   public void getPositionsByIdShouldReturnEmptyListWhenNoPositionsFoundWithTheGivenIds() {
     // Given
@@ -105,6 +109,47 @@ public class PositionServiceImplTest {
     assertEquals(actualPositionDtoList, expectedPositionDtoList);
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void getPositionDtoByIdShouldThrowIllegalArgumentExceptionWhenPositionIdIsNull() {
+    // Given
+
+    // When
+    positionService.getPositionDtoById(null);
+
+    // Then
+  }
+
+  @Test
+  public void getPositionDtoByIdShouldReturnNullPositionDtoWhenPositionIdIsNonExistent() {
+    // Given
+    given(positionRepository.findOne(POSITION_ID_NON_EXISTENT)).willReturn(null);
+
+    // When
+    PositionDTO positionDTO = positionService.getPositionDtoById(POSITION_ID_NON_EXISTENT);
+
+    // Then
+    assertThat(positionDTO, nullValue());
+
+    then(positionRepository).should().findOne(POSITION_ID_NON_EXISTENT);
+    verifyZeroInteractions(converterService);
+  }
+
+  @Test
+  public void getPositionDtoByIdShouldReturnExistingPositionDtoWhenPositionIdIsExisting() {
+    // Given
+    given(positionRepository.findOne(DEVELOPER_ID)).willReturn(developerEntity);
+    given(converterService.convert(developerEntity, PositionDTO.class)).willReturn(developerDto);
+
+    // When
+    PositionDTO positionDTO = positionService.getPositionDtoById(DEVELOPER_ID);
+
+    // Then
+    assertThat(positionDTO, notNullValue());
+    assertThat(positionDTO, equalTo(developerDto));
+
+    then(positionRepository).should().findOne(DEVELOPER_ID);
+    then(converterService).should().convert(developerEntity, PositionDTO.class);
+  }
 
   @Test
   public void getAllPositionsShouldReturnEmptyListWhenThereAreNoPositions() {
@@ -156,6 +201,48 @@ public class PositionServiceImplTest {
     assertEquals(result, expectedPositionDtoList);
 
     then(positionRepository).should(times(1)).findAll();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getPositionDtoByNameShouldThrowIllegalArgumentExceptionWhenPositionNameIsNull() {
+    // Given
+
+    // When
+    positionService.getPositionDtoByName(null);
+
+    // Then
+  }
+
+  @Test
+  public void getPositionDtoByNameShouldReturnNullPositionDtoWhenPositionNameIsNonExistent() {
+    // Given
+    given(positionRepository.findByName(POSITION_NAME_NON_EXISTENT)).willReturn(null);
+
+    // When
+    PositionDTO positionDTO = positionService.getPositionDtoByName(POSITION_NAME_NON_EXISTENT);
+
+    // Then
+    assertThat(positionDTO, nullValue());
+
+    then(positionRepository).should().findByName(POSITION_NAME_NON_EXISTENT);
+    verifyZeroInteractions(converterService);
+  }
+
+  @Test
+  public void getPositionDtoByNameShouldReturnExistingPositionDtoWhenPositionNameIsExisting() {
+    // Given
+    given(positionRepository.findByName(DEVELOPER_NAME)).willReturn(developerEntity);
+    given(converterService.convert(developerEntity, PositionDTO.class)).willReturn(developerDto);
+
+    // When
+    PositionDTO positionDTO = positionService.getPositionDtoByName(DEVELOPER_NAME);
+
+    // Then
+    assertThat(positionDTO, notNullValue());
+    assertThat(positionDTO, equalTo(developerDto));
+
+    then(positionRepository).should().findByName(DEVELOPER_NAME);
+    then(converterService).should().convert(developerEntity, PositionDTO.class);
   }
 
   @Test(expected = IllegalArgumentException.class)

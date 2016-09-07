@@ -25,10 +25,9 @@ public interface StatesHistoryService {
   /**
    * Saves a state of the given application and returns it's id.
    * @param state the state
-   * @param applicationId the application's id
    * @return the state's id
    */
-  Long saveStateHistory(StateHistoryDTO state, Long applicationId);
+  Long saveStateHistory(StateHistoryDTO state);
 
   /**
    * Returns the list of states of the given application.

@@ -1,8 +1,7 @@
 package com.epam.rft.atsy.web;
 
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
-import com.epam.rft.atsy.service.domain.ChannelDTO;
-import com.epam.rft.atsy.service.domain.PositionDTO;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
@@ -11,6 +10,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,9 +26,9 @@ public class StateHistoryViewRepresentation {
 
   private Long candidateId;
 
-  private PositionDTO position;
+  private String positionName;
 
-  private ChannelDTO channel;
+  private String channelName;
 
   private ApplicationDTO applicationDTO;
 
@@ -53,6 +53,7 @@ public class StateHistoryViewRepresentation {
 
   @Min(value = 0, message = "statehistory.error.claim.negative")
   private Long claim;
+
 
   private Date dayOfStart;
 

@@ -1,15 +1,5 @@
 package com.epam.rft.atsy.service.impl;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
-
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.entities.ChannelEntity;
@@ -25,6 +15,7 @@ import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -34,9 +25,19 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationsServiceImplTest {
@@ -59,8 +60,6 @@ public class ApplicationsServiceImplTest {
   private static final Long CHANNEL_ID = 8L;
   private static final String CHANNEL_NAME = "állásbörze";
 
-  private final Set<String> positionsSet = new HashSet<>(Arrays.asList(POSITION_NAME));
-
   private final ApplicationDTO applicationDTO =
       ApplicationDTO.builder().id(APPLICATION_ID).creationDate(APPLICATION_CREATION_DATE)
           .candidateId(CANDIDATE_ID)
@@ -72,12 +71,6 @@ public class ApplicationsServiceImplTest {
       CandidateEntity.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).email(CANDIDATE_EMAIL)
           .phone(CANDIDATE_PHONE).description(CANDIDATE_DESCRIPTION).referer(CANDIDATE_REFERRER)
           .languageSkill(CANDIDATE_LANG_SKILL).build();
-
-  private final CandidateDTO
-      candidateDTO =
-      CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).email(CANDIDATE_EMAIL)
-          .phone(CANDIDATE_PHONE).description(CANDIDATE_DESCRIPTION).referer(CANDIDATE_REFERRER)
-          .languageSkill(CANDIDATE_LANG_SKILL).positions(positionsSet).build();
 
   private final PositionEntity positionEntity =
       PositionEntity.builder().id(POSITION_ID).name(POSITION_NAME).build();
@@ -94,7 +87,6 @@ public class ApplicationsServiceImplTest {
 
   private final StateHistoryDTO
       stateHistoryDTO = StateHistoryDTO.builder().stateDTO(new StateDTO(1L, "newstate")).build();
-
 
   @Mock
   private ConverterService converterService;
@@ -119,10 +111,9 @@ public class ApplicationsServiceImplTest {
     // Given
 
     // When
-    List<ApplicationDTO> applicationDTOs = applicationsService.getApplicationsByCandidateDTO(null);
+    applicationsService.getApplicationsByCandidateDTO(null);
 
     // Then
-
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -131,12 +122,9 @@ public class ApplicationsServiceImplTest {
     CandidateDTO candidateDTO = CandidateDTO.builder().id(null).build();
 
     // When
-    List<ApplicationDTO>
-        applicationDTOs =
-        applicationsService.getApplicationsByCandidateDTO(candidateDTO);
+    applicationsService.getApplicationsByCandidateDTO(candidateDTO);
 
     // Then
-
   }
 
   @Test
@@ -155,7 +143,6 @@ public class ApplicationsServiceImplTest {
 
   @Test
   public void getApplicationByCandidateDTOShouldReturnOneElementListOfApplicationDTOWhenCandidateIdExists() {
-
     // Given
     CandidateDTO candidateDTO = CandidateDTO.builder().id(CANDIDATE_ID).build();
     List<ApplicationEntity> applicationEntities = Collections.singletonList(applicationEntity);
@@ -172,12 +159,10 @@ public class ApplicationsServiceImplTest {
 
     // Then
     assertThat(result, equalTo(applicationDTOs));
-
   }
 
   @Test
   public void getApplicationByCandidateDTOShouldReturnThreeElementListOfApplicationDTOWhenCandidateIdExists() {
-
     // Given
     CandidateDTO candidateDTO = CandidateDTO.builder().id(CANDIDATE_ID).build();
     List<ApplicationEntity>
@@ -198,7 +183,6 @@ public class ApplicationsServiceImplTest {
 
     // Then
     assertThat(result, equalTo(applicationDTOs));
-
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -233,96 +217,163 @@ public class ApplicationsServiceImplTest {
     // Then
     verify(statesHistoryService, atLeastOnce()).deleteStateHistoriesByApplication(applicationDTO);
     verify(applicationsRepository, atLeastOnce()).delete(applicationEntity);
-
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void getApplicationDtoByIdShouldThrowIllegalArgumentExceptionWhenApplicationIdIsNull() {
+    // Given
+
+    // When
+    applicationsService.getApplicationDtoById(null);
+
+    // Then
+  }
+
+  @Test
+  public void getApplicationDtoByIdShouldReturnNullWhenApplicationDtoNotExists() {
+    // Given
+    given(applicationsRepository.findOne(APPLICATION_ID)).willReturn(null);
+
+    // When
+    ApplicationDTO returnedApplicationDto = applicationsService.getApplicationDtoById(APPLICATION_ID);
+    assertThat(returnedApplicationDto, is(nullValue()));
+
+    // Then
+    then(applicationsRepository).should().findOne(APPLICATION_ID);
+    verifyZeroInteractions(converterService);
+  }
+
+  @Test
+  public void getApplicationDtoByIdShouldReturnExistingApplicationDtoWhenApplicationEntityExists() {
+    // Given
+    given(applicationsRepository.findOne(APPLICATION_ID)).willReturn(applicationEntity);
+    given(converterService.convert(applicationEntity, ApplicationDTO.class)).willReturn(applicationDTO);
+
+    // When
+    ApplicationDTO returnedApplicationDto = applicationsService.getApplicationDtoById(APPLICATION_ID);
+    assertThat(returnedApplicationDto, notNullValue());
+    assertThat(returnedApplicationDto, equalTo(applicationDTO));
+
+    // Then
+    then(applicationsRepository).should().findOne(APPLICATION_ID);
+    then(converterService).should().convert(applicationEntity, ApplicationDTO.class);
+  }
 
   @Test
   public void saveOrUpdateShouldSaveAProperApplicationDTO() {
     // Given
     given(converterService.convert(applicationDTO, ApplicationEntity.class))
         .willReturn(applicationEntity);
-    given(applicationsRepository.save(applicationEntity)).willReturn(this.applicationEntity);
+
+    given(applicationsRepository.saveAndFlush(applicationEntity)).willReturn(this.applicationEntity);
+    given(converterService.convert(applicationEntity, ApplicationDTO.class)).willReturn(applicationDTO);
 
     // When
-    Long result = applicationsService.saveOrUpdate(applicationDTO);
+    ApplicationDTO result = applicationsService.saveOrUpdate(applicationDTO);
 
     // Then
-    assertNotNull(result);
-    assertEquals(APPLICATION_ID, result);
+    assertThat(result, notNullValue());
+    assertThat(result, equalTo(applicationDTO));
 
     then(converterService).should().convert(applicationDTO, ApplicationEntity.class);
-    then(applicationsRepository).should().save(applicationEntity);
+
+    then(applicationsRepository).should().saveAndFlush(applicationEntity);
+    then(converterService).should().convert(applicationEntity, ApplicationDTO.class);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveOrUpdateWithApplicationDTONullShouldThrowIllegalArgumentException() {
+    // Given
+
     // When
     applicationsService.saveOrUpdate(null);
+
+    // Then
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveOrUpdateWithApplicationDTOsCandidateIDNullShouldThrowIllegalArgumentException() {
+    // Given
     final ApplicationDTO applicationDTO =
         ApplicationDTO.builder().id(APPLICATION_ID).creationDate(new Date()).candidateId(null)
             .positionId(POSITION_ID).channelId(CHANNEL_ID).build();
 
     // When
     applicationsService.saveOrUpdate(applicationDTO);
+
+    // Then
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveOrUpdateWithApplicationDTOsPositionIDNullShouldThrowIllegalArgumentException() {
+    // Given
     final ApplicationDTO applicationDTO =
         ApplicationDTO.builder().id(APPLICATION_ID).creationDate(new Date())
             .candidateId(CANDIDATE_ID).positionId(null).channelId(CHANNEL_ID).build();
 
     // When
     applicationsService.saveOrUpdate(applicationDTO);
+
+    // Then
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveOrUpdateWithApplicationDTOsChannelIDNullShouldThrowIllegalArgumentException() {
+    // Given
     final ApplicationDTO applicationDTO =
         ApplicationDTO.builder().id(APPLICATION_ID).creationDate(new Date())
             .candidateId(CANDIDATE_ID).positionId(POSITION_ID).channelId(null).build();
 
     // When
     applicationsService.saveOrUpdate(applicationDTO);
+
+    // Then
   }
 
   @Test
   public void saveApplicationShouldSaveAProperApplicationDTOAndStateDTO() {
+    // Given
     final StateHistoryDTO stateHistoryDTO =
         StateHistoryDTO.builder().channel(new ChannelDTO(8L, null)).candidateId(1L)
             .position(new PositionDTO(1L, null)).description("sss")
             .stateDTO(new StateDTO(1L, "newstate")).build();
 
-    // Given
-    given(converterService.convert(applicationDTO, ApplicationEntity.class))
-        .willReturn(applicationEntity);
-    given(applicationsRepository.save(applicationEntity)).willReturn(this.applicationEntity);
+    given(converterService.convert(applicationDTO, ApplicationEntity.class)).willReturn(applicationEntity);
+    given(applicationsRepository.saveAndFlush(applicationEntity)).willReturn(this.applicationEntity);
+    given(converterService.convert(applicationEntity, ApplicationDTO.class)).willReturn(applicationDTO);
+
     // When
     Long result = applicationsService.saveApplication(applicationDTO, stateHistoryDTO);
 
     // Then
-    assertNotNull(result);
-    assertEquals(APPLICATION_ID, result);
+    assertThat(result, notNullValue());
+    assertThat(result, equalTo(APPLICATION_ID));
+    assertThat(stateHistoryDTO.getApplicationDTO(), equalTo(applicationDTO));
 
-    then(statesHistoryService).should().saveStateHistory(stateHistoryDTO, APPLICATION_ID);
     then(converterService).should().convert(applicationDTO, ApplicationEntity.class);
-    then(applicationsRepository).should().save(applicationEntity);
+
+    then(applicationsRepository).should().saveAndFlush(applicationEntity);
+    then(converterService).should().convert(applicationEntity, ApplicationDTO.class);
+    then(statesHistoryService).should().saveStateHistory(stateHistoryDTO);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveApplicationWithApplicationDTONullShouldThrowIllegalArgumentException() {
+    // Given
+
     // When
     applicationsService.saveApplication(null, stateHistoryDTO);
+
+    // Then
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void saveApplicationWithStateDTONullShouldThrowIllegalArgumentException() {
+    // Given
+
     // When
     applicationsService.saveApplication(applicationDTO, null);
+
+    // Then
   }
 }

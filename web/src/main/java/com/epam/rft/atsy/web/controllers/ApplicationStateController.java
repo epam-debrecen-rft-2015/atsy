@@ -1,10 +1,14 @@
 package com.epam.rft.atsy.web.controllers;
 
+import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.CandidateService;
+import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.ConverterService;
+import com.epam.rft.atsy.service.PositionService;
 import com.epam.rft.atsy.service.StateFlowService;
 import com.epam.rft.atsy.service.StateService;
 import com.epam.rft.atsy.service.StatesHistoryService;
+import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
@@ -35,6 +39,7 @@ public class ApplicationStateController {
   private static final String APPLICATION_STATE = "candidate.table.state.";
   private static final String STATES_OBJECT_KEY = "states";
   private static final String STATE_FLOW_OBJECT_KEY = "stateflows";
+  private static final String NEW_STATE = "newstate";
 
   private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
 
@@ -56,6 +61,14 @@ public class ApplicationStateController {
   @Autowired
   private ConverterService converterService;
 
+  @Autowired
+  private ApplicationsService applicationsService;
+
+  @Autowired
+  private ChannelService channelService;
+
+  @Autowired
+  private PositionService positionService;
 
   /**
    * Creates the application state page and fills it with all the state information of the given
@@ -82,11 +95,19 @@ public class ApplicationStateController {
 
       Assert.notNull(clickedStateDTO);
 
-      stateHistoryViewRepresentations.add(0, StateHistoryViewRepresentation.builder()
+      StateHistoryViewRepresentation representation = StateHistoryViewRepresentation.builder()
           .creationDate(new Date())
           .stateId(clickedStateDTO.getId())
           .stateName(clickedStateDTO.getName())
-          .build());
+          .build();
+
+      if (clickedState.equals(NEW_STATE)) {
+        ApplicationDTO applicationDTO = applicationsService.getApplicationDtoById(applicationId);
+        representation.setChannelName(channelService.getChannelDtoById(applicationDTO.getChannelId()).getName());
+        representation.setPositionName(positionService.getPositionDtoById(applicationDTO.getPositionId()).getName());
+      }
+
+      stateHistoryViewRepresentations.add(0, representation);
     }
 
     CandidateDTO candidateDTO = candidateService.getCandidateByApplicationID(applicationId);
