@@ -21,7 +21,7 @@ import javax.validation.Valid;
  */
 @Controller
 public class NewApplicationController {
-  private static final String VIEW_NAME = "new_application_popup";
+  private static final String VIEW_NAME = "application";
 
   @Resource
   private ApplicationsService applicationsService;

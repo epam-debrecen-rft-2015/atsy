@@ -128,7 +128,7 @@ public class NewApplicationStepDefs {
   }
 
   @Then("^New application page disappears$")
-  public void new_application_popup_disappears() throws Throwable {
+  public void new_application_page_disappears() throws Throwable {
     try {
       webDriver.findElement(By.id(APPLICATION_PAGE_ID));
       // Wrong behaviour
