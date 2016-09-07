@@ -371,7 +371,7 @@
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedFeedbackDate}</p>
                               <c:if test="${stat.first}">
                                   <div class='input-group date' name='feedbackDate' id='feedbackDateInput' >
-                                      <input type='text' class="form-control stateInput hidden" data-bind="datetimepickerBinding: 'feedbackDate'" />
+                                      <input required type='text' class="form-control stateInput hidden" data-bind="datetimepickerBinding: 'feedbackDate'" />
                                       <span class="input-group-addon stateInput hidden">
                                           <span class="glyphicon glyphicon-calendar"></span>
                                       </span>

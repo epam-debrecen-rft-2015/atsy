@@ -42,7 +42,7 @@ function StateHistoryModel() {
                  data[property] = ko.observable();
               }
                   $(element).parent().on("dp.change", function(event){
-                    data[property](event.date.format('YYYY-MM-DD HH:mm'));
+                    data[property](event.date.subtract(event.date.utcOffset(), 'm').format('YYYY-MM-DD HH:mm'));
                   });
           }
       };
