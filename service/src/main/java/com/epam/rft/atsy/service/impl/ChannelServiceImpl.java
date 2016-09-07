@@ -1,10 +1,12 @@
 package com.epam.rft.atsy.service.impl;
 
+import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.entities.ChannelEntity;
 import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
 import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
+import com.epam.rft.atsy.service.exception.ChannelNotFoundException;
 import com.epam.rft.atsy.service.exception.DuplicateChannelException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,5 +76,19 @@ public class ChannelServiceImpl implements ChannelService {
 
       throw new DuplicateChannelException(channelName, ex);
     }
+  }
+
+  @Transactional
+  @Override
+  public void deleteChannelDtoLogicallyByName(String channelName) throws ChannelNotFoundException {
+    Assert.notNull(channelName);
+
+    ChannelEntity channelEntity = this.channelRepository.findByName(channelName);
+    if (channelEntity == null) {
+      throw new ChannelNotFoundException();
+    }
+
+    channelEntity.setDeleted(true);
+    this.channelRepository.saveAndFlush(channelEntity);
   }
 }

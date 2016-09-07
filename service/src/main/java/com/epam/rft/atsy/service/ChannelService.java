@@ -1,6 +1,7 @@
 package com.epam.rft.atsy.service;
 
 import com.epam.rft.atsy.service.domain.ChannelDTO;
+import com.epam.rft.atsy.service.exception.ChannelNotFoundException;
 
 import java.util.Collection;
 
@@ -38,4 +39,11 @@ public interface ChannelService {
    * @param channel the channel
    */
   void saveOrUpdate(ChannelDTO channel);
+
+  /**
+   * Setups the deleted field to true in the channel in the database.
+   *
+   * @param channelName is the name of the channel
+   */
+  void deleteChannelDtoLogicallyByName(String channelName) throws ChannelNotFoundException;
 }
