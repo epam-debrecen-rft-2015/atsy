@@ -20,7 +20,7 @@ import javax.validation.Valid;
  * candidate.
  */
 @Controller
-public class NewApplicationPopupController {
+public class NewApplicationController {
   private static final String VIEW_NAME = "new_application_popup";
 
   @Resource

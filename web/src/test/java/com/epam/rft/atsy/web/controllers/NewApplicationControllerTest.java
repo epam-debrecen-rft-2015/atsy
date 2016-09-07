@@ -30,7 +30,7 @@ import java.util.Date;
 import lombok.val;
 
 @RunWith(MockitoJUnitRunner.class)
-public class NewApplicationPopupControllerTest extends AbstractControllerTest {
+public class NewApplicationControllerTest extends AbstractControllerTest {
 
   private static final String VIEW_NAME = "new_application_popup";
   private static final String REQUEST_URL_GET = "/new_application_popup";
@@ -48,7 +48,7 @@ public class NewApplicationPopupControllerTest extends AbstractControllerTest {
   @Mock
   private ApplicationsService applicationsService;
   @InjectMocks
-  private NewApplicationPopupController newApplicationPopupController;
+  private NewApplicationController newApplicationController;
 
   private ChannelDTO channelDTO = ChannelDTO.builder().id(1L).name(CHANNEL_NAME_FACEBOOK).build();
   private PositionDTO positionDTO = PositionDTO.builder().id(1L).name(POSITION_NAME_DEVELOPER).build();
@@ -60,7 +60,7 @@ public class NewApplicationPopupControllerTest extends AbstractControllerTest {
 
   @Override
   protected Object[] controllersUnderTest() {
-    return new Object[]{newApplicationPopupController};
+    return new Object[]{newApplicationController};
   }
 
   @Test

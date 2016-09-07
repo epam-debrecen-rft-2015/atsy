@@ -7,7 +7,7 @@ import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(format = {"json:target/report.json", "pretty"}, features = {
-    "src/test/resources/com/epam/rft/atsy/cucumber/NewApplicationPopup.feature"}, glue = {
+    "src/test/resources/com/epam/rft/atsy/cucumber/NewApplication.feature"}, glue = {
     "com.epam.rft.atsy.cucumber.application", "com.epam.rft.atsy.cucumber.util"})
-public class NewApplicationPopupIT {
+public class NewApplicationIT {
 }

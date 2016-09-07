@@ -69,8 +69,6 @@
                     </button>
                 </div>
             </form>
-
             </div>
-
     </jsp:body>
 </atsy:secure_page>

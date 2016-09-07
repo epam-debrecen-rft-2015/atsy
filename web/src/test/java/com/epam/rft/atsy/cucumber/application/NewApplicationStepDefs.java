@@ -23,14 +23,14 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-public class NewApplicationPopupStepDefs {
+public class NewApplicationStepDefs {
 
   private static WebDriver webDriver = DriverProvider.getDriver();
   private static final SimpleDateFormat
       SIMPLE_DATE_FORMAT =
       new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss");
 
-  private static final String POP_UP_CONTENT = "pop_up_content";
+  private static final String APPLICATION_PAGE_ID = "application_page";
   private static final String APPLICATIONS_TABLE = "applications_table";
   private static final String POSITION = "position";
   private static final String CHANNEL = "channel";
@@ -64,9 +64,9 @@ public class NewApplicationPopupStepDefs {
         equalTo("http://localhost:8080/atsy/secure/application?candidateId=1"));
   }
 
-  @And("^the New application popup appears$")
-  public void the_new_application_popup_appears() throws Throwable {
-    assertThat(webDriver.findElement(By.id(POP_UP_CONTENT)).isDisplayed(), is(true));
+  @And("^the New application page appears$")
+  public void the_new_application_page_appears() throws Throwable {
+    assertThat(webDriver.findElement(By.id(APPLICATION_PAGE_ID)).isDisplayed(), is(true));
   }
 
   @And("^the user can select a position from a dropdown$")
@@ -92,8 +92,8 @@ public class NewApplicationPopupStepDefs {
   }
 
 
-  @Given("^the user is on a New application popup of an existing candidate$")
-  public void the_user_is_on_a_new_application_popup_of_an_existing_candidates() throws Throwable {
+  @Given("^the user is on a New application page of an existing candidate$")
+  public void the_user_is_on_a_new_application_page_of_an_existing_candidates() throws Throwable {
     webDriver.get("http://localhost:8080/atsy/secure/application?candidateId=1");
   }
 
@@ -127,10 +127,10 @@ public class NewApplicationPopupStepDefs {
     webDriver.findElement(By.id(SAVE_NEW_APPLY_BUTTON)).click();
   }
 
-  @Then("^New application popup disappears$")
+  @Then("^New application page disappears$")
   public void new_application_popup_disappears() throws Throwable {
     try {
-      webDriver.findElement(By.id(POP_UP_CONTENT));
+      webDriver.findElement(By.id(APPLICATION_PAGE_ID));
       // Wrong behaviour
       Assert.fail();
     } catch (NoSuchElementException e) {
