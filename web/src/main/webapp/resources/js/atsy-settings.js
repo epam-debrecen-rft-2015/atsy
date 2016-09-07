@@ -63,9 +63,13 @@ $(function () {
 
 function actionFormatter(value, row, index) {
     return [
-        '<a class="edit ml10" href="javascript:void(0)" title="Edit">',
+        '<a class="edit ml10 little-space" href="javascript:void(0)" title="Edit">',
         '<i class="glyphicon glyphicon-edit"></i>',
-        '</a>'
+        '</a>',
+
+        '<a class="remove ml10 little-space" href="javascript:void(0)" title="Remove">',
+        '<i class="glyphicon glyphicon-remove"></i>',
+         '</a>',
     ].join('');
 }
 
@@ -75,9 +79,24 @@ window.positionsEvents = {
         $('#position-form #positionId').val(row.id);
     }
 };
+
 window.channelsEvents = {
     'click .edit': function (e, value, row) {
         $('#channel-form #channel_name').val(row.name);
         $('#channel-form #channelId').val(row.id);
+    },
+    'click .remove': function (e, value, row) {
+        bootbox.confirm("Are you sure?", function(answer) {
+
+            if (answer) {
+                $.ajax({
+                    type: "POST",
+                    url: "./delete",
+                    data: "channelName=" + row.name,
+                    cache: false,
+                 });
+            }
+        });
+
     }
 };

@@ -222,3 +222,7 @@ form > .button-panel > .btn {
   cursor: pointer;
 }
 
+.little-space {
+  padding-left: 5px;
+  padding-right: 5px;
+}
