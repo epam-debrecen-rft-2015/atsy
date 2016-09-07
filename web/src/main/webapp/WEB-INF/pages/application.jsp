@@ -6,18 +6,18 @@
 <%@taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
 <%@page contentType="text/html;charset=UTF-8" %>
 <spring:url value="/secure/application" var="application"/>
-<spring:url value="/secure/new_application_popup" var="new_application_popup"/>
+<spring:url value="/secure/new_application" var="new_application"/>
 
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
        <c:url value="/resources/js/atsy-application.js" var="urlValue" /> <script src="${urlValue}"></script>
-       <c:url value="/resources/js/atsy-new-application-popup.js" var="urlValue" /> <script type="text/javascript" src="${urlValue}"></script>
+       <c:url value="/resources/js/atsy-new-application.js" var="urlValue" /> <script type="text/javascript" src="${urlValue}"></script>
     </jsp:attribute>
     <jsp:body>
         <div id="application_page">
             <h1 class="page-header"><spring:message code="application.create.title"/></h1>
 
-            <form class="form" role="form" method="POST" id="application-create-form" action="${new_application_popup}">
+            <form class="form" role="form" method="POST" id="application-create-form" action="${new_application}">
                 <input type="hidden" name="candidateId" id="candidateId" value="${candidateId}">
                 <div class="form-group row" id="positionDiv">
                     <spring:message code="application.popup.position.drop.down.default.value" var="i18n_position_drop_down_default_value"/>
