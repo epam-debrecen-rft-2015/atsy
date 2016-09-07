@@ -3,7 +3,6 @@ $(document).ready(function () {
         table = $("#candidates");
     window.onhashchange = locationHashChanged;
 
-
     form.submit(function (event) {
         var values = ["name", "email", "phone", "position"];
         var $this = $(this);
@@ -58,16 +57,10 @@ $(document).ready(function () {
     locationHashChanged();
 });
 
-function actionFormatter(value, row, index) {
-    return [
-        '<a class="edit ml10" href="candidate/' + row.id + '" title="Edit">',
-        '<i class="glyphicon glyphicon-edit"></i>',
-        '</a>'
-    ].join('');
-}
-
-function positionFormatter(value) {
-   return value.join(", ");
- }
+$('.table').bootstrapTable({
+    onClickRow: function (row, $element) {
+      window.location.href="candidate/" + row.id;
+    }
+});
 
 

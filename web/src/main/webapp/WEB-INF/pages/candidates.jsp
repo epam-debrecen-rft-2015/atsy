@@ -41,7 +41,7 @@
             </div>
             <div id="candidates_table">
                 <div>
-                    <table class="table table-striped table-hover" data-toggle="table" id="candidates" data-url="${candidates}" data-height="500" data-sort-name="name" data-escape="true">
+                    <table class="table table-striped table-hover cursor-pointer" data-toggle="table" id="candidates" data-url="${candidates}" data-height="500" data-sort-name="name" data-escape="true">
                         <thead>
                         <tr>
                             <th data-field="name" data-align="left" data-sortable="true"><spring:message
@@ -51,12 +51,9 @@
                             </th>
                             <th data-field="phone" data-align="left" data-sortable="true"><spring:message
                                     code="welcome.candidates.table.phone.title"/></th>
-                            <th data-field="positions" data-align="left" data-sortable="true" data-formatter="positionFormatter">
-                              <spring:message code="welcome.candidates.table.positions.title"/>
-                            </th>
-                            <th data-field="actions" data-align="left" data-formatter="actionFormatter">
-                                <spring:message code="welcome.candidates.table.actions.title"/>
-                            </th>
+
+                            <th data-field="positions" data-align="left" data-sortable="true"><spring:message
+                                    code="welcome.candidates.table.positions.title"/></th>
                         </tr>
                         </thead>
                     </table>
