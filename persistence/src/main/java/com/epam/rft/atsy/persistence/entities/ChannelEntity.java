@@ -22,18 +22,14 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "channels", schema = "atsy", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
-public class ChannelEntity extends SuperEntity implements java.io.Serializable {
+public class ChannelEntity extends LogicallyDeletableEntity implements java.io.Serializable {
 
-
-  @Column(name = "name", nullable = false, length = 255, unique = true)
+  @Column(name = "name", nullable = false, unique = true)
   private String name;
 
-
   @Builder
-  public ChannelEntity(Long id, String name) {
-    super(id);
+  public ChannelEntity(Long id, Boolean deleted, String name) {
+    super(id, deleted);
     this.name = name;
   }
-
-
 }
