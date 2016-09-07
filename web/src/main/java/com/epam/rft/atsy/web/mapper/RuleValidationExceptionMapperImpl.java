@@ -38,4 +38,4 @@ public class RuleValidationExceptionMapperImpl implements RuleValidationExceptio
     throw new IllegalArgumentException();
   }
 
-}//class
+}

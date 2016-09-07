@@ -2,7 +2,9 @@ package com.epam.rft.atsy.web.mapper;
 
 /**
  * This interface is responsible for mapping the validation exceptions to their corresponding
- * messages. However, the mapping is only one sided, the exception can be mapped to its message but
+ * messages.
+ *
+ * However, the mapping is only one sided, the exception can be mapped to its message but
  * not the other way around.
  */
 @FunctionalInterface

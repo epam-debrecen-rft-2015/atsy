@@ -21,10 +21,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This configuration class is responsible for the bean that stores all the validation exceptions
- * along with their corresponding messages. The bean is filled with data here, so if some changes
- * happen among the validation exceptions or the exception messages, this class must be adjusted
- * according to the changes.
+ * This class is responsible for creating the bean that stores all the exception-message pairs. The
+ * bean is filled with data here, so if some changes happen among the validation exceptions or the
+ * exception messages, this class must be adjusted according to the changes.
  */
 @Configuration
 public class ExceptionMapperConfiguration {
@@ -76,4 +75,4 @@ public class ExceptionMapperConfiguration {
     return Collections.unmodifiableSet(exceptionMessagePairValidationExceptionSet);
   }
 
-}//class
+}

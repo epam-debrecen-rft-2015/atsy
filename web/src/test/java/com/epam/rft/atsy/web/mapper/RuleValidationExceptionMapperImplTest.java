@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ExceptionMessagePairValidationExceptionMapperImplTest {
+public class RuleValidationExceptionMapperImplTest {
 
   private static final Exception INVALID_EXCEPTION = new Exception();
   private static final Exception VALID_EXCEPTION = new PasswordUniqueValidationException();
@@ -21,7 +21,8 @@ public class ExceptionMessagePairValidationExceptionMapperImplTest {
   @BeforeClass
   public static void setUp() {
     Set<ExceptionMessagePair> exceptionMessagePairSet = new HashSet<>();
-    exceptionMessagePairSet.add(new ExceptionMessagePair("unique", PasswordUniqueValidationException.class));
+    exceptionMessagePairSet
+        .add(new ExceptionMessagePair("unique", PasswordUniqueValidationException.class));
     ruleValidationExceptionMapper = new RuleValidationExceptionMapperImpl();
     ruleValidationExceptionMapper.ruleValidationExceptionSet = Collections.unmodifiableSet(
         exceptionMessagePairSet);
@@ -47,4 +48,4 @@ public class ExceptionMessagePairValidationExceptionMapperImplTest {
     assertEquals(EXPECTED_MESSAGE_KEY, actualMessageKey);
   }
 
-}//class
+}
