@@ -6,7 +6,9 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -14,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
+import com.epam.rft.atsy.service.exception.ChannelNotFoundException;
 import com.epam.rft.atsy.web.MediaTypes;
 import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
@@ -33,6 +36,8 @@ import java.util.List;
 public class ChannelControllerTest extends AbstractControllerTest {
   private static final String REQUEST_URL = "/secure/channels";
 
+  private static final String REQUEST_URL_FOR_DELETE_ = "/secure/channels/delete";
+
   private static final Object MISSING_REQUEST_BODY = null;
 
   private static final Long CHANNEL_ID = 1L;
@@ -41,9 +46,13 @@ public class ChannelControllerTest extends AbstractControllerTest {
 
   private static final String REQUEST_BODY_IS_MISSING_MESSAGE = "Required request body is missing";
 
-  private static final String EMPTY_POSITION_NAME_MESSAGE_KEY = "settings.channels.error.empty";
+  private static final String EMPTY_CHANNEL_NAME_MESSAGE_KEY = "settings.channels.error.empty";
+
+  private static final String SELECTED_CHANNEL_NOT_FOUND_MESSAGE_KEY = "selected.channel.not.found";
 
   private static final String VALIDATION_ERROR_MESSAGE = "Validation error";
+
+  private static final String REQUEST_PARAM_NAME_CHANNEL_ID = "channelId";
 
   @Mock
   private ChannelService channelService;
@@ -145,7 +154,7 @@ public class ChannelControllerTest extends AbstractControllerTest {
     // not to include null fields in the JSON
     objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-    given(messageKeyResolver.resolveMessageOrDefault(EMPTY_POSITION_NAME_MESSAGE_KEY))
+    given(messageKeyResolver.resolveMessageOrDefault(EMPTY_CHANNEL_NAME_MESSAGE_KEY))
         .willReturn(VALIDATION_ERROR_MESSAGE);
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, emptyPostedDto))
@@ -167,6 +176,43 @@ public class ChannelControllerTest extends AbstractControllerTest {
 
     then(channelService).should().saveOrUpdate(correctPostedDto);
 
+    verifyZeroInteractions(messageKeyResolver);
+  }
+
+  @Test
+  public void deleteChannelDtoLogicallyByNameShouldRespondInternalServerErrorWhenChannelIdIsNull() throws Exception {
+    doThrow(IllegalArgumentException.class).when(this.channelService)
+        .deleteChannelDtoLogicallyById(null);
+
+    this.mockMvc.perform(
+        delete(REQUEST_URL_FOR_DELETE_).param(REQUEST_PARAM_NAME_CHANNEL_ID, StringUtils.EMPTY))
+        .andExpect(status().isInternalServerError());
+
+    then(this.channelService).should().deleteChannelDtoLogicallyById(null);
+    verifyZeroInteractions(messageKeyResolver);
+  }
+
+  @Test
+  public void deleteChannelDtoLogicallyByNameShouldRespondBadRequestWhenChannelNotExists() throws Exception {
+    doThrow(ChannelNotFoundException.class).when(this.channelService)
+        .deleteChannelDtoLogicallyById(CHANNEL_ID);
+
+    this.mockMvc.perform(
+        delete(REQUEST_URL_FOR_DELETE_).param(REQUEST_PARAM_NAME_CHANNEL_ID, String.valueOf(CHANNEL_ID)))
+        .andExpect(status().isBadRequest());
+
+    then(this.channelService).should().deleteChannelDtoLogicallyById(CHANNEL_ID);
+    then(this.messageKeyResolver).should()
+        .resolveMessageOrDefault(SELECTED_CHANNEL_NOT_FOUND_MESSAGE_KEY);
+  }
+
+  @Test
+  public void deleteChannelDtoLogicallyByNameShouldRespondOKWhenLogicallyDeletedIsSuccess() throws Exception {
+    this.mockMvc.perform(
+        delete(REQUEST_URL_FOR_DELETE_).param(REQUEST_PARAM_NAME_CHANNEL_ID, String.valueOf(CHANNEL_ID)))
+        .andExpect(status().isOk());
+
+    then(this.channelService).should().deleteChannelDtoLogicallyById(CHANNEL_ID);
     verifyZeroInteractions(messageKeyResolver);
   }
 }
