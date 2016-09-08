@@ -89,22 +89,37 @@ window.channelsEvents = {
         $('#channel-form #channelId').val(row.id);
     },
     'click .remove': function (e, value, row) {
-        bootbox.confirm("Are you sure?", function(answer) {
+         var options = {
+            size: 'small',
+            message: "Your message here…",
+            animate: true,
+            onEscape: function() {},
+            buttons: {
 
-            if (answer) {
-                $.ajax({
-                    type: 'DELETE',
-                    url: "./delete?" + 'channelId=' + row.id,
-                    cache: false,
-                 })
-                 .done(function (container) {
-                      var table = pageContainer.find('table');
-                      if (table instanceof $) {
-                          table.bootstrapTable('refresh');
+                danger: {
+                    label: "No",
+                    className: "btn-danger",
+                    callback: function() {}
+                },
+
+                success: {
+                      label: "Yes!",
+                      className: "btn-success",
+                      callback: function() {
+                          $.ajax({
+                              type: 'DELETE',
+                              url: "./delete?" + 'channelId=' + row.id,
+                              cache: false,
+                          }).done(function (container) {
+                              var table = pageContainer.find('table');
+                              if (table instanceof $) {
+                                  table.bootstrapTable('refresh');
+                              }
+                          });
                       }
-                 });
-            }
-        });
-
+                 },
+            },
+         }
+        bootbox.dialog(options);
     }
 };
