@@ -13,6 +13,5 @@ public interface ChannelRepository extends JpaRepository<ChannelEntity, Long> {
 
   ChannelEntity findByName(String channelName);
 
-  @Query
-  List<ChannelEntity> findAll();
+  List<ChannelEntity> findAllNonDeletedChannelEntity();
 }
