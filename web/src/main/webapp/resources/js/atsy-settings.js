@@ -92,19 +92,19 @@ window.channelsEvents = {
     'click .remove': function (e, value, row) {
          var options = {
             size: 'small',
-            message: "Your message here…",
+            message: "Biztos vagy benne, hogy törölni akarod az alábbi forrást? (" + row.name + ")",
             animate: true,
             onEscape: function() {},
             buttons: {
 
                 danger: {
-                    label: "No",
+                    label: "Nem",
                     className: "btn-danger",
                     callback: function() {}
                 },
 
                 success: {
-                      label: "Yes!",
+                      label: "Igen",
                       className: "btn-success",
                       callback: function() {
                           $.ajax({
