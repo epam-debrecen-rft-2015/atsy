@@ -16,6 +16,11 @@
     .navbar .glyphicon {
         vertical-align: bottom;
     }
+
+    .icon-text{
+        line-height: 110%!important;
+        vertical-align: bottom!important;
+    }
 }
 
 @media all and (min-width: 768px) {
@@ -57,6 +62,12 @@ body {
     padding-top: 11px;
     padding-bottom: 11px;
     font-size: 17px;
+}
+
+.icon-text {
+    margin-left: 10px;
+    line-height: 150%;
+    vertical-align: top;
 }
 
 #positions_section .btn-add {
