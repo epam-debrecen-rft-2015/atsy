@@ -10,18 +10,18 @@ import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.List;
-import javax.annotation.Resource;
 
 @Service
 public class ApplicationsServiceImpl implements ApplicationsService {
 
-  @Resource
+  @Autowired
   private StatesHistoryService statesHistoryService;
 
   @Autowired
@@ -48,7 +48,7 @@ public class ApplicationsServiceImpl implements ApplicationsService {
     return converterService.convert(applicationEntities, ApplicationDTO.class);
   }
 
-  @Transactional(readOnly = false)
+  @Transactional
   @Override
   public void deleteApplicationsByCandidateDTO(CandidateDTO candidateDTO) {
     Assert.notNull(candidateDTO);
@@ -66,19 +66,30 @@ public class ApplicationsServiceImpl implements ApplicationsService {
     }
   }
 
+  @Transactional(readOnly = true)
+  @Override
+  public ApplicationDTO getApplicationDtoById(Long applicationId) {
+    Assert.notNull(applicationId);
+    ApplicationEntity applicationEntity = applicationsRepository.findOne(applicationId);
+    if (applicationEntity != null) {
+      return converterService.convert(applicationEntity, ApplicationDTO.class);
+    }
+    return null;
+  }
+
   @Transactional
   @Override
-  public Long saveOrUpdate(ApplicationDTO applicationDTO) {
+  public ApplicationDTO saveOrUpdate(ApplicationDTO applicationDTO) {
     Assert.notNull(applicationDTO);
     Assert.notNull(applicationDTO.getCandidateId());
     Assert.notNull(applicationDTO.getPositionId());
     Assert.notNull(applicationDTO.getChannelId());
 
-    ApplicationEntity
-        applicationEntity =
+    ApplicationEntity applicationEntity =
         converterService.convert(applicationDTO, ApplicationEntity.class);
+    ApplicationEntity savedOrUpdateApplicationEntity = applicationsRepository.saveAndFlush(applicationEntity);
 
-    return applicationsRepository.save(applicationEntity).getId();
+    return converterService.convert(savedOrUpdateApplicationEntity, ApplicationDTO.class);
   }
 
   @Transactional
@@ -86,8 +97,9 @@ public class ApplicationsServiceImpl implements ApplicationsService {
   public Long saveApplication(ApplicationDTO applicationDTO, StateHistoryDTO stateHistoryDTO) {
     Assert.notNull(stateHistoryDTO);
 
-    Long applicationId = saveOrUpdate(applicationDTO);
-    statesHistoryService.saveStateHistory(stateHistoryDTO, applicationId);
-    return applicationId;
+    ApplicationDTO savedOrUpdatedApplicationDto = saveOrUpdate(applicationDTO);
+    stateHistoryDTO.setApplicationDTO(savedOrUpdatedApplicationDto);
+    statesHistoryService.saveStateHistory(stateHistoryDTO);
+    return savedOrUpdatedApplicationDto.getId();
   }
 }

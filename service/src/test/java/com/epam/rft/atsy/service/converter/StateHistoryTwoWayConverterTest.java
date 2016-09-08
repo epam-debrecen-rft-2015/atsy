@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
@@ -91,6 +92,8 @@ public class StateHistoryTwoWayConverterTest {
   private StatesHistoryEntity statesHistoryEntity = StatesHistoryEntity.builder()
       .id(STATE_HISTORY_ID)
       .applicationEntity(applicationEntity)
+      .positionEntity(positionEntity)
+      .channelEntity(channelEntity)
       .creationDate(APPLICATION_CREATION_DATE)
       .description(STATE_HISTORY_DESCRIPTION)
       .result(STATE_HISTORY_RESULT)
@@ -177,6 +180,11 @@ public class StateHistoryTwoWayConverterTest {
     //Then
     assertThat(result, notNullValue());
     assertThat(result, is(stateHistoryDTO));
+
+    then(converterService).should().convert(applicationEntity, ApplicationDTO.class);
+    then(converterService).should().convert(channelEntity, ChannelDTO.class);
+    then(converterService).should().convert(positionEntity, PositionDTO.class);
+    then(converterService).should().convert(statesEntity, StateDTO.class);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -194,6 +202,8 @@ public class StateHistoryTwoWayConverterTest {
     //Given
     given(converterService.convert(applicationDTO, ApplicationEntity.class))
         .willReturn(applicationEntity);
+    given(converterService.convert(channelDTO, ChannelEntity.class)).willReturn(channelEntity);
+    given(converterService.convert(positionDTO, PositionEntity.class)).willReturn(positionEntity);
     given(converterService.convert(stateDTO, StatesEntity.class)).willReturn(statesEntity);
 
     //When
@@ -202,6 +212,10 @@ public class StateHistoryTwoWayConverterTest {
     //Then
     assertThat(result, notNullValue());
     assertThat(result, is(statesHistoryEntity));
-  }
 
+    then(converterService).should().convert(applicationDTO, ApplicationEntity.class);
+    then(converterService).should().convert(channelDTO, ChannelEntity.class);
+    then(converterService).should().convert(positionDTO, PositionEntity.class);
+    then(converterService).should().convert(stateDTO, StatesEntity.class);
+  }
 }

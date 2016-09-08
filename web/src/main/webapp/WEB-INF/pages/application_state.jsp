@@ -13,6 +13,7 @@
 <c:url value="/resources/thirdparty/bootstrap-datetimepicker/moment-with-locales.js" var="moment_js"/>
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
+
         <c:url value="/resources/js/atsy-statehistory.js" var="urlValue"/><script src="${urlValue}"></script>
        <c:url value="/resources/js/atsy-statehistory-create.js" var="urlValue" /> <script src="${urlValue}"></script>
        <c:url value="/resources/thirdparty/bootstrap-validator/validator.js" var="urlValue" /> <script src="${urlValue}"
@@ -25,7 +26,8 @@
   <jsp:body>
       <div class="page-header">
           <h1><spring:message code="application.state.title"/>
-              <small id="positionName"><c:out value = "${states[0].position.name}"/></small>
+
+              <small id="positionName"><c:out value = "${states[0].positionName}"/></small>
           </h1>
       </div>
 
@@ -79,7 +81,8 @@
           <form data-toggle="validator" class="form form-horizontal" role="form" method="POST" id="create-state-form" action="#">
               <c:if test="${stat.first}">
                 <input type="hidden" name="id" value="${data.id}" data-bind="valueWithInit: 'id'"/>
-                <input type="hidden" name="stateId" value="${data.stateId}" data-bind="valueWithInit: 'stateId'"/>
+                <input type="hidden" id="stateId" name="stateId" value="${data.stateId}" data-bind="valueWithInit: 'stateId'"/>
+                <input type="hidden" name="stateName" value="${data.stateName}" data-bind="valueWithInit: 'stateName'"/>
               </c:if>
 
               <div class="form-group col-sm-12 col-md-12 col-lg-12">
@@ -113,29 +116,36 @@
                   </div>
                   <div class="help-block with-errors"></div>
               </div>
-
               <c:choose>
+
                   <c:when test="${data.stateName == 'newstate'}">
-                      <div class="form-group">
-                          <label for="positionNameInput" class="control-label col-sm-4"><spring:message code="statehistory.field.position"/></label>
-                          <div class="col-sm-8">
-                              <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value = "${data.position.name}"/></p>
-                              <c:if test="${stat.first}">
-                                  <input class="stateInput hidden" type="text" name="position.name" id="positionNameInput" value="${fn:escapeXml(data.position.name)}"
-                                    data-bind="valueWithInit: 'name'">
-                              </c:if>
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          <label for="channelNameInput" class="control-label col-sm-4"><spring:message code="statehistory.field.channel"/></label>
-                          <div class="col-sm-8">
-                              <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value = "${data.channel.name}"/></p>
-                              <c:if test="${stat.first}">
-                                  <input class="stateInput hidden" type="text" name="channel.name" id="channelNameInput" value="${fn:escapeXml(data.channel.name)}"
-                                    data-bind="valueWithInit: 'channelName'">
-                              </c:if>
-                          </div>
-                      </div>
+                       <div class="form-group">
+                            <label for="positionSelector"  class="control-label col-sm-4"><spring:message code="statehistory.field.position"/></label>
+                            <div class="col-sm-8">
+                                <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.positionName}</p>
+                                  <c:if test="${stat.first}">
+                                      <select required class="stateInput hidden" id="positionSelector" data-bind="valueWithInit: 'positionName'">
+                                          <option disabled="disabled" selected="selected">
+                                               <c:out value="${data.positionName}"/>
+                                           </option>
+                                      </select>
+                                  </c:if>
+                             </div>
+                       </div>
+                       <div class="form-group">
+                           <label for="channelSelector"  class="control-label col-sm-4"><spring:message code="statehistory.field.channel"/></label>
+                            <div class="col-sm-8">
+                                 <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.channelName}</p>
+                                 <c:if test="${stat.first}">
+                                     <select required class="stateInput hidden" id="channelSelector" data-bind="valueWithInit: 'channelName'">
+                                         <option disabled="disabled" selected="selected">
+                                             <c:out value="${data.channelName}"/>
+                                         </option>
+                                     </select>
+                                 </c:if>
+                           </div>
+                       </div>
+
                   </c:when>
                     <c:when test ="${data.stateName == 'coding'}">
                        <div class="form-group">
@@ -249,6 +259,7 @@
                           <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.reviewerName}</p>
                           <c:if test="${stat.first}">
                             <spring:message code="statehistory.error.reviewerName.length" var="errorReviewerNameLengthMessage" />
+
 
                             <input type="text " class="stateInput hidden" id="reviwerNameInput"  value="${fn:escapeXml(data.reviewerName)}"
                               data-bind="valueWithInit: 'reviewerName'"
@@ -388,6 +399,7 @@
                               <fmt:formatDate value="${data.dayOfStart}" type="date" pattern="yyyy-MM-dd" var="formattedDayOfStart"/>
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedDayOfStart}</p>
                               <c:if test="${stat.first}">
+
                                   <input class="stateInput hidden" type="date" name="dayOfStart" id="dayOfStartInput" value="${fn:escapeXml(formattedDayOfStart)}"
                                   data-bind="valueWithInit: 'dayOfStart'" required>
                               </c:if>
@@ -419,4 +431,5 @@
           </form>
       </c:forEach>
   </jsp:body>
+
 </atsy:secure_page>
