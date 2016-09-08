@@ -30,11 +30,11 @@ import java.util.Date;
 import lombok.val;
 
 @RunWith(MockitoJUnitRunner.class)
-public class NewApplicationPopupControllerTest extends AbstractControllerTest {
+public class NewApplicationControllerTest extends AbstractControllerTest {
 
-  private static final String VIEW_NAME = "new_application_popup";
-  private static final String REQUEST_URL_GET = "/new_application_popup";
-  private static final String REQUEST_URL_POST = "/secure/new_application_popup";
+  private static final String VIEW_NAME = "application";
+  private static final String REQUEST_URL_GET = "/new_application";
+  private static final String REQUEST_URL_POST = "/secure/new_application";
   private static final String REDIRECT_URL_FOR_CANDIDATE_A = "/secure/candidate/1";
   private static final String REDIRECT_URL_FOR_NON_EXISTING_CANDIDATE = "/secure/candidate/null";
 
@@ -48,23 +48,26 @@ public class NewApplicationPopupControllerTest extends AbstractControllerTest {
   @Mock
   private ApplicationsService applicationsService;
   @InjectMocks
-  private NewApplicationPopupController newApplicationPopupController;
+  private NewApplicationController newApplicationController;
 
   private ChannelDTO channelDTO = ChannelDTO.builder().id(1L).name(CHANNEL_NAME_FACEBOOK).build();
-  private PositionDTO positionDTO = PositionDTO.builder().id(1L).name(POSITION_NAME_DEVELOPER).build();
+  private PositionDTO
+      positionDTO =
+      PositionDTO.builder().id(1L).name(POSITION_NAME_DEVELOPER).build();
   private StateDTO stateDTO = StateDTO.builder().id(1L).name(NEW_STATE).build();
 
   private StateHistoryDTO stateHistoryDTO =
-      StateHistoryDTO.builder().candidateId(1L).channel(channelDTO).position(positionDTO).stateDTO(stateDTO)
+      StateHistoryDTO.builder().candidateId(1L).channel(channelDTO).position(positionDTO)
+          .stateDTO(stateDTO)
           .description(DESCRIPTION).build();
 
   @Override
   protected Object[] controllersUnderTest() {
-    return new Object[]{newApplicationPopupController};
+    return new Object[]{newApplicationController};
   }
 
   @Test
-  public void loadPageShouldRenderNewApplicationPopupView() throws Exception {
+  public void loadPageShouldRenderNewApplicationView() throws Exception {
     this.mockMvc.perform(get(REQUEST_URL_GET))
         .andExpect(status().isOk())
         .andExpect(view().name(VIEW_NAME))
@@ -84,7 +87,8 @@ public class NewApplicationPopupControllerTest extends AbstractControllerTest {
     val applicationDTOCaptor = ArgumentCaptor.forClass(ApplicationDTO.class);
     val stateHistoryDTOCaptor = ArgumentCaptor.forClass(StateHistoryDTO.class);
 
-    then(applicationsService).should().saveApplication(applicationDTOCaptor.capture(), stateHistoryDTOCaptor.capture());
+    then(applicationsService).should()
+        .saveApplication(applicationDTOCaptor.capture(), stateHistoryDTOCaptor.capture());
     assertThat(stateHistoryDTOCaptor.getValue(), equalTo(stateHistoryDTO));
     assertApplicationDtoWhenSaveOrUpdateIsSuccess(applicationDTOCaptor);
   }
@@ -128,7 +132,8 @@ public class NewApplicationPopupControllerTest extends AbstractControllerTest {
     verifyZeroInteractions(applicationsService);
   }
 
-  private void assertApplicationDtoWhenSaveOrUpdateIsSuccess(ArgumentCaptor<ApplicationDTO> applicationDTOCaptor) {
+  private void assertApplicationDtoWhenSaveOrUpdateIsSuccess(
+      ArgumentCaptor<ApplicationDTO> applicationDTOCaptor) {
     Date presentDate = currentDateMinus(5);
     assertThat(applicationDTOCaptor.getValue().getCandidateId(), equalTo(1L));
     assertThat(applicationDTOCaptor.getValue().getChannelId(), equalTo(1L));
