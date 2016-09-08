@@ -41,19 +41,19 @@ function SettingsForm() {
                     $this.find('input').val('');
                 }).error(function (xhr) {
                     var response = xhr.responseJSON;
-
                     showError($this, response.errorMessage);
                 });
             }
         });
+
         function showError(container, message) {
-            container.find('.globalMessage .error-message').text(message);
-            container.find('.globalMessage').show();
+            container.find('#errorMessageForCreating').text(message);
+            container.find('#errorMessageForCreating').show();
             container.addClass('has-error');
         }
 
         function hideError(container) {
-            container.find('.globalMessage').hide();
+            container.find('#errorMessageForCreating').hide();
             container.removeClass('has-error');
         }
     }
@@ -63,6 +63,7 @@ $(function () {
     new SettingsForm().init('#positions_section','settings.positions.error.empty');
     new SettingsForm().init('#channels_section','settings.channels.error.empty');
 });
+
 
 function actionFormatter(value, row, index) {
     return [
@@ -115,11 +116,26 @@ window.channelsEvents = {
                               if (table instanceof $) {
                                   table.bootstrapTable('refresh');
                               }
+                              hideError(pageContainer);
+                          }).error(function (xhr) {
+                              var response = xhr.responseJSON;
+                              showError(pageContainer, window.messages['selected.channel.not.found']);
                           });
                       }
                  },
             },
          }
         bootbox.dialog(options);
+
+        function showError(container, message) {
+            container.find('#errorMessageForDeleting').text(message);
+            container.find('#errorMessageForDeleting').show();
+            container.addClass('has-error');
+        }
+
+        function hideError(container) {
+            container.find('#errorMessageForDeleting').hide();
+            container.removeClass('has-error');
+        }
     }
 };

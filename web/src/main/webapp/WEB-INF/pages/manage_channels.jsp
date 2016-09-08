@@ -10,6 +10,7 @@
      <c:url value="/resources/js/atsy-settings.js" var="urlValue"/><script src="${urlValue}"></script>
      <script type="text/javascript">
          window.messages['settings.channels.error.empty'] = '<spring:message code="settings.channels.error.empty"/>';
+         window.messages['selected.channel.not.found'] = '<spring:message code="selected.channel.not.found"/>';
      </script>
 
     <c:url value="/resources/thirdparty/bootstrap/js/bootstrap.min.js" var="urlValue"/><script src="${urlValue}"></script>
@@ -20,6 +21,12 @@
         <div id="settings">
             <h1 class="page-header"><spring:message code="settings.title"/></h1>
             <div id="channels_section">
+
+                <div class="globalMessage alert alert-danger" id="errorMessageForDeleting" role="alert" style="display: none">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="error-message"></span>
+                </div>
+
                 <h3><spring:message code="settings.channels.title"/></h3>
                 <div>
                     <div class="row">
@@ -46,7 +53,7 @@
                                 <legend><spring:message code="settings.channels.form.title"/></legend>
                                 <form role="form" method="POST" id="channel-form" action=".">
 
-                                    <div class="globalMessage alert alert-danger" role="alert"
+                                    <div class="globalMessage alert alert-danger" id="errorMessageForCreating" role="alert"
                                          style="display: none">
                                         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                                         <span class="error-message"></span>
