@@ -25,7 +25,7 @@ node {
 
   echo "Selected port mapping is ${portMapping}"
 
-  sh 'PORT_MAPPING="' + portMapping + '" PROFILE="' + profile + '" docker-compose up -d'
+  sh 'PORT_MAPPING="' + portMapping + '" PROFILE="' + profile + '" JMX_PORT_MAPPING="8888" docker-compose up -d'
 
   sh "docker port ${branchName}_app_1"
 }
