@@ -1,6 +1,18 @@
 package com.epam.rft.atsy.web.controllers.rest;
 
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.PositionService;
@@ -14,7 +26,6 @@ import com.epam.rft.atsy.web.FieldErrorResponseComposer;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
 import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -27,18 +38,6 @@ import org.springframework.validation.BindingResult;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StateHistoryControllerTest extends AbstractControllerTest {
@@ -111,16 +110,13 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   private ChannelDTO channelDTO;
 
   private static final Long ID = 1L;
-
-  private static final Date CREATION_DATE =
-
+  private static final Date
+      CREATION_DATE =
       new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
-
-  private static final String FEEDBACK_DATE_STRING = "2016-08-15 14:00:00";
 
   private static final Date
       FEEDBACK_DATE =
-      new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
+      new GregorianCalendar(2016, 8 - 1, 15, 2, 0, 0).getTime();
 
   private static final Date
       DAY_OF_START =
@@ -206,7 +202,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .id(ID)
         .candidateId(CANDIDATE_ID)
         .creationDate(CREATION_DATE)
-        .feedbackDate(FEEDBACK_DATE_STRING)
+        .feedbackDate(FEEDBACK_DATE)
         .languageSkill(LANGUAGE_SKILL)
         .description(DESCRIPTION)
         .result(RESULT)
@@ -226,7 +222,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .positionName(POSITION_NAME)
         .channelName(CHANNEL_NAME)
         .creationDate(CREATION_DATE)
-        .feedbackDate(FEEDBACK_DATE_STRING)
+        .feedbackDate(FEEDBACK_DATE)
         .languageSkill(LANGUAGE_SKILL)
         .description(DESCRIPTION)
         .result(RESULT)
@@ -277,24 +273,6 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void saveOrUpdateShouldRespondWithErrorJSONWhenFeedbackDateIsMalformed() throws Exception {
-    StateHistoryViewRepresentation stateHistoryViewRepresentation =
-        StateHistoryViewRepresentation.builder().feedbackDate(MALFORMED_DATE).build();
-
-    given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
-
-        .willReturn(composeResponseFromField(FIELD_FEEDBACK_DATE, DATE_PARSE_ERROR_MESSAGE_KEY));
-
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
-        .andExpect(status().isBadRequest())
-
-        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
-        .andExpect(jsonPath(JSON_PATH_FEEDBACK_DATE).value(DATE_PARSE_ERROR_MESSAGE_KEY));
-
-    verifyZeroInteractions(statesHistoryService, channelService, positionService, applicationsService);
-  }
-
-  @Test
   public void saveOrUpdateShouldRespondWithErrorJSONWhenClaimIsNegative() throws Exception {
     StateHistoryViewRepresentation stateHistoryViewRepresentation =
         StateHistoryViewRepresentation.builder().claim(NEGATIVE_CLAIM).build();
@@ -309,7 +287,8 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
         .andExpect(jsonPath(JSON_PATH_FIELD_CLAIM).value(CLAIM_NEGATIVE_MESSAGE_KEY));
 
-    verifyZeroInteractions(statesHistoryService, channelService, positionService, applicationsService);
+    verifyZeroInteractions(statesHistoryService, channelService, positionService,
+        applicationsService);
   }
 
   @Test
@@ -319,20 +298,24 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
     given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
 
-        .willReturn(composeResponseFromField(FIELD_OFFERED_MONEY, OFFERED_MONEY_NEGATIVE_MESSAGE_KEY));
+        .willReturn(
+            composeResponseFromField(FIELD_OFFERED_MONEY, OFFERED_MONEY_NEGATIVE_MESSAGE_KEY));
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
 
         .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
-        .andExpect(jsonPath(JSON_PATH_FIELD_OFFERED_MONEY).value(OFFERED_MONEY_NEGATIVE_MESSAGE_KEY));
+        .andExpect(
+            jsonPath(JSON_PATH_FIELD_OFFERED_MONEY).value(OFFERED_MONEY_NEGATIVE_MESSAGE_KEY));
 
-    verifyZeroInteractions(statesHistoryService, channelService, positionService, applicationsService);
+    verifyZeroInteractions(statesHistoryService, channelService, positionService,
+        applicationsService);
   }
 
   @Test
   public void saveOrUpdateShouldRespondWithApplicationIdWhenPostHasNoErrors() throws Exception {
-    given(applicationsService.getApplicationDtoById(APPLICATION_ID)).willReturn(dummyApplicationDto);
+    given(applicationsService.getApplicationDtoById(APPLICATION_ID))
+        .willReturn(dummyApplicationDto);
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, dummyStateHistory))
         .andExpect(status().isOk())
@@ -352,7 +335,8 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   @Test
   public void saveOrUpdateShouldRespondWithErrorJSONWhenPositionNotExists() throws Exception {
     StateHistoryViewRepresentation stateHistoryViewRepresentation =
-        StateHistoryViewRepresentation.builder().stateId(STATE_ID_FOR_NEW_STATE).stateName(STATE_NAME_NEW_STATE)
+        StateHistoryViewRepresentation.builder().stateId(STATE_ID_FOR_NEW_STATE)
+            .stateName(STATE_NAME_NEW_STATE)
             .positionName(POSITION_NAME_NON_EXISTENT).build();
 
     given(positionService.getPositionDtoByName(POSITION_NAME_NON_EXISTENT)).willReturn(null);
@@ -374,7 +358,8 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   @Test
   public void saveOrUpdateShouldRespondWithErrorJSONWhenChannelNotExists() throws Exception {
     StateHistoryViewRepresentation stateHistoryViewRepresentation =
-        StateHistoryViewRepresentation.builder().stateId(STATE_ID_FOR_NEW_STATE).stateName(STATE_NAME_NEW_STATE)
+        StateHistoryViewRepresentation.builder().stateId(STATE_ID_FOR_NEW_STATE)
+            .stateName(STATE_NAME_NEW_STATE)
             .channelName(CHANNEL_NAME_NON_EXISTENT).build();
 
     given(channelService.getChannelDtoByName(CHANNEL_NAME_NON_EXISTENT)).willReturn(null);
@@ -394,10 +379,13 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void saveOrUpdateShouldRespondWithErrorJSONWhenPositionAndChannelNotExist() throws Exception {
+  public void saveOrUpdateShouldRespondWithErrorJSONWhenPositionAndChannelNotExist()
+      throws Exception {
     StateHistoryViewRepresentation stateHistoryViewRepresentation =
-        StateHistoryViewRepresentation.builder().stateId(STATE_ID_FOR_NEW_STATE).stateName(STATE_NAME_NEW_STATE)
-            .positionName(POSITION_NAME_NON_EXISTENT).channelName(CHANNEL_NAME_NON_EXISTENT).build();
+        StateHistoryViewRepresentation.builder().stateId(STATE_ID_FOR_NEW_STATE)
+            .stateName(STATE_NAME_NEW_STATE)
+            .positionName(POSITION_NAME_NON_EXISTENT).channelName(CHANNEL_NAME_NON_EXISTENT)
+            .build();
 
     given(positionService.getPositionDtoByName(POSITION_NAME_NON_EXISTENT)).willReturn(null);
     given(channelService.getChannelDtoByName(CHANNEL_NAME_NON_EXISTENT)).willReturn(null);
@@ -419,10 +407,12 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void saveOrUpdateShouldRespondWithApplicationIdWhenPositionAndChannelExist() throws Exception {
+  public void saveOrUpdateShouldRespondWithApplicationIdWhenPositionAndChannelExist()
+      throws Exception {
     given(positionService.getPositionDtoByName(POSITION_NAME)).willReturn(positionDTO);
     given(channelService.getChannelDtoByName(CHANNEL_NAME)).willReturn(channelDTO);
-    given(applicationsService.getApplicationDtoById(APPLICATION_ID)).willReturn(dummyApplicationDto);
+    given(applicationsService.getApplicationDtoById(APPLICATION_ID))
+        .willReturn(dummyApplicationDto);
 
     mockMvc.perform(buildJsonPostRequest(REQUEST_URL, dummyStateHistoryWithNewState))
         .andExpect(status().isOk())
@@ -448,8 +438,10 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
     return new ResponseEntity<>(restResponse, HttpStatus.BAD_REQUEST);
   }
 
-  private ResponseEntity<RestResponse> composeResponseFromField(String firstFieldName, String firstFieldValue,
-                                                                String secondFieldName, String secondFieldValue) {
+  private ResponseEntity<RestResponse> composeResponseFromField(String firstFieldName,
+                                                                String firstFieldValue,
+                                                                String secondFieldName,
+                                                                String secondFieldValue) {
     RestResponse restResponse = new RestResponse(COMMON_INVALID_INPUT_MESSAGE_KEY);
 
     restResponse.addField(firstFieldName, firstFieldValue);
