@@ -1,7 +1,10 @@
+var pageContainer;
+
 function SettingsForm() {
     this.init = function (container, validationMessageKey) {
         if (typeof container === 'string') {
             container = $(container);
+            pageContainer = container;
         }
 
         var form = container.find('form'),
@@ -94,6 +97,12 @@ window.channelsEvents = {
                     url: "./delete",
                     data: "channelName=" + row.name,
                     cache: false,
+                 })
+                 .done(function (container) {
+                      var table = pageContainer.find('table');
+                      if (table instanceof $) {
+                          table.bootstrapTable('refresh');
+                      }
                  });
             }
         });

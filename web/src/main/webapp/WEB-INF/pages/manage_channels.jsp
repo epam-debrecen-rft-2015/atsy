@@ -12,7 +12,6 @@
          window.messages['settings.channels.error.empty'] = '<spring:message code="settings.channels.error.empty"/>';
      </script>
 
-    <c:url value="/resources/thirdparty/jquery/jquery-2.0.3.min.js" var="urlValue"/><script src="${urlValue}"></script>
     <c:url value="/resources/thirdparty/bootstrap/js/bootstrap.min.js" var="urlValue"/><script src="${urlValue}"></script>
     <c:url value="/resources/thirdparty/bootbox/bootbox.js" var="urlValue"/><script src="${urlValue}"></script>
 

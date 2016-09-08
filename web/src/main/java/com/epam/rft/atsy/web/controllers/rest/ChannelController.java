@@ -25,7 +25,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(path = "/secure/channels")
 public class ChannelController {
-  private static final String EMPTY_POSITION_NAME_MESSAGE_KEY = "settings.channels.error.empty";
+  private static final String EMPTY_CHANNEL_NAME_MESSAGE_KEY = "settings.channels.error.empty";
   private static final String SELECTED_CHANNEL_NOT_FOUND_MESSAGE_KEY = "selected.channel.not.found";
 
   @Resource
@@ -60,7 +60,7 @@ public class ChannelController {
       return new ResponseEntity<>(RestResponse.NO_ERROR, HttpStatus.OK);
     } else {
       String errorMessage =
-          messageKeyResolver.resolveMessageOrDefault(EMPTY_POSITION_NAME_MESSAGE_KEY);
+          messageKeyResolver.resolveMessageOrDefault(EMPTY_CHANNEL_NAME_MESSAGE_KEY);
 
       RestResponse restResponse = new RestResponse(errorMessage);
 
