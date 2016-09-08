@@ -4,7 +4,6 @@ $(document).ready(function() {
         //nothing
       } else {
         stateHistoryModel.ajaxCall();
-        console.log(stateHistoryModel);
         return false;
       }
   }));
@@ -42,7 +41,8 @@ function StateHistoryModel() {
                  data[property] = ko.observable();
               }
                   $(element).parent().on("dp.change", function(event){
-                    data[property](event.date.subtract(event.date.utcOffset(), 'm').format('YYYY-MM-DD HH:mm'));
+                    var timeZonedDate = event.date.subtract(event.date.utcOffset(), 'm').format('YYYY-MM-DD HH:mm')
+                    data[property](timeZonedDate);
                   });
           }
       };

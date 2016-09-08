@@ -59,8 +59,7 @@ public class StateHistoryController {
           .result(stateHistoryViewRepresentation.getResult())
           .offeredMoney(stateHistoryViewRepresentation.getOfferedMoney())
           .claim(stateHistoryViewRepresentation.getClaim())
-          .feedbackDate(stateHistoryViewRepresentation.getFeedbackDate() != null
-              ? stateHistoryViewRepresentation.getFeedbackDate() : null)
+          .feedbackDate(stateHistoryViewRepresentation.getFeedbackDate())
           .dayOfStart(stateHistoryViewRepresentation.getDayOfStart())
           .dateOfEnter(stateHistoryViewRepresentation.getDateOfEnter())
           .creationDate(null)
