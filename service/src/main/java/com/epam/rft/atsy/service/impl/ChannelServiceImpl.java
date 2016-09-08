@@ -77,9 +77,7 @@ public class ChannelServiceImpl implements ChannelService {
       channelRepository.saveAndFlush(channelEntity);
     } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
       log.error("Save to repository failed.", ex);
-
       String channelName = channel.getName();
-
       throw new DuplicateChannelException(channelName, ex);
     }
   }

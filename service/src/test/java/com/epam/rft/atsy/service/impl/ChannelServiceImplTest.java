@@ -64,6 +64,7 @@ public class ChannelServiceImplTest {
 
   private ChannelDTO facebookDto;
   private ChannelEntity facebookEntity;
+  private ChannelDTO deletedFacebookDto;
   private ChannelEntity deletedFacebookEntity;
   private ChannelDTO dtkDto;
   private ChannelEntity dtkEntity;
@@ -79,6 +80,9 @@ public class ChannelServiceImplTest {
             .build();
     facebookEntity =
         ChannelEntity.builder().id(CHANNEL_ID_FACEBOOK).name(CHANNEL_NAME_FACEBOOK).deleted(false)
+            .build();
+    deletedFacebookDto =
+        ChannelDTO.builder().id(CHANNEL_ID_FACEBOOK).name(CHANNEL_NAME_FACEBOOK).deleted(true)
             .build();
     deletedFacebookEntity =
         ChannelEntity.builder().id(CHANNEL_ID_FACEBOOK).name(CHANNEL_NAME_FACEBOOK).deleted(true)
@@ -235,13 +239,34 @@ public class ChannelServiceImplTest {
     then(converterService).should().convert(facebookEntity, ChannelDTO.class);
   }
 
+
+  @Test(expected = IllegalArgumentException.class)
+  public void saveOrUpdateShouldThrowIllegalArgumentExceptionWhenNullPassed() {
+    // Given
+
+    // When
+    this.channelService.saveOrUpdate(null);
+
+    // Then
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void saveOrUpdateShouldThrowIllegalArgumentExceptionWhenChannelNameIsNull() {
+    // Given
+    ChannelDTO channelDTO = ChannelDTO.builder().name(null).build();
+
+    // When
+    this.channelService.saveOrUpdate(channelDTO);
+
+    // Then
+  }
+
   @Test
   public void saveOrUpdateShouldThrowDREAfterCatchingConstraintViolationException()
       throws DuplicateChannelException {
     // Given
-    given(converterService.convert(facebookDto, ChannelEntity.class)).willReturn(facebookEntity);
-
-    given(channelRepository.saveAndFlush(facebookEntity))
+    given(this.channelRepository.findByName(CHANNEL_NAME_FACEBOOK)).willReturn(facebookEntity);
+    given(this.channelRepository.saveAndFlush(facebookEntity))
         .willThrow(ConstraintViolationException.class);
 
     expectedException.expect(DuplicateChannelException.class);
@@ -249,16 +274,20 @@ public class ChannelServiceImplTest {
     expectedException.expectCause(Matchers.isA(ConstraintViolationException.class));
 
     // When
-    channelService.saveOrUpdate(facebookDto);
+    this.channelService.saveOrUpdate(facebookDto);
+
+    // Then
+    then(this.channelRepository).should().findByName(CHANNEL_NAME_FACEBOOK);
+    then(this.channelRepository).should().saveAndFlush(facebookEntity);
+    verifyZeroInteractions(this.converterService);
   }
 
   @Test
   public void saveOrUpdateShouldThrowDREAfterCatchingDataIntegrityViolationException()
       throws DuplicateChannelException {
     // Given
-    given(converterService.convert(facebookDto, ChannelEntity.class)).willReturn(facebookEntity);
-
-    given(channelRepository.saveAndFlush(facebookEntity))
+    given(this.channelRepository.findByName(CHANNEL_NAME_FACEBOOK)).willReturn(facebookEntity);
+    given(this.channelRepository.saveAndFlush(facebookEntity))
         .willThrow(DataIntegrityViolationException.class);
 
     expectedException.expect(DuplicateChannelException.class);
@@ -266,27 +295,48 @@ public class ChannelServiceImplTest {
     expectedException.expectCause(Matchers.isA(DataIntegrityViolationException.class));
 
     // When
-    channelService.saveOrUpdate(facebookDto);
+    this.channelService.saveOrUpdate(facebookDto);
+
+    // Then
+    then(this.channelRepository).should().findByName(CHANNEL_NAME_FACEBOOK);
+    then(this.channelRepository).should().saveAndFlush(facebookEntity);
+    verifyZeroInteractions(this.converterService);
+  }
+
+  @Test
+  public void saveOrUpdateShouldSaveValidChannelDtoWhenThatWasDeleted() {
+    // Given
+    ArgumentCaptor<ChannelEntity> channelEntityArgumentCaptor =
+        ArgumentCaptor.forClass(ChannelEntity.class);
+    given(this.channelRepository.findByName(CHANNEL_NAME_FACEBOOK))
+        .willReturn(deletedFacebookEntity);
+
+    // When
+    this.channelService.saveOrUpdate(deletedFacebookDto);
+
+    // Then
+    verify(this.channelRepository).saveAndFlush(channelEntityArgumentCaptor.capture());
+    assertThat(facebookEntity, equalTo(channelEntityArgumentCaptor.getValue()));
+
+    then(this.channelRepository).should().findByName(CHANNEL_NAME_FACEBOOK);
+    then(this.channelRepository).should().saveAndFlush(facebookEntity);
+    verifyZeroInteractions(this.converterService);
   }
 
   @Test
   public void saveOrUpdateShouldSaveValidChannelDTO() {
     // Given
-    given(converterService.convert(facebookDto, ChannelEntity.class)).willReturn(facebookEntity);
-
-    given(channelRepository.saveAndFlush(facebookEntity)).willReturn(facebookEntity);
+    given(this.channelRepository.findByName(CHANNEL_NAME_FACEBOOK)).willReturn(null);
+    given(this.converterService.convert(facebookDto, ChannelEntity.class))
+        .willReturn(facebookEntity);
 
     // When
-    channelService.saveOrUpdate(facebookDto);
+    this.channelService.saveOrUpdate(facebookDto);
 
     // Then
-    then(channelRepository).should().saveAndFlush(facebookEntity);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void saveOrUpdateShouldThrowIllegalArgumentExceptionWhenNullPassed() {
-    // When
-    channelService.saveOrUpdate(null);
+    then(this.channelRepository).should().findByName(CHANNEL_NAME_FACEBOOK);
+    then(this.channelRepository).should().saveAndFlush(facebookEntity);
+    then(this.converterService).should().convert(facebookDto, ChannelEntity.class);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -317,19 +367,19 @@ public class ChannelServiceImplTest {
   public void deleteChannelDtoLogicallyByIdShouldDeletedLogicallyWhenChannelEntityExists()
       throws ChannelNotFoundException {
     // Given
-    given(this.channelRepository.findOne(CHANNEL_ID_FACEBOOK)).willReturn(facebookEntity);
     ArgumentCaptor<ChannelEntity> channelEntityArgumentCaptor =
         ArgumentCaptor.forClass(ChannelEntity.class);
+    given(this.channelRepository.findOne(CHANNEL_ID_FACEBOOK)).willReturn(facebookEntity);
 
     // When
     this.channelService.deleteChannelDtoLogicallyById(CHANNEL_ID_FACEBOOK);
 
     // Then
     verify(channelRepository).saveAndFlush(channelEntityArgumentCaptor.capture());
-    assertThat(channelEntityArgumentCaptor.getValue(), equalTo(deletedFacebookEntity));
+    assertThat(deletedFacebookEntity, equalTo(channelEntityArgumentCaptor.getValue()));
 
     then(channelRepository).should().findOne(CHANNEL_ID_FACEBOOK);
-    then(channelRepository).should().saveAndFlush(channelEntityArgumentCaptor.getValue());
+    then(channelRepository).should().saveAndFlush(deletedFacebookEntity);
   }
 
 }
