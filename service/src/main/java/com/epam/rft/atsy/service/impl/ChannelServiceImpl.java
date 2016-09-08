@@ -65,9 +65,16 @@ public class ChannelServiceImpl implements ChannelService {
     Assert.notNull(channel);
     Assert.notNull(channel.getName());
 
-    ChannelEntity entity = converterService.convert(channel, ChannelEntity.class);
+    ChannelEntity channelEntity = this.channelRepository.findByName(channel.getName());
+
+    if (channelEntity == null) {
+      channelEntity = converterService.convert(channel, ChannelEntity.class);
+    } else if (channelEntity.isDeleted() != null && channelEntity.isDeleted()) {
+      channelEntity.setDeleted(false);
+    }
+
     try {
-      channelRepository.saveAndFlush(entity);
+      channelRepository.saveAndFlush(channelEntity);
     } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
       log.error("Save to repository failed.", ex);
 

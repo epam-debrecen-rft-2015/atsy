@@ -6,6 +6,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +25,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "channels", schema = "atsy", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
-@NamedQueries(@NamedQuery(name = "ChannelEntity.findAll", query = "SELECT channel FROM ChannelEntity channel WHERE channel.deleted is false"))
+@NamedQueries(@NamedQuery(name = "ChannelEntity.findAll", query = "SELECT channel FROM ChannelEntity channel WHERE channel.deleted is null or channel.deleted is false"))
 public class ChannelEntity extends LogicallyDeletableEntity implements java.io.Serializable {
 
   @Column(name = "name", nullable = false, unique = true)
