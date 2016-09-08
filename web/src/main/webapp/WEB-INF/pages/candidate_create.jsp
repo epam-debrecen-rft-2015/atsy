@@ -115,9 +115,8 @@
                                 <span id="email-errors" class="help-block with-errors"></span>
 
                                 <p class="showValue form-control-static">
-                                    <a href="mailto:${candidate.email}"><span class="glyphicon glyphicon-envelope"
-                                                                              title="E-mail küldése"></span></a>
-                                        <c:out value = "${candidate.email}"/></p>
+                                  <a href="mailto:${candidate.email}"><c:out value = "${candidate.email}"/></a>
+                                </p>
                             </div>
 
                         </div>
