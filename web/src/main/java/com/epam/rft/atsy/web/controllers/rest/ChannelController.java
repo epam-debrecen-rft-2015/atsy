@@ -68,11 +68,11 @@ public class ChannelController {
     }
   }
 
-  @RequestMapping(path = "/delete", method = RequestMethod.POST)
-  public ResponseEntity<RestResponse> deleteChannelDtoLogicallyByName(@RequestParam(name = "channelName") String channelName) {
+  @RequestMapping(path = "/delete", method = RequestMethod.DELETE)
+  public ResponseEntity<RestResponse> deleteChannelDtoLogicallyByName(@RequestParam(name = "channelId") Long channelId) {
 
     try {
-      channelService.deleteChannelDtoLogicallyByName(channelName);
+      channelService.deleteChannelDtoLogicallyById(channelId);
       return new ResponseEntity<>(RestResponse.NO_ERROR, HttpStatus.OK);
 
     } catch (ChannelNotFoundException e) {

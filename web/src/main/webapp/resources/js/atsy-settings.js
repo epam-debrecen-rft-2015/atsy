@@ -93,9 +93,8 @@ window.channelsEvents = {
 
             if (answer) {
                 $.ajax({
-                    type: "POST",
-                    url: "./delete",
-                    data: "channelName=" + row.name,
+                    type: 'DELETE',
+                    url: "./delete?" + 'channelId=' + row.id,
                     cache: false,
                  })
                  .done(function (container) {

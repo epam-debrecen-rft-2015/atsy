@@ -79,10 +79,10 @@ public class ChannelServiceImpl implements ChannelService {
 
   @Transactional
   @Override
-  public void deleteChannelDtoLogicallyByName(String channelName) throws ChannelNotFoundException {
-    Assert.notNull(channelName);
+  public void deleteChannelDtoLogicallyById(Long channelId) throws ChannelNotFoundException {
+    Assert.notNull(channelId);
 
-    ChannelEntity channelEntity = this.channelRepository.findByName(channelName);
+    ChannelEntity channelEntity = this.channelRepository.findOne(channelId);
     if (channelEntity == null) {
       throw new ChannelNotFoundException();
     }

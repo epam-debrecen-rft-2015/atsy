@@ -43,7 +43,7 @@ public interface ChannelService {
   /**
    * Setups the deleted field to true in the channel in the database.
    *
-   * @param channelName is the name of the channel
+   * @param channelId is the id of the channel
    */
-  void deleteChannelDtoLogicallyByName(String channelName) throws ChannelNotFoundException;
+  void deleteChannelDtoLogicallyById(Long channelId) throws ChannelNotFoundException;
 }
