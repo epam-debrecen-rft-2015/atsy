@@ -40,7 +40,7 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PasswordChangeControllerTest extends AbstractControllerTest {
+public class PasswordChangeControllerBackupTest extends AbstractControllerTest {
   private static final String REQUEST_URL = "/secure/password/manage";
 
   private static final String VIEW_NAME = "password_change";
@@ -72,7 +72,7 @@ public class PasswordChangeControllerTest extends AbstractControllerTest {
   private PasswordValidator passwordValidator;
 
   @InjectMocks
-  private PasswordChangeController passwordChangeController;
+  private PasswordChangeControllerBackup passwordChangeControllerBackup;
 
 
   private PasswordChangeDTO passwordChangeDto;
@@ -81,7 +81,7 @@ public class PasswordChangeControllerTest extends AbstractControllerTest {
 
   @Override
   protected Object[] controllersUnderTest() {
-    return new Object[]{passwordChangeController};
+    return new Object[]{passwordChangeControllerBackup};
   }
 
   @Before
