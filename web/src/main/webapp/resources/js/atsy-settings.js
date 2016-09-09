@@ -1,5 +1,16 @@
 var pageContainer;
 
+$(document).ready(function() {
+    $.i18n.properties({
+        name: 'messages',
+        path: '/atsy/resources/i18n/',
+        language: 'hu',
+        async: true,
+        mode:'both',
+        callback: function(){  }
+    });
+});
+
 function SettingsForm() {
     this.init = function (container, validationMessageKey) {
         if (typeof container === 'string') {
@@ -90,21 +101,22 @@ window.channelsEvents = {
         $('#channel-form #channelId').val(row.id);
     },
     'click .remove': function (e, value, row) {
+
          var options = {
             size: 'small',
-            message: "Biztos vagy benne, hogy törölni akarod az alábbi forrást? (" + row.name + ")",
+            message: $.i18n.prop('do.you.want.to.delete') + " (" + row.name + ")",
             animate: true,
             onEscape: function() {},
             buttons: {
 
                 danger: {
-                    label: "Nem",
+                    label: $.i18n.prop('cancel.button'),
                     className: "btn-danger",
                     callback: function() {}
                 },
 
                 success: {
-                      label: "Igen",
+                      label: $.i18n.prop('delete.button'),
                       className: "btn-success",
                       callback: function() {
                           $.ajax({
@@ -119,7 +131,7 @@ window.channelsEvents = {
                               hideError(pageContainer);
                           }).error(function (xhr) {
                               var response = xhr.responseJSON;
-                              showError(pageContainer, window.messages['selected.channel.not.found']);
+                              showError(pageContainer, $.i18n.prop('selected.channel.not.found'));
                           });
                       }
                  },

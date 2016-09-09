@@ -10,11 +10,11 @@
      <c:url value="/resources/js/atsy-settings.js" var="urlValue"/><script src="${urlValue}"></script>
      <script type="text/javascript">
          window.messages['settings.channels.error.empty'] = '<spring:message code="settings.channels.error.empty"/>';
-         window.messages['selected.channel.not.found'] = '<spring:message code="selected.channel.not.found"/>';
      </script>
 
     <c:url value="/resources/thirdparty/bootstrap/js/bootstrap.min.js" var="urlValue"/><script src="${urlValue}"></script>
     <c:url value="/resources/thirdparty/bootbox/bootbox.js" var="urlValue"/><script src="${urlValue}"></script>
+    <c:url value="/resources/thirdparty/jquery/jquery.i18n.properties.js" var="urlValue"/><script src="${urlValue}" type="text/javascript" language="JavaScript"></script>
 
     </jsp:attribute>
     <jsp:body>
