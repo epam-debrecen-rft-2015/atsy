@@ -16,6 +16,12 @@
         <div id="settings">
             <h1 class="page-header"><spring:message code="settings.title"/></h1>
             <div id="positions_section">
+
+                <div class="globalMessage alert alert-danger" id="errorMessageForDeleting" role="alert" style="display: none">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="error-message"></span>
+                </div>
+
                 <h3><spring:message code="settings.positions.title"/></h3>
                 <div>
                     <div class="row">
@@ -43,11 +49,10 @@
                                 <legend><spring:message code="settings.positions.form.title"/></legend>
                                 <form role="form" method="POST" id="position-form" action=".">
 
-                                    <div class="globalMessage alert alert-danger" role="alert"
-                                         style="display: none">
-                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                                        <span class="error-message"></span>
-                                    </div>
+                             <div class="globalMessage alert alert-danger" id="errorMessageForCreating" role="alert" style="display: none">
+                                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                 <span class="error-message"></span>
+                             </div>
 
                                     <div class="form-group">
                                         <input type="hidden" name="id" id="positionId">

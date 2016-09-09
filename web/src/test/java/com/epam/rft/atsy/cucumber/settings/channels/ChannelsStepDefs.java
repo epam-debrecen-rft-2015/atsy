@@ -100,8 +100,8 @@ public class ChannelsStepDefs {
   @Then("^error message appears (.*)$")
   public void error_message_appears_message(String message) throws Throwable {
     WebDriverWait wait = new WebDriverWait(getDriver(), 15);
-    wait.until(visibilityOfElementLocated(By.cssSelector("#channel-form .error-message")));
-    assertThat(getDriver().findElement(By.cssSelector("#channel-form .error-message")).getText(),
+    wait.until(visibilityOfElementLocated(By.cssSelector("#channel-form #errorMessageForCreating")));
+    assertThat(getDriver().findElement(By.cssSelector("#channel-form #errorMessageForCreating")).getText(),
         containsString(message));
   }
 
