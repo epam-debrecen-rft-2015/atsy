@@ -7,8 +7,10 @@ import javax.persistence.PrePersist;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
 /**
@@ -17,19 +19,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @MappedSuperclass
 public abstract class LogicallyDeletableEntity extends SuperEntity {
 
   @Getter(AccessLevel.NONE)
   @Column(name = "deleted")
   private Boolean deleted;
-
-  @PrePersist
-  void preInsert() {
-    if (deleted == null) {
-      deleted = false;
-    }
-  }
 
   public LogicallyDeletableEntity(Long id, Boolean deleted) {
     super(id);

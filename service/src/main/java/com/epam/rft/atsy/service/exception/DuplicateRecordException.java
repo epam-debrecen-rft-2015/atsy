@@ -18,6 +18,10 @@ public class DuplicateRecordException extends RuntimeException {
     this.name = name;
   }
 
+  public DuplicateRecordException(String name) {
+    this.name = name;
+  }
+
   /**
    * Returns the name.
    * @return the name

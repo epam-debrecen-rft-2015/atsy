@@ -8,6 +8,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
@@ -261,46 +262,15 @@ public class ChannelServiceImplTest {
     // Then
   }
 
-  @Test
-  public void saveOrUpdateShouldThrowDREAfterCatchingConstraintViolationException()
-      throws DuplicateChannelException {
+  @Test(expected = DuplicateChannelException.class)
+  public void saveOrUpdateShouldThrowDuplicateChannelExceptionExceptionWhenChannelEntityExistsAndItsDeletedFieldIsFalse() {
     // Given
     given(this.channelRepository.findByName(CHANNEL_NAME_FACEBOOK)).willReturn(facebookEntity);
-    given(this.channelRepository.saveAndFlush(facebookEntity))
-        .willThrow(ConstraintViolationException.class);
-
-    expectedException.expect(DuplicateChannelException.class);
-    expectedException.expectMessage(CoreMatchers.endsWith(CHANNEL_NAME_FACEBOOK));
-    expectedException.expectCause(Matchers.isA(ConstraintViolationException.class));
 
     // When
     this.channelService.saveOrUpdate(facebookDto);
 
     // Then
-    then(this.channelRepository).should().findByName(CHANNEL_NAME_FACEBOOK);
-    then(this.channelRepository).should().saveAndFlush(facebookEntity);
-    verifyZeroInteractions(this.converterService);
-  }
-
-  @Test
-  public void saveOrUpdateShouldThrowDREAfterCatchingDataIntegrityViolationException()
-      throws DuplicateChannelException {
-    // Given
-    given(this.channelRepository.findByName(CHANNEL_NAME_FACEBOOK)).willReturn(facebookEntity);
-    given(this.channelRepository.saveAndFlush(facebookEntity))
-        .willThrow(DataIntegrityViolationException.class);
-
-    expectedException.expect(DuplicateChannelException.class);
-    expectedException.expectMessage(CoreMatchers.endsWith(CHANNEL_NAME_FACEBOOK));
-    expectedException.expectCause(Matchers.isA(DataIntegrityViolationException.class));
-
-    // When
-    this.channelService.saveOrUpdate(facebookDto);
-
-    // Then
-    then(this.channelRepository).should().findByName(CHANNEL_NAME_FACEBOOK);
-    then(this.channelRepository).should().saveAndFlush(facebookEntity);
-    verifyZeroInteractions(this.converterService);
   }
 
   @Test

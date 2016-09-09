@@ -7,15 +7,15 @@ import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.exception.ChannelNotFoundException;
 import com.epam.rft.atsy.service.exception.DuplicateChannelException;
-import org.hibernate.exception.ConstraintViolationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.Collection;
 import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -68,18 +68,14 @@ public class ChannelServiceImpl implements ChannelService {
     ChannelEntity channelEntity = this.channelRepository.findByName(channel.getName());
 
     if (channelEntity == null) {
-      channelEntity = converterService.convert(channel, ChannelEntity.class);
+      channelEntity = this.converterService.convert(channel, ChannelEntity.class);
     } else if (channelEntity.isDeleted() != null && channelEntity.isDeleted()) {
       channelEntity.setDeleted(false);
+    } else {
+      throw new DuplicateChannelException(channel.getName());
     }
 
-    try {
-      channelRepository.saveAndFlush(channelEntity);
-    } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
-      log.error("Save to repository failed.", ex);
-      String channelName = channel.getName();
-      throw new DuplicateChannelException(channelName, ex);
-    }
+    this.channelRepository.saveAndFlush(channelEntity);
   }
 
   @Transactional

@@ -16,4 +16,8 @@ public class DuplicateChannelException extends DuplicateRecordException {
   public DuplicateChannelException(String name, Throwable cause) {
     super(name, ERROR_MESSAGE + name, cause);
   }
+
+  public DuplicateChannelException(String name) {
+    super(name);
+  }
 }
