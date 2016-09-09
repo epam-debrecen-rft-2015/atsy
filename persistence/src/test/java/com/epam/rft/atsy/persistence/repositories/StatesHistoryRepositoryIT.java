@@ -14,6 +14,9 @@ import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.entities.StatesHistoryEntity;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.Arrays;
@@ -45,6 +48,8 @@ public class StatesHistoryRepositoryIT extends AbstractRepositoryIT {
   private static final String STATE_NAME_CODING = "coding";
   private static final String STATE_NAME_FIRST_TEST = "firstTest";
   private static final String STATE_NAME_HR = "hr";
+
+  private static final Pageable DEFAULT_PAGE_REQUEST = new PageRequest(0, 10);
 
   @Autowired
   private ApplicationsRepository applicationsRepository;
@@ -211,7 +216,11 @@ public class StatesHistoryRepositoryIT extends AbstractRepositoryIT {
   private ApplicationEntity getApplicationByCandidateEmail(String candidateEmail) {
     CandidateEntity candidateEntity = this.candidateRepository.findByEmail(candidateEmail);
 
-    return this.applicationsRepository.findByCandidateEntity(candidateEntity).get(ZEROTH_ELEMENT);
+    Page<ApplicationEntity>
+        pageResult =
+        this.applicationsRepository.findByCandidateEntity(candidateEntity, DEFAULT_PAGE_REQUEST);
+
+    return pageResult.getContent().get(ZEROTH_ELEMENT);
   }
 
   private ApplicationEntity getExpectedApplicationEntity(String candidateEmail, Long channelId,
@@ -231,10 +240,11 @@ public class StatesHistoryRepositoryIT extends AbstractRepositoryIT {
 
     Date currentDate = new Date();
 
-    Long
-        expectedApplicationId =
-        this.applicationsRepository.findByCandidateEntity(candidateEntity).get(ZEROTH_ELEMENT)
-            .getId();
+    Page<ApplicationEntity>
+        pageResult =
+        this.applicationsRepository.findByCandidateEntity(candidateEntity, DEFAULT_PAGE_REQUEST);
+
+    Long expectedApplicationId = pageResult.getContent().get(ZEROTH_ELEMENT).getId();
     ApplicationEntity expectedApplicationEntity = ApplicationEntity.builder()
         .id(expectedApplicationId)
         .positionEntity(expectedPositionEntity)
