@@ -1,8 +1,12 @@
 package com.epam.rft.atsy.persistence.repositories;
 
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -23,6 +27,11 @@ public interface CandidateRepository extends JpaRepository<CandidateEntity, Long
                                                                                     String email,
                                                                                     String phone,
                                                                                     Sort sort);
+
+  @Query("SELECT candidate "
+      + "FROM CandidateEntity candidate")
+  Page<CandidateEntity> findByCandidateFilterRequest(
+                                                     Pageable pageable);
 
   /**
    * Returns the candidate whose email is equal to the specified email.

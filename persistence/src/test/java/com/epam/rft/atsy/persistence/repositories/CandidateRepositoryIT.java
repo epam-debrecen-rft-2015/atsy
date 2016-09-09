@@ -10,6 +10,7 @@ import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import java.util.Arrays;
@@ -335,5 +336,27 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     //Then
     assertThat(candidate, notNullValue());
     assertThat(candidate.getEmail(), is(EXISTING_CANDIDATE_EMAIL));
+  }
+
+  @Test
+  public void findByCandidateFiletRequestShouldFindCandidateAOnlyByPhoneFilter() {
+    //Given
+    String name = "";
+    String email = "";
+    String phone = CANDIDATE_A_PHONE;
+    String position = "";
+
+    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA);
+
+    //When
+    List<CandidateEntity>
+        actualCandidates =
+        candidateRepository
+            .findByCandidateFilterRequest(new PageRequest(0, 10))
+            .getContent();
+
+    //Then
+    assertCandidateValue(actualCandidates, name, email, phone);
+    assertCandidateList(expectedCandidates, actualCandidates);
   }
 }
