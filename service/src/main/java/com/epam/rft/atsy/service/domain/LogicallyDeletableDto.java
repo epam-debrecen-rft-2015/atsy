@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public abstract class LogicallyDeletableDto {
 
   @Getter(AccessLevel.NONE)
-  private Boolean deleted;
+  private Boolean deleted = false;
 
   public Boolean isDeleted() {
     return deleted;
