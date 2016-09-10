@@ -50,7 +50,7 @@ public class NewApplicationPopupControllerTest extends AbstractControllerTest {
   @InjectMocks
   private NewApplicationPopupController newApplicationPopupController;
 
-  private ChannelDTO channelDTO = ChannelDTO.builder().id(1L).name(CHANNEL_NAME_FACEBOOK).build();
+  private ChannelDTO channelDTO = ChannelDTO.builder().id(1L).name(CHANNEL_NAME_FACEBOOK).deleted(false).build();
   private PositionDTO positionDTO = PositionDTO.builder().id(1L).name(POSITION_NAME_DEVELOPER).build();
   private StateDTO stateDTO = StateDTO.builder().id(1L).name(NEW_STATE).build();
 
