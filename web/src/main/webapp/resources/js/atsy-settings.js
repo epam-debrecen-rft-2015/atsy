@@ -1,16 +1,5 @@
 var pageContainer;
 
-$(document).ready(function() {
-    $.i18n.properties({
-        name: 'messages',
-        path: '/atsy/resources/i18n/',
-        language: 'hu',
-        async: true,
-        mode:'both',
-        callback: function(){  }
-    });
-});
-
 function SettingsForm() {
     this.init = function (container, validationMessageKey) {
         if (typeof container === 'string') {
@@ -104,19 +93,19 @@ window.channelsEvents = {
 
          var options = {
             size: 'small',
-            message: $.i18n.prop('do.you.want.to.delete') + " (" + row.name + ")",
+            message: $.i18n.prop('delete.question') + " (" + row.name + ")",
             animate: true,
             onEscape: function() {},
             buttons: {
 
                 danger: {
-                    label: $.i18n.prop('cancel.button'),
+                    label: $.i18n.prop('common.no'),
                     className: "btn-danger",
                     callback: function() {}
                 },
 
                 success: {
-                      label: $.i18n.prop('delete.button'),
+                      label: $.i18n.prop('common.yes'),
                       className: "btn-success",
                       callback: function() {
                           $.ajax({
