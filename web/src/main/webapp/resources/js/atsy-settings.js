@@ -93,19 +93,19 @@ window.channelsEvents = {
 
          var options = {
             size: 'small',
-            message: $.i18n.prop('delete.question.js') + " (" + row.name + ")",
+            message: $.i18n.prop('question.delete.channel.js') + " (" + row.name + ")",
             animate: true,
             onEscape: function() {},
             buttons: {
 
                 danger: {
-                    label: $.i18n.prop('common.no'),
+                    label: $.i18n.prop('common.no.js'),
                     className: "btn-danger",
                     callback: function() {}
                 },
 
                 success: {
-                      label: $.i18n.prop('common.yes'),
+                      label: $.i18n.prop('common.yes.js'),
                       className: "btn-success",
                       callback: function() {
                           $.ajax({
