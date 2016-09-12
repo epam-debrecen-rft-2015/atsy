@@ -134,6 +134,7 @@ public class ChannelsStepDefs {
 
   @Then("^the list of channels changed$")
   public void the_list_of_channels_changed() throws Throwable {
+    getDriver().findElement(By.cssSelector("table#channels tbody")).getText();
     assertThat(getDriver().findElement(By.cssSelector("table#channels tbody")).getText(),
         is(not(containsString(channelName))));
   }
