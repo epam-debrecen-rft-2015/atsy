@@ -1,6 +1,6 @@
 package com.epam.rft.atsy.web.controllers;
 
-import com.epam.rft.atsy.web.messageresolution.MessageSourceRepresenationService;
+import com.epam.rft.atsy.web.messageresolution.MessageSourceRepresentationService;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,7 @@ public class MessageSourceController {
   public static final String TEXT_PLAIN_CHARSET_UTF_8 = "text/plain;charset=UTF-8";
 
   @Autowired
-  private MessageSourceRepresenationService messageSourceRepresenationService;
+  private MessageSourceRepresentationService messageSourceRepresenationService;
 
   @RequestMapping(value = "/messages_{language}.properties", produces = TEXT_PLAIN_CHARSET_UTF_8)
   @ResponseBody

@@ -6,6 +6,8 @@ import com.epam.rft.atsy.web.messageresolution.AtsyReloadableResourceBundleMessa
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolverImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.apache.commons.lang3.CharEncoding;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -74,11 +76,9 @@ public class WebConfiguration extends DelegatingWebMvcConfiguration {
 
   @Bean
   public AtsyReloadableResourceBundleMessageSource atsyInternalMessageSource() {
-    AtsyReloadableResourceBundleMessageSource
-        source =
-        new AtsyReloadableResourceBundleMessageSource();
+    AtsyReloadableResourceBundleMessageSource source = new AtsyReloadableResourceBundleMessageSource();
     source.setBasename("classpath:i18n/messages");
-    source.setDefaultEncoding("UTF-8");
+    source.setDefaultEncoding(CharEncoding.UTF_8);
     source.setFallbackToSystemLocale(false);
     return source;
   }

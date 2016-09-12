@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.epam.rft.atsy.web.messageresolution.MessageSourceRepresenationService;
+import com.epam.rft.atsy.web.messageresolution.MessageSourceRepresentationService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,7 +19,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class MessageSourceControllerTest extends AbstractControllerTest {
 
   @Mock
-  private MessageSourceRepresenationService messageSourceRepresentationService;
+  private MessageSourceRepresentationService messageSourceRepresentationService;
 
   @InjectMocks
   private MessageSourceController controller;
