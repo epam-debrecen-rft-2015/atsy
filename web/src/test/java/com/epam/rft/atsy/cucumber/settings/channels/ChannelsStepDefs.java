@@ -50,7 +50,6 @@ public class ChannelsStepDefs {
 
   @And("^the channels screen appears$")
   public void the_positions_screen_appears() throws Throwable {
-    waitForAjax();
     WebDriverWait wait = new WebDriverWait(getDriver(), 5);
     wait.until(presenceOfElementLocated(By.id("channels")));
     assertThat(getDriver().findElement(By.id("settings")).isDisplayed(), is(true));
@@ -70,7 +69,9 @@ public class ChannelsStepDefs {
 
   @When("^the Mentés button clicked$")
   public void the_mentes_button_clicked() throws Throwable {
+    getDriver().findElement(By.cssSelector("table#channels tbody"));
     getDriver().findElement(By.cssSelector("#channel-form .btn-success")).click();
+    getDriver().findElement(By.cssSelector("table#channels tbody")).getText();
   }
 
   @When("^the Mégsem button clicked$")
@@ -92,7 +93,6 @@ public class ChannelsStepDefs {
 
   @Then("^the new channel called (.*) appears in the list of channels")
   public void the_new_channel_appears_in_the_list_of_channels(String name) throws Throwable {
-    waitForAjax();
     assertThat(getDriver().findElement(By.cssSelector("table#channels tbody")).getText(),
         containsString(name));
   }
@@ -134,10 +134,7 @@ public class ChannelsStepDefs {
 
   @Then("^the list of channels changed$")
   public void the_list_of_channels_changed() throws Throwable {
-    waitForAjax();
     assertThat(getDriver().findElement(By.cssSelector("table#channels tbody")).getText(),
         is(not(containsString(channelName))));
   }
-
-
 }
