@@ -1,13 +1,20 @@
 package com.epam.rft.atsy.web.messageresolution;
 
-import java.util.Locale;
-
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
-public class AtsyReloadableResourceBundleMessageSource extends ReloadableResourceBundleMessageSource {
+import java.util.Locale;
+import java.util.Properties;
 
-	public boolean isSupportedLocale(Locale locale) {
-		return false;
-	}
-	
+public class AtsyReloadableResourceBundleMessageSource
+    extends ReloadableResourceBundleMessageSource {
+
+  public Properties getMergedPropertiesRepresentation(Locale locale) {
+    return super.getMergedProperties(locale).getProperties();
+  }
+
+  public boolean isSupportedLocale(Locale locale) {
+    PropertiesHolder holder = this.getMergedProperties(locale);
+    return !holder.getProperties().isEmpty();
+  }
+
 }
