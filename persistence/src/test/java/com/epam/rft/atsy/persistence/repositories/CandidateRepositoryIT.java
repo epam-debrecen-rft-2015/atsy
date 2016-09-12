@@ -48,6 +48,8 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
   private static final Short CANDIDATE_B_LANGUAGE_SKILL = 2;
   private static final Short CANDIDATE_C_LANGUAGE_SKILL = 8;
 
+  public static final String CANDIDATE_C_POSITION = "Fejlesztő";
+
   private static final String EXISTING_CANDIDATE_EMAIL = CANDIDATE_A_EMAIL;
 
   private static final String NON_EXISTENT_CANDIDATE_EMAIL = "does@not.exist";
@@ -83,7 +85,6 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
       .referer(CANDIDATE_C_REFERER)
       .languageSkill(CANDIDATE_C_LANGUAGE_SKILL)
       .build();
-
 
   @Autowired
   private CandidateRepository candidateRepository;
@@ -124,15 +125,203 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     }
   }
 
-  //TODO: Add more tests!
   @Test
-  public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldFindCandidateAOnlyByPhoneFilter() {
+  public void findByCandidateFilterRequestShouldFindCandidateAOnlyByPhoneFilter() {
     //Given
-    String name = "Candidate A";
+    String name = "";
+    String email = "";
+    String phone = CANDIDATE_A_PHONE;
+    String position = "";
+    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA);
+
+    //When
+    List<CandidateEntity>
+        actualCandidates =
+        candidateRepository
+            .findByCandidateFilterRequest(name, email, phone, position, new PageRequest(0, 10))
+            .getContent();
+
+    //Then
+    assertCandidateValue(actualCandidates, name, email, phone);
+    assertCandidateList(expectedCandidates, actualCandidates);
+  }
+
+  @Test
+  public void findByCandidateFilterRequestShouldFindCandidateBOnlyByNameFilter() {
+    //Given
+    String name = CANDIDATE_B_NAME;
     String email = "";
     String phone = "";
-    String position = "  ";
-    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA);
+    String position = "";
+    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateB);
+
+    //When
+    List<CandidateEntity>
+        actualCandidates =
+        candidateRepository
+            .findByCandidateFilterRequest(name, email, phone, position, new PageRequest(0, 10))
+            .getContent();
+
+    //Then
+    assertCandidateValue(actualCandidates, name, email, phone);
+    assertCandidateList(expectedCandidates, actualCandidates);
+  }
+
+  @Test
+  public void findByCandidateFilterRequestShouldFindCandidateCOnlyByEmailFilter() {
+    //Given
+    String name = "";
+    String email = CANDIDATE_C_EMAIL;
+    String phone = "";
+    String position = "";
+    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC);
+
+    //When
+    List<CandidateEntity>
+        actualCandidates =
+        candidateRepository
+            .findByCandidateFilterRequest(name, email, phone, position, new PageRequest(0, 10))
+            .getContent();
+
+    //Then
+    assertCandidateValue(actualCandidates, name, email, phone);
+    assertCandidateList(expectedCandidates, actualCandidates);
+  }
+
+  @Test
+  public void findByCandidateFilterRequestShouldFindThreeCandidatesInDescendingOrderByEmail() {
+    //Given
+    String name = "";
+    String email = "atsy.com";
+    String phone = "";
+    String position = "";
+    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC, candidateB, candidateA);
+
+    //When
+    List<CandidateEntity>
+        actualCandidates =
+        candidateRepository
+            .findByCandidateFilterRequest(name, email, phone, position,
+                new PageRequest(0, 10, createSort(Sort.Direction.DESC, "email"))).getContent();
+
+    //Then
+    assertCandidateValue(actualCandidates, name, email, phone);
+    assertCandidateList(expectedCandidates, actualCandidates);
+  }
+
+  @Test
+  public void findByCandidateFilterRequestShouldFindThreeCandidatesInAscendingOrderByEmail() {
+    //Given
+    String name = "";
+    String email = "atsy.com";
+    String phone = "";
+    String position = "";
+    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA, candidateB, candidateC);
+
+    //When
+    List<CandidateEntity>
+        actualCandidates =
+        candidateRepository
+            .findByCandidateFilterRequest(name, email, phone, position,
+                new PageRequest(0, 10, createSort(Sort.Direction.ASC, "email"))).getContent();
+
+    //Then
+    assertCandidateValue(actualCandidates, name, email, phone);
+    assertCandidateList(expectedCandidates, actualCandidates);
+  }
+
+  @Test
+  public void findByCandidateFilterRequestShouldFindThreeCandidatesInAscendingOrderByName() {
+    //Given
+    String name = "";
+    String email = "";
+    String phone = "+3610";
+    String position = "";
+    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA, candidateB, candidateC);
+
+    //When
+    List<CandidateEntity>
+        actualCandidates =
+        candidateRepository
+            .findByCandidateFilterRequest(name, email, phone, position,
+                new PageRequest(0, 10, createSort(Sort.Direction.ASC, "name"))).getContent();
+
+    //Then
+    assertCandidateValue(actualCandidates, name, email, phone);
+    assertCandidateList(expectedCandidates, actualCandidates);
+  }
+
+  @Test
+  public void findByCandidateFilterRequestShouldFindThreeCandidatesInDescendingOrderByName() {
+    //Given
+    String name = "";
+    String email = "";
+    String phone = "+3610";
+    String position = "";
+    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC, candidateB, candidateA);
+
+    //When
+    List<CandidateEntity>
+        actualCandidates =
+        candidateRepository
+            .findByCandidateFilterRequest(name, email, phone, position,
+                new PageRequest(0, 10, createSort(Sort.Direction.DESC, "name"))).getContent();
+
+    //Then
+    assertCandidateValue(actualCandidates, name, email, phone);
+    assertCandidateList(expectedCandidates, actualCandidates);
+  }
+
+  @Test
+  public void findByCandidateFilterRequestShouldFindThreeCandidatesInDescendingOrderByPhoneFilteredByName() {
+    //Given
+    String name = "Candidate";
+    String email = "";
+    String phone = "";
+    String position = "";
+    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC, candidateB, candidateA);
+
+    //When
+    List<CandidateEntity>
+        actualCandidates =
+        candidateRepository
+            .findByCandidateFilterRequest(name, email, phone, position,
+                new PageRequest(0, 10, createSort(Sort.Direction.DESC, "phone"))).getContent();
+
+    //Then
+    assertCandidateValue(actualCandidates, name, email, phone);
+    assertCandidateList(expectedCandidates, actualCandidates);
+  }
+
+  @Test
+  public void findByCandidateFilterRequestShouldFindThreeCandidatesInAscendingOrderByPhoneFilteredByName() {
+    //Given
+    String name = "Candidate";
+    String email = "";
+    String phone = "";
+    String position = "";
+    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA, candidateB, candidateC);
+
+    //When
+    List<CandidateEntity>
+        actualCandidates =
+        candidateRepository
+            .findByCandidateFilterRequest(name, email, phone, position,
+                new PageRequest(0, 10, createSort(Sort.Direction.ASC, "phone"))).getContent();
+
+    //Then
+    assertCandidateValue(actualCandidates, name, email, phone);
+    assertCandidateList(expectedCandidates, actualCandidates);
+  }
+
+  @Test
+  public void findByCandidateFilterRequestShouldGiveEmptyList() {
+    //Given
+    String name = NON_EXISTENT_CANDIDATE_NAME;
+    String email = "";
+    String phone = "";
+    String position = "";
+    List<CandidateEntity> expectedCandidates = Collections.emptyList();
 
     //When
     List<CandidateEntity>
@@ -146,176 +335,21 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-  public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldFindCandidateBOnlyByNameFilter() {
-    //Given
-    String name = CANDIDATE_B_NAME;
-    String email = "";
-    String phone = "";
-    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateB);
-
-    //When
-    List<CandidateEntity>
-        actualCandidates =
-        candidateRepository
-            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, null);
-
-    //Then
-    assertCandidateValue(actualCandidates, name, email, phone);
-    assertCandidateList(expectedCandidates, actualCandidates);
-  }
-
-  @Test
-  public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldFindCandidateCOnlyByEmailFilter() {
+  public void findByCandidateFieldRequestShouldFindCandidateCOnlyByPositionFilter() {
     //Given
     String name = "";
-    String email = CANDIDATE_C_EMAIL;
+    String email = "";
     String phone = "";
+    String position = CANDIDATE_C_POSITION;
+
     List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC);
 
     //When
     List<CandidateEntity>
         actualCandidates =
         candidateRepository
-            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, null);
-
-    //Then
-    assertCandidateValue(actualCandidates, name, email, phone);
-    assertCandidateList(expectedCandidates, actualCandidates);
-  }
-
-  @Test
-  public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldFindThreeCandidatesInDescendingOrderByEmail() {
-    //Given
-    String name = "";
-    String email = "atsy.com";
-    String phone = "";
-    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC, candidateB, candidateA);
-
-    //When
-    List<CandidateEntity>
-        actualCandidates =
-        candidateRepository
-            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone,
-                createSort(Sort.Direction.DESC, "email"));
-
-    //Then
-    assertCandidateValue(actualCandidates, name, email, phone);
-    assertCandidateList(expectedCandidates, actualCandidates);
-  }
-
-  @Test
-  public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldFindThreeCandidatesInAscendingOrderByEmail() {
-    //Given
-    String name = "";
-    String email = "atsy.com";
-    String phone = "";
-    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA, candidateB, candidateC);
-
-    //When
-    List<CandidateEntity>
-        actualCandidates =
-        candidateRepository
-            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone,
-                createSort(Sort.Direction.ASC, "email"));
-
-    //Then
-    assertCandidateValue(actualCandidates, name, email, phone);
-    assertCandidateList(expectedCandidates, actualCandidates);
-  }
-
-  @Test
-  public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldFindThreeCandidatesInAscendingOrderByName() {
-    //Given
-    String name = "";
-    String email = "";
-    String phone = "+3610";
-    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA, candidateB, candidateC);
-
-    //When
-    List<CandidateEntity>
-        actualCandidates =
-        candidateRepository
-            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone,
-                createSort(Sort.Direction.ASC, "name"));
-
-    //Then
-    assertCandidateValue(actualCandidates, name, email, phone);
-    assertCandidateList(expectedCandidates, actualCandidates);
-  }
-
-  @Test
-  public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldFindThreeCandidatesInDescendingOrderByName() {
-    //Given
-    String name = "";
-    String email = "";
-    String phone = "+3610";
-    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC, candidateB, candidateA);
-
-    //When
-    List<CandidateEntity>
-        actualCandidates =
-        candidateRepository
-            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone,
-                createSort(Sort.Direction.DESC, "name"));
-
-    //Then
-    assertCandidateValue(actualCandidates, name, email, phone);
-    assertCandidateList(expectedCandidates, actualCandidates);
-  }
-
-  @Test
-  public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldFindThreeCandidatesInDescendingOrderByPhoneFilteredByName() {
-    //Given
-    String name = "Candidate";
-    String email = "";
-    String phone = "";
-    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC, candidateB, candidateA);
-
-    //When
-    List<CandidateEntity>
-        actualCandidates =
-        candidateRepository
-            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone,
-                createSort(Sort.Direction.DESC, "phone"));
-
-    //Then
-    assertCandidateValue(actualCandidates, name, email, phone);
-    assertCandidateList(expectedCandidates, actualCandidates);
-  }
-
-  @Test
-  public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldFindThreeCandidatesInAscendingOrderByPhoneFilteredByName() {
-    //Given
-    String name = "Candidate";
-    String email = "";
-    String phone = "";
-    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA, candidateB, candidateC);
-
-    //When
-    List<CandidateEntity>
-        actualCandidates =
-        candidateRepository
-            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone,
-                createSort(Sort.Direction.ASC, "phone"));
-
-    //Then
-    assertCandidateValue(actualCandidates, name, email, phone);
-    assertCandidateList(expectedCandidates, actualCandidates);
-  }
-
-  @Test
-  public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldGiveEmptyList() {
-    //Given
-    String name = NON_EXISTENT_CANDIDATE_NAME;
-    String email = "";
-    String phone = "";
-    List<CandidateEntity> expectedCandidates = Collections.emptyList();
-
-    //When
-    List<CandidateEntity>
-        actualCandidates =
-        candidateRepository
-            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, null);
+            .findByCandidateFilterRequest(name, email, phone, position, new PageRequest(0, 10))
+            .getContent();
 
     //Then
     assertCandidateList(expectedCandidates, actualCandidates);
@@ -339,27 +373,4 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     assertThat(candidate, notNullValue());
     assertThat(candidate.getEmail(), is(EXISTING_CANDIDATE_EMAIL));
   }
-
-  @Test
-  public void findByCandidateFieldRequestShouldFindCandidateCOnlyByPositionFilter() {
-    //Given
-    String name = "";
-    String email = "";
-    String phone = "";
-    String position = "Fejlesztő";
-
-    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC);
-
-    //When
-    List<CandidateEntity>
-        actualCandidates =
-        candidateRepository
-            .findByCandidateFilterRequest(name, email, phone, position, new PageRequest(0, 10))
-            .getContent();
-
-    //Then
-    assertCandidateList(expectedCandidates, actualCandidates);
-  }
-
-
 }
