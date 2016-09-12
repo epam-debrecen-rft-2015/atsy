@@ -2,6 +2,7 @@ package com.epam.rft.atsy.web.configuration;
 
 import com.epam.rft.atsy.service.configuration.ServiceConfiguration;
 import com.epam.rft.atsy.web.exceptionhandling.UncheckedExceptionResolver;
+import com.epam.rft.atsy.web.messageresolution.AtsyReloadableResourceBundleMessageSource;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolverImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -73,14 +74,18 @@ public class WebConfiguration extends DelegatingWebMvcConfiguration {
   public HttpMessageConverter jsonMessageConverter(ObjectMapper objectMapper) {
     return new MappingJackson2HttpMessageConverter(objectMapper);
   }
+  
+  @Bean
+  public AtsyReloadableResourceBundleMessageSource atsyInternalMessageSource() {
+	    AtsyReloadableResourceBundleMessageSource source = new AtsyReloadableResourceBundleMessageSource();
+	    source.setBasename("classpath:i18n/messages");
+	    source.setDefaultEncoding("UTF-8");
+	    return source;
+  } 
 
   @Bean
   public MessageKeyResolver messageSource() {
-    ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
-    source.setBasename("classpath:i18n/messages");
-    source.setDefaultEncoding("UTF-8");
-
-    MessageKeyResolver messageKeyResolver = new MessageKeyResolverImpl(source);
+    MessageKeyResolver messageKeyResolver = new MessageKeyResolverImpl(atsyInternalMessageSource());
 
     return messageKeyResolver;
   }
