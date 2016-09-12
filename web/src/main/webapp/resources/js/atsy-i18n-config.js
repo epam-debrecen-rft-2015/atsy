@@ -1,7 +1,7 @@
 $(document).ready(function() {
     $.i18n.properties({
         name: 'messages',
-        path: '/atsy/resources/i18n/',
+        path: '/atsy/',
         language: 'hu',
         async: true,
         mode:'both',

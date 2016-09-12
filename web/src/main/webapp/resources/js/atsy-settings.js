@@ -93,7 +93,7 @@ window.channelsEvents = {
 
          var options = {
             size: 'small',
-            message: $.i18n.prop('delete.question') + " (" + row.name + ")",
+            message: $.i18n.prop('delete.question.js') + " (" + row.name + ")",
             animate: true,
             onEscape: function() {},
             buttons: {
