@@ -28,9 +28,30 @@ public interface CandidateRepository extends JpaRepository<CandidateEntity, Long
                                                                                     String phone,
                                                                                     Sort sort);
 
-  @Query("SELECT candidate "
-      + "FROM CandidateEntity candidate")
-  Page<CandidateEntity> findByCandidateFilterRequest(
+  //TODO: Csak C-t adja vissza gondold újra!!
+
+  /**
+   * Returns the list of CandidateEntities whom suits the given conditions.
+   * @param candidateName the name, which the candidate's name must contain
+   * @param candidateEmail the email, which the candidate's email must contain
+   * @param candidatePhone the phone number, which the candidate's phone number must contain
+   * @param candidatePosition the position, which the candidate's phone number must contain
+   * @return the list of CandidateEntities
+   */
+  @Query(value = "SELECT candidate FROM CandidateEntity candidate "
+      + "WHERE candidate.name LIKE CONCAT('%',:name,'%') AND "
+      + "candidate.email LIKE CONCAT('%',:email,'%') AND "
+      + "candidate.phone LIKE CONCAT('%',:phone,'%') AND "
+      + "(candidate.id in "
+      + "(SELECT candidateEntity FROM ApplicationEntity application "
+      + "WHERE candidate.id = application.candidateEntity AND application.positionEntity IN "
+      + "(SELECT id FROM PositionEntity position WHERE position.name LIKE CONCAT('%',:position,'%')))"
+      + "OR "
+      + "(LENGTH(TRIM(:position)) < 1))")
+  Page<CandidateEntity> findByCandidateFilterRequest(@Param("name") String candidateName,
+                                                     @Param("email") String candidateEmail,
+                                                     @Param("phone") String candidatePhone,
+                                                     @Param("position") String candidatePosition,
                                                      Pageable pageable);
 
   /**

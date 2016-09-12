@@ -124,22 +124,24 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     }
   }
 
+  //TODO: Add more tests!
   @Test
   public void findAllByNameContainingAndEmailContainingAndPhoneContainingShouldFindCandidateAOnlyByPhoneFilter() {
     //Given
-    String name = "";
+    String name = "Candidate A";
     String email = "";
-    String phone = CANDIDATE_A_PHONE;
+    String phone = "";
+    String position = "  ";
     List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA);
 
     //When
     List<CandidateEntity>
         actualCandidates =
         candidateRepository
-            .findAllByNameContainingAndEmailContainingAndPhoneContaining(name, email, phone, null);
+            .findByCandidateFilterRequest(name, email, phone, position, new PageRequest(0, 10))
+            .getContent();
 
     //Then
-    assertCandidateValue(actualCandidates, name, email, phone);
     assertCandidateList(expectedCandidates, actualCandidates);
   }
 
@@ -339,24 +341,25 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-  public void findByCandidateFiletRequestShouldFindCandidateAOnlyByPhoneFilter() {
+  public void findByCandidateFieldRequestShouldFindCandidateCOnlyByPositionFilter() {
     //Given
     String name = "";
     String email = "";
-    String phone = CANDIDATE_A_PHONE;
-    String position = "";
+    String phone = "";
+    String position = "Fejlesztő";
 
-    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA);
+    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC);
 
     //When
     List<CandidateEntity>
         actualCandidates =
         candidateRepository
-            .findByCandidateFilterRequest(new PageRequest(0, 10))
+            .findByCandidateFilterRequest(name, email, phone, position, new PageRequest(0, 10))
             .getContent();
 
     //Then
-    assertCandidateValue(actualCandidates, name, email, phone);
     assertCandidateList(expectedCandidates, actualCandidates);
   }
+
+
 }
