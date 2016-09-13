@@ -85,7 +85,7 @@ public class ChannelControllerTest extends AbstractControllerTest {
 
   @Test
   public void getChannelsShouldRespondWithEmptyJsonArrayWhenThereAreNoChannels() throws Exception {
-    given(channelService.getAllChannels()).willReturn(Collections.emptyList());
+    given(channelService.getAllNonDeletedChannelDto()).willReturn(Collections.emptyList());
 
     mockMvc.perform(get(REQUEST_URL))
         .andExpect(status().isOk())
@@ -93,7 +93,7 @@ public class ChannelControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$").isArray())
         .andExpect(jsonPath("$").isEmpty());
 
-    then(channelService).should().getAllChannels();
+    then(channelService).should().getAllNonDeletedChannelDto();
   }
 
   @Test
@@ -101,7 +101,7 @@ public class ChannelControllerTest extends AbstractControllerTest {
       throws Exception {
     List<ChannelDTO> channels = Collections.singletonList(persistedDto);
 
-    given(channelService.getAllChannels()).willReturn(channels);
+    given(channelService.getAllNonDeletedChannelDto()).willReturn(channels);
 
     mockMvc.perform(get(REQUEST_URL))
         .andExpect(status().isOk())
@@ -111,7 +111,7 @@ public class ChannelControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$[0].id", is(CHANNEL_ID.intValue())))
         .andExpect(jsonPath("$[0].name", is(CHANNEL_NAME)));
 
-    then(channelService).should().getAllChannels();
+    then(channelService).should().getAllNonDeletedChannelDto();
   }
 
   @Test
@@ -119,7 +119,7 @@ public class ChannelControllerTest extends AbstractControllerTest {
       throws Exception {
     List<ChannelDTO> channels = Collections.nCopies(3, persistedDto);
 
-    given(channelService.getAllChannels()).willReturn(channels);
+    given(channelService.getAllNonDeletedChannelDto()).willReturn(channels);
 
     mockMvc.perform(get(REQUEST_URL))
         .andExpect(status().isOk())
@@ -133,7 +133,7 @@ public class ChannelControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$[2].id", is(CHANNEL_ID.intValue())))
         .andExpect(jsonPath("$[2].name", is(CHANNEL_NAME)));
 
-    then(channelService).should().getAllChannels();
+    then(channelService).should().getAllNonDeletedChannelDto();
   }
 
   @Test

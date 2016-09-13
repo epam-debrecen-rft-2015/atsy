@@ -1,7 +1,18 @@
 package com.epam.rft.atsy.cucumber.settings.channels;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
+
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
-import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForAjax;
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForPageLoadAfter;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -11,16 +22,6 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.List;
-import cucumber.api.java.en.And;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
 
 public class ChannelsStepDefs {
   private String channelsListContents;
@@ -69,9 +70,7 @@ public class ChannelsStepDefs {
 
   @When("^the Mentés button clicked$")
   public void the_mentes_button_clicked() throws Throwable {
-    getDriver().findElement(By.cssSelector("table#channels tbody"));
     getDriver().findElement(By.cssSelector("#channel-form .btn-success")).click();
-    getDriver().findElement(By.cssSelector("table#channels tbody")).getText();
   }
 
   @When("^the Mégsem button clicked$")
@@ -89,10 +88,12 @@ public class ChannelsStepDefs {
   public void user_enters_into_the_title(String title) throws Throwable {
     getDriver().findElement(By.id("channel_name")).clear();
     getDriver().findElement(By.id("channel_name")).sendKeys(title);
+    channelName = title;
   }
 
   @Then("^the new channel called (.*) appears in the list of channels")
   public void the_new_channel_appears_in_the_list_of_channels(String name) throws Throwable {
+    waitChannelTableUntilPresentChannelName(name);
     assertThat(getDriver().findElement(By.cssSelector("table#channels tbody")).getText(),
         containsString(name));
   }
@@ -134,8 +135,13 @@ public class ChannelsStepDefs {
 
   @Then("^the list of channels changed$")
   public void the_list_of_channels_changed() throws Throwable {
-    getDriver().findElement(By.cssSelector("table#channels tbody")).getText();
     assertThat(getDriver().findElement(By.cssSelector("table#channels tbody")).getText(),
         is(not(containsString(channelName))));
+  }
+
+  private void waitChannelTableUntilPresentChannelName(String channelName) {
+    WebDriverWait webDriverWait = new WebDriverWait((getDriver()), 15);
+    webDriverWait.until(ExpectedConditions
+        .textToBePresentInElement(getDriver().findElement(By.cssSelector("table#channels tbody")), channelName));
   }
 }

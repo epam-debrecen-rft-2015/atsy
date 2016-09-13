@@ -32,6 +32,7 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
+
 import javax.annotation.PostConstruct;
 
 @Configuration
@@ -86,7 +87,6 @@ public class WebConfiguration extends DelegatingWebMvcConfiguration {
   @Bean
   public MessageKeyResolver messageSource() {
     MessageKeyResolver messageKeyResolver = new MessageKeyResolverImpl(atsyInternalMessageSource());
-
     return messageKeyResolver;
   }
 

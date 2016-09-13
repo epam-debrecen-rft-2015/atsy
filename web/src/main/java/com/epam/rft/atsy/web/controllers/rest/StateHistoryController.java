@@ -10,12 +10,9 @@ import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.web.FieldErrorResponseComposer;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
-import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +20,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Locale;
-
 import javax.validation.Valid;
 
 @RestController
@@ -59,10 +54,9 @@ public class StateHistoryController {
 
   /**
    * This method is used to save new states or update the information of the latest state.
-   *
-   * @param applicationId                  identifier of the application whose states are viewed and edited
+   * @param applicationId identifier of the application whose states are viewed and edited
    * @param stateHistoryViewRepresentation this attribute contains all the state information of the
-   *                                       given application
+   * given application
    * @return a ModelAndView object filled with the data to stay on the same page and view the states
    * of the same application, but including the latest modification
    */
@@ -81,36 +75,33 @@ public class StateHistoryController {
     if (bindingResult.hasErrors()) {
       return fieldErrorResponseComposer.composeResponse(bindingResult);
     } else {
-      try {
-        stateHistoryDTO = StateHistoryDTO.builder()
-            .id(stateHistoryViewRepresentation.getId())
-            .applicationDTO(applicationsService.getApplicationDtoById(applicationId))
-            .candidateId(stateHistoryViewRepresentation.getCandidateId())
-            .description(stateHistoryViewRepresentation.getDescription())
-            .result(stateHistoryViewRepresentation.getResult())
-            .offeredMoney(stateHistoryViewRepresentation.getOfferedMoney())
-            .claim(stateHistoryViewRepresentation.getClaim())
-            .feedbackDate(stateHistoryViewRepresentation.getFeedbackDate() != null
-                && !stateHistoryViewRepresentation.getFeedbackDate().isEmpty() ? DATE_FORMAT
-                .parse(stateHistoryViewRepresentation.getFeedbackDate()) : null)
-            .dayOfStart(stateHistoryViewRepresentation.getDayOfStart())
-            .dateOfEnter(stateHistoryViewRepresentation.getDateOfEnter())
-            .creationDate(null)
-            .stateDTO(StateDTO.builder().id(stateHistoryViewRepresentation.getStateId())
-                .name(stateHistoryViewRepresentation.getStateName()).build())
-            .recommendation(stateHistoryViewRepresentation.getRecommendation() != null ?
-                stateHistoryViewRepresentation.getRecommendation() == 1 : null)
-            .reviewerName(stateHistoryViewRepresentation.getReviewerName())
-            .recommendedPositionLevel(stateHistoryViewRepresentation.getRecommendedPositionLevel())
-            .build();
-      } catch (ParseException e) {
-        RestResponse restResponse = new RestResponse(e.getMessage());
-        return new ResponseEntity<>(restResponse, HttpStatus.BAD_REQUEST);
-      }
+      stateHistoryDTO = StateHistoryDTO.builder()
+          .id(stateHistoryViewRepresentation.getId())
+          .applicationDTO(applicationsService.getApplicationDtoById(applicationId))
+          .candidateId(stateHistoryViewRepresentation.getCandidateId())
+          .description(stateHistoryViewRepresentation.getDescription())
+          .result(stateHistoryViewRepresentation.getResult())
+          .offeredMoney(stateHistoryViewRepresentation.getOfferedMoney())
+          .claim(stateHistoryViewRepresentation.getClaim())
+          .feedbackDate(stateHistoryViewRepresentation.getFeedbackDate())
+          .dayOfStart(stateHistoryViewRepresentation.getDayOfStart())
+          .dateOfEnter(stateHistoryViewRepresentation.getDateOfEnter())
+          .creationDate(null)
+          .stateDTO(StateDTO.builder().id(stateHistoryViewRepresentation.getStateId())
+              .name(stateHistoryViewRepresentation.getStateName()).build())
+          .recommendation(stateHistoryViewRepresentation.getRecommendation() != null ?
+              stateHistoryViewRepresentation.getRecommendation() == 1 : null)
+          .reviewerName(stateHistoryViewRepresentation.getReviewerName())
+          .recommendedPositionLevel(stateHistoryViewRepresentation.getRecommendedPositionLevel())
+          .build();
 
       if (isNewState(stateName)) {
-        ChannelDTO channelDTO = channelService.getChannelDtoByName(stateHistoryViewRepresentation.getChannelName());
-        PositionDTO positionDTO = positionService.getPositionDtoByName(stateHistoryViewRepresentation.getPositionName());
+        ChannelDTO
+            channelDTO =
+            channelService.getChannelDtoByName(stateHistoryViewRepresentation.getChannelName());
+        PositionDTO
+            positionDTO =
+            positionService.getPositionDtoByName(stateHistoryViewRepresentation.getPositionName());
 
         stateHistoryDTO.getApplicationDTO().setChannelId(channelDTO.getId());
         stateHistoryDTO.getApplicationDTO().setPositionId(positionDTO.getId());
@@ -120,7 +111,8 @@ public class StateHistoryController {
       }
 
       statesHistoryService.saveStateHistory(stateHistoryDTO);
-      return new ResponseEntity<>(Collections.singletonMap("applicationId", applicationId), HttpStatus.OK);
+      return new ResponseEntity<>(Collections.singletonMap("applicationId", applicationId),
+          HttpStatus.OK);
     }
   }
 
@@ -128,12 +120,15 @@ public class StateHistoryController {
     return stateName != null && stateName.equals(NEW_STATE);
   }
 
-  protected void validateNewState(StateHistoryViewRepresentation stateHistoryViewRepresentation, BindingResult bindingResult) {
-      if (positionService.getPositionDtoByName(stateHistoryViewRepresentation.getPositionName()) == null) {
-        bindingResult.rejectValue(FIELD_POSITION_NAME, null, POSITION_NOT_FOUND_MESSAGE_KEY);
-      }
-      if (channelService.getChannelDtoByName(stateHistoryViewRepresentation.getChannelName()) == null) {
-        bindingResult.rejectValue(FIELD_CHANNEL_NAME, null, CHANNEL_NOT_FOUND_MESSAGE_KEY);
-      }
+  protected void validateNewState(StateHistoryViewRepresentation stateHistoryViewRepresentation,
+                                  BindingResult bindingResult) {
+    if (positionService.getPositionDtoByName(stateHistoryViewRepresentation.getPositionName())
+        == null) {
+      bindingResult.rejectValue(FIELD_POSITION_NAME, null, POSITION_NOT_FOUND_MESSAGE_KEY);
+    }
+    if (channelService.getChannelDtoByName(stateHistoryViewRepresentation.getChannelName())
+        == null) {
+      bindingResult.rejectValue(FIELD_CHANNEL_NAME, null, CHANNEL_NOT_FOUND_MESSAGE_KEY);
+    }
   }
 }
