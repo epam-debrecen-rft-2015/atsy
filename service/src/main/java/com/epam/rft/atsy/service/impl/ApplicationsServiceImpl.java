@@ -10,8 +10,10 @@ import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -44,6 +46,26 @@ public class ApplicationsServiceImpl implements ApplicationsService {
     List<ApplicationEntity>
         applicationEntities =
         applicationsRepository.findByCandidateEntity(candidateEntity);
+
+    return converterService.convert(applicationEntities, ApplicationDTO.class);
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public List<ApplicationDTO> getApplicationsByCandidateDTO(CandidateDTO candidateDTO, int page,
+                                                            int size) {
+    Assert.notNull(candidateDTO);
+    Assert.notNull(candidateDTO.getId());
+
+    CandidateEntity candidateEntity = candidateRepository.findOne(candidateDTO.getId());
+
+    Pageable pageRequest = new PageRequest(page, size);
+
+    Page<ApplicationEntity>
+        pageResult =
+        applicationsRepository.findByCandidateEntity(candidateEntity, pageRequest);
+
+    List<ApplicationEntity> applicationEntities = pageResult.getContent();
 
     return converterService.convert(applicationEntities, ApplicationDTO.class);
   }
@@ -87,7 +109,9 @@ public class ApplicationsServiceImpl implements ApplicationsService {
 
     ApplicationEntity applicationEntity =
         converterService.convert(applicationDTO, ApplicationEntity.class);
-    ApplicationEntity savedOrUpdateApplicationEntity = applicationsRepository.saveAndFlush(applicationEntity);
+    ApplicationEntity
+        savedOrUpdateApplicationEntity =
+        applicationsRepository.saveAndFlush(applicationEntity);
 
     return converterService.convert(savedOrUpdateApplicationEntity, ApplicationDTO.class);
   }
