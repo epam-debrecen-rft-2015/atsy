@@ -6,5 +6,5 @@ CREATE TABLE candidates(
   description LONGTEXT,
   referer VARCHAR(255),
   language_skill TINYINT unsigned,
-  cv_file_name VARCHAR(255)
+  cv_file_name VARCHAR(255) UNIQUE
 );
