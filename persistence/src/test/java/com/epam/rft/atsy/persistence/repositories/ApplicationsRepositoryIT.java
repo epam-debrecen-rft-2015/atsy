@@ -158,7 +158,6 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
     // Then
     assertThat(result, notNullValue());
     assertThat(result.size(), is(2));
-    assertThat(pageResult.getTotalPages(), is(2));
 
     assertApplicationEntity(result.get(0), candidateEntityC, expectedChannelEntity,
         expectedPositionEntity, expectedDate);
