@@ -42,7 +42,7 @@ public class ChannelServiceImpl implements ChannelService {
 
   @Transactional(readOnly = true)
   @Override
-  public Collection<ChannelDTO> getAllChannels() {
+  public Collection<ChannelDTO> getAllNonDeletedChannelDto() {
     List<ChannelEntity> ChannelEntities = channelRepository.findAllNonDeletedChannelEntity();
     return converterService.convert(ChannelEntities, ChannelDTO.class);
   }

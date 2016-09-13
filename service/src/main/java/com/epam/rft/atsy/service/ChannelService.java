@@ -19,11 +19,11 @@ public interface ChannelService {
   ChannelDTO getChannelDtoById(Long channelId);
 
   /**
-   * Returns a collection of channels.
+   * Returns the list of ChannelDTOs where the deleted fields are null or false.
    *
-   * @return the collection of channels
+   * @return the list of ChannelDTOs where the deleted fields are null or false
    */
-  Collection<ChannelDTO> getAllChannels();
+  Collection<ChannelDTO> getAllNonDeletedChannelDto();
 
   /**
    * Returns the channel with the specified name.
@@ -44,6 +44,7 @@ public interface ChannelService {
    * Setups the deleted field to true in the channel in the database.
    *
    * @param channelId is the id of the channel
+   * @throws {@code ChannelNotFoundException} If the channel by this @{code channelId} not found
    */
   void deleteChannelDtoLogicallyById(Long channelId) throws ChannelNotFoundException;
 }

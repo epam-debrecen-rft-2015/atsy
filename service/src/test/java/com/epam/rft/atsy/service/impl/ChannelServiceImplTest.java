@@ -1,26 +1,12 @@
 package com.epam.rft.atsy.service.impl;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-
 import com.epam.rft.atsy.persistence.entities.ChannelEntity;
 import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.exception.ChannelNotFoundException;
 import com.epam.rft.atsy.service.exception.DuplicateChannelException;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matchers;
-import org.hibernate.exception.ConstraintViolationException;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,12 +16,22 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ChannelServiceImplTest {
@@ -144,14 +140,14 @@ public class ChannelServiceImplTest {
   }
 
   @Test
-  public void getAllChannelsShouldReturnEmptyListWhenThereAreNoChannels() {
+  public void getAllNonDeletedChannelDtoShouldReturnEmptyListWhenThereAreNoChannels() {
     // Given
     given(channelRepository.findAllNonDeletedChannelEntity()).willReturn(EMPTY_CHANNEL_ENTITY_LIST);
     given(converterService.convert(EMPTY_CHANNEL_ENTITY_LIST, ChannelDTO.class))
         .willReturn(EMPTY_CHANNEL_DTO_LIST);
 
     // When
-    Collection<ChannelDTO> channels = channelService.getAllChannels();
+    Collection<ChannelDTO> channels = channelService.getAllNonDeletedChannelDto();
 
     // Then
     assertThat(channels, notNullValue());
@@ -162,7 +158,7 @@ public class ChannelServiceImplTest {
   }
 
   @Test
-  public void getAllChannelsShouldReturnSingleElementListWhenThereIsOneChannel() {
+  public void getAllNonDeletedChannelDtoShouldReturnSingleElementListWhenThereIsOneChannel() {
     // Given
     List<ChannelEntity> channels = Arrays.asList(facebookEntity);
 
@@ -172,7 +168,7 @@ public class ChannelServiceImplTest {
     given(converterService.convert(channels, ChannelDTO.class)).willReturn(expected);
 
     // When
-    Collection<ChannelDTO> result = channelService.getAllChannels();
+    Collection<ChannelDTO> result = channelService.getAllNonDeletedChannelDto();
 
     // Then
     assertEquals(result, expected);
@@ -182,14 +178,14 @@ public class ChannelServiceImplTest {
   }
 
   @Test
-  public void getAllChannelsShouldReturnThreeElementListWhenThereAreThreeChannels() {
+  public void getAllNonDeletedChannelDtoShouldReturnThreeElementListWhenThereAreThreeChannels() {
     // Given
     given(channelRepository.findAllNonDeletedChannelEntity()).willReturn(expectedChannelEntityList);
     given(converterService.convert(expectedChannelEntityList, ChannelDTO.class))
         .willReturn(expectedChannelDTOList);
 
     // When
-    Collection<ChannelDTO> result = channelService.getAllChannels();
+    Collection<ChannelDTO> result = channelService.getAllNonDeletedChannelDto();
 
     // Then
     assertEquals(result, expectedChannelDTOList);

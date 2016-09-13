@@ -40,7 +40,7 @@ public class ChannelController {
    */
   @RequestMapping(method = RequestMethod.GET)
   public Collection<ChannelDTO> getChannels() {
-    return channelService.getAllChannels();
+    return channelService.getAllNonDeletedChannelDto();
   }
 
   /**
@@ -68,6 +68,12 @@ public class ChannelController {
     }
   }
 
+  /**
+   * This method is used to delete an existing channel from the database.
+   * @param channelId identifier of the channel that we want to delete logically
+   * @return a ResponseEntity object, which contains HTTP status code and error message if any
+   * occurs
+   */
   @RequestMapping(path = "/delete", method = RequestMethod.DELETE)
   public ResponseEntity<RestResponse> deleteChannelDtoLogicallyByName(@RequestParam(name = "channelId") Long channelId) {
 
