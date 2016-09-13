@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PagingResponse {
+public class PagingResponse<T> {
 
   private Long total;
-  private List<?> dataList;
+  private List<T> dataList;
 
 }
