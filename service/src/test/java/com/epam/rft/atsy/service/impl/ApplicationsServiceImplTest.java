@@ -1,5 +1,17 @@
 package com.epam.rft.atsy.service.impl;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.entities.ChannelEntity;
@@ -15,29 +27,19 @@ import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationsServiceImplTest {
@@ -59,6 +61,16 @@ public class ApplicationsServiceImplTest {
 
   private static final Long CHANNEL_ID = 8L;
   private static final String CHANNEL_NAME = "állásbörze";
+
+  private static final int PAGE_NUMBER_ZERO = 0;
+  private static final int PAGE_SIZE_TEN = 10;
+  private static final int PAGE_SIZE_TWO = 2;
+  private static final Pageable
+      DEFAULT_PAGE_REQUEST =
+      new PageRequest(PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
+  private static final Pageable
+      ZERO_TWO_PAGE_REQUEST =
+      new PageRequest(PAGE_NUMBER_ZERO, PAGE_SIZE_TWO);
 
   private final ApplicationDTO applicationDTO =
       ApplicationDTO.builder().id(APPLICATION_ID).creationDate(APPLICATION_CREATION_DATE)
@@ -117,12 +129,34 @@ public class ApplicationsServiceImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
+  public void pageGetApplicationsByCandidateDTOShouldThrowIllegalArgumentExceptionWhenCandidateDTOIsNull() {
+    // Given
+
+    // When
+    applicationsService.getApplicationsByCandidateDTO(null, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
+
+    // Then
+  }
+
+  @Test(expected = IllegalArgumentException.class)
   public void getApplicationsByCandidateDTOShouldThrowIllegalArgumentExceptionWhenCandidateDTOsIdIsNull() {
     // Given
     CandidateDTO candidateDTO = CandidateDTO.builder().id(null).build();
 
     // When
     applicationsService.getApplicationsByCandidateDTO(candidateDTO);
+
+    // Then
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void pageGetApplicationsByCandidateDTOShouldThrowIllegalArgumentExceptionWhenCandidateDTOsIdIsNull() {
+    // Given
+    CandidateDTO candidateDTO = CandidateDTO.builder().id(null).build();
+
+    // When
+    applicationsService
+        .getApplicationsByCandidateDTO(candidateDTO, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
 
     // Then
   }
@@ -136,6 +170,24 @@ public class ApplicationsServiceImplTest {
 
     // When
     List<ApplicationDTO> result = applicationsService.getApplicationsByCandidateDTO(candidateDTO);
+
+    // Then
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  public void pageGetApplicationByCandidateDTOShouldReturnEmptyListWhenCandidateIdIsNotFound() {
+    // Given
+    CandidateDTO candidateDTO = CandidateDTO.builder().id(NON_EXISTENT_CANDIDATE_ID).build();
+    given(candidateRepository.findOne(NON_EXISTENT_CANDIDATE_ID)).willReturn(null);
+    given(applicationsRepository.findByCandidateEntity(null, DEFAULT_PAGE_REQUEST))
+        .willReturn(new PageImpl<ApplicationEntity>(Collections.emptyList()));
+
+    // When
+    List<ApplicationDTO>
+        result =
+        applicationsService
+            .getApplicationsByCandidateDTO(candidateDTO, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
 
     // Then
     assertTrue(result.isEmpty());
@@ -162,6 +214,29 @@ public class ApplicationsServiceImplTest {
   }
 
   @Test
+  public void pageGetApplicationByCandidateDTOShouldReturnOneElementListOfApplicationDTOWhenCandidateIdExists() {
+    // Given
+    CandidateDTO candidateDTO = CandidateDTO.builder().id(CANDIDATE_ID).build();
+    List<ApplicationEntity> applicationEntities = Collections.singletonList(applicationEntity);
+    List<ApplicationDTO> applicationDTOs = Collections.singletonList(applicationDTO);
+
+    given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
+    given(applicationsRepository.findByCandidateEntity(candidateEntity, DEFAULT_PAGE_REQUEST))
+        .willReturn(new PageImpl<ApplicationEntity>(applicationEntities));
+    given(converterService.convert(applicationEntities, ApplicationDTO.class))
+        .willReturn(applicationDTOs);
+
+    // When
+    List<ApplicationDTO>
+        result =
+        applicationsService
+            .getApplicationsByCandidateDTO(candidateDTO, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
+
+    // Then
+    assertThat(result, equalTo(applicationDTOs));
+  }
+
+  @Test
   public void getApplicationByCandidateDTOShouldReturnThreeElementListOfApplicationDTOWhenCandidateIdExists() {
     // Given
     CandidateDTO candidateDTO = CandidateDTO.builder().id(CANDIDATE_ID).build();
@@ -180,6 +255,33 @@ public class ApplicationsServiceImplTest {
 
     // When
     List<ApplicationDTO> result = applicationsService.getApplicationsByCandidateDTO(candidateDTO);
+
+    // Then
+    assertThat(result, equalTo(applicationDTOs));
+  }
+
+  @Test
+  public void pageGetApplicationByCandidateDTOShouldReturnThreeElementListOfApplicationDTOWhenCandidateIdExists() {
+    // Given
+    CandidateDTO candidateDTO = CandidateDTO.builder().id(CANDIDATE_ID).build();
+    List<ApplicationEntity>
+        applicationEntities =
+        Arrays.asList(applicationEntity, applicationEntity, applicationEntity);
+    List<ApplicationDTO>
+        applicationDTOs =
+        Arrays.asList(applicationDTO, applicationDTO, applicationDTO);
+
+    given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
+    given(applicationsRepository.findByCandidateEntity(candidateEntity, DEFAULT_PAGE_REQUEST))
+        .willReturn(new PageImpl<ApplicationEntity>(applicationEntities));
+    given(converterService.convert(applicationEntities, ApplicationDTO.class))
+        .willReturn(applicationDTOs);
+
+    // When
+    List<ApplicationDTO>
+        result =
+        applicationsService
+            .getApplicationsByCandidateDTO(candidateDTO, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
 
     // Then
     assertThat(result, equalTo(applicationDTOs));
@@ -235,7 +337,9 @@ public class ApplicationsServiceImplTest {
     given(applicationsRepository.findOne(APPLICATION_ID)).willReturn(null);
 
     // When
-    ApplicationDTO returnedApplicationDto = applicationsService.getApplicationDtoById(APPLICATION_ID);
+    ApplicationDTO
+        returnedApplicationDto =
+        applicationsService.getApplicationDtoById(APPLICATION_ID);
     assertThat(returnedApplicationDto, is(nullValue()));
 
     // Then
@@ -247,10 +351,13 @@ public class ApplicationsServiceImplTest {
   public void getApplicationDtoByIdShouldReturnExistingApplicationDtoWhenApplicationEntityExists() {
     // Given
     given(applicationsRepository.findOne(APPLICATION_ID)).willReturn(applicationEntity);
-    given(converterService.convert(applicationEntity, ApplicationDTO.class)).willReturn(applicationDTO);
+    given(converterService.convert(applicationEntity, ApplicationDTO.class))
+        .willReturn(applicationDTO);
 
     // When
-    ApplicationDTO returnedApplicationDto = applicationsService.getApplicationDtoById(APPLICATION_ID);
+    ApplicationDTO
+        returnedApplicationDto =
+        applicationsService.getApplicationDtoById(APPLICATION_ID);
     assertThat(returnedApplicationDto, notNullValue());
     assertThat(returnedApplicationDto, equalTo(applicationDTO));
 
@@ -265,8 +372,10 @@ public class ApplicationsServiceImplTest {
     given(converterService.convert(applicationDTO, ApplicationEntity.class))
         .willReturn(applicationEntity);
 
-    given(applicationsRepository.saveAndFlush(applicationEntity)).willReturn(this.applicationEntity);
-    given(converterService.convert(applicationEntity, ApplicationDTO.class)).willReturn(applicationDTO);
+    given(applicationsRepository.saveAndFlush(applicationEntity))
+        .willReturn(this.applicationEntity);
+    given(converterService.convert(applicationEntity, ApplicationDTO.class))
+        .willReturn(applicationDTO);
 
     // When
     ApplicationDTO result = applicationsService.saveOrUpdate(applicationDTO);
@@ -338,9 +447,12 @@ public class ApplicationsServiceImplTest {
             .position(new PositionDTO(1L, null)).description("sss")
             .stateDTO(new StateDTO(1L, "newstate")).build();
 
-    given(converterService.convert(applicationDTO, ApplicationEntity.class)).willReturn(applicationEntity);
-    given(applicationsRepository.saveAndFlush(applicationEntity)).willReturn(this.applicationEntity);
-    given(converterService.convert(applicationEntity, ApplicationDTO.class)).willReturn(applicationDTO);
+    given(converterService.convert(applicationDTO, ApplicationEntity.class))
+        .willReturn(applicationEntity);
+    given(applicationsRepository.saveAndFlush(applicationEntity))
+        .willReturn(this.applicationEntity);
+    given(converterService.convert(applicationEntity, ApplicationDTO.class))
+        .willReturn(applicationDTO);
 
     // When
     Long result = applicationsService.saveApplication(applicationDTO, stateHistoryDTO);
