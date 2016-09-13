@@ -3,8 +3,8 @@ package com.epam.rft.atsy.service;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+import com.epam.rft.atsy.service.response.PagingResponse;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -13,12 +13,16 @@ import java.util.List;
 public interface StatesHistoryService {
 
   /**
-   * returns the collection of applications of the candidate.
-   * @param id the candidate's id
-   * @return the collection of applications
+   * Returns a PagingResponse object for a candidate, which contains a list of
+   * CandidateApplicationDTOs with the number of size, and the number of all
+   * CandidateApplicationDTOs.
+   * @param id id the candidate's id
+   * @param page number of the requested page
+   * @param size the requested page size
+   * @return a PagingResponse object
    */
-  Collection<CandidateApplicationDTO> getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(
-      Long id);
+  PagingResponse<CandidateApplicationDTO> getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(
+      Long id, int page, int size);
 
   void deleteStateHistoriesByApplication(ApplicationDTO applicationDTO);
 

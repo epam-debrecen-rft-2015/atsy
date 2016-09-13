@@ -14,13 +14,15 @@ import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
-
+import com.epam.rft.atsy.service.response.PagingResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,23 +50,35 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
 
   @Transactional(readOnly = true)
   @Override
-  public Collection<CandidateApplicationDTO> getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(
-      Long id) {
+  public PagingResponse<CandidateApplicationDTO> getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(
+      Long id, int page, int size) {
     Assert.notNull(id);
     CandidateEntity candidateEntity = candidateRepository.findOne(id);
 
     Assert.notNull(candidateEntity);
-    List<ApplicationEntity>
-        applicationList =
-        applicationsRepository.findByCandidateEntity(candidateEntity);
+
+    Pageable pageRequest = new PageRequest(page, size);
+
+    Page<ApplicationEntity>
+        pageResult =
+        applicationsRepository.findByCandidateEntity(candidateEntity, pageRequest);
+
+    List<ApplicationEntity> applicationList = pageResult.getContent();
 
     List<CandidateApplicationDTO>
         candidateApplicationDTOs =
         converterService.convert(applicationList, CandidateApplicationDTO.class);
 
-    return candidateApplicationDTOs.stream()
+    candidateApplicationDTOs = candidateApplicationDTOs.stream()
         .sorted((m1, m2) -> m2.getModificationDate().compareTo(m1.getModificationDate()))
         .collect(Collectors.toList());
+
+    PagingResponse<CandidateApplicationDTO> response = new PagingResponse<>();
+    response.setDataList(candidateApplicationDTOs);
+    response.setTotal(pageResult.getTotalElements());
+
+    return response;
+
   }
 
   @Transactional
@@ -91,8 +105,11 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
     StatesEntity statesEntity = statesRepository.findOne(state.getStateDTO().getId());
     Assert.notNull(statesEntity);
 
-    StatesHistoryEntity statesHistoryEntity = converterService.convert(state, StatesHistoryEntity.class);
-    statesHistoryEntity.setCreationDate(state.getCreationDate() == null ? new Date() : state.getCreationDate());
+    StatesHistoryEntity
+        statesHistoryEntity =
+        converterService.convert(state, StatesHistoryEntity.class);
+    statesHistoryEntity
+        .setCreationDate(state.getCreationDate() == null ? new Date() : state.getCreationDate());
 
     applicationsService.saveOrUpdate(state.getApplicationDTO());
     return statesHistoryRepository.saveAndFlush(statesHistoryEntity).getId();
