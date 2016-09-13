@@ -2,8 +2,8 @@ package com.epam.rft.atsy.persistence.repositories;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
@@ -86,12 +86,24 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
       .languageSkill(CANDIDATE_C_LANGUAGE_SKILL)
       .build();
 
+  public static final int DEFAULT_PAGESIZE = 10;
+
+  private static final PageRequest
+      DEFAULT_PAGEREQUEST =
+      new PageRequest(0, DEFAULT_PAGESIZE, Sort.Direction.ASC, "name");
+
+  private static final PageRequest
+      DESCENDING_NAME_PAGEREQUEST =
+      new PageRequest(0, DEFAULT_PAGESIZE,
+          Sort.Direction.DESC, "name");
+
+  private static final PageRequest
+      DESCENDING_EMAIL_PAGEREQUEST =
+      new PageRequest(0, DEFAULT_PAGESIZE,
+          Sort.Direction.DESC, "email");
+
   @Autowired
   private CandidateRepository candidateRepository;
-
-  private Sort createSort(Sort.Direction direction, String property) {
-    return new Sort(direction, property);
-  }
 
   private void assertCandidateValue(List<CandidateEntity> candidates, String expectedName,
                                     String expectedEmail, String expectedPhone) {
@@ -126,6 +138,47 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
+  public void findByCandidateFilterRequestShouldFindAllCandidatesWithEmptyFilterRequest() {
+    //Given
+    String name = "";
+    String email = "";
+    String phone = "";
+    String position = "";
+    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateA, candidateB, candidateC);
+
+    //When
+    List<CandidateEntity>
+        actualCandidate =
+        candidateRepository
+            .findByCandidateFilterRequest(name, email, phone, position, DEFAULT_PAGEREQUEST)
+            .getContent();
+
+    //The
+    assertCandidateList(expectedCandidates, actualCandidate);
+  }
+
+  @Test
+  public void findByCandidateFieldRequestShouldFindCandidateCOnlyByPositionFilter() {
+    //Given
+    String name = "";
+    String email = "";
+    String phone = "";
+    String position = "f";
+
+    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC);
+
+    //When
+    List<CandidateEntity>
+        actualCandidates =
+        candidateRepository
+            .findByCandidateFilterRequest(name, email, phone, position, DEFAULT_PAGEREQUEST)
+            .getContent();
+
+    //Then
+    assertCandidateList(expectedCandidates, actualCandidates);
+  }
+
+  @Test
   public void findByCandidateFilterRequestShouldFindCandidateAOnlyByPhoneFilter() {
     //Given
     String name = "";
@@ -138,7 +191,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     List<CandidateEntity>
         actualCandidates =
         candidateRepository
-            .findByCandidateFilterRequest(name, email, phone, position, new PageRequest(0, 10))
+            .findByCandidateFilterRequest(name, email, phone, position, DEFAULT_PAGEREQUEST)
             .getContent();
 
     //Then
@@ -159,7 +212,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     List<CandidateEntity>
         actualCandidates =
         candidateRepository
-            .findByCandidateFilterRequest(name, email, phone, position, new PageRequest(0, 10))
+            .findByCandidateFilterRequest(name, email, phone, position, DEFAULT_PAGEREQUEST)
             .getContent();
 
     //Then
@@ -180,7 +233,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     List<CandidateEntity>
         actualCandidates =
         candidateRepository
-            .findByCandidateFilterRequest(name, email, phone, position, new PageRequest(0, 10))
+            .findByCandidateFilterRequest(name, email, phone, position, DEFAULT_PAGEREQUEST)
             .getContent();
 
     //Then
@@ -202,7 +255,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         actualCandidates =
         candidateRepository
             .findByCandidateFilterRequest(name, email, phone, position,
-                new PageRequest(0, 10, createSort(Sort.Direction.DESC, "email"))).getContent();
+                DESCENDING_EMAIL_PAGEREQUEST).getContent();
 
     //Then
     assertCandidateValue(actualCandidates, name, email, phone);
@@ -223,7 +276,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         actualCandidates =
         candidateRepository
             .findByCandidateFilterRequest(name, email, phone, position,
-                new PageRequest(0, 10, createSort(Sort.Direction.ASC, "email"))).getContent();
+                DEFAULT_PAGEREQUEST).getContent();
 
     //Then
     assertCandidateValue(actualCandidates, name, email, phone);
@@ -231,7 +284,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-  public void findByCandidateFilterRequestShouldFindThreeCandidatesInAscendingOrderByName() {
+  public void findByCandidateFilterRequestShouldFindThreeCandidatesByPhoneFilterInAscendingOrderByName() {
     //Given
     String name = "";
     String email = "";
@@ -244,7 +297,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         actualCandidates =
         candidateRepository
             .findByCandidateFilterRequest(name, email, phone, position,
-                new PageRequest(0, 10, createSort(Sort.Direction.ASC, "name"))).getContent();
+                DEFAULT_PAGEREQUEST).getContent();
 
     //Then
     assertCandidateValue(actualCandidates, name, email, phone);
@@ -265,7 +318,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         actualCandidates =
         candidateRepository
             .findByCandidateFilterRequest(name, email, phone, position,
-                new PageRequest(0, 10, createSort(Sort.Direction.DESC, "name"))).getContent();
+                DESCENDING_NAME_PAGEREQUEST).getContent();
 
     //Then
     assertCandidateValue(actualCandidates, name, email, phone);
@@ -286,7 +339,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         actualCandidates =
         candidateRepository
             .findByCandidateFilterRequest(name, email, phone, position,
-                new PageRequest(0, 10, createSort(Sort.Direction.DESC, "phone"))).getContent();
+                DESCENDING_NAME_PAGEREQUEST).getContent();
 
     //Then
     assertCandidateValue(actualCandidates, name, email, phone);
@@ -307,7 +360,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
         actualCandidates =
         candidateRepository
             .findByCandidateFilterRequest(name, email, phone, position,
-                new PageRequest(0, 10, createSort(Sort.Direction.ASC, "phone"))).getContent();
+                DEFAULT_PAGEREQUEST).getContent();
 
     //Then
     assertCandidateValue(actualCandidates, name, email, phone);
@@ -315,7 +368,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-  public void findByCandidateFilterRequestShouldGiveEmptyList() {
+  public void findByCandidateFilterRequestShouldNotFindNonExistentCandidate() {
     //Given
     String name = NON_EXISTENT_CANDIDATE_NAME;
     String email = "";
@@ -327,28 +380,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     List<CandidateEntity>
         actualCandidates =
         candidateRepository
-            .findByCandidateFilterRequest(name, email, phone, position, new PageRequest(0, 10))
-            .getContent();
-
-    //Then
-    assertCandidateList(expectedCandidates, actualCandidates);
-  }
-
-  @Test
-  public void findByCandidateFieldRequestShouldFindCandidateCOnlyByPositionFilter() {
-    //Given
-    String name = "";
-    String email = "";
-    String phone = "";
-    String position = CANDIDATE_C_POSITION;
-
-    List<CandidateEntity> expectedCandidates = Arrays.asList(candidateC);
-
-    //When
-    List<CandidateEntity>
-        actualCandidates =
-        candidateRepository
-            .findByCandidateFilterRequest(name, email, phone, position, new PageRequest(0, 10))
+            .findByCandidateFilterRequest(name, email, phone, position, DEFAULT_PAGEREQUEST)
             .getContent();
 
     //Then

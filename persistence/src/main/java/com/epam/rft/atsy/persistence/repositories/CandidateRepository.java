@@ -28,15 +28,8 @@ public interface CandidateRepository extends JpaRepository<CandidateEntity, Long
                                                                                     String phone,
                                                                                     Sort sort);
 
-  /**
-   * Returns the list of CandidateEntities whom suits the given conditions.
-   * @param candidateName the name, which the candidate's name must contain
-   * @param candidateEmail the email, which the candidate's email must contain
-   * @param candidatePhone the phone number, which the candidate's phone number must contain
-   * @param candidatePosition the position, which the candidate's phone number must contain
-   * @return the list of CandidateEntities
-   */
-//  @Query(value = "SELECT DISTINCT candidate FROM CandidateEntity candidate "
+  // TODO: Decide which query to use
+  //  @Query(value = "SELECT DISTINCT candidate FROM CandidateEntity candidate "
 //      + "WHERE candidate.name LIKE CONCAT('%',:name,'%') AND "
 //      + "candidate.email LIKE CONCAT('%',:email,'%') AND "
 //      + "candidate.phone LIKE CONCAT('%',:phone,'%') AND "
@@ -57,17 +50,31 @@ public interface CandidateRepository extends JpaRepository<CandidateEntity, Long
 //  c.email LIKE CONCAT('%%') AND
 //  c.phone LIKE CONCAT('%%');
 
+//  @Query(value = "SELECT DISTINCT candidate FROM ApplicationEntity application "
+//      + "RIGHT OUTER JOIN application.candidateEntity candidate "
+//      + "LEFT OUTER JOIN application.positionEntity position "
+//      + "WHERE candidate.name LIKE CONCAT('%',:name,'%') AND "
+//      + "candidate.email LIKE CONCAT('%',:email,'%') AND "
+//      + "candidate.phone LIKE CONCAT('%',:phone,'%') AND "
+//      + "(position.name LIKE CONCAT('%',:position,'%')) OR (LENGTH(TRIM(:position)) < 1))) ")
 
+  /**
+   * Returns the list of CandidateEntities whom suits the given conditions.
+   * @param candidateName the name, which the candidate's name must contain
+   * @param candidateEmail the email, which the candidate's email must contain
+   * @param candidatePhone the phone number, which the candidate's phone number must contain
+   * @param candidatePosition the position, which the candidate's phone number must contain
+   * @return the list of CandidateEntities
+   */
   @Query(value = "SELECT DISTINCT candidate FROM CandidateEntity candidate "
-      + "LEFT JOIN ApplicationEntity application LIKE CONCAT('%',:name,'%') AND "
+      + "WHERE candidate.name LIKE CONCAT('%',:name,'%') AND "
       + "candidate.email LIKE CONCAT('%',:email,'%') AND "
       + "candidate.phone LIKE CONCAT('%',:phone,'%') AND "
       + "(candidate.id IN "
       + "(SELECT candidateEntity FROM ApplicationEntity application "
       + "WHERE candidate.id = application.candidateEntity AND application.positionEntity IN "
-      + "(SELECT id FROM PositionEntity position WHERE position.name LIKE CONCAT('%',:position,'%'))) "
-      + "OR "
-      + "(LENGTH(TRIM(:position)) < 1)) ")
+      + "(SELECT id FROM PositionEntity position "
+      + "WHERE position.name LIKE CONCAT('%',:position,'%'))) OR (LENGTH(TRIM(:position)) < 1)) ")
   Page<CandidateEntity> findByCandidateFilterRequest(@Param("name") String candidateName,
                                                      @Param("email") String candidateEmail,
                                                      @Param("phone") String candidatePhone,
