@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -21,10 +23,10 @@ public class MessageSourceController {
   @RequestMapping(value = "/messages_{language}.properties", produces = TEXT_PLAIN_CHARSET_UTF_8)
   @ResponseBody
   public ResponseEntity<String> getMessages(@PathVariable("language") String language) {
-    Validate.notNull(language);
+    Assert.notNull(language);
 
     if (!this.messageSourceRepresenationService.isSupportedLocale(language)) {
-      return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     String result = this.messageSourceRepresenationService.getLocalePropertiesAsString(language);

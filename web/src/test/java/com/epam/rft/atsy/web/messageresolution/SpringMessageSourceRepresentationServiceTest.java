@@ -49,7 +49,7 @@ public class SpringMessageSourceRepresentationServiceTest {
   }
 
   @Test
-  public void isSupportedLocaleShouldReturnFalseForSpanishLocaleWhenLocaleParamIsSpanish() {
+  public void isSupportedLocaleShouldReturnFalseWhenLocaleParamIsSpanish() {
     boolean result = this.service.isSupportedLocale(LOCALE_ES_AS_STRING);
 
     assertThat(result, is(false));
