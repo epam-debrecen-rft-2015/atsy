@@ -72,8 +72,8 @@
                                        data-error="${nameEmptyValue}"
                                        required maxlength="100">
 
-                                <div id="name-errors" class="help-block with-errors"></div>
                                 <p class="showValue form-control-static"><c:out value="${candidate.name}"/></p>
+                                <div id="name-errors" class="help-block with-errors"></div>
                             </div>
 
                         </div>
@@ -105,18 +105,19 @@
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
                             <spring:message code="candidate.error.email.empty" var="emailEmptyValue"/>
                             <spring:message code="candidate.error.email.incorrect" var="emailIncorrectValue"/>
-                                <input type="text" class="input form-control" name="email" id="email" data-bind="valueWithInit: 'email'"
+
+                               <input type="text" class="input form-control" name="email" id="email" data-bind="valueWithInit: 'email'"
                                        value="${candidate.email}"
                                        placeholder="${i18nemail}"
                                        data-error="${emailEmptyValue}"
                                        data-pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
                                       data-pattern-error="${emailIncorrectValue}"
                                        required maxlength="255">
-                                <span id="email-errors" class="help-block with-errors"></span>
 
                                 <p class="showValue form-control-static">
                                   <a href="mailto:${candidate.email}"><c:out value = "${candidate.email}"/></a>
                                 </p>
+                                <span id="email-errors" class="help-block with-errors"></span>
                             </div>
 
                         </div>
@@ -141,7 +142,6 @@
                             </div>
                         </div>
 
-
                         <div class="error col-lg-12 col-md-12 col-sm-12">
                         </div>
                         <div class="form-group"
@@ -158,9 +158,8 @@
                                        placeholder="${i18nphone}" data-error="${phoneIncorrectValue}"
                                        pattern="^\+?[0-9]+" maxlength="20">
 
-                                <div id="phone-errors" class="help-block with-errors"></div>
-
                                 <p class="showValue form-control-static"><c:out value ="${candidate.phone}"/></p>
+                               <div id="phone-errors" class="help-block with-errors"></div>
                             </div>
 
                         </div>
