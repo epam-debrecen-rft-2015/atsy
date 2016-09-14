@@ -11,6 +11,11 @@
      <script type="text/javascript">
          window.messages['settings.positions.error.empty'] = '<spring:message code="settings.positions.error.empty"/>';
      </script>
+
+         <c:url value="/resources/js/atsy-i18n-config.js" var="urlValue" /><script src="${urlValue}"></script>
+         <c:url value="/resources/thirdparty/bootstrap/js/bootstrap.min.js" var="urlValue"/><script src="${urlValue}"></script>
+         <c:url value="/resources/thirdparty/bootbox/bootbox.js" var="urlValue"/><script src="${urlValue}"></script>
+         <c:url value="/resources/thirdparty/jquery/jquery.i18n.properties.js" var="urlValue"/><script src="${urlValue}" type="text/javascript" language="JavaScript"></script>
     </jsp:attribute>
     <jsp:body>
         <div id="settings">

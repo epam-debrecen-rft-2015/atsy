@@ -80,7 +80,58 @@ window.positionsEvents = {
     'click .edit': function (e, value, row) {
         $('#position-form #position_name').val(row.name);
         $('#position-form #positionId').val(row.id);
-    }
+    },
+
+    'click .remove': function (e, value, row) {
+             var self = $(this);
+             var options = {
+                size: 'small',
+                message: $.i18n.prop('question.delete.position.js') + " (" + row.name + ")",
+                animate: true,
+                onEscape: function() {},
+                buttons: {
+
+                    danger: {
+                        label: $.i18n.prop('common.no.js'),
+                        className: "btn-danger",
+                        callback: function() {}
+                    },
+
+                    success: {
+                          label: $.i18n.prop('common.yes.js'),
+                          className: "btn-success",
+                          callback: function() {
+                              $.ajax({
+                                  type: 'DELETE',
+                                  url: "./delete?" + 'positionId=' + row.id,
+                                  cache: false,
+                              }).done(function (container) {
+                                  var table = pageContainer.find('table');
+                                  if (table instanceof $) {
+                                    self.closest('tr').remove();
+                                  }
+                                  hideError(pageContainer);
+                              }).error(function (xhr) {
+                                  var response = xhr.responseJSON;
+                                  showError(pageContainer, $.i18n.prop('selected.channel.not.found.js'));
+                              });
+                          }
+                     },
+                },
+             }
+            bootbox.dialog(options);
+
+            function showError(container, message) {
+                container.find('#errorMessageForDeleting').text(message);
+                container.find('#errorMessageForDeleting').show();
+                container.addClass('has-error');
+            }
+
+            function hideError(container) {
+                container.find('#errorMessageForDeleting').hide();
+                container.removeClass('has-error');
+            }
+        }
 };
 
 window.channelsEvents = {
@@ -90,6 +141,7 @@ window.channelsEvents = {
     },
     'click .remove': function (e, value, row) {
 
+         var self = $(this);
          var options = {
             size: 'small',
             message: $.i18n.prop('question.delete.channel.js') + " (" + row.name + ")",
@@ -114,12 +166,12 @@ window.channelsEvents = {
                           }).done(function (container) {
                               var table = pageContainer.find('table');
                               if (table instanceof $) {
-                                  table.bootstrapTable('refresh');
+                                  self.closest('tr').remove();
                               }
                               hideError(pageContainer);
                           }).error(function (xhr) {
                               var response = xhr.responseJSON;
-                              showError(pageContainer, $.i18n.prop('selected.channel.not.found'));
+                              showError(pageContainer, $.i18n.prop('selected.channel.not.found.js'));
                           });
                       }
                  },
