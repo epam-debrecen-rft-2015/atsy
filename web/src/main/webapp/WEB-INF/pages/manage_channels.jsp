@@ -11,11 +11,23 @@
      <script type="text/javascript">
          window.messages['settings.channels.error.empty'] = '<spring:message code="settings.channels.error.empty"/>';
      </script>
+
+    <c:url value="/resources/js/atsy-i18n-config.js" var="urlValue" /><script src="${urlValue}"></script>
+    <c:url value="/resources/thirdparty/bootstrap/js/bootstrap.min.js" var="urlValue"/><script src="${urlValue}"></script>
+    <c:url value="/resources/thirdparty/bootbox/bootbox.js" var="urlValue"/><script src="${urlValue}"></script>
+    <c:url value="/resources/thirdparty/jquery/jquery.i18n.properties.js" var="urlValue"/><script src="${urlValue}" type="text/javascript" language="JavaScript"></script>
+
     </jsp:attribute>
     <jsp:body>
         <div id="settings">
             <h1 class="page-header"><spring:message code="settings.title"/></h1>
             <div id="channels_section">
+
+                <div class="globalMessage alert alert-danger" id="errorMessageForDeleting" role="alert" style="display: none">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="error-message"></span>
+                </div>
+
                 <h3><spring:message code="settings.channels.title"/></h3>
                 <div>
                     <div class="row">
@@ -30,8 +42,8 @@
                                             code="settings.channels.table.name.title"/></th>
                                     <th data-field="channelId" data-align="left"
                                         data-formatter="actionFormatter"
-                                        data-events="channelsEvents"><spring:message
-                                            code="settings.channels.table.action.title"/>
+                                        data-events="channelsEvents">
+                                        <spring:message code="settings.channels.table.action.title"/>
                                     </th>
                                 </tr>
                                 </thead>
@@ -42,7 +54,7 @@
                                 <legend><spring:message code="settings.channels.form.title"/></legend>
                                 <form role="form" method="POST" id="channel-form" action=".">
 
-                                    <div class="globalMessage alert alert-danger" role="alert"
+                                    <div class="globalMessage alert alert-danger" id="errorMessageForCreating" role="alert"
                                          style="display: none">
                                         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                                         <span class="error-message"></span>

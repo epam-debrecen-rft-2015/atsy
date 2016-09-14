@@ -54,6 +54,7 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
     ChannelEntity expectedChannelEntity = ChannelEntity.builder()
         .id(1L)
         .name("direkt")
+        .deleted(false)
         .build();
     PositionEntity expectedPositionEntity = PositionEntity.builder()
         .id(1L)
@@ -80,14 +81,17 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
     ChannelEntity expectedChannelEntity = ChannelEntity.builder()
         .id(2L)
         .name("profession hírdetés")
+        .deleted(false)
         .build();
     ChannelEntity expectedSecondChannelEntity = ChannelEntity.builder()
         .id(3L)
         .name("profession adatbázis")
+        .deleted(false)
         .build();
     ChannelEntity expectedThirdChannelEntity = ChannelEntity.builder()
         .id(4L)
         .name("facebook")
+        .deleted(false)
         .build();
     PositionEntity expectedPositionEntity = PositionEntity.builder()
         .id(1L)

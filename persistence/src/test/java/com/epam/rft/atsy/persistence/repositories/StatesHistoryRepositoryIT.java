@@ -23,10 +23,6 @@ import java.util.List;
 @Sql("classpath:sql/states/states.sql")
 public class StatesHistoryRepositoryIT extends AbstractRepositoryIT {
 
-  private static final String CANDIDATE_NAME_D = "Candidate D";
-  private static final String CANDIDATE_NAME_E = "Candidate E";
-  private static final String CANDIDATE_NAME_F = "Candidate F";
-
   private static final String CANDIDATE_EMAIL_D = "candidate.d@atsy.com";
   private static final String CANDIDATE_EMAIL_E = "candidate.e@atsy.com";
   private static final String CANDIDATE_EMAIL_F = "candidate.f@atsy.com";
@@ -222,6 +218,7 @@ public class StatesHistoryRepositoryIT extends AbstractRepositoryIT {
     ChannelEntity expectedChannelEntity = ChannelEntity.builder()
         .id(channelId)
         .name(channelName)
+        .deleted(false)
         .build();
 
     PositionEntity expectedPositionEntity = PositionEntity.builder()

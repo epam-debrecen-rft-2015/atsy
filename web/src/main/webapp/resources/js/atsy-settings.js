@@ -1,7 +1,10 @@
+var pageContainer;
+
 function SettingsForm() {
     this.init = function (container, validationMessageKey) {
         if (typeof container === 'string') {
             container = $(container);
+            pageContainer = container;
         }
 
         var form = container.find('form'),
@@ -38,19 +41,19 @@ function SettingsForm() {
                     $this.find('input').val('');
                 }).error(function (xhr) {
                     var response = xhr.responseJSON;
-
                     showError($this, response.errorMessage);
                 });
             }
         });
+
         function showError(container, message) {
-            container.find('.globalMessage .error-message').text(message);
-            container.find('.globalMessage').show();
+            container.find('#errorMessageForCreating').text(message);
+            container.find('#errorMessageForCreating').show();
             container.addClass('has-error');
         }
 
         function hideError(container) {
-            container.find('.globalMessage').hide();
+            container.find('#errorMessageForCreating').hide();
             container.removeClass('has-error');
         }
     }
@@ -63,9 +66,13 @@ $(function () {
 
 function actionFormatter(value, row, index) {
     return [
-        '<a class="edit ml10" href="javascript:void(0)" title="Edit">',
+        '<a class="edit ml10 little-space" href="javascript:void(0)" title="Edit">',
         '<i class="glyphicon glyphicon-edit"></i>',
-        '</a>'
+        '</a>',
+
+        '<a class="remove ml10 little-space" href="javascript:void(0)" title="Remove">',
+        '<i class="glyphicon glyphicon-remove"></i>',
+         '</a>',
     ].join('');
 }
 
@@ -75,9 +82,60 @@ window.positionsEvents = {
         $('#position-form #positionId').val(row.id);
     }
 };
+
 window.channelsEvents = {
     'click .edit': function (e, value, row) {
         $('#channel-form #channel_name').val(row.name);
         $('#channel-form #channelId').val(row.id);
+    },
+    'click .remove': function (e, value, row) {
+
+         var options = {
+            size: 'small',
+            message: $.i18n.prop('question.delete.channel.js') + " (" + row.name + ")",
+            animate: true,
+            onEscape: function() {},
+            buttons: {
+
+                danger: {
+                    label: $.i18n.prop('common.no.js'),
+                    className: "btn-danger",
+                    callback: function() {}
+                },
+
+                success: {
+                      label: $.i18n.prop('common.yes.js'),
+                      className: "btn-success",
+                      callback: function() {
+                          $.ajax({
+                              type: 'DELETE',
+                              url: "./delete?" + 'channelId=' + row.id,
+                              cache: false,
+                          }).done(function (container) {
+                              var table = pageContainer.find('table');
+                              if (table instanceof $) {
+                                  table.bootstrapTable('refresh');
+                              }
+                              hideError(pageContainer);
+                          }).error(function (xhr) {
+                              var response = xhr.responseJSON;
+                              showError(pageContainer, $.i18n.prop('selected.channel.not.found'));
+                          });
+                      }
+                 },
+            },
+         }
+        bootbox.dialog(options);
+
+        function showError(container, message) {
+            container.find('#errorMessageForDeleting').text(message);
+            container.find('#errorMessageForDeleting').show();
+            container.addClass('has-error');
+        }
+
+        function hideError(container) {
+            container.find('#errorMessageForDeleting').hide();
+            container.removeClass('has-error');
+        }
     }
 };
