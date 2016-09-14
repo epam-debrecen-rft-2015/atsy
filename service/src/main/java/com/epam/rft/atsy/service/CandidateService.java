@@ -1,7 +1,9 @@
 package com.epam.rft.atsy.service;
 
 import com.epam.rft.atsy.service.domain.CandidateDTO;
+import com.epam.rft.atsy.service.request.CandidateFilterRequest;
 import com.epam.rft.atsy.service.request.FilterRequest;
+import com.epam.rft.atsy.service.response.PagingResponse;
 
 import java.util.Collection;
 
@@ -30,6 +32,10 @@ public interface CandidateService {
    * @return the collection of candidates
    */
   Collection<CandidateDTO> getAllCandidate(FilterRequest sortingRequest);
+
+
+  PagingResponse<CandidateDTO> getCandidatesByFilterRequest(
+      CandidateFilterRequest candidateFilterRequest);
 
   void deletePositionsByCandidate(CandidateDTO candidateDTO);
 

@@ -9,11 +9,15 @@ import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.DuplicateCandidateException;
+import com.epam.rft.atsy.service.request.CandidateFilterRequest;
 import com.epam.rft.atsy.service.request.FilterRequest;
 import com.epam.rft.atsy.service.request.SearchOptions;
+import com.epam.rft.atsy.service.response.PagingResponse;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,6 +87,51 @@ public class CandidateServiceImpl implements CandidateService {
     return converterService.convert(candidateEntities, CandidateDTO.class);
   }
 
+  @Transactional(readOnly = true)
+  @Override
+  public PagingResponse<CandidateDTO> getCandidatesByFilterRequest(
+      CandidateFilterRequest candidateFilterRequest) {
+
+    PageRequest pageRequest;
+
+    validateCandidateFilterRequest(candidateFilterRequest);
+
+    if (candidateFilterRequest.getSortName() != null
+        && candidateFilterRequest.getSortOrder() != null) {
+
+      Sort.Direction
+          sortDirection =
+          Sort.Direction.fromString(candidateFilterRequest.getSortOrder());
+
+      pageRequest =
+          new PageRequest(candidateFilterRequest.getPageSize(),
+              candidateFilterRequest.getPageSize(),
+              sortDirection, candidateFilterRequest.getSortName());
+
+    } else {
+      pageRequest =
+          new PageRequest(candidateFilterRequest.getPageNumber(),
+              candidateFilterRequest.getPageSize());
+    }
+
+    Page<CandidateEntity>
+        candidateEntitiesPage =
+        candidateRepository.findByCandidateFilterRequest(candidateFilterRequest.getCandidateName(),
+            candidateFilterRequest.getCandidateEmail(), candidateFilterRequest.getCandidatePhone(),
+            candidateFilterRequest.getCandiadtePositions(), pageRequest);
+
+    List<CandidateDTO>
+        candidateDTOs =
+        converterService.convert(candidateEntitiesPage.getContent(), CandidateDTO.class);
+
+    PagingResponse<CandidateDTO>
+        result =
+        new PagingResponse<>(candidateEntitiesPage.getTotalElements(), candidateDTOs);
+
+    return result;
+  }
+
+
   @Transactional(readOnly = false)
   @Override
   public void deletePositionsByCandidate(CandidateDTO candidateDTO) {
@@ -120,5 +169,24 @@ public class CandidateServiceImpl implements CandidateService {
     SearchOptions searchOptions = filterRequest.getSearchOptions();
 
     Assert.notNull(searchOptions);
+  }
+
+  private void validateCandidateFilterRequest(CandidateFilterRequest candidateFilterRequest) {
+    Assert.notNull(candidateFilterRequest);
+    Assert.notNull(candidateFilterRequest.getPageSize());
+    Assert.notNull(candidateFilterRequest.getPageNumber());
+
+    if (candidateFilterRequest.getSortName() != null
+        || candidateFilterRequest.getSortOrder() != null) {
+      Assert.notNull(candidateFilterRequest.getSortName());
+      Assert.notNull(candidateFilterRequest.getSortOrder());
+
+      try {
+        Sort.Direction.fromString(candidateFilterRequest.getSortOrder());
+      } catch (IllegalArgumentException e) {
+        throw new IllegalArgumentException(
+            "Invalid sort order: " + candidateFilterRequest.getSortOrder(), e);
+      }
+    }
   }
 }
