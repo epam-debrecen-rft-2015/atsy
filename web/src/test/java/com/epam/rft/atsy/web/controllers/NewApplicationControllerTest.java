@@ -55,7 +55,7 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
 
   private ChannelDTO channelDTO = ChannelDTO.builder().id(1L).name(CHANNEL_NAME_FACEBOOK).deleted(false).build();
 
-  private PositionDTO positionDTO = PositionDTO.builder().id(1L).name(POSITION_NAME_DEVELOPER).build();
+  private PositionDTO positionDTO = PositionDTO.builder().id(1L).name(POSITION_NAME_DEVELOPER).deleted(false).build();
   private StateDTO stateDTO = StateDTO.builder().id(1L).name(NEW_STATE).build();
 
   private StateHistoryDTO stateHistoryDTO =

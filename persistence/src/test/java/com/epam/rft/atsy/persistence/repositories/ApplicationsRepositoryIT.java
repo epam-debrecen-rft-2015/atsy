@@ -59,6 +59,7 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
     PositionEntity expectedPositionEntity = PositionEntity.builder()
         .id(1L)
         .name("Fejlesztő")
+        .deleted(false)
         .build();
     Date nearNow = currentDateMinus(5);
 
@@ -96,6 +97,7 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
     PositionEntity expectedPositionEntity = PositionEntity.builder()
         .id(1L)
         .name("Fejlesztő")
+        .deleted(false)
         .build();
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
