@@ -115,6 +115,7 @@ body {
 }
 
 .form-group > label {
+    display: block;
     padding-top: 5px;
 }
 
@@ -164,7 +165,10 @@ textarea {
 }
 
 #candidate_creation.display .showValue {
-    display: block;
+    display: inline-block;
+    vertical-align: middle;
+    padding-top: 6.5px;
+    padding-bottom: 7.5px;
 }
 
 #candidate_creation.display .btn.showValue {
@@ -233,3 +237,6 @@ form > .button-panel > .btn {
   cursor: pointer;
 }
 
+.labels{
+display: inline-block;
+}

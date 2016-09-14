@@ -65,14 +65,14 @@
                                    for="name"><spring:message
                                     code="candidate.name.label"/></label>
 
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <div class="form-group col-lg-4 col-md-4 col-sm-4 labels">
                                <spring:message code="candidate.error.name.empty" var="nameEmptyValue"/> <input type="text" class="input form-control " name="name" id="name" data-bind="valueWithInit: 'name'"
                                       value="${fn:escapeXml(candidate.name)}"
                                        placeholder="${i18nname}"
                                        data-error="${nameEmptyValue}"
                                        required maxlength="100">
 
-                                <p class="showValue form-control-static"><c:out value="${candidate.name}"/></p>
+                                <p class="showValue"><c:out value="${candidate.name}"/></p>
                                 <div id="name-errors" class="help-block with-errors"></div>
                             </div>
 
@@ -84,12 +84,12 @@
                                    for="referer"><spring:message
                                     code="candidate.place.label"/></label>
 
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <div class="form-group col-lg-4 col-md-4 col-sm-4 labels">
                                 <input type="text" class="input form-control" name="referer" id="referer" data-bind="valueWithInit: 'referer'"
                                        value="${fn:escapeXml(candidate.referer)}"
                                        placeholder="${i18nplace}" maxlength="20">
 
-                                <p class="showValue form-control-static"><c:out value = "${candidate.referer}"/></p>
+                                <p class="showValue"><c:out value = "${candidate.referer}"/></p>
                             </div>
 
                         </div>
@@ -102,7 +102,7 @@
                                    for="email"><spring:message
                                     code="candidate.email.label"/></label>
 
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <div class="form-group col-lg-4 col-md-4 col-sm-4 labels">
                             <spring:message code="candidate.error.email.empty" var="emailEmptyValue"/>
                             <spring:message code="candidate.error.email.incorrect" var="emailIncorrectValue"/>
 
@@ -114,7 +114,7 @@
                                       data-pattern-error="${emailIncorrectValue}"
                                        required maxlength="255">
 
-                                <p class="showValue form-control-static">
+                                <p class="showValue">
                                   <a href="mailto:${candidate.email}"><c:out value = "${candidate.email}"/></a>
                                 </p>
                                 <span id="email-errors" class="help-block with-errors"></span>
@@ -127,7 +127,7 @@
                                    for="drop"><spring:message
                                     code="candidate.english.label"/></label>
 
-                            <div class="selectContainer col-lg-4 col-md-4 col-sm-4">
+                            <div class="selectContainer col-lg-4 col-md-4 col-sm-4 labels">
                                 <select class="input form-control" name="languageSkill" id="languageSkill" data-bind="valueWithInit: 'languageSkill'">
                                     <option value=0 <c:if
                                             test="${0 eq candidate.languageSkill}"> selected="selected" </c:if>>
@@ -138,7 +138,7 @@
                                     </c:forEach>
                                 </select>
 
-                                <p class="showValue form-control-static"><c:out value = "${candidate.languageSkill}"/></p>
+                                <p class="showValue"><c:out value = "${candidate.languageSkill}"/></p>
                             </div>
                         </div>
 
@@ -151,14 +151,14 @@
                                    for="phone"><spring:message
                                     code="candidate.phone.label"/></label>
 
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <div class="form-group col-lg-4 col-md-4 col-sm-4 labels">
                             <spring:message code="candidate.error.phone.incorrect" var="phoneIncorrectValue"/>
                                 <input type="text" class="input form-control" name="phone" id="phone" data-bind="valueWithInit: 'phone'"
                                        value="${candidate.phone}"
                                        placeholder="${i18nphone}" data-error="${phoneIncorrectValue}"
                                        pattern="^\+?[0-9]+" maxlength="20">
 
-                                <p class="showValue form-control-static"><c:out value ="${candidate.phone}"/></p>
+                                <p class="showValue"><c:out value ="${candidate.phone}"/></p>
                                <div id="phone-errors" class="help-block with-errors"></div>
                             </div>
 
@@ -176,7 +176,7 @@
                                 <textarea rows="4" cols="4" class="input form-control" id="description" data-bind="valueWithInit: 'description'"
                                           placeholder="${i18ndescription}"><c:out value = "${candidate.description}"/></textarea>
 
-                                <p class="showValue form-control-static"><c:out value = "${candidate.description}"/></p>
+                                <p class="showValue"><c:out value = "${candidate.description}"/></p>
                             </div>
                         </div>
 
