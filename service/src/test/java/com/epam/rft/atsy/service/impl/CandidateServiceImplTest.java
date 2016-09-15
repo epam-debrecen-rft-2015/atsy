@@ -4,6 +4,7 @@ package com.epam.rft.atsy.service.impl;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -16,9 +17,11 @@ import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.DuplicateCandidateException;
+import com.epam.rft.atsy.service.request.CandidateFilterRequest;
 import com.epam.rft.atsy.service.request.FilterRequest;
 import com.epam.rft.atsy.service.request.SearchOptions;
 import com.epam.rft.atsy.service.request.SortingRequest;
+import com.epam.rft.atsy.service.response.PagingResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
@@ -32,9 +35,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CandidateServiceImplTest {
@@ -50,6 +58,15 @@ public class CandidateServiceImplTest {
   private static final SortingRequest.Field SORT_FIELD = SortingRequest.Field.NAME;
   private static final CandidateEntity NOT_FOUND_CANDIDATE_ENTITY = null;
   private static final CandidateDTO NOT_FOUND_CANDIDATE_DTO = null;
+
+  private static final String SORT_NAME_NAME = "name";
+  private static final String SORT_ORDER_ASC = "asc";
+
+  private static final String INVALID_SORT_ORDER = "invalid sort order";
+  private static final String INVALID_SORT_NAME = "invalid sort name";
+
+  private static final int DEFAULT_PAGE_NUMBER = 0;
+  private static final int DEFAULT_PAGE_SIZE = 10;
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -278,6 +295,137 @@ public class CandidateServiceImplTest {
         .findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL, PHONE,
             descendingSort);
   }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getCandidatesByFilterRequestShouldThrowIllegalARgumentExceptionWhenCandidateFilterRequestIsnull() {
+    // Given
+
+    // When
+    candidateService.getCandidatesByFilterRequest(null);
+    // Then
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getCandidatesByFilterRequestShouldThrowIllegalARgumentExceptionWhenPageSizeIsnull() {
+    // Given
+    CandidateFilterRequest
+        candidateFilterRequest =
+        CandidateFilterRequest.builder().pageSize(null).build();
+    // When
+    candidateService.getCandidatesByFilterRequest(candidateFilterRequest);
+    // Then
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getCandidatesByFilterRequestShouldThrowIllegalARgumentExceptionWhenPageNumberIsnull() {
+    // Given
+    CandidateFilterRequest
+        candidateFilterRequest =
+        CandidateFilterRequest.builder().pageNumber(null).build();
+    // When
+    candidateService.getCandidatesByFilterRequest(candidateFilterRequest);
+    // Then
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getCandidatesByFilterRequestShouldThrowIllegalARgumentExceptionWhenSortNameIsNotNullButSortOrderIsNull() {
+    // Given
+    CandidateFilterRequest
+        candidateFilterRequest =
+        CandidateFilterRequest.builder().sortName(SORT_NAME_NAME).sortOrder(null).build();
+    // When
+    candidateService.getCandidatesByFilterRequest(candidateFilterRequest);
+    // Then
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getCandidatesByFilterRequestShouldThrowIllegalARgumentExceptionWhenSortOrderIsNotNullButSortNameIsNull() {
+    // Given
+    CandidateFilterRequest
+        candidateFilterRequest =
+        CandidateFilterRequest.builder().sortOrder(SORT_ORDER_ASC).sortName(null).build();
+    // When
+    candidateService.getCandidatesByFilterRequest(candidateFilterRequest);
+    // Then
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getCandidatesByFilterRequestShouldThrowIllegalARgumentExceptionWhenSortOrderIsInvalid() {
+    // Given
+    CandidateFilterRequest
+        candidateFilterRequest =
+        CandidateFilterRequest.builder().sortName(SORT_NAME_NAME).sortOrder(INVALID_SORT_ORDER)
+            .build();
+    // When
+    candidateService.getCandidatesByFilterRequest(candidateFilterRequest);
+    // Then
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getCandidatesByFilterRequestShouldThrowIllegalARgumentExceptionWhenSortNameIsInvalid() {
+    // Given
+    CandidateFilterRequest
+        candidateFilterRequest =
+        CandidateFilterRequest.builder().sortName(INVALID_SORT_NAME).sortOrder(SORT_ORDER_ASC)
+            .build();
+    // When
+    candidateService.getCandidatesByFilterRequest(candidateFilterRequest);
+    // Then
+  }
+
+  @Test
+  public void getCandidatesByFilterRequestShouldFindDummyCandidateDTOInAscendingOrderByNameWhenThereIsARightCandidateFilterRequest() {
+    // Given
+
+    CandidateFilterRequest
+        candidateFilterRequest =
+        CandidateFilterRequest.builder().pageNumber(DEFAULT_PAGE_NUMBER).pageSize(DEFAULT_PAGE_SIZE)
+            .sortName(SORT_NAME_NAME).sortOrder(SORT_ORDER_ASC).candidateName(NAME).build();
+
+    PageRequest
+        pageRequest =
+        new PageRequest(candidateFilterRequest.getPageNumber(),
+            candidateFilterRequest.getPageSize(),
+            Sort.Direction.fromString(candidateFilterRequest.getSortOrder()),
+            candidateFilterRequest.getSortName());
+
+    String name = candidateFilterRequest.getCandidateName();
+    String email = candidateFilterRequest.getCandidateEmail();
+    String phone = candidateFilterRequest.getCandidatePhone();
+    String positions = candidateFilterRequest.getCandiadtePositions();
+
+    Page<CandidateEntity>
+        dummyCandidateEntityPage =
+        new PageImpl<>(Arrays.asList(dummyCandidateEntity));
+
+    List<CandidateDTO> dummyCandidateDTOs = Arrays.asList(dummyCandidateDto);
+
+    given(candidateRepository
+        .findByCandidateFilterRequest(name, email, phone, positions, pageRequest))
+        .willReturn(dummyCandidateEntityPage);
+
+    given(converterService.convert(dummyCandidateEntityPage.getContent(), CandidateDTO.class))
+        .willReturn(dummyCandidateDTOs);
+
+    PagingResponse<CandidateDTO>
+        expectedPagingResponse =
+        new PagingResponse<>(dummyCandidateEntityPage.getTotalElements(), dummyCandidateDTOs);
+    // When
+
+    PagingResponse<CandidateDTO>
+        actualPagingResponse =
+        candidateService.getCandidatesByFilterRequest(candidateFilterRequest);
+
+    // Then
+    assertEquals(actualPagingResponse, expectedPagingResponse);
+    then(converterService).should(times(1))
+        .convert(dummyCandidateEntityPage.getContent(), CandidateDTO.class);
+    then(candidateRepository).should(times(1))
+        .findByCandidateFilterRequest(name, email, phone, positions, pageRequest);
+  }
+
+  //Null candidate dto
+
 
   @Test(expected = IllegalArgumentException.class)
   public void saveOrUpdateShouldThrowIAEWhenNullPassed() {

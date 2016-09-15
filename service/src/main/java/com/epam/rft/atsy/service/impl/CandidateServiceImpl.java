@@ -104,7 +104,7 @@ public class CandidateServiceImpl implements CandidateService {
           Sort.Direction.fromString(candidateFilterRequest.getSortOrder());
 
       pageRequest =
-          new PageRequest(candidateFilterRequest.getPageSize(),
+          new PageRequest(candidateFilterRequest.getPageNumber(),
               candidateFilterRequest.getPageSize(),
               sortDirection, candidateFilterRequest.getSortName());
 
@@ -131,8 +131,7 @@ public class CandidateServiceImpl implements CandidateService {
     return result;
   }
 
-
-  @Transactional(readOnly = false)
+  @Transactional
   @Override
   public void deletePositionsByCandidate(CandidateDTO candidateDTO) {
     candidateDTO.setPositions(null);
@@ -183,9 +182,17 @@ public class CandidateServiceImpl implements CandidateService {
 
       try {
         Sort.Direction.fromString(candidateFilterRequest.getSortOrder());
-      } catch (IllegalArgumentException e) {
+      } catch (Exception e) {
         throw new IllegalArgumentException(
             "Invalid sort order: " + candidateFilterRequest.getSortOrder(), e);
+      }
+
+      try {
+        new PageRequest(0, 10, Sort.Direction.fromString(candidateFilterRequest.getSortOrder()),
+            candidateFilterRequest.getSortName());
+      } catch (Exception e) {
+        throw new IllegalArgumentException(
+            "Invalid sort name: " + candidateFilterRequest.getSortName(), e);
       }
     }
   }
