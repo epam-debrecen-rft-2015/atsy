@@ -224,6 +224,7 @@ public class StatesHistoryRepositoryIT extends AbstractRepositoryIT {
     PositionEntity expectedPositionEntity = PositionEntity.builder()
         .id(positionId)
         .name(positionName)
+        .deleted(false)
         .build();
 
     Date currentDate = new Date();

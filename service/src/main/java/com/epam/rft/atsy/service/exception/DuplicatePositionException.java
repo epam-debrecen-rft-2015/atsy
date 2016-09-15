@@ -14,4 +14,8 @@ public class DuplicatePositionException extends DuplicateRecordException {
   public DuplicatePositionException(String name, Throwable cause) {
     super(name, ERROR_MESSAGE + name, cause);
   }
+
+  public DuplicatePositionException(String name) {
+    super(name);
+  }
 }

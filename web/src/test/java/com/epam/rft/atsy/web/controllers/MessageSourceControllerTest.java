@@ -2,6 +2,7 @@ package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.web.messageresolution.MessageSourceRepresentationService;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -23,6 +24,7 @@ public class MessageSourceControllerTest extends AbstractControllerTest {
   private static final String LOCALE_UNSUPPORTED = "es";
   private static final String REQUEST_URL_FOR_AVAILABLE_MESSAGES = "/messages_hu.properties";
   private static final String REQUEST_URL_FOR_UNAVAILABLE_MESSAGES = "/messages_es.properties";
+  private static final String REQUEST_URL_FOR_DEFAULT_MESSAGES = "/messages.properties";
   private static final String EXPECTED_PROPERTIES = "prop1=value1\nprop2=value2";
 
   @Mock
@@ -60,5 +62,13 @@ public class MessageSourceControllerTest extends AbstractControllerTest {
 
     then(this.messageSourceRepresentationService).should().isSupportedLocale(LOCALE_UNSUPPORTED);
     then(this.messageSourceRepresentationService).should(never()).getLocalePropertiesAsString(anyString());
+  }
+
+  @Test
+  public void getDefaultMessagesShouldReturnAnEmptyString() throws Exception {
+    mockMvc.perform(get(REQUEST_URL_FOR_DEFAULT_MESSAGES))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MessageSourceController.TEXT_PLAIN_CHARSET_UTF_8))
+        .andExpect(content().string(StringUtils.EMPTY));
   }
 }
