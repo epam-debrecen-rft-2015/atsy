@@ -1,5 +1,7 @@
 package com.epam.rft.atsy.service.impl;
 
+import com.google.common.base.MoreObjects;
+
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
@@ -13,6 +15,7 @@ import com.epam.rft.atsy.service.request.CandidateFilterRequest;
 import com.epam.rft.atsy.service.request.FilterRequest;
 import com.epam.rft.atsy.service.request.SearchOptions;
 import com.epam.rft.atsy.service.response.PagingResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -114,11 +117,23 @@ public class CandidateServiceImpl implements CandidateService {
               candidateFilterRequest.getPageSize());
     }
 
+    String
+        name =
+        MoreObjects.firstNonNull(candidateFilterRequest.getCandidateName(), StringUtils.EMPTY);
+    String
+        email =
+        MoreObjects.firstNonNull(candidateFilterRequest.getCandidateEmail(), StringUtils.EMPTY);
+    String
+        phone =
+        MoreObjects.firstNonNull(candidateFilterRequest.getCandidatePhone(), StringUtils.EMPTY);
+    String
+        positions =
+        MoreObjects.firstNonNull(candidateFilterRequest.getCandiadtePositions(), StringUtils.EMPTY);
+
     Page<CandidateEntity>
         candidateEntitiesPage =
-        candidateRepository.findByCandidateFilterRequest(candidateFilterRequest.getCandidateName(),
-            candidateFilterRequest.getCandidateEmail(), candidateFilterRequest.getCandidatePhone(),
-            candidateFilterRequest.getCandiadtePositions(), pageRequest);
+        candidateRepository
+            .findByCandidateFilterRequest(name, email, phone, positions, pageRequest);
 
     List<CandidateDTO>
         candidateDTOs =

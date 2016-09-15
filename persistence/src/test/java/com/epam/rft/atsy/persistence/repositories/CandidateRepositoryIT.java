@@ -90,17 +90,17 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
 
   private static final PageRequest
       DEFAULT_PAGEREQUEST =
-      new PageRequest(0, DEFAULT_PAGESIZE, Sort.Direction.ASC, "name");
+      new PageRequest(0, DEFAULT_PAGESIZE, Sort.Direction.ASC, "candidate.name");
 
   private static final PageRequest
       DESCENDING_NAME_PAGEREQUEST =
       new PageRequest(0, DEFAULT_PAGESIZE,
-          Sort.Direction.DESC, "name");
+          Sort.Direction.DESC, "candidate.name");
 
   private static final PageRequest
       DESCENDING_EMAIL_PAGEREQUEST =
       new PageRequest(0, DEFAULT_PAGESIZE,
-          Sort.Direction.DESC, "email");
+          Sort.Direction.DESC, "candidate.email");
 
   @Autowired
   private CandidateRepository candidateRepository;

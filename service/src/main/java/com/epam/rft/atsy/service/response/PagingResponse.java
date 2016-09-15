@@ -11,6 +11,5 @@ import lombok.NoArgsConstructor;
 public class PagingResponse<T> {
 
   private Long total;
-  private List<T> dataList;
-
+  private List<T> rows;
 }
