@@ -19,7 +19,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class PositionDTO extends LogicallyDeletableDTO {
+public class PositionDTO extends LogicallyDeletableDTOS {
 
   @NotNull
   @Size(min = 1)

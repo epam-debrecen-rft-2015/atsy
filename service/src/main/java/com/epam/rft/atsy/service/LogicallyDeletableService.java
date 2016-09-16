@@ -1,6 +1,6 @@
 package com.epam.rft.atsy.service;
 
-import com.epam.rft.atsy.service.domain.LogicallyDeletableDTO;
+import com.epam.rft.atsy.service.domain.LogicallyDeletableDTOS;
 import com.epam.rft.atsy.service.exception.ObjectNotFoundException;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @param <D> the type of the DTO
  */
-public interface LogicallyDeletableService<D extends LogicallyDeletableDTO> {
+public interface LogicallyDeletableService<D extends LogicallyDeletableDTOS> {
 
   /**
    * Returns the list of D where the deleted field is false.

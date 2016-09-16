@@ -16,7 +16,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public abstract class LogicallyDeletableDTO extends SuperDTO {
+public abstract class LogicallyDeletableDTOS extends SuperDTO {
 
   @Getter(AccessLevel.NONE)
   private Boolean deleted = false;
@@ -25,7 +25,7 @@ public abstract class LogicallyDeletableDTO extends SuperDTO {
     return deleted;
   }
 
-  public LogicallyDeletableDTO(Long id, Boolean deleted) {
+  public LogicallyDeletableDTOS(Long id, Boolean deleted) {
     super(id);
     this.deleted = deleted;
   }
