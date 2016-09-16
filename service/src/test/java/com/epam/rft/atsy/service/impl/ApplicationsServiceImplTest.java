@@ -22,11 +22,13 @@ import com.epam.rft.atsy.persistence.repositories.StatesHistoryRepository;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
+import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+import com.epam.rft.atsy.service.response.PagingResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -100,6 +102,10 @@ public class ApplicationsServiceImplTest {
   private final StateHistoryDTO
       stateHistoryDTO = StateHistoryDTO.builder().stateDTO(new StateDTO(1L, "newstate")).build();
 
+  private final CandidateApplicationDTO
+      dummyCandidateApplicationDTO =
+      CandidateApplicationDTO.builder().build();
+
   @Mock
   private ConverterService converterService;
 
@@ -129,11 +135,11 @@ public class ApplicationsServiceImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void pageGetApplicationsByCandidateDTOShouldThrowIllegalArgumentExceptionWhenCandidateDTOIsNull() {
+  public void getApplicationsByCandidateIdShouldThrowIllegalArgumentExceptionWhenCandidateDTOIsNull() {
     // Given
 
     // When
-    applicationsService.getApplicationsByCandidateDTO(null, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
+    applicationsService.getApplicationsByCandidateId(null, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
 
     // Then
   }
@@ -150,13 +156,11 @@ public class ApplicationsServiceImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void pageGetApplicationsByCandidateDTOShouldThrowIllegalArgumentExceptionWhenCandidateDTOsIdIsNull() {
+  public void getApplicationsByCandidateIdShouldThrowIllegalArgumentExceptionWhenCandidateDTOsIdIsNull() {
     // Given
-    CandidateDTO candidateDTO = CandidateDTO.builder().id(null).build();
 
     // When
-    applicationsService
-        .getApplicationsByCandidateDTO(candidateDTO, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
+    applicationsService.getApplicationsByCandidateId(null, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
 
     // Then
   }
@@ -176,21 +180,22 @@ public class ApplicationsServiceImplTest {
   }
 
   @Test
-  public void pageGetApplicationByCandidateDTOShouldReturnEmptyListWhenCandidateIdIsNotFound() {
+  public void getApplicationByCandidateIdShouldReturnEmptyListWhenCandidateIdIsNotFound() {
     // Given
-    CandidateDTO candidateDTO = CandidateDTO.builder().id(NON_EXISTENT_CANDIDATE_ID).build();
     given(candidateRepository.findOne(NON_EXISTENT_CANDIDATE_ID)).willReturn(null);
     given(applicationsRepository.findByCandidateEntity(null, DEFAULT_PAGE_REQUEST))
         .willReturn(new PageImpl<ApplicationEntity>(Collections.emptyList()));
 
     // When
-    List<ApplicationDTO>
+    PagingResponse<CandidateApplicationDTO>
         result =
         applicationsService
-            .getApplicationsByCandidateDTO(candidateDTO, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
+            .getApplicationsByCandidateId(NON_EXISTENT_CANDIDATE_ID, PAGE_NUMBER_ZERO,
+                PAGE_SIZE_TEN);
 
     // Then
-    assertTrue(result.isEmpty());
+    assertThat(result.getTotal(), is(0L));
+    assertTrue(result.getRows().isEmpty());
   }
 
   @Test
@@ -214,26 +219,28 @@ public class ApplicationsServiceImplTest {
   }
 
   @Test
-  public void pageGetApplicationByCandidateDTOShouldReturnOneElementListOfApplicationDTOWhenCandidateIdExists() {
+  public void getApplicationByCandidateIdShouldReturnOneElementListOfApplicationDTOWhenCandidateIdExists() {
     // Given
-    CandidateDTO candidateDTO = CandidateDTO.builder().id(CANDIDATE_ID).build();
     List<ApplicationEntity> applicationEntities = Collections.singletonList(applicationEntity);
-    List<ApplicationDTO> applicationDTOs = Collections.singletonList(applicationDTO);
+    List<CandidateApplicationDTO>
+        candidateApplicationDTOs =
+        Collections.singletonList(dummyCandidateApplicationDTO);
 
     given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
     given(applicationsRepository.findByCandidateEntity(candidateEntity, DEFAULT_PAGE_REQUEST))
         .willReturn(new PageImpl<ApplicationEntity>(applicationEntities));
-    given(converterService.convert(applicationEntities, ApplicationDTO.class))
-        .willReturn(applicationDTOs);
+    given(converterService.convert(applicationEntities, CandidateApplicationDTO.class))
+        .willReturn(candidateApplicationDTOs);
 
     // When
-    List<ApplicationDTO>
+    PagingResponse<CandidateApplicationDTO>
         result =
         applicationsService
-            .getApplicationsByCandidateDTO(candidateDTO, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
+            .getApplicationsByCandidateId(CANDIDATE_ID, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
 
     // Then
-    assertThat(result, equalTo(applicationDTOs));
+    assertThat(result.getTotal(), is(1L));
+    assertThat(result.getRows(), equalTo(candidateApplicationDTOs));
   }
 
   @Test
@@ -261,30 +268,58 @@ public class ApplicationsServiceImplTest {
   }
 
   @Test
-  public void pageGetApplicationByCandidateDTOShouldReturnThreeElementListOfApplicationDTOWhenCandidateIdExists() {
+  public void getApplicationByCandidateIdShouldReturnThreeElementListOfApplicationDTOWhenCandidateIdExists() {
     // Given
-    CandidateDTO candidateDTO = CandidateDTO.builder().id(CANDIDATE_ID).build();
     List<ApplicationEntity>
         applicationEntities =
         Arrays.asList(applicationEntity, applicationEntity, applicationEntity);
-    List<ApplicationDTO>
-        applicationDTOs =
-        Arrays.asList(applicationDTO, applicationDTO, applicationDTO);
+    List<CandidateApplicationDTO>
+        candidateApplicationDTOs =
+        Arrays.asList(dummyCandidateApplicationDTO, dummyCandidateApplicationDTO,
+            dummyCandidateApplicationDTO);
 
     given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
     given(applicationsRepository.findByCandidateEntity(candidateEntity, DEFAULT_PAGE_REQUEST))
         .willReturn(new PageImpl<ApplicationEntity>(applicationEntities));
-    given(converterService.convert(applicationEntities, ApplicationDTO.class))
-        .willReturn(applicationDTOs);
+    given(converterService.convert(applicationEntities, CandidateApplicationDTO.class))
+        .willReturn(candidateApplicationDTOs);
 
     // When
-    List<ApplicationDTO>
+    PagingResponse<CandidateApplicationDTO>
         result =
         applicationsService
-            .getApplicationsByCandidateDTO(candidateDTO, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
+            .getApplicationsByCandidateId(CANDIDATE_ID, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
 
     // Then
-    assertThat(result, equalTo(applicationDTOs));
+    assertThat(result.getTotal(), is(3L));
+    assertThat(result.getRows(), equalTo(candidateApplicationDTOs));
+  }
+
+  @Test
+  public void getApplicationByCandidateIdShouldReturnAMaximumNumberOfApplicationsGivenByTheSizeParameter() {
+    // Given
+    List<ApplicationEntity>
+        applicationEntities =
+        Arrays.asList(applicationEntity, applicationEntity);
+    List<CandidateApplicationDTO>
+        candidateApplicationDTOs =
+        Arrays.asList(dummyCandidateApplicationDTO, dummyCandidateApplicationDTO);
+
+    given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
+    given(applicationsRepository.findByCandidateEntity(candidateEntity, ZERO_TWO_PAGE_REQUEST))
+        .willReturn(new PageImpl<ApplicationEntity>(applicationEntities));
+    given(converterService.convert(applicationEntities, CandidateApplicationDTO.class))
+        .willReturn(candidateApplicationDTOs);
+
+    // When
+    PagingResponse<CandidateApplicationDTO>
+        result =
+        applicationsService
+            .getApplicationsByCandidateId(CANDIDATE_ID, PAGE_NUMBER_ZERO, PAGE_SIZE_TWO);
+
+    // Then
+    assertThat(result.getRows().size(), is(2));
+    assertThat(result.getRows(), equalTo(candidateApplicationDTOs));
   }
 
   @Test(expected = IllegalArgumentException.class)
