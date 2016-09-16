@@ -4,7 +4,7 @@ import com.epam.rft.atsy.persistence.entities.LogicallyDeletableEntity;
 import com.epam.rft.atsy.persistence.repositories.LogicallyDeletableRepository;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.LogicallyDeletableService;
-import com.epam.rft.atsy.service.domain.LogicallyDeletableDTOS;
+import com.epam.rft.atsy.service.domain.LogicallyDeletableDTO;
 import com.epam.rft.atsy.service.exception.ObjectNotFoundException;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +12,7 @@ import org.springframework.util.Assert;
 
 import java.util.List;
 
-public class LogicallyDeletableServiceImpl<D extends LogicallyDeletableDTOS, E extends LogicallyDeletableEntity>
+public class LogicallyDeletableServiceImpl<D extends LogicallyDeletableDTO, E extends LogicallyDeletableEntity>
     implements LogicallyDeletableService<D> {
 
   private final Class<D> dtoTypeParameterClass;
