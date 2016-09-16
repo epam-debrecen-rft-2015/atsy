@@ -334,8 +334,8 @@ public class ApplicationsServiceImplTest {
   public void saveApplicationShouldSaveAProperApplicationDTOAndStateDTO() {
     // Given
     final StateHistoryDTO stateHistoryDTO =
-        StateHistoryDTO.builder().channel(new ChannelDTO(8L, null)).candidateId(1L)
-            .position(new PositionDTO(1L, null)).description("sss")
+        StateHistoryDTO.builder().channel(ChannelDTO.builder().id(8L).name(null).build()).candidateId(1L)
+            .position(PositionDTO.builder().id(1L).name(null).build()).description("sss")
             .stateDTO(new StateDTO(1L, "newstate")).build();
 
     given(converterService.convert(applicationDTO, ApplicationEntity.class)).willReturn(applicationEntity);
