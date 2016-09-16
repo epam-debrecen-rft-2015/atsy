@@ -1,8 +1,8 @@
 package com.epam.rft.atsy.service.domain;
 
-import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,9 +19,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class ChannelDTO extends LogicallyDeletableDto implements Serializable {
-
-  private Long id;
+public class ChannelDTO extends LogicallyDeletableDTO {
 
   @NotNull
   @Size(min = 1)
@@ -29,8 +27,7 @@ public class ChannelDTO extends LogicallyDeletableDto implements Serializable {
 
   @Builder
   public ChannelDTO(Long id, Boolean deleted, String name) {
-    super(deleted);
-    this.id = id;
+    super(id, deleted);
     this.name = name;
   }
 }
