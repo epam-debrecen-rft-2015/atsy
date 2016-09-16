@@ -37,7 +37,16 @@ public class CandidateController {
   @Resource
   private CandidateService candidateService;
 
-  //TODO: Add Java Doc.
+  /**
+   * Loads the page according to the given parameters.
+   * @param filter Non-required parameter which represents how the result should be filtered
+   * @param sortName required parameter which represents which field is used in sorting
+   * @param sortOrder required parameter which represents the requested ordering
+   * (ascending/descending)
+   * @param pageSize required parameter which represents the size of the {@code Page}
+   * @param pageNumber required parameter which represents the number of the {@code Page}
+   * @return a paging response containing the appropriete {@code CandidateDTOs}
+   */
   @RequestMapping(method = RequestMethod.GET)
   public PagingResponse<CandidateDTO> loadPage(
       @RequestParam(value = "filter", required = false) String filter,

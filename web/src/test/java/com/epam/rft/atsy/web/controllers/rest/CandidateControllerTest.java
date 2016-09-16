@@ -65,7 +65,6 @@ public class CandidateControllerTest extends AbstractControllerTest {
       CandidateFilterRequest.builder().candidateName("").candidateEmail("").candidatePhone("")
           .candiadtePositions("").sortName(NAME).sortOrder(ASC)
           .pageNumber(DEFAULT_PAGE_NUMBER_PARAM).pageSize(DEFAULT_PAGE_SIZE_PARAM_).build();
-  public static final String CANDIDATE_POSITION = "Fejlesztő";
 
   @Mock
   private CandidateService candidateService;
@@ -156,8 +155,13 @@ public class CandidateControllerTest extends AbstractControllerTest {
   public void loadPageShouldRespondCandidateCollectionWhenOrderByNameAscWithFilterByNameWhenNameIsNotValid()
       throws Exception {
 
-    CandidateFilterRequest candidateFilterRequest = DEFAULT_CANDIDATE_FILTER_REQUEST;
-    candidateFilterRequest.setCandidateName(NON_VALID_CANDIDATE_NAME);
+    CandidateFilterRequest
+        candidateFilterRequest =
+        CandidateFilterRequest.builder().candidateName(NON_VALID_CANDIDATE_NAME)
+            .candidateEmail(StringUtils.EMPTY)
+            .candidatePhone(StringUtils.EMPTY).candiadtePositions(StringUtils.EMPTY).sortName(NAME)
+            .sortOrder(ASC)
+            .pageNumber(0).pageSize(10).build();
 
     ArgumentCaptor<CandidateFilterRequest>
         candidateFilterRequestArgumentCaptor =
@@ -180,8 +184,13 @@ public class CandidateControllerTest extends AbstractControllerTest {
   public void loadPageShouldRespondCandidateCollectionWhenOrderByNameAscWithFilterByName()
       throws Exception {
 
-    CandidateFilterRequest candidateFilterRequest = DEFAULT_CANDIDATE_FILTER_REQUEST;
-    candidateFilterRequest.setCandidateName(CANDIDATE_NAME);
+    CandidateFilterRequest
+        candidateFilterRequest =
+        CandidateFilterRequest.builder().candidateName(CANDIDATE_NAME)
+            .candidateEmail(StringUtils.EMPTY)
+            .candidatePhone(StringUtils.EMPTY).candiadtePositions(StringUtils.EMPTY).sortName(NAME)
+            .sortOrder(ASC)
+            .pageNumber(0).pageSize(10).build();
 
     ArgumentCaptor<CandidateFilterRequest>
         candidateFilterRequestArgumentCaptor =
@@ -204,9 +213,13 @@ public class CandidateControllerTest extends AbstractControllerTest {
   public void loadPageShouldRespondCandidateCollectionWhenOrderByNameAscWithFilterByEmailAndPhone()
       throws Exception {
 
-    CandidateFilterRequest candidateFilterRequest = DEFAULT_CANDIDATE_FILTER_REQUEST;
-    candidateFilterRequest.setCandidateEmail(CANDIDATE_EMAIL);
-    candidateFilterRequest.setCandidatePhone(CANDIDATE_PHONE);
+    CandidateFilterRequest
+        candidateFilterRequest =
+        CandidateFilterRequest.builder().candidateName(StringUtils.EMPTY)
+            .candidateEmail(CANDIDATE_EMAIL)
+            .candidatePhone(CANDIDATE_PHONE).candiadtePositions(StringUtils.EMPTY).sortName(NAME)
+            .sortOrder(ASC)
+            .pageNumber(0).pageSize(10).build();
 
     ArgumentCaptor<CandidateFilterRequest>
         candidateFilterRequestArgumentCaptor =
@@ -229,10 +242,13 @@ public class CandidateControllerTest extends AbstractControllerTest {
   public void loadPageShouldRespondCandidateCollectionWhenOrderByNameAscWithFilterByNameAndEmailAndPhone()
       throws Exception {
 
-    CandidateFilterRequest candidateFilterRequest = DEFAULT_CANDIDATE_FILTER_REQUEST;
-    candidateFilterRequest.setCandidateName(CANDIDATE_NAME);
-    candidateFilterRequest.setCandidateEmail(CANDIDATE_EMAIL);
-    candidateFilterRequest.setCandidatePhone(CANDIDATE_PHONE);
+    CandidateFilterRequest
+        candidateFilterRequest =
+        CandidateFilterRequest.builder().candidateName(CANDIDATE_NAME)
+            .candidateEmail(CANDIDATE_EMAIL)
+            .candidatePhone(CANDIDATE_PHONE).candiadtePositions(StringUtils.EMPTY).sortName(NAME)
+            .sortOrder(ASC)
+            .pageNumber(0).pageSize(10).build();
 
     ArgumentCaptor<CandidateFilterRequest>
         candidateFilterRequestArgumentCaptor =
@@ -256,11 +272,13 @@ public class CandidateControllerTest extends AbstractControllerTest {
   public void loadPageShouldRespondCandidateCollectionWhenOrderByNameAscWithFilterByNameAndEmailAndPhoneAndPosition()
       throws Exception {
 
-    CandidateFilterRequest candidateFilterRequest = DEFAULT_CANDIDATE_FILTER_REQUEST;
-    candidateFilterRequest.setCandidateName(CANDIDATE_NAME);
-    candidateFilterRequest.setCandidateEmail(CANDIDATE_C_EMAIL);
-    candidateFilterRequest.setCandidatePhone(CANDIDATE_C_PHONE);
-    candidateFilterRequest.setCandiadtePositions(CANDIDATE_C_POSITION);
+    CandidateFilterRequest
+        candidateFilterRequest =
+        CandidateFilterRequest.builder().candidateName(CANDIDATE_NAME)
+            .candidateEmail(CANDIDATE_C_EMAIL)
+            .candidatePhone(CANDIDATE_C_PHONE).candiadtePositions(CANDIDATE_C_POSITION)
+            .sortName(NAME).sortOrder(ASC)
+            .pageNumber(0).pageSize(10).build();
 
     ArgumentCaptor<CandidateFilterRequest>
         candidateFilterRequestArgumentCaptor =
