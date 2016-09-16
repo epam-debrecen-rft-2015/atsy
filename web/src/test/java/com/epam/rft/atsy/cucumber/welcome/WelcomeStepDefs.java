@@ -47,8 +47,8 @@ public class WelcomeStepDefs {
   @When("the user clicks on the logo")
   public void homeClicked() {
     waitForPageLoadAfter(
-      driver -> driver.findElement(By.cssSelector(".navbar .navbar-brand .img-rounded"))
-        .click());
+        driver -> driver.findElement(By.cssSelector(".navbar .navbar-brand .img-rounded"))
+            .click());
   }
 
   @Then("the Candidates page appears")

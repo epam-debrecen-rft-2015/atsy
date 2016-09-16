@@ -3,7 +3,6 @@ package com.epam.rft.atsy.web.controllers;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.util.CandidateCVFileHandler;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +44,8 @@ public class FileDownloadController {
 
   @ResponseBody
   @RequestMapping(value = "/secure/candidate/fileDownload/{candidateId}", method = RequestMethod.GET)
-  public Object downloadFile(@PathVariable("candidateId") Long candidateId, RedirectAttributes redirectAttrs)
+  public Object downloadFile(@PathVariable("candidateId") Long candidateId,
+                             RedirectAttributes redirectAttrs)
       throws Exception {
 
     CandidateDTO candidateDTO = candidateService.getCandidate(candidateId);
@@ -54,7 +54,8 @@ public class FileDownloadController {
 
       try {
         File file = candidateCVFileHandler
-            .createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(uploadLocation, candidateId, candidateCVFilename);
+            .createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(uploadLocation, candidateId,
+                candidateCVFilename);
         if (!file.exists()) {
           throw new IOException();
         }
@@ -62,7 +63,8 @@ public class FileDownloadController {
         InputStreamResource inputStreamResource = new InputStreamResource(inputStream);
 
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(CONTENT_DISPOSITION, String.format(INLINE_FORMAT + candidateCVFilename));
+        responseHeaders
+            .set(CONTENT_DISPOSITION, String.format(INLINE_FORMAT + candidateCVFilename));
         responseHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         responseHeaders.setContentLength(file.length());
 

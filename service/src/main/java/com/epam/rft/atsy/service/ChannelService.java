@@ -11,7 +11,6 @@ public interface ChannelService {
 
   /**
    * Returns the channel with the specified id.
-   *
    * @param channelId the id of the searched channel
    * @return the channel
    */
@@ -19,14 +18,12 @@ public interface ChannelService {
 
   /**
    * Returns a collection of channels.
-   *
    * @return the collection of channels
    */
   Collection<ChannelDTO> getAllChannels();
 
   /**
    * Returns the channel with the specified name.
-   *
    * @param channelName the name of the searched channel
    * @return the channel
    */
@@ -34,7 +31,6 @@ public interface ChannelService {
 
   /**
    * Saves a channel to the database.
-   *
    * @param channel the channel
    */
   void saveOrUpdate(ChannelDTO channel);

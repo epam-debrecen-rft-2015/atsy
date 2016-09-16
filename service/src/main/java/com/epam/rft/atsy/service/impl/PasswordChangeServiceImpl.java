@@ -39,7 +39,9 @@ public class PasswordChangeServiceImpl implements PasswordChangeService {
   public Long saveOrUpdate(PasswordHistoryDTO passwordHistoryDTO) {
     Assert.notNull(passwordHistoryDTO);
     Assert.notNull(passwordHistoryDTO.getUserId());
-    PasswordHistoryEntity entity = converterService.convert(passwordHistoryDTO, PasswordHistoryEntity.class);
+    PasswordHistoryEntity
+        entity =
+        converterService.convert(passwordHistoryDTO, PasswordHistoryEntity.class);
 
     UserEntity userEntity = userRepository.findOne(passwordHistoryDTO.getUserId());
     Assert.notNull(userEntity);

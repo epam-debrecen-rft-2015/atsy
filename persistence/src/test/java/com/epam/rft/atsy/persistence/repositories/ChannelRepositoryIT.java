@@ -1,15 +1,14 @@
 package com.epam.rft.atsy.persistence.repositories;
 
 
-import com.epam.rft.atsy.persistence.entities.ChannelEntity;
-
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import com.epam.rft.atsy.persistence.entities.ChannelEntity;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ChannelRepositoryIT extends AbstractRepositoryIT {
 

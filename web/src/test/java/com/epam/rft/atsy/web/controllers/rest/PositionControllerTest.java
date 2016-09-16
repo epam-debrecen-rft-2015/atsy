@@ -36,8 +36,12 @@ public class PositionControllerTest extends AbstractControllerTest {
   private static final String VALIDATION_ERROR_MESSAGE = "Validation error";
   private static final String EMPTY_POSITION_NAME_MESSAGE_KEY = "settings.positions.error.empty";
 
-  private PositionDTO positionDTOWithCorrectPositionName = PositionDTO.builder().id(1L).name(POSITION_NAME).build();
-  private PositionDTO positionDTOWithEmptyPositionName = PositionDTO.builder().id(1L).name(StringUtils.EMPTY).build();
+  private PositionDTO
+      positionDTOWithCorrectPositionName =
+      PositionDTO.builder().id(1L).name(POSITION_NAME).build();
+  private PositionDTO
+      positionDTOWithEmptyPositionName =
+      PositionDTO.builder().id(1L).name(StringUtils.EMPTY).build();
 
   @Mock
   private MessageKeyResolver messageKeyResolver;
@@ -53,7 +57,8 @@ public class PositionControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void getPositionsShouldRespondWithEmptyJsonArrayWhenThereAreNoPositions() throws Exception {
+  public void getPositionsShouldRespondWithEmptyJsonArrayWhenThereAreNoPositions()
+      throws Exception {
     given(positionService.getAllPositions()).willReturn(Collections.emptyList());
 
     this.mockMvc.perform(get(REQUEST_URL))
@@ -66,8 +71,10 @@ public class PositionControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void getPositionsShouldRespondWithJsonWithOnePositionWhenThereIsOnePosition() throws Exception {
-    given(positionService.getAllPositions()).willReturn(Collections.singletonList(positionDTOWithCorrectPositionName));
+  public void getPositionsShouldRespondWithJsonWithOnePositionWhenThereIsOnePosition()
+      throws Exception {
+    given(positionService.getAllPositions())
+        .willReturn(Collections.singletonList(positionDTOWithCorrectPositionName));
 
     this.mockMvc.perform(get(REQUEST_URL))
         .andExpect(status().isOk())
@@ -81,8 +88,10 @@ public class PositionControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void getPositionsShouldRespondWithJsonWithThreePositionsWhenThereAreThreePositions() throws Exception {
-    given(positionService.getAllPositions()).willReturn(Collections.nCopies(3, positionDTOWithCorrectPositionName));
+  public void getPositionsShouldRespondWithJsonWithThreePositionsWhenThereAreThreePositions()
+      throws Exception {
+    given(positionService.getAllPositions())
+        .willReturn(Collections.nCopies(3, positionDTOWithCorrectPositionName));
 
     this.mockMvc.perform(get(REQUEST_URL))
         .andExpect(status().isOk())
@@ -100,7 +109,8 @@ public class PositionControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void saveOrUpdateShouldRespondWithErrorResponseWhenRequestBodyIsMissing() throws Exception {
+  public void saveOrUpdateShouldRespondWithErrorResponseWhenRequestBodyIsMissing()
+      throws Exception {
 
     this.mockMvc.perform(post(REQUEST_URL)
         .contentType(MediaTypes.APPLICATION_JSON_UTF8)
@@ -112,7 +122,8 @@ public class PositionControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void saveOrUpdateShouldRespondWithValidationErrorWhenNameIsTheEmptyString() throws Exception {
+  public void saveOrUpdateShouldRespondWithValidationErrorWhenNameIsTheEmptyString()
+      throws Exception {
     objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     given(messageKeyResolver.resolveMessageOrDefault(EMPTY_POSITION_NAME_MESSAGE_KEY))
         .willReturn(VALIDATION_ERROR_MESSAGE);
@@ -130,7 +141,8 @@ public class PositionControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void saveOrUpdateShouldRespondWithNoErrorResponseWhenThePostedJsonIsCorrect() throws Exception {
+  public void saveOrUpdateShouldRespondWithNoErrorResponseWhenThePostedJsonIsCorrect()
+      throws Exception {
     mockMvc.perform(post(REQUEST_URL)
         .contentType(MediaTypes.APPLICATION_JSON_UTF8)
         .accept(MediaTypes.APPLICATION_JSON_UTF8)

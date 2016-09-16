@@ -12,8 +12,6 @@ import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.DuplicateCandidateException;
 import com.epam.rft.atsy.service.request.CandidateFilterRequest;
-import com.epam.rft.atsy.service.request.FilterRequest;
-import com.epam.rft.atsy.service.request.SearchOptions;
 import com.epam.rft.atsy.service.response.PagingResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
@@ -26,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Collection;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
@@ -73,25 +70,6 @@ public class CandidateServiceImpl implements CandidateService {
 
   @Transactional(readOnly = true)
   @Override
-  public Collection<CandidateDTO> getAllCandidate(FilterRequest sortingRequest) {
-    validateFilterRequest(sortingRequest);
-
-    SearchOptions searchOptions = sortingRequest.getSearchOptions();
-
-    Sort.Direction sortDirection = Sort.Direction.fromString(sortingRequest.getOrder().name());
-
-    Sort sort = new Sort(sortDirection, sortingRequest.getFieldName().toString());
-
-    List<CandidateEntity>
-        candidateEntities =
-        candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(
-            searchOptions.getName(), searchOptions.getEmail(), searchOptions.getPhone(), sort);
-
-    return converterService.convert(candidateEntities, CandidateDTO.class);
-  }
-
-  @Transactional(readOnly = true)
-  @Override
   public PagingResponse<CandidateDTO> getCandidatesByFilterRequest(
       CandidateFilterRequest candidateFilterRequest) {
 
@@ -109,7 +87,7 @@ public class CandidateServiceImpl implements CandidateService {
       pageRequest =
           new PageRequest(candidateFilterRequest.getPageNumber(),
               candidateFilterRequest.getPageSize(),
-              sortDirection, candidateFilterRequest.getSortName());
+              sortDirection, resolveSortName(candidateFilterRequest.getSortName()));
 
     } else {
       pageRequest =
@@ -169,22 +147,6 @@ public class CandidateServiceImpl implements CandidateService {
     }
   }
 
-  /**
-   * Validates the fields of the passed filter request. Performs nullness-checks.
-   * @param filterRequest the object to validate
-   * @throws IllegalArgumentException if any member of the parameter (or the parameter itself) is
-   * {@code null}.
-   */
-  private void validateFilterRequest(FilterRequest filterRequest) {
-    Assert.notNull(filterRequest);
-    Assert.notNull(filterRequest.getFieldName());
-    Assert.notNull(filterRequest.getOrder());
-
-    SearchOptions searchOptions = filterRequest.getSearchOptions();
-
-    Assert.notNull(searchOptions);
-  }
-
   private void validateCandidateFilterRequest(CandidateFilterRequest candidateFilterRequest) {
     Assert.notNull(candidateFilterRequest);
     Assert.notNull(candidateFilterRequest.getPageSize());
@@ -209,6 +171,18 @@ public class CandidateServiceImpl implements CandidateService {
         throw new IllegalArgumentException(
             "Invalid sort name: " + candidateFilterRequest.getSortName(), e);
       }
+    }
+  }
+
+  public String resolveSortName(String sortName) {
+    if (sortName == "email") {
+      return "candidate.email";
+    } else if (sortName == "phone") {
+      return "candidate.phone";
+    } else if (sortName == "positions") {
+      return "position.name";
+    } else {
+      return "candidate.name";
     }
   }
 }

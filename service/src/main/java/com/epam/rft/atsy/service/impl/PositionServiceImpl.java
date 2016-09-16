@@ -6,7 +6,6 @@ import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.PositionService;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.exception.DuplicatePositionException;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,7 +16,6 @@ import org.springframework.util.Assert;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -38,7 +36,8 @@ public class PositionServiceImpl implements PositionService {
     List<PositionEntity> positionEntities = positionRepository.findAll(ids);
     List<PositionDTO> emptyList = Collections.emptyList();
 
-    return positionEntities.isEmpty() ? emptyList : converterService.convert(positionEntities, PositionDTO.class);
+    return positionEntities.isEmpty() ? emptyList
+        : converterService.convert(positionEntities, PositionDTO.class);
   }
 
   @Transactional(readOnly = true)

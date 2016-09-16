@@ -1,7 +1,12 @@
 package com.epam.rft.atsy.util;
 
-import com.epam.rft.atsy.web.util.CandidateCVFileHandler;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 
+import com.epam.rft.atsy.web.util.CandidateCVFileHandler;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
@@ -10,12 +15,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class CandidateCVFileHandlerTest {
 
@@ -43,7 +42,8 @@ public class CandidateCVFileHandlerTest {
   @Test(expected = IllegalArgumentException.class)
   public void createCVFileFromFolderLocationAndCandidateDtoAndCVFilenameShouldThrowIllegalArgumentExceptionWhenFolderLocationIsNull() {
     candidateCVFileHandler
-        .createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(null, CANDIDATE_ID, CV_FILENAME);
+        .createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(null, CANDIDATE_ID,
+            CV_FILENAME);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -125,7 +125,8 @@ public class CandidateCVFileHandlerTest {
     boolean
         actual =
         candidateCVFileHandler
-            .existCandidateFolderOnFolderLocation(TEST_FOLDER_LOCATION, CANDIDATE_ID_NON_EXISTENT_FOLDER);
+            .existCandidateFolderOnFolderLocation(TEST_FOLDER_LOCATION,
+                CANDIDATE_ID_NON_EXISTENT_FOLDER);
 
     assertFalse(actual);
   }

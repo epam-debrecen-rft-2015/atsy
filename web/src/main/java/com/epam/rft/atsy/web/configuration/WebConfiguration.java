@@ -5,7 +5,6 @@ import com.epam.rft.atsy.web.exceptionhandling.UncheckedExceptionResolver;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolverImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -31,7 +30,6 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
-
 import javax.annotation.PostConstruct;
 
 @Configuration

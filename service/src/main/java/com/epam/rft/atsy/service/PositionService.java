@@ -12,7 +12,6 @@ public interface PositionService {
 
   /**
    * Returns the position with the specified id.
-   *
    * @param ids the id of the searched position
    * @return the position
    */
@@ -20,7 +19,6 @@ public interface PositionService {
 
   /**
    * Returns the position object with the given id.
-   *
    * @param positionId the id of position
    * @return the position object
    */
@@ -28,14 +26,12 @@ public interface PositionService {
 
   /**
    * Returns a collection of positions.
-   *
    * @return the collection of positions
    */
   Collection<PositionDTO> getAllPositions();
 
   /**
    * Returns the position object with the given name.
-   *
    * @param positionName the name of the position
    * @return the position object
    */
@@ -43,7 +39,6 @@ public interface PositionService {
 
   /**
    * Saves a position to the database.
-   *
    * @param position the position
    */
   void saveOrUpdate(PositionDTO position);

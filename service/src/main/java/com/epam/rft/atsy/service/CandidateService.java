@@ -2,10 +2,7 @@ package com.epam.rft.atsy.service;
 
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.request.CandidateFilterRequest;
-import com.epam.rft.atsy.service.request.FilterRequest;
 import com.epam.rft.atsy.service.response.PagingResponse;
-
-import java.util.Collection;
 
 /**
  * Service that operates with candidates in the database layer and in the view layer.
@@ -25,13 +22,6 @@ public interface CandidateService {
    * @return the candidate object
    */
   CandidateDTO getCandidateByApplicationID(Long applicationID);
-
-  /**
-   * Returns a collection of candidates, whom fits the filter.
-   * @param sortingRequest the filter
-   * @return the collection of candidates
-   */
-  Collection<CandidateDTO> getAllCandidate(FilterRequest sortingRequest);
 
 
   PagingResponse<CandidateDTO> getCandidatesByFilterRequest(

@@ -14,7 +14,7 @@ public class WelcomeControllerTest extends AbstractControllerTest {
 
   @Override
   protected Object[] controllersUnderTest() {
-    return new Object[] { new WelcomeController() };
+    return new Object[]{new WelcomeController()};
   }
 
   @Test

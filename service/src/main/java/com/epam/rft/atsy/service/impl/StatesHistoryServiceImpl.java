@@ -14,7 +14,6 @@ import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,8 +90,11 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
     StatesEntity statesEntity = statesRepository.findOne(state.getStateDTO().getId());
     Assert.notNull(statesEntity);
 
-    StatesHistoryEntity statesHistoryEntity = converterService.convert(state, StatesHistoryEntity.class);
-    statesHistoryEntity.setCreationDate(state.getCreationDate() == null ? new Date() : state.getCreationDate());
+    StatesHistoryEntity
+        statesHistoryEntity =
+        converterService.convert(state, StatesHistoryEntity.class);
+    statesHistoryEntity
+        .setCreationDate(state.getCreationDate() == null ? new Date() : state.getCreationDate());
 
     applicationsService.saveOrUpdate(state.getApplicationDTO());
     return statesHistoryRepository.saveAndFlush(statesHistoryEntity).getId();

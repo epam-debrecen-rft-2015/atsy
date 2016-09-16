@@ -8,7 +8,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
@@ -18,9 +17,6 @@ import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.DuplicateCandidateException;
 import com.epam.rft.atsy.service.request.CandidateFilterRequest;
-import com.epam.rft.atsy.service.request.FilterRequest;
-import com.epam.rft.atsy.service.request.SearchOptions;
-import com.epam.rft.atsy.service.request.SortingRequest;
 import com.epam.rft.atsy.service.response.PagingResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.CoreMatchers;
@@ -41,7 +37,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -55,7 +50,6 @@ public class CandidateServiceImplTest {
   private static final String REFERER = "Jane Doe";
   private static final Short LANGUAGE_SKILL = 5;
   private static final String DESCRIPTION = "Simply John Doe.";
-  private static final SortingRequest.Field SORT_FIELD = SortingRequest.Field.NAME;
   private static final CandidateEntity NOT_FOUND_CANDIDATE_ENTITY = null;
   private static final CandidateDTO NOT_FOUND_CANDIDATE_DTO = null;
 
@@ -86,9 +80,6 @@ public class CandidateServiceImplTest {
   private CandidateEntity dummyCandidateEntity;
   private CandidateDTO dummyCandidateDto;
   private ApplicationEntity dummyApplicationEntity;
-  private FilterRequest ascendingFilterRequest;
-  private FilterRequest descendingFilterRequest;
-  private Sort ascendingSort;
 
   @Before
   public void setUp() {
@@ -101,16 +92,6 @@ public class CandidateServiceImplTest {
 
     dummyCandidateDto = CandidateDTO.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
         .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).build();
-
-    ascendingFilterRequest =
-        FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
-            .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
-
-    descendingFilterRequest =
-        FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.DESC)
-            .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
-
-    ascendingSort = new Sort(Sort.Direction.ASC, SORT_FIELD.toString());
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -182,118 +163,6 @@ public class CandidateServiceImplTest {
 
     // Then
     assertThat(candidate, equalTo(dummyCandidateDto));
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void getAllCandidatesShouldThrowIAEWhenFilterRequestIsNull() {
-    // When
-    candidateService.getAllCandidate(null);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void getAllCandidatesShouldThrowIAEWhenSearchOptionsIsNull() {
-    // Given
-    FilterRequest defectedRequest =
-        FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
-            .searchOptions(null).build();
-
-    // When
-    candidateService.getAllCandidate(defectedRequest);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void getAllCandidatesShouldThrowIAEWhenFieldNameIsNull() {
-    // Given
-    FilterRequest defectedRequest =
-        FilterRequest.builder().fieldName(null).order(SortingRequest.Order.ASC)
-            .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
-
-    // When
-    candidateService.getAllCandidate(defectedRequest);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void getAllCandidatesShouldThrowIAEWhenOrderIsNull() {
-    // Given
-    FilterRequest defectedRequest =
-        FilterRequest.builder().fieldName(SORT_FIELD).order(null)
-            .searchOptions(new SearchOptions(NAME, EMAIL, PHONE)).build();
-
-    // When
-    candidateService.getAllCandidate(defectedRequest);
-  }
-
-  @Test
-  public void getAllCandidatesShouldCallRepositoryWithEmptyStringAsNameWhenSearchOptionsNameIsNull() {
-    // Given
-    FilterRequest defectedRequest =
-        FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
-            .searchOptions(new SearchOptions(null, EMAIL, PHONE)).build();
-
-    // When
-    candidateService.getAllCandidate(defectedRequest);
-
-    // Then
-    verify(candidateRepository)
-        .findAllByNameContainingAndEmailContainingAndPhoneContaining(StringUtils.EMPTY, EMAIL,
-            PHONE, ascendingSort);
-  }
-
-  @Test
-  public void getAllCandidatesShouldCallRepositoryWithEmptyStringAsEmailWhenSearchOptionsEmailIsNull() {
-    // Given
-    FilterRequest defectedRequest =
-        FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
-            .searchOptions(new SearchOptions(NAME, null, PHONE)).build();
-
-    // When
-    candidateService.getAllCandidate(defectedRequest);
-
-    // Then
-    verify(candidateRepository)
-        .findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, StringUtils.EMPTY, PHONE,
-            ascendingSort);
-  }
-
-  @Test
-  public void getAllCandidatesShouldCallRepositoryWithEmptyStringAsPhoneWhenSearchOptionsPhoneIsNull() {
-    // Given
-    FilterRequest defectedRequest =
-        FilterRequest.builder().fieldName(SORT_FIELD).order(SortingRequest.Order.ASC)
-            .searchOptions(new SearchOptions(NAME, EMAIL, null)).build();
-
-    // When
-    candidateService.getAllCandidate(defectedRequest);
-
-    // Then
-    verify(candidateRepository)
-        .findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL, StringUtils.EMPTY,
-            ascendingSort);
-  }
-
-  @Test
-  public void getAllCandidateShouldCallRepositoryWithAscendingSortWhenPassingAscendingFilterRequest() {
-    // When
-    Collection<CandidateDTO> result = candidateService.getAllCandidate(ascendingFilterRequest);
-
-    // Then
-    verify(candidateRepository)
-        .findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL, PHONE,
-            ascendingSort);
-  }
-
-  @Test
-  public void getAllCandidateShouldCallRepositoryWithDescendingSortWhenPassingDescendingFilterRequest() {
-    // Given
-    Sort descendingSort = new Sort(Sort.Direction.DESC, SORT_FIELD.toString());
-
-    // When
-    Collection<CandidateDTO> result = candidateService.getAllCandidate(descendingFilterRequest);
-
-    // Then
-    verify(candidateRepository)
-        .findAllByNameContainingAndEmailContainingAndPhoneContaining(NAME, EMAIL, PHONE,
-            descendingSort);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -387,12 +256,12 @@ public class CandidateServiceImplTest {
         new PageRequest(candidateFilterRequest.getPageNumber(),
             candidateFilterRequest.getPageSize(),
             Sort.Direction.fromString(candidateFilterRequest.getSortOrder()),
-            candidateFilterRequest.getSortName());
+            candidateService.resolveSortName(candidateFilterRequest.getSortName()));
 
     String name = candidateFilterRequest.getCandidateName();
-    String email = candidateFilterRequest.getCandidateEmail();
-    String phone = candidateFilterRequest.getCandidatePhone();
-    String positions = candidateFilterRequest.getCandiadtePositions();
+    String email = StringUtils.EMPTY;
+    String phone = StringUtils.EMPTY;
+    String positions = StringUtils.EMPTY;
 
     Page<CandidateEntity>
         dummyCandidateEntityPage =
@@ -416,16 +285,12 @@ public class CandidateServiceImplTest {
         actualPagingResponse =
         candidateService.getCandidatesByFilterRequest(candidateFilterRequest);
 
-    // Then
     assertEquals(actualPagingResponse, expectedPagingResponse);
     then(converterService).should(times(1))
         .convert(dummyCandidateEntityPage.getContent(), CandidateDTO.class);
     then(candidateRepository).should(times(1))
         .findByCandidateFilterRequest(name, email, phone, positions, pageRequest);
   }
-
-  //Null candidate dto
-
 
   @Test(expected = IllegalArgumentException.class)
   public void saveOrUpdateShouldThrowIAEWhenNullPassed() {

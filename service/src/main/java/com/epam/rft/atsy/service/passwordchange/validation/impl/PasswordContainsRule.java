@@ -23,10 +23,12 @@ public class PasswordContainsRule implements PasswordValidationRule {
    * @return true if the new password contains at least one letter, number and special character
    */
   @Override
-  public void validate(PasswordChangeDTO passwordChangeDTO) throws PasswordContainsValidationException {
+  public void validate(PasswordChangeDTO passwordChangeDTO)
+      throws PasswordContainsValidationException {
     String newPassword = passwordChangeDTO.getNewPassword();
 
-    if (!(containsLetters(newPassword) && containsNumbers(newPassword) && containsSpecial(newPassword))) {
+    if (!(containsLetters(newPassword) && containsNumbers(newPassword) && containsSpecial(
+        newPassword))) {
       throw new PasswordContainsValidationException();
     }
   }

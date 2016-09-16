@@ -28,36 +28,6 @@ public interface CandidateRepository extends JpaRepository<CandidateEntity, Long
                                                                                     String phone,
                                                                                     Sort sort);
 
-  // TODO: Decide which query to use
-  //  @Query(value = "SELECT DISTINCT candidate FROM CandidateEntity candidate "
-//      + "WHERE candidate.name LIKE CONCAT('%',:name,'%') AND "
-//      + "candidate.email LIKE CONCAT('%',:email,'%') AND "
-//      + "candidate.phone LIKE CONCAT('%',:phone,'%') AND "
-//      + "(candidate.id IN "
-//      + "(SELECT candidateEntity FROM ApplicationEntity application "
-//      + "WHERE candidate.id = application.candidateEntity AND application.positionEntity IN "
-//      + "(SELECT id FROM PositionEntity position WHERE position.name LIKE CONCAT('%',:position,'%'))) "
-//      + "OR "
-//      + "(LENGTH(TRIM(:position)) < 1)) ")
-
-//  SELECT distinct c.*
-//  FROM candidates c
-//  LEFT JOIN applications a
-//  ON c.id = a.candidate_id
-//  LEFT JOIN positions p
-//  ON a.position_id = p.id and p.name LIKE CONCAT('%%')
-//  WHERE c.name LIKE CONCAT('%%') AND
-//  c.email LIKE CONCAT('%%') AND
-//  c.phone LIKE CONCAT('%%');
-
-//  @Query(value = "SELECT DISTINCT candidate FROM ApplicationEntity application "
-//      + "RIGHT OUTER JOIN application.candidateEntity candidate "
-//      + "LEFT OUTER JOIN application.positionEntity position "
-//      + "WHERE candidate.name LIKE CONCAT('%',:name,'%') AND "
-//      + "candidate.email LIKE CONCAT('%',:email,'%') AND "
-//      + "candidate.phone LIKE CONCAT('%',:phone,'%') AND "
-//      + "(position.name LIKE CONCAT('%',:position,'%')) OR (LENGTH(TRIM(:position)) < 1))) ")
-
   /**
    * Returns the list of CandidateEntities whom suits the given conditions.
    * @param candidateName the name, which the candidate's name must contain
@@ -66,16 +36,6 @@ public interface CandidateRepository extends JpaRepository<CandidateEntity, Long
    * @param candidatePosition the position, which the candidate's phone number must contain
    * @return the list of CandidateEntities
    */
-
-//  @Query(value = "SELECT DISTINCT candidate FROM CandidateEntity candidate "
-//      + "WHERE candidate.name LIKE CONCAT('%',:name,'%') AND "
-//      + "candidate.email LIKE CONCAT('%',:email,'%') AND "
-//      + "candidate.phone LIKE CONCAT('%',:phone,'%') AND "
-//      + "(candidate.id IN "
-//      + "(SELECT candidateEntity FROM ApplicationEntity application "
-//      + "WHERE candidate.id = application.candidateEntity AND application.positionEntity IN "
-//      + "(SELECT id FROM PositionEntity position "
-//      + "WHERE position.name LIKE CONCAT('%',:position,'%'))) OR (LENGTH(TRIM(:position)) < 1)) ")
   @Query(value = "SELECT DISTINCT candidate FROM ApplicationEntity application "
       + "RIGHT OUTER JOIN application.candidateEntity candidate "
       + "LEFT OUTER JOIN application.positionEntity position "
