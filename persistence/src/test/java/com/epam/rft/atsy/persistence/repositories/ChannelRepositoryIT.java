@@ -64,12 +64,12 @@ public class ChannelRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-  public void findAllNonDeletedChannelEntityShouldNotContainAnEntityThatHasDeletedFieldWithTrueValue() {
+  public void findAllByDeletedFalseShouldNotContainAnEntityThatHasDeletedFieldWithTrueValue() {
     // Given
     ChannelEntity channelEntityWithTrueDeletedField = this.channelRepository.findByName(CHANNEL_NAME_WITH_TRUE_DELETED_FIELD);
 
     // When
-    List<ChannelEntity> actualChannelEntityList = this.channelRepository.findAllNonDeletedChannelEntity();
+    List<ChannelEntity> actualChannelEntityList = this.channelRepository.findAllByDeletedFalse();
 
     // Then
     assertThat(actualChannelEntityList, notNullValue());
@@ -78,11 +78,11 @@ public class ChannelRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-  public void findAllNonDeletedChannelEntityShouldReturnWithOnlyNonDeletedChannelEntities() {
+  public void findAllByDeletedFalseShouldReturnWithOnlyNonDeletedChannelEntities() {
     // Given
 
     // When
-    List<ChannelEntity> actualChannelEntityList = this.channelRepository.findAllNonDeletedChannelEntity();
+    List<ChannelEntity> actualChannelEntityList = this.channelRepository.findAllByDeletedFalse();
 
     // Then
     assertThat(actualChannelEntityList, notNullValue());

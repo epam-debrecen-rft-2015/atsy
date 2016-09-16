@@ -62,11 +62,11 @@ public class PositionRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-  public void findAllNonDeletedPositionEntityShouldReturnOnlyNonDeletedPositions() {
+  public void findAllByDeletedFalseShouldReturnOnlyNonDeletedPositions() {
     // Given
 
     // When
-    List<PositionEntity> actualPositionList = this.positionRepository.findAllNonDeletedPositionEntity();
+    List<PositionEntity> actualPositionList = this.positionRepository.findAllByDeletedFalse();
 
     // Then
     assertThat(actualPositionList, notNullValue());
@@ -75,12 +75,12 @@ public class PositionRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-  public void findAllNonDeletedPositionEntityShouldNotContainAnEntityThatHasDeletedFieldWithTrueValue() {
+  public void findAllByDeletedFalseShouldNotContainAnEntityThatHasDeletedFieldWithTrueValue() {
     // Given
     PositionEntity positionEntityWithTrueDeletedField = this.positionRepository.findByName(POSITION_NAME_WITH_TRUE_DELETED_FIELD);
 
     // When
-    List<PositionEntity> actualPositionList = this.positionRepository.findAllNonDeletedPositionEntity();
+    List<PositionEntity> actualPositionList = this.positionRepository.findAllByDeletedFalse();
 
     // Then
     assertThat(actualPositionList, notNullValue());
