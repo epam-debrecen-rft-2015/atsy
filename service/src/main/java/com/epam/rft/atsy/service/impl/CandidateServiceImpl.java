@@ -87,7 +87,7 @@ public class CandidateServiceImpl implements CandidateService {
       pageRequest =
           new PageRequest(candidateFilterRequest.getPageNumber(),
               candidateFilterRequest.getPageSize(),
-              sortDirection, resolveSortName(candidateFilterRequest.getSortName()));
+              sortDirection, candidateFilterRequest.getSortName());
 
     } else {
       pageRequest =
@@ -171,18 +171,6 @@ public class CandidateServiceImpl implements CandidateService {
         throw new IllegalArgumentException(
             "Invalid sort name: " + candidateFilterRequest.getSortName(), e);
       }
-    }
-  }
-
-  public String resolveSortName(String sortName) {
-    if (sortName == "email") {
-      return "candidate.email";
-    } else if (sortName == "phone") {
-      return "candidate.phone";
-    } else if (sortName == "positions") {
-      return "position.name";
-    } else {
-      return "candidate.name";
     }
   }
 }

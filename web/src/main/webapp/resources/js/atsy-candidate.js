@@ -60,7 +60,21 @@ $(document).ready(function () {
 $('.table').bootstrapTable({
     onClickRow: function (row, $element) {
       window.location.href="candidate/" + row.id;
-    }
+    },
+
+    queryParams: function (p) {
+        var sortName = p.sortName;
+
+        if (sortName == "email") {
+          sortName = "candidate.email";
+        } else if (sortName == "phone") {
+          sortName = "candidate.phone";
+        } else if (sortName == "positions") {
+          sortName = "position.name";
+        } else {
+          sortName = "candidate.name";
+        }
+        p.sortName = sortName
+        return  p
+      }
 });
-
-

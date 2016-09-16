@@ -256,7 +256,7 @@ public class CandidateServiceImplTest {
         new PageRequest(candidateFilterRequest.getPageNumber(),
             candidateFilterRequest.getPageSize(),
             Sort.Direction.fromString(candidateFilterRequest.getSortOrder()),
-            candidateService.resolveSortName(candidateFilterRequest.getSortName()));
+            candidateFilterRequest.getSortName());
 
     String name = candidateFilterRequest.getCandidateName();
     String email = StringUtils.EMPTY;
