@@ -8,8 +8,10 @@ import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
+import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+import com.epam.rft.atsy.service.response.PagingResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -52,12 +54,13 @@ public class ApplicationsServiceImpl implements ApplicationsService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<ApplicationDTO> getApplicationsByCandidateDTO(CandidateDTO candidateDTO, int page,
-                                                            int size) {
-    Assert.notNull(candidateDTO);
-    Assert.notNull(candidateDTO.getId());
+  public PagingResponse<CandidateApplicationDTO> getApplicationsByCandidateId(
+      Long candidateId,
+      int page,
+      int size) {
+    Assert.notNull(candidateId);
 
-    CandidateEntity candidateEntity = candidateRepository.findOne(candidateDTO.getId());
+    CandidateEntity candidateEntity = candidateRepository.findOne(candidateId);
 
     Pageable pageRequest = new PageRequest(page, size);
 
@@ -67,7 +70,16 @@ public class ApplicationsServiceImpl implements ApplicationsService {
 
     List<ApplicationEntity> applicationEntities = pageResult.getContent();
 
-    return converterService.convert(applicationEntities, ApplicationDTO.class);
+    List<CandidateApplicationDTO>
+        candidateApplicationDTOs =
+        converterService.convert(applicationEntities, CandidateApplicationDTO.class);
+    Long total = pageResult.getTotalElements();
+
+    PagingResponse<CandidateApplicationDTO>
+        response =
+        new PagingResponse<>(total, candidateApplicationDTOs);
+
+    return response;
   }
 
   @Transactional
