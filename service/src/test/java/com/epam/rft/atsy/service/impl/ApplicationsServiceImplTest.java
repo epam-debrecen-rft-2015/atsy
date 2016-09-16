@@ -104,7 +104,7 @@ public class ApplicationsServiceImplTest {
 
   private final CandidateApplicationDTO
       dummyCandidateApplicationDTO =
-      CandidateApplicationDTO.builder().build();
+      CandidateApplicationDTO.builder().modificationDate(APPLICATION_CREATION_DATE).build();
 
   @Mock
   private ConverterService converterService;

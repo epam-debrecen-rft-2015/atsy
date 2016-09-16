@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ApplicationsServiceImpl implements ApplicationsService {
@@ -73,6 +74,11 @@ public class ApplicationsServiceImpl implements ApplicationsService {
     List<CandidateApplicationDTO>
         candidateApplicationDTOs =
         converterService.convert(applicationEntities, CandidateApplicationDTO.class);
+
+    candidateApplicationDTOs = candidateApplicationDTOs.stream()
+        .sorted((m1, m2) -> m2.getModificationDate().compareTo(m1.getModificationDate()))
+        .collect(Collectors.toList());
+
     Long total = pageResult.getTotalElements();
 
     PagingResponse<CandidateApplicationDTO>
