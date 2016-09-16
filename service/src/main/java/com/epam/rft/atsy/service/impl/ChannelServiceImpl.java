@@ -2,10 +2,10 @@ package com.epam.rft.atsy.service.impl;
 
 import com.epam.rft.atsy.persistence.entities.ChannelEntity;
 import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
+import com.epam.rft.atsy.persistence.repositories.LogicallyDeletableRepository;
 import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
-import com.epam.rft.atsy.service.exception.ChannelNotFoundException;
 import com.epam.rft.atsy.service.exception.DuplicateChannelException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,20 +13,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Collection;
-import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class ChannelServiceImpl implements ChannelService {
+public class ChannelServiceImpl extends LogicallyDeletableServiceImpl<ChannelDTO, ChannelEntity>
+    implements ChannelService {
 
-  @Autowired
-  private ConverterService converterService;
-
-  @Autowired
   private ChannelRepository channelRepository;
+
+  @Autowired
+  public ChannelServiceImpl(ChannelRepository channelRepository, ConverterService converterService) {
+    this(ChannelDTO.class, channelRepository, converterService);
+    this.channelRepository = channelRepository;
+  }
+
+  public ChannelServiceImpl(Class<ChannelDTO> dtoTypeParameterClass,
+                            LogicallyDeletableRepository logicallyDeletableRepository,
+                            ConverterService converterService) {
+    super(dtoTypeParameterClass, logicallyDeletableRepository, converterService);
+  }
+
 
   @Transactional(readOnly = true)
   @Override
@@ -38,13 +45,6 @@ public class ChannelServiceImpl implements ChannelService {
       return converterService.convert(channelEntity, ChannelDTO.class);
     }
     return null;
-  }
-
-  @Transactional(readOnly = true)
-  @Override
-  public Collection<ChannelDTO> getAllNonDeletedChannelDto() {
-    List<ChannelEntity> ChannelEntities = channelRepository.findAllNonDeletedChannelEntity();
-    return converterService.convert(ChannelEntities, ChannelDTO.class);
   }
 
   @Transactional(readOnly = true)
@@ -75,20 +75,6 @@ public class ChannelServiceImpl implements ChannelService {
       throw new DuplicateChannelException(channel.getName());
     }
 
-    this.channelRepository.saveAndFlush(channelEntity);
-  }
-
-  @Transactional
-  @Override
-  public void deleteChannelDtoLogicallyById(Long channelId) throws ChannelNotFoundException {
-    Assert.notNull(channelId);
-
-    ChannelEntity channelEntity = this.channelRepository.findOne(channelId);
-    if (channelEntity == null) {
-      throw new ChannelNotFoundException();
-    }
-
-    channelEntity.setDeleted(true);
     this.channelRepository.saveAndFlush(channelEntity);
   }
 }
