@@ -1,7 +1,6 @@
 package com.epam.rft.atsy.service.impl;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
-import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.entities.StatesEntity;
 import com.epam.rft.atsy.persistence.entities.StatesHistoryEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
@@ -12,20 +11,14 @@ import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
-import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
-import com.epam.rft.atsy.service.response.PagingResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class StatesHistoryServiceImpl implements StatesHistoryService {
@@ -47,39 +40,6 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
 
   @Autowired
   private StatesRepository statesRepository;
-
-  @Transactional(readOnly = true)
-  @Override
-  public PagingResponse<CandidateApplicationDTO> getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(
-      Long id, int page, int size) {
-    Assert.notNull(id);
-    CandidateEntity candidateEntity = candidateRepository.findOne(id);
-
-    Assert.notNull(candidateEntity);
-
-    Pageable pageRequest = new PageRequest(page, size);
-
-    Page<ApplicationEntity>
-        pageResult =
-        applicationsRepository.findByCandidateEntity(candidateEntity, pageRequest);
-
-    List<ApplicationEntity> applicationList = pageResult.getContent();
-
-    List<CandidateApplicationDTO>
-        candidateApplicationDTOs =
-        converterService.convert(applicationList, CandidateApplicationDTO.class);
-
-    candidateApplicationDTOs = candidateApplicationDTOs.stream()
-        .sorted((m1, m2) -> m2.getModificationDate().compareTo(m1.getModificationDate()))
-        .collect(Collectors.toList());
-
-    PagingResponse<CandidateApplicationDTO> response = new PagingResponse<>();
-    response.setDataList(candidateApplicationDTOs);
-    response.setTotal(pageResult.getTotalElements());
-
-    return response;
-
-  }
 
   @Transactional
   @Override
