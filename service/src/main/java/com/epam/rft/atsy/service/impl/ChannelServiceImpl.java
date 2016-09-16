@@ -5,16 +5,17 @@ import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
 import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
+import com.epam.rft.atsy.service.exception.ChannelNotFoundException;
 import com.epam.rft.atsy.service.exception.DuplicateChannelException;
-import org.hibernate.exception.ConstraintViolationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.Collection;
 import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -41,8 +42,8 @@ public class ChannelServiceImpl implements ChannelService {
 
   @Transactional(readOnly = true)
   @Override
-  public Collection<ChannelDTO> getAllChannels() {
-    List<ChannelEntity> ChannelEntities = channelRepository.findAll();
+  public Collection<ChannelDTO> getAllNonDeletedChannelDto() {
+    List<ChannelEntity> ChannelEntities = channelRepository.findAllNonDeletedChannelEntity();
     return converterService.convert(ChannelEntities, ChannelDTO.class);
   }
 
@@ -64,15 +65,30 @@ public class ChannelServiceImpl implements ChannelService {
     Assert.notNull(channel);
     Assert.notNull(channel.getName());
 
-    ChannelEntity entity = converterService.convert(channel, ChannelEntity.class);
-    try {
-      channelRepository.saveAndFlush(entity);
-    } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
-      log.error("Save to repository failed.", ex);
+    ChannelEntity channelEntity = this.channelRepository.findByName(channel.getName());
 
-      String channelName = channel.getName();
-
-      throw new DuplicateChannelException(channelName, ex);
+    if (channelEntity == null) {
+      channelEntity = this.converterService.convert(channel, ChannelEntity.class);
+    } else if (channelEntity.isDeleted() != null && channelEntity.isDeleted()) {
+      channelEntity.setDeleted(false);
+    } else {
+      throw new DuplicateChannelException(channel.getName());
     }
+
+    this.channelRepository.saveAndFlush(channelEntity);
+  }
+
+  @Transactional
+  @Override
+  public void deleteChannelDtoLogicallyById(Long channelId) throws ChannelNotFoundException {
+    Assert.notNull(channelId);
+
+    ChannelEntity channelEntity = this.channelRepository.findOne(channelId);
+    if (channelEntity == null) {
+      throw new ChannelNotFoundException();
+    }
+
+    channelEntity.setDeleted(true);
+    this.channelRepository.saveAndFlush(channelEntity);
   }
 }

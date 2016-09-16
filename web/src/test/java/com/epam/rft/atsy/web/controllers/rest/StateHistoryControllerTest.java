@@ -110,16 +110,13 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   private ChannelDTO channelDTO;
 
   private static final Long ID = 1L;
-
-  private static final Date CREATION_DATE =
-
+  private static final Date
+      CREATION_DATE =
       new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
-
-  private static final String FEEDBACK_DATE_STRING = "2016-08-15 14:00:00";
 
   private static final Date
       FEEDBACK_DATE =
-      new GregorianCalendar(2016, 8 - 1, 15, 14, 0, 0).getTime();
+      new GregorianCalendar(2016, 8 - 1, 15, 2, 0, 0).getTime();
 
   private static final Date
       DAY_OF_START =
@@ -205,7 +202,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .id(ID)
         .candidateId(CANDIDATE_ID)
         .creationDate(CREATION_DATE)
-        .feedbackDate(FEEDBACK_DATE_STRING)
+        .feedbackDate(FEEDBACK_DATE)
         .languageSkill(LANGUAGE_SKILL)
         .description(DESCRIPTION)
         .result(RESULT)
@@ -225,7 +222,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .positionName(POSITION_NAME)
         .channelName(CHANNEL_NAME)
         .creationDate(CREATION_DATE)
-        .feedbackDate(FEEDBACK_DATE_STRING)
+        .feedbackDate(FEEDBACK_DATE)
         .languageSkill(LANGUAGE_SKILL)
         .description(DESCRIPTION)
         .result(RESULT)
@@ -274,26 +271,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .recommendation(RECOMMENDATION_YES_BOOL)
         .build();
   }
-
-  @Test
-  public void saveOrUpdateShouldRespondWithErrorJSONWhenFeedbackDateIsMalformed() throws Exception {
-    StateHistoryViewRepresentation stateHistoryViewRepresentation =
-        StateHistoryViewRepresentation.builder().feedbackDate(MALFORMED_DATE).build();
-
-    given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
-
-        .willReturn(composeResponseFromField(FIELD_FEEDBACK_DATE, DATE_PARSE_ERROR_MESSAGE_KEY));
-
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
-        .andExpect(status().isBadRequest())
-
-        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
-        .andExpect(jsonPath(JSON_PATH_FEEDBACK_DATE).value(DATE_PARSE_ERROR_MESSAGE_KEY));
-
-    verifyZeroInteractions(statesHistoryService, channelService, positionService,
-        applicationsService);
-  }
-
+  
   @Test
   public void saveOrUpdateShouldRespondWithErrorJSONWhenClaimIsNegative() throws Exception {
     StateHistoryViewRepresentation stateHistoryViewRepresentation =

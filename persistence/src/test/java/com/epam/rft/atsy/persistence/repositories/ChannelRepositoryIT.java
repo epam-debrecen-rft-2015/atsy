@@ -1,20 +1,25 @@
 package com.epam.rft.atsy.persistence.repositories;
 
-
+import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import com.epam.rft.atsy.persistence.entities.ChannelEntity;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 public class ChannelRepositoryIT extends AbstractRepositoryIT {
 
   private static final Long CHANNEL_ID_FACEBOOK = 4L;
   private static final String CHANNEL_NAME_FACEBOOK = "facebook";
   private static final String CHANNEL_NAME_NON_EXISTENT = "Olympiad";
+  private static final String CHANNEL_NAME_WITH_TRUE_DELETED_FIELD = "street";
 
   @Autowired
   private ChannelRepository channelRepository;
@@ -45,7 +50,8 @@ public class ChannelRepositoryIT extends AbstractRepositoryIT {
   public void findByNameShouldReturnExistingChannelEntityWhenChannelNameIsExisting() {
     // Given
     ChannelEntity expectedChannelEntity =
-        ChannelEntity.builder().id(CHANNEL_ID_FACEBOOK).name(CHANNEL_NAME_FACEBOOK).build();
+        ChannelEntity.builder().id(CHANNEL_ID_FACEBOOK).name(CHANNEL_NAME_FACEBOOK).deleted(false)
+            .build();
 
     // When
     ChannelEntity actualChannelEntity = channelRepository.findByName(CHANNEL_NAME_FACEBOOK);
@@ -54,4 +60,44 @@ public class ChannelRepositoryIT extends AbstractRepositoryIT {
     assertThat(actualChannelEntity, notNullValue());
     assertThat(actualChannelEntity, equalTo(expectedChannelEntity));
   }
+
+  @Test
+  public void findAllNonDeletedChannelEntityShouldNotContainAnEntityThatHasDeletedFieldWithTrueValue() {
+    // Given
+    ChannelEntity
+        channelEntityWithTrueDeletedField =
+        this.channelRepository.findByName(CHANNEL_NAME_WITH_TRUE_DELETED_FIELD);
+
+    // When
+    List<ChannelEntity>
+        actualChannelEntityList =
+        this.channelRepository.findAllNonDeletedChannelEntity();
+
+    // Then
+    assertThat(actualChannelEntityList, notNullValue());
+    assertFalse(actualChannelEntityList.isEmpty());
+    assertFalse(actualChannelEntityList.contains(channelEntityWithTrueDeletedField));
+  }
+
+  @Test
+  public void findAllNonDeletedChannelEntityShouldReturnWithOnlyNonDeletedChannelEntities() {
+    // Given
+
+    // When
+    List<ChannelEntity>
+        actualChannelEntityList =
+        this.channelRepository.findAllNonDeletedChannelEntity();
+
+    // Then
+    assertThat(actualChannelEntityList, notNullValue());
+    assertThat(actualChannelEntityList.isEmpty(), is(false));
+    assertNonDeletedChannelEntityList(actualChannelEntityList);
+  }
+
+  private void assertNonDeletedChannelEntityList(List<ChannelEntity> channelEntityList) {
+    if (channelEntityList.stream().anyMatch(c -> c.isDeleted())) {
+      Assert.fail();
+    }
+  }
+
 }

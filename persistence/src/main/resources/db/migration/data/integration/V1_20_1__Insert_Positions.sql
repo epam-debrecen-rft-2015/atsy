@@ -1,0 +1,1 @@
+INSERT INTO positions (name, deleted) VALUES ('Table tennis instructor', true);

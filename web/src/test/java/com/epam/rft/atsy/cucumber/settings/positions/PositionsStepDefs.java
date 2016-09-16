@@ -98,8 +98,8 @@ public class PositionsStepDefs {
   @Then("^error message appears (.*)$")
   public void error_message_appears_message(String message) throws Throwable {
     WebDriverWait wait = new WebDriverWait(getDriver(), 15);
-    wait.until(visibilityOfElementLocated(By.cssSelector("#position-form .error-message")));
-    assertThat(getDriver().findElement(By.cssSelector("#position-form .error-message")).getText(),
+    wait.until(visibilityOfElementLocated(By.cssSelector("#position-form #errorMessageForCreating")));
+    assertThat(getDriver().findElement(By.cssSelector("#position-form #errorMessageForCreating")).getText(),
         containsString(message));
   }
 

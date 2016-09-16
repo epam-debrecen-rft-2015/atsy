@@ -10,7 +10,6 @@ import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.web.FieldErrorResponseComposer;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
-import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Locale;
@@ -77,32 +75,25 @@ public class StateHistoryController {
     if (bindingResult.hasErrors()) {
       return fieldErrorResponseComposer.composeResponse(bindingResult);
     } else {
-      try {
-        stateHistoryDTO = StateHistoryDTO.builder()
-            .id(stateHistoryViewRepresentation.getId())
-            .applicationDTO(applicationsService.getApplicationDtoById(applicationId))
-            .candidateId(stateHistoryViewRepresentation.getCandidateId())
-            .description(stateHistoryViewRepresentation.getDescription())
-            .result(stateHistoryViewRepresentation.getResult())
-            .offeredMoney(stateHistoryViewRepresentation.getOfferedMoney())
-            .claim(stateHistoryViewRepresentation.getClaim())
-            .feedbackDate(stateHistoryViewRepresentation.getFeedbackDate() != null
-                && !stateHistoryViewRepresentation.getFeedbackDate().isEmpty() ? DATE_FORMAT
-                .parse(stateHistoryViewRepresentation.getFeedbackDate()) : null)
-            .dayOfStart(stateHistoryViewRepresentation.getDayOfStart())
-            .dateOfEnter(stateHistoryViewRepresentation.getDateOfEnter())
-            .creationDate(null)
-            .stateDTO(StateDTO.builder().id(stateHistoryViewRepresentation.getStateId())
-                .name(stateHistoryViewRepresentation.getStateName()).build())
-            .recommendation(stateHistoryViewRepresentation.getRecommendation() != null ?
-                stateHistoryViewRepresentation.getRecommendation() == 1 : null)
-            .reviewerName(stateHistoryViewRepresentation.getReviewerName())
-            .recommendedPositionLevel(stateHistoryViewRepresentation.getRecommendedPositionLevel())
-            .build();
-      } catch (ParseException e) {
-        RestResponse restResponse = new RestResponse(e.getMessage());
-        return new ResponseEntity<>(restResponse, HttpStatus.BAD_REQUEST);
-      }
+      stateHistoryDTO = StateHistoryDTO.builder()
+          .id(stateHistoryViewRepresentation.getId())
+          .applicationDTO(applicationsService.getApplicationDtoById(applicationId))
+          .candidateId(stateHistoryViewRepresentation.getCandidateId())
+          .description(stateHistoryViewRepresentation.getDescription())
+          .result(stateHistoryViewRepresentation.getResult())
+          .offeredMoney(stateHistoryViewRepresentation.getOfferedMoney())
+          .claim(stateHistoryViewRepresentation.getClaim())
+          .feedbackDate(stateHistoryViewRepresentation.getFeedbackDate())
+          .dayOfStart(stateHistoryViewRepresentation.getDayOfStart())
+          .dateOfEnter(stateHistoryViewRepresentation.getDateOfEnter())
+          .creationDate(null)
+          .stateDTO(StateDTO.builder().id(stateHistoryViewRepresentation.getStateId())
+              .name(stateHistoryViewRepresentation.getStateName()).build())
+          .recommendation(stateHistoryViewRepresentation.getRecommendation() != null ?
+              stateHistoryViewRepresentation.getRecommendation() == 1 : null)
+          .reviewerName(stateHistoryViewRepresentation.getReviewerName())
+          .recommendedPositionLevel(stateHistoryViewRepresentation.getRecommendedPositionLevel())
+          .build();
 
       if (isNewState(stateName)) {
         ChannelDTO

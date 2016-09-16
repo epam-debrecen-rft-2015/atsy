@@ -9,7 +9,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
@@ -17,18 +17,16 @@ import com.epam.rft.atsy.persistence.repositories.PositionRepository;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.exception.DuplicatePositionException;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matchers;
-import org.hibernate.exception.ConstraintViolationException;
+import com.epam.rft.atsy.service.exception.PositionNotFoundException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -60,14 +58,24 @@ public class PositionServiceImplTest {
 
   private PositionEntity developerEntity;
   private PositionDTO developerDto;
+  private PositionEntity deletedDeveloperEntity;
+  private PositionDTO deletedDeveloperDto;
   private List<PositionEntity> expectedPositionEntityList;
   private List<PositionDTO> expectedPositionDtoList;
 
   @Before
   public void setUp() {
-    developerEntity = PositionEntity.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).build();
+    developerEntity =
+        PositionEntity.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(false).build();
 
-    developerDto = PositionDTO.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).build();
+    developerDto =
+        PositionDTO.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(false).build();
+
+    deletedDeveloperEntity =
+        PositionEntity.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(true).build();
+
+    deletedDeveloperDto =
+        PositionDTO.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(true).build();
 
     expectedPositionEntityList = Arrays.asList(developerEntity, developerEntity, developerEntity);
 
@@ -151,55 +159,57 @@ public class PositionServiceImplTest {
   }
 
   @Test
-  public void getAllPositionsShouldReturnEmptyListWhenThereAreNoPositions() {
+  public void getAllNonDeletedPositionDtoShouldReturnEmptyListWhenThereAreNoPositions() {
     // Given
-    given(positionRepository.findAll()).willReturn(EMPTY_POSITION_ENTITY_LIST);
+    given(positionRepository.findAllNonDeletedPositionEntity())
+        .willReturn(EMPTY_POSITION_ENTITY_LIST);
     given(converterService.convert(EMPTY_POSITION_ENTITY_LIST, PositionDTO.class))
         .willReturn(EMPTY_POSITION_DTO_LIST);
 
     // When
-    Collection<PositionDTO> positions = positionService.getAllPositions();
+    Collection<PositionDTO> positions = positionService.getAllNonDeletedPositionDto();
 
     // Then
     assertThat(positions, notNullValue());
     assertThat(positions.isEmpty(), is(true));
 
-    then(positionRepository).should(times(1)).findAll();
+    then(positionRepository).should().findAllNonDeletedPositionEntity();
   }
 
   @Test
-  public void getAllPositionsShouldReturnSingleElementListWhenThereIsOnePosition() {
+  public void getAllNonDeletedPositionDtoShouldReturnSingleElementListWhenThereIsOnePosition() {
     // Given
     List<PositionEntity> positions = Arrays.asList(developerEntity);
 
     List<PositionDTO> expected = Arrays.asList(developerDto);
 
-    given(positionRepository.findAll()).willReturn(positions);
+    given(positionRepository.findAllNonDeletedPositionEntity()).willReturn(positions);
     given(converterService.convert(positions, PositionDTO.class)).willReturn(expected);
 
     // When
-    Collection<PositionDTO> result = positionService.getAllPositions();
+    Collection<PositionDTO> result = positionService.getAllNonDeletedPositionDto();
 
     // Then
     assertEquals(result, expected);
 
-    then(positionRepository).should(times(1)).findAll();
+    then(positionRepository).should().findAllNonDeletedPositionEntity();
   }
 
   @Test
-  public void getAllPositionsShouldReturnThreeElementListWhenThereAreThreePositions() {
+  public void getAllNonDeletedPositionDtoShouldReturnThreeElementListWhenThereAreThreePositions() {
     // Given
-    given(positionRepository.findAll()).willReturn(expectedPositionEntityList);
+    given(positionRepository.findAllNonDeletedPositionEntity())
+        .willReturn(expectedPositionEntityList);
     given(converterService.convert(expectedPositionEntityList, PositionDTO.class))
         .willReturn(expectedPositionDtoList);
 
     // When
-    Collection<PositionDTO> result = positionService.getAllPositions();
+    Collection<PositionDTO> result = positionService.getAllNonDeletedPositionDto();
 
     // Then
     assertEquals(result, expectedPositionDtoList);
 
-    then(positionRepository).should(times(1)).findAll();
+    then(positionRepository).should().findAllNonDeletedPositionEntity();
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -244,57 +254,114 @@ public class PositionServiceImplTest {
     then(converterService).should().convert(developerEntity, PositionDTO.class);
   }
 
+
   @Test(expected = IllegalArgumentException.class)
-  public void saveOrUpdateShouldThrowIAEWhenNullPassed() {
-    // When
-    positionService.saveOrUpdate(null);
-  }
-
-  @Test
-  public void saveOrUpdateShouldThrowDREAfterCatchingConstraintViolationException()
-      throws DuplicatePositionException {
+  public void saveOrUpdateShouldThrowIllegalArgumentExceptionWhenNullPassed() {
     // Given
-    given(converterService.convert(developerDto, PositionEntity.class)).willReturn(developerEntity);
-
-    given(positionRepository.saveAndFlush(developerEntity))
-        .willThrow(ConstraintViolationException.class);
-
-    expectedException.expect(DuplicatePositionException.class);
-    expectedException.expectMessage(CoreMatchers.endsWith(DEVELOPER_NAME));
-    expectedException.expectCause(Matchers.isA(ConstraintViolationException.class));
 
     // When
-    positionService.saveOrUpdate(developerDto);
-  }
-
-  @Test
-  public void saveOrUpdateShouldThrowDREAfterCatchingDataIntegrityViolationException()
-      throws DuplicatePositionException {
-    // Given
-    given(converterService.convert(developerDto, PositionEntity.class)).willReturn(developerEntity);
-
-    given(positionRepository.saveAndFlush(developerEntity))
-        .willThrow(DataIntegrityViolationException.class);
-
-    expectedException.expect(DuplicatePositionException.class);
-    expectedException.expectMessage(CoreMatchers.endsWith(DEVELOPER_NAME));
-    expectedException.expectCause(Matchers.isA(DataIntegrityViolationException.class));
-
-    // When
-    positionService.saveOrUpdate(developerDto);
-  }
-
-  @Test
-  public void saveOrUpdateShouldSaveAProperPositionDTO() {
-    // Given
-    given(converterService.convert(developerDto, PositionEntity.class)).willReturn(developerEntity);
-
-    given(positionRepository.saveAndFlush(developerEntity)).willReturn(developerEntity);
-
-    // When
-    positionService.saveOrUpdate(developerDto);
+    this.positionService.saveOrUpdate(null);
 
     // Then
-    then(positionRepository).should(times(1)).saveAndFlush(developerEntity);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void saveOrUpdateShouldThrowIllegalArgumentExceptionWhenPositionNameIsNull() {
+    // Given
+    PositionDTO positionDTO = PositionDTO.builder().name(null).build();
+
+    // When
+    this.positionService.saveOrUpdate(positionDTO);
+
+    // Then
+  }
+
+  @Test(expected = DuplicatePositionException.class)
+  public void saveOrUpdateShouldThrowDuplicatePositionExceptionWhenPositionEntityExistsAndItsDeletedFieldIsFalse() {
+    // Given
+    given(this.positionRepository.findByName(DEVELOPER_NAME)).willReturn(developerEntity);
+
+    // When
+    this.positionService.saveOrUpdate(developerDto);
+
+    // Then
+  }
+
+  @Test
+  public void saveOrUpdateShouldSaveValidPositionDtoWhenThatWasDeleted() {
+    // Given
+    ArgumentCaptor<PositionEntity> positionEntityArgumentCaptor =
+        ArgumentCaptor.forClass(PositionEntity.class);
+    given(this.positionRepository.findByName(DEVELOPER_NAME))
+        .willReturn(deletedDeveloperEntity);
+
+    // When
+    this.positionService.saveOrUpdate(deletedDeveloperDto);
+
+    // Then
+    verify(this.positionRepository).saveAndFlush(positionEntityArgumentCaptor.capture());
+    assertThat(developerEntity, equalTo(positionEntityArgumentCaptor.getValue()));
+
+    then(this.positionRepository).should().findByName(DEVELOPER_NAME);
+    then(this.positionRepository).should().saveAndFlush(developerEntity);
+    verifyZeroInteractions(this.converterService);
+  }
+
+  @Test
+  public void saveOrUpdateShouldSaveValidPositionDtoDTO() {
+    // Given
+    given(this.positionRepository.findByName(DEVELOPER_NAME)).willReturn(null);
+    given(this.converterService.convert(developerDto, PositionEntity.class))
+        .willReturn(developerEntity);
+
+    // When
+    this.positionService.saveOrUpdate(developerDto);
+
+    // Then
+    then(this.positionRepository).should().findByName(DEVELOPER_NAME);
+    then(this.positionRepository).should().saveAndFlush(developerEntity);
+    then(this.converterService).should().convert(developerDto, PositionEntity.class);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void deletePositionDtoLogicallyByIdShouldThrowIllegalArgumentExceptionWhenPositionIdIsNull()
+      throws PositionNotFoundException {
+    // Given
+
+    // When
+    this.positionService.deletePositionDtoLogicallyById(null);
+
+    // Then
+  }
+
+  @Test(expected = PositionNotFoundException.class)
+  public void deletePositionDtoLogicallyByIdShouldThrowPositionNotFoundExceptionWhenPositionEntityNotExists()
+      throws PositionNotFoundException {
+    // Given
+    given(this.positionRepository.findOne(POSITION_ID_NON_EXISTENT)).willReturn(null);
+
+    // When
+    this.positionService.deletePositionDtoLogicallyById(POSITION_ID_NON_EXISTENT);
+
+    // Then
+  }
+
+  @Test
+  public void deletePositionDtoLogicallyByIdShouldDeletedLogicallyWhenPositionEntityExists()
+      throws PositionNotFoundException {
+    // Given
+    ArgumentCaptor<PositionEntity> positionEntityArgumentCaptor =
+        ArgumentCaptor.forClass(PositionEntity.class);
+    given(this.positionRepository.findOne(DEVELOPER_ID)).willReturn(developerEntity);
+
+    // When
+    this.positionService.deletePositionDtoLogicallyById(DEVELOPER_ID);
+
+    // Then
+    verify(positionRepository).saveAndFlush(positionEntityArgumentCaptor.capture());
+    assertThat(deletedDeveloperEntity, equalTo(positionEntityArgumentCaptor.getValue()));
+
+    then(positionRepository).should().findOne(DEVELOPER_ID);
+    then(positionRepository).should().saveAndFlush(deletedDeveloperEntity);
   }
 }

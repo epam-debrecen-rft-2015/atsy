@@ -9,6 +9,8 @@
 <spring:url value="/secure/application_state" var="application_state"/>
 <c:url value="/resources/thirdparty/bootstrap-datepicker/bootstrap-datepicker.js" var="bootstrap_datepicker_js"/>
 <c:url value="/resources/thirdparty/bootstrap-datepicker/bootstrap-datepicker.css" var="bootstrap_datepicker_css"/>
+<c:url value="/resources/thirdparty/bootstrap-datetimepicker/bootstrap-datetimepicker.js" var="bootstrap_datetimepicker_js"/>
+<c:url value="/resources/thirdparty/bootstrap-datetimepicker/moment-with-locales.js" var="moment_js"/>
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
 
@@ -18,6 +20,8 @@
                         type="text/javascript"></script>
         <script src="${bootstrap_datepicker_js}" type="text/javascript"></script>
         <link href="${bootstrap_datepicker_css}" rel="stylesheet" type="text/css">
+        <script src="${moment_js}" type="text/javascript"></script>
+        <script src="${bootstrap_datetimepicker_js}" type="text/javascript"></script>
     </jsp:attribute>
   <jsp:body>
       <div class="page-header">
@@ -338,50 +342,51 @@
                           </div>
                     </c:when>
                   <c:when test="${data.stateName == 'wageOffer'}">
+                      <spring:message code="common.thousand.huf" var="thousandHUF"/>
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.offeredMoney"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.offeredMoney}</p>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value="${data.offeredMoney} ${thousandHUF}"/></p>
                               <c:if test="${stat.first}">
                                   <spring:message code="statehistory.error.offeredMoney.negative" var="errorOfferedMoneyNegativeMessage"/>
-
-
-                                  <input class="stateInput hidden" type="number" name="offeredMoney" id="offeredMoneyInput"  value="${fn:escapeXml(data.offeredMoney)}"
+                                  <input required class="stateInput hidden" type="number" name="offeredMoney" id="offeredMoneyInput"  value="${data.offeredMoney}"
                                   data-error="${errorOfferedMoneyNegativeMessage}"
                                   data-bind="valueWithInit: 'offeredMoney'"
                                   min="0">
+                                  <span class="stateDataPostfix hidden" ><c:out value="${thousandHUF}"/></span>
                               </c:if>
+
                           </div>
                           <div class="help-block with-errors"></div>
                       </div>
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.claim"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.claim}</p>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value="${data.claim} ${thousandHUF}"/></p>
                               <c:if test="${stat.first}">
                                   <spring:message code="statehistory.error.claim.negative" var="errorClaimNegativeMessage"/>
-
- 
-                                  <input class="stateInput hidden" type="number" name="claim" id="claimInput" value="${fn:escapeXml(data.claim)}"
+                                  <input required class="stateInput hidden" type="number" name="claim" id="claimInput" value="${data.claim}"
                                   data-error="${errorClaimNegativeMessage}"
                                   data-bind="valueWithInit: 'claim'"
                                   min="0">
+                                  <span class="stateDataPostfix hidden" ><c:out value="${thousandHUF}"/></span>
                               </c:if>
                           </div>
                           <div class="help-block with-errors"></div>
                       </div>
+
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.feedbackDate"/></label>
                           <div class="col-sm-8">
-                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.feedbackDate}</p>
+                              <fmt:formatDate value="${data.feedbackDate}" type="date" pattern="yyyy-MM-dd HH:mm" var="formattedFeedbackDate"/>
+                              <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedFeedbackDate}</p>
                               <c:if test="${stat.first}">
-                                  <spring:message code="statehistory.error.parse.date" var="errorParseDateMessage"/>
-
-
-                                  <input class="stateInput hidden" type="text" name="feedbackDate" id="feedbackDateInput" value="${fn:escapeXml(data.feedbackDate)}"
-                                  data-error="${errorParseDateMessage}"
-                                  data-bind="valueWithInit: 'feedbackDate'"
-                                  pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$">
+                                  <div class='input-group date' name='feedbackDate' id='feedbackDateInput' >
+                                      <input required type='text' class="form-control stateInput hidden" value="${formattedFeedbackDate}" data-bind="datetimepickerBinding: 'feedbackDate'" />
+                                      <span class="input-group-addon stateInput hidden">
+                                          <span class="glyphicon glyphicon-calendar"></span>
+                                      </span>
+                                  </div>
                               </c:if>
                           </div>
                           <div class="help-block with-errors"></div>

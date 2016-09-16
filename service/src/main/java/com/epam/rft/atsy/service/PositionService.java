@@ -1,6 +1,7 @@
 package com.epam.rft.atsy.service;
 
 import com.epam.rft.atsy.service.domain.PositionDTO;
+import com.epam.rft.atsy.service.exception.PositionNotFoundException;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,10 +26,10 @@ public interface PositionService {
   PositionDTO getPositionDtoById(Long positionId);
 
   /**
-   * Returns a collection of positions.
-   * @return the collection of positions
+   * Returns the list of PositionDTOs where the deleted fields are null or false.
+   * @return the list of PositionDTOs where the deleted fields are null or false
    */
-  Collection<PositionDTO> getAllPositions();
+  Collection<PositionDTO> getAllNonDeletedPositionDto();
 
   /**
    * Returns the position object with the given name.
@@ -42,4 +43,11 @@ public interface PositionService {
    * @param position the position
    */
   void saveOrUpdate(PositionDTO position);
+
+  /**
+   * Setups the deleted field to true in the position in the database.
+   * @param positionId is the id of the position
+   * @throws {@code PositionNotFoundException} If the position by this @{code positionId} not found
+   */
+  void deletePositionDtoLogicallyById(Long positionId) throws PositionNotFoundException;
 }

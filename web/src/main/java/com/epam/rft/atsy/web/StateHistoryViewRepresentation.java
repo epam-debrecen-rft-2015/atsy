@@ -7,7 +7,6 @@ import java.util.Date;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,8 +33,8 @@ public class StateHistoryViewRepresentation {
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
   private Date creationDate;
 
-  @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$", message = "statehistory.error.parse.date")
-  private String feedbackDate;
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+  private Date feedbackDate;
 
   private Short languageSkill;
 
