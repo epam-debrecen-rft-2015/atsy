@@ -2,7 +2,7 @@ package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.service.PositionService;
 import com.epam.rft.atsy.service.domain.PositionDTO;
-import com.epam.rft.atsy.service.exception.PositionNotFoundException;
+import com.epam.rft.atsy.service.exception.ObjectNotFoundException;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 
@@ -42,7 +42,7 @@ public class PositionController {
    */
   @RequestMapping(method = RequestMethod.GET)
   public Collection<PositionDTO> getPositions() {
-    return positionService.getAllNonDeletedPositionDto();
+    return positionService.getAllNonDeletedDto();
   }
 
   /**
@@ -73,10 +73,10 @@ public class PositionController {
   public ResponseEntity<RestResponse> deletePositionDtoLogicallyByName(@RequestParam(name = "positionId") Long positionId) {
 
     try {
-      positionService.deletePositionDtoLogicallyById(positionId);
+      positionService.deleteDtoLogicallyById(positionId);
       return new ResponseEntity<>(RestResponse.NO_ERROR, HttpStatus.OK);
 
-    } catch (PositionNotFoundException e) {
+    } catch (ObjectNotFoundException e) {
       String errorMessage = messageKeyResolver.resolveMessageOrDefault(SELECTED_POSITION_NOT_FOUND_MESSAGE_KEY);
 
       RestResponse restResponse = new RestResponse(errorMessage);

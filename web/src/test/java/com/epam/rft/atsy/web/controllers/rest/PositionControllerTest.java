@@ -2,8 +2,7 @@ package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.service.PositionService;
 import com.epam.rft.atsy.service.domain.PositionDTO;
-import com.epam.rft.atsy.service.exception.ChannelNotFoundException;
-import com.epam.rft.atsy.service.exception.PositionNotFoundException;
+import com.epam.rft.atsy.service.exception.ObjectNotFoundException;
 import com.epam.rft.atsy.web.MediaTypes;
 import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
@@ -62,7 +61,7 @@ public class PositionControllerTest extends AbstractControllerTest {
 
   @Test
   public void getPositionsShouldRespondWithEmptyJsonArrayWhenThereAreNoPositions() throws Exception {
-    given(positionService.getAllNonDeletedPositionDto()).willReturn(Collections.emptyList());
+    given(positionService.getAllNonDeletedDto()).willReturn(Collections.emptyList());
 
     this.mockMvc.perform(get(REQUEST_URL))
         .andExpect(status().isOk())
@@ -70,12 +69,12 @@ public class PositionControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$").isArray())
         .andExpect(jsonPath("$").isEmpty());
 
-    then(positionService).should().getAllNonDeletedPositionDto();
+    then(positionService).should().getAllNonDeletedDto();
   }
 
   @Test
   public void getPositionsShouldRespondWithJsonWithOnePositionWhenThereIsOnePosition() throws Exception {
-    given(positionService.getAllNonDeletedPositionDto())
+    given(positionService.getAllNonDeletedDto())
         .willReturn(Collections.singletonList(positionDTOWithCorrectPositionName));
 
     this.mockMvc.perform(get(REQUEST_URL))
@@ -86,12 +85,12 @@ public class PositionControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$[0].id", equalTo(1)))
         .andExpect(jsonPath("$[0].name", equalTo(POSITION_NAME)));
 
-    then(positionService).should().getAllNonDeletedPositionDto();
+    then(positionService).should().getAllNonDeletedDto();
   }
 
   @Test
   public void getPositionsShouldRespondWithJsonWithThreePositionsWhenThereAreThreePositions() throws Exception {
-    given(positionService.getAllNonDeletedPositionDto())
+    given(positionService.getAllNonDeletedDto())
         .willReturn(Collections.nCopies(3, positionDTOWithCorrectPositionName));
 
     this.mockMvc.perform(get(REQUEST_URL))
@@ -106,7 +105,7 @@ public class PositionControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$[2].id", equalTo(1)))
         .andExpect(jsonPath("$[2].name", equalTo(POSITION_NAME)));
 
-    then(positionService).should().getAllNonDeletedPositionDto();
+    then(positionService).should().getAllNonDeletedDto();
   }
 
   @Test
@@ -157,26 +156,26 @@ public class PositionControllerTest extends AbstractControllerTest {
   @Test
   public void deletePositionDtoLogicallyByNameShouldRespondInternalServerErrorWhenPositionIdIsNull() throws Exception {
     doThrow(IllegalArgumentException.class).when(this.positionService)
-        .deletePositionDtoLogicallyById(null);
+        .deleteDtoLogicallyById(null);
 
     this.mockMvc.perform(
         delete(REQUEST_URL_FOR_DELETE_).param(REQUEST_PARAM_NAME_POSITION_ID, StringUtils.EMPTY))
         .andExpect(status().isInternalServerError());
 
-    then(this.positionService).should().deletePositionDtoLogicallyById(null);
+    then(this.positionService).should().deleteDtoLogicallyById(null);
     verifyZeroInteractions(messageKeyResolver);
   }
 
   @Test
   public void deletePositionDtoLogicallyByNameShouldRespondBadRequestWhenPositionNotExists() throws Exception {
-    doThrow(PositionNotFoundException.class).when(this.positionService)
-        .deletePositionDtoLogicallyById(POSITION_ID);
+    doThrow(ObjectNotFoundException.class).when(this.positionService)
+        .deleteDtoLogicallyById(POSITION_ID);
 
     this.mockMvc.perform(
         delete(REQUEST_URL_FOR_DELETE_).param(REQUEST_PARAM_NAME_POSITION_ID, String.valueOf(POSITION_ID)))
         .andExpect(status().isBadRequest());
 
-    then(this.positionService).should().deletePositionDtoLogicallyById(POSITION_ID);
+    then(this.positionService).should().deleteDtoLogicallyById(POSITION_ID);
     then(this.messageKeyResolver).should()
         .resolveMessageOrDefault(SELECTED_POSITION_NOT_FOUND_MESSAGE_KEY);
   }
@@ -187,7 +186,7 @@ public class PositionControllerTest extends AbstractControllerTest {
         delete(REQUEST_URL_FOR_DELETE_).param(REQUEST_PARAM_NAME_POSITION_ID, String.valueOf(POSITION_ID)))
         .andExpect(status().isOk());
 
-    then(this.positionService).should().deletePositionDtoLogicallyById(POSITION_ID);
+    then(this.positionService).should().deleteDtoLogicallyById(POSITION_ID);
     verifyZeroInteractions(messageKeyResolver);
   }
 }

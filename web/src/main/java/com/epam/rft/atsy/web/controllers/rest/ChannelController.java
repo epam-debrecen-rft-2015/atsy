@@ -2,9 +2,10 @@ package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
-import com.epam.rft.atsy.service.exception.ChannelNotFoundException;
+import com.epam.rft.atsy.service.exception.ObjectNotFoundException;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
 import java.util.Locale;
+
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
@@ -33,21 +35,22 @@ public class ChannelController {
   @Resource
   private MessageKeyResolver messageKeyResolver;
 
-
   /**
    * Returns all stored channels in JSON format
+   *
    * @return a collection of ChannelDTO objects
    */
   @RequestMapping(method = RequestMethod.GET)
   public Collection<ChannelDTO> getChannels() {
-    return channelService.getAllNonDeletedChannelDto();
+    return channelService.getAllNonDeletedDto();
   }
 
   /**
    * This method is used to modify an existing channel, or add a new one to the database.
+   *
    * @param channelDTO a valid channelDTO object which stores information about the new channelDTO
-   * @param result an object used to handle errors
-   * @param locale a local object which sets the language of the error message (if any occurs)
+   * @param result     an object used to handle errors
+   * @param locale     a local object which sets the language of the error message (if any occurs)
    * @return a ResponseEntity object, which contains HTTP status code and error message if any
    * occurs
    */
@@ -70,18 +73,20 @@ public class ChannelController {
 
   /**
    * This method is used to delete an existing channel from the database.
+   *
    * @param channelId identifier of the channel that we want to delete logically
    * @return a ResponseEntity object, which contains HTTP status code and error message if any
    * occurs
    */
   @RequestMapping(path = "/delete", method = RequestMethod.DELETE)
-  public ResponseEntity<RestResponse> deleteChannelDtoLogicallyByName(@RequestParam(name = "channelId") Long channelId) {
+  public ResponseEntity<RestResponse> deleteChannelDtoLogicallyByName(
+      @RequestParam(name = "channelId") Long channelId) {
 
     try {
-      channelService.deleteChannelDtoLogicallyById(channelId);
+      channelService.deleteDtoLogicallyById(channelId);
       return new ResponseEntity<>(RestResponse.NO_ERROR, HttpStatus.OK);
 
-    } catch (ChannelNotFoundException e) {
+    } catch (ObjectNotFoundException e) {
       String errorMessage = messageKeyResolver.resolveMessageOrDefault(SELECTED_CHANNEL_NOT_FOUND_MESSAGE_KEY);
       RestResponse restResponse = new RestResponse(errorMessage);
       return new ResponseEntity<>(restResponse, HttpStatus.BAD_REQUEST);
