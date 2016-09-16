@@ -1,14 +1,16 @@
 package com.epam.rft.atsy.web.controllers.rest;
 
-import com.epam.rft.atsy.service.StatesHistoryService;
+import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
+import com.epam.rft.atsy.service.response.PagingResponse;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
 import java.util.Locale;
 import javax.annotation.Resource;
 
@@ -22,8 +24,8 @@ public class CandidateApplicationController {
 
   private static final String APPLICATION_STATE = "candidate.table.state.";
 
-  @Resource
-  private StatesHistoryService statesHistoryService;
+  @Autowired
+  private ApplicationsService applicationsService;
 
   @Resource
   private MessageKeyResolver messageKeyResolver;
@@ -36,14 +38,17 @@ public class CandidateApplicationController {
    * @return a collection with all applications of the specified candidate
    */
   @RequestMapping(method = RequestMethod.GET)
-  public Collection<CandidateApplicationDTO> loadApplications(
-      @PathVariable(value = "candidateId") Long candidateId, Locale locale) {
-    Collection<CandidateApplicationDTO>
-        applicationStates =
-        statesHistoryService
-            .getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(candidateId);
+  public PagingResponse<CandidateApplicationDTO> loadApplications(
+      @PathVariable(value = "candidateId") Long candidateId, Locale locale,
+      @RequestParam(name = "pageNumber") Integer pageNumber,
+      @RequestParam(name = "pageSize") Integer pageSize) {
 
-    for (CandidateApplicationDTO candidateApplicationDTO : applicationStates) {
+    PagingResponse<CandidateApplicationDTO>
+        candidateApplicationDTOPagingResponse =
+        applicationsService.getApplicationsByCandidateId(candidateId, pageNumber - 1, pageSize);
+
+    for (CandidateApplicationDTO candidateApplicationDTO : candidateApplicationDTOPagingResponse
+        .getRows()) {
       String stateType = candidateApplicationDTO.getStateType();
 
       stateType =
@@ -51,6 +56,6 @@ public class CandidateApplicationController {
 
       candidateApplicationDTO.setStateType(stateType);
     }
-    return applicationStates;
+    return candidateApplicationDTOPagingResponse;
   }
 }
