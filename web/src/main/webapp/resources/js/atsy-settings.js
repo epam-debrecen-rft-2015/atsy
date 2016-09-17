@@ -83,54 +83,9 @@ window.channelsEvents = {
         $('#channel-form #channelId').val(row.id);
     },
     'click .remove': function (e, value, row) {
-
-         var self = $(this);
          var container = $('#channels_section');
-         var options = {
-            size: 'small',
-            message: $.i18n.prop('question.delete.channel.js') + " (" + new Option(row.name).innerHTML + ")",
-            animate: true,
-            onEscape: function() {},
-            buttons: {
-
-                danger: {
-                    label: $.i18n.prop('common.no.js'),
-                    className: "btn-danger",
-                    callback: function() {}
-                },
-
-                success: {
-                      label: $.i18n.prop('common.yes.js'),
-                      className: "btn-success",
-                      callback: function() {
-                          $.ajax({
-                              type: 'DELETE',
-                              url: "./delete?" + 'channelId=' + row.id,
-                              cache: false,
-                          }).done(function () {
-                              var table = container.find('table');
-                              self.closest('tr').remove();
-                              hideError(container);
-                          }).error(function (xhr) {
-                              var response = xhr.responseJSON;
-                              showError(container, $.i18n.prop('selected.channel.not.found.js'));
-                          });
-                      }
-                 },
-            },
-         }
-        bootbox.dialog(options);
-
-        function showError(container, message) {
-            container.find('#errorMessageForDeleting').text(message);
-            container.find('#errorMessageForDeleting').show();
-            container.addClass('has-error');
-        }
-
-        function hideError(container) {
-            container.find('#errorMessageForDeleting').hide();
-            container.removeClass('has-error');
-        }
+         var options = getOptions('question.delete.channel.js', 'selected.channel.not.found.js', 'channel', row, container);
+         bootbox.dialog(options);
     }
 };
 
@@ -141,52 +96,8 @@ window.positionsEvents = {
     },
 
     'click .remove': function (e, value, row) {
-             var self = $(this);
-             var container = $('#positions_section');
-             var options = {
-                size: 'small',
-                message: $.i18n.prop('question.delete.position.js') + " (" + new Option(row.name).innerHTML + ")",
-                animate: true,
-                onEscape: function() {},
-                buttons: {
-
-                    danger: {
-                        label: $.i18n.prop('common.no.js'),
-                        className: "btn-danger",
-                        callback: function() {}
-                    },
-
-                    success: {
-                          label: $.i18n.prop('common.yes.js'),
-                          className: "btn-success",
-                          callback: function() {
-                              $.ajax({
-                                  type: 'DELETE',
-                                  url: "./delete?" + 'positionId=' + row.id,
-                                  cache: false,
-                              }).done(function() {
-                                  var table = container.find('table');
-                                  self.closest('tr').remove();
-                                  hideError(container);
-                              }).error(function (xhr) {
-                                  var response = xhr.responseJSON;
-                                  showError(container, $.i18n.prop('selected.position.not.found.js'));
-                              });
-                          }
-                     },
-                },
-             }
-            bootbox.dialog(options);
-
-            function showError(container, message) {
-                container.find('#errorMessageForDeleting').text(message);
-                container.find('#errorMessageForDeleting').show();
-                container.addClass('has-error');
-            }
-
-            function hideError(container) {
-                container.find('#errorMessageForDeleting').hide();
-                container.removeClass('has-error');
-            }
-        }
+        var container = $('#positions_section');
+        var options = getOptions('question.delete.position.js', 'selected.position.not.found.js', 'position', row, container);
+        bootbox.dialog(options);
+    }
 };
