@@ -84,7 +84,7 @@ window.channelsEvents = {
     },
     'click .remove': function (e, value, row) {
          var container = $('#channels_section');
-         var options = getOptions('question.delete.channel.js', 'selected.channel.not.found.js', 'channel', row, container);
+         var options = getOptions('question.delete.channel.js', 'selected.channel.not.found.js', row, container);
          bootbox.dialog(options);
     }
 };
@@ -97,7 +97,7 @@ window.positionsEvents = {
 
     'click .remove': function (e, value, row) {
         var container = $('#positions_section');
-        var options = getOptions('question.delete.position.js', 'selected.position.not.found.js', 'position', row, container);
+        var options = getOptions('question.delete.position.js', 'selected.position.not.found.js', row, container);
         bootbox.dialog(options);
     }
 };

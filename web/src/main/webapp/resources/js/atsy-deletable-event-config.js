@@ -1,4 +1,4 @@
-function getOptions(dialogMessageKey, errorMessageKey, objectType, row, container) {
+function getOptions(dialogMessageKey, errorMessageKey, row, container) {
     var options = {
         size: 'small',
         message: $.i18n.prop(dialogMessageKey) + " (" + new Option(row.name).innerHTML + ")",
@@ -19,7 +19,7 @@ function getOptions(dialogMessageKey, errorMessageKey, objectType, row, containe
                 callback: function() {
                     $.ajax({
                         type: 'DELETE',
-                        url: "./delete?" + objectType + 'Id=' + row.id,
+                        url: "./delete?" + 'id=' + row.id,
                         cache: false,
                     }).done(function() {
                         var table = container.find('table');
@@ -27,7 +27,7 @@ function getOptions(dialogMessageKey, errorMessageKey, objectType, row, containe
                         hideError(container);
                     }).error(function (xhr) {
                         var response = xhr.responseJSON;
-                        showError(container, $.i18n.prop(errorMessageKey));
+                        showError(container, response.errorMessage + " (" + row.name + ")");
                     });
                 }
              },

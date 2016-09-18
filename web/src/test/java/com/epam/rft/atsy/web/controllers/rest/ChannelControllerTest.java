@@ -19,6 +19,7 @@ import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.exception.ObjectNotFoundException;
 import com.epam.rft.atsy.web.MediaTypes;
 import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
+import com.epam.rft.atsy.web.controllers.LogicallyDeletableAbstractController;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.StringUtils;
@@ -48,11 +49,9 @@ public class ChannelControllerTest extends AbstractControllerTest {
 
   private static final String EMPTY_CHANNEL_NAME_MESSAGE_KEY = "settings.channels.error.empty";
 
-  private static final String SELECTED_CHANNEL_NOT_FOUND_MESSAGE_KEY = "selected.channel.not.found";
-
   private static final String VALIDATION_ERROR_MESSAGE = "Validation error";
 
-  private static final String REQUEST_PARAM_NAME_CHANNEL_ID = "channelId";
+  private static final String REQUEST_PARAM_NAME_ID = "id";
 
   @Mock
   private ChannelService channelService;
@@ -84,7 +83,7 @@ public class ChannelControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void getChannelsShouldRespondWithEmptyJsonArrayWhenThereAreNoChannels() throws Exception {
+  public void getAllNonDeletedDtoShouldRespondWithEmptyJsonArrayWhenThereAreNoChannels() throws Exception {
     given(channelService.getAllNonDeletedDto()).willReturn(Collections.emptyList());
 
     mockMvc.perform(get(REQUEST_URL))
@@ -97,7 +96,7 @@ public class ChannelControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void getChannelsShouldRespondWithJsonWithOneChannelWhenThereIsOneChannel()
+  public void getAllNonDeletedDtoShouldRespondWithJsonWithOneChannelWhenThereIsOneChannel()
       throws Exception {
     List<ChannelDTO> channels = Collections.singletonList(persistedDto);
 
@@ -115,7 +114,7 @@ public class ChannelControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void getChannelsShouldRespondWithJsonWithThreeChannelsWhenThereAreThreeChannels()
+  public void getAllNonDeletedDtoShouldRespondWithJsonWithThreeChannelsWhenThereAreThreeChannels()
       throws Exception {
     List<ChannelDTO> channels = Collections.nCopies(3, persistedDto);
 
@@ -180,12 +179,13 @@ public class ChannelControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void deleteChannelDtoLogicallyByNameShouldRespondInternalServerErrorWhenChannelIdIsNull() throws Exception {
+  public void deleteDtoLogicallyByIdShouldRespondInternalServerErrorWhenChannelIdIsNull()
+      throws Exception {
     doThrow(IllegalArgumentException.class).when(this.channelService)
         .deleteDtoLogicallyById(null);
 
     this.mockMvc.perform(
-        delete(REQUEST_URL_FOR_DELETE_).param(REQUEST_PARAM_NAME_CHANNEL_ID, StringUtils.EMPTY))
+        delete(REQUEST_URL_FOR_DELETE_).param(REQUEST_PARAM_NAME_ID, StringUtils.EMPTY))
         .andExpect(status().isInternalServerError());
 
     then(this.channelService).should().deleteDtoLogicallyById(null);
@@ -193,23 +193,26 @@ public class ChannelControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void deleteChannelDtoLogicallyByNameShouldRespondBadRequestWhenChannelNotExists() throws Exception {
+  public void deleteDtoLogicallyByIdShouldRespondBadRequestWhenChannelNotExists()
+      throws Exception {
     doThrow(ObjectNotFoundException.class).when(this.channelService)
         .deleteDtoLogicallyById(CHANNEL_ID);
 
     this.mockMvc.perform(
-        delete(REQUEST_URL_FOR_DELETE_).param(REQUEST_PARAM_NAME_CHANNEL_ID, String.valueOf(CHANNEL_ID)))
+        delete(REQUEST_URL_FOR_DELETE_).param(REQUEST_PARAM_NAME_ID, String.valueOf(CHANNEL_ID)))
         .andExpect(status().isBadRequest());
 
     then(this.channelService).should().deleteDtoLogicallyById(CHANNEL_ID);
     then(this.messageKeyResolver).should()
-        .resolveMessageOrDefault(SELECTED_CHANNEL_NOT_FOUND_MESSAGE_KEY);
+        .resolveMessageOrDefault(
+            LogicallyDeletableAbstractController.SELECTED_ELEMENT_NOT_FOUND_ERROR_MESSAGE_KEY);
   }
 
   @Test
-  public void deleteChannelDtoLogicallyByNameShouldRespondOKWhenLogicallyDeletedIsSuccess() throws Exception {
+  public void deleteDtoLogicallyByIdShouldRespondOKWhenLogicallyDeletedIsSuccess()
+      throws Exception {
     this.mockMvc.perform(
-        delete(REQUEST_URL_FOR_DELETE_).param(REQUEST_PARAM_NAME_CHANNEL_ID, String.valueOf(CHANNEL_ID)))
+        delete(REQUEST_URL_FOR_DELETE_).param(REQUEST_PARAM_NAME_ID, String.valueOf(CHANNEL_ID)))
         .andExpect(status().isOk());
 
     then(this.channelService).should().deleteDtoLogicallyById(CHANNEL_ID);
