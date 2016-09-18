@@ -12,16 +12,16 @@ import org.springframework.util.Assert;
 
 import java.util.List;
 
-public class LogicallyDeletableServiceImpl<D extends LogicallyDeletableDTO, E extends LogicallyDeletableEntity>
+public abstract class LogicallyDeletableAbstractServiceImpl<D extends LogicallyDeletableDTO, E extends LogicallyDeletableEntity>
     implements LogicallyDeletableService<D> {
 
   private final Class<D> dtoTypeParameterClass;
   private LogicallyDeletableRepository logicallyDeletableRepository;
   protected ConverterService converterService;
 
-  public LogicallyDeletableServiceImpl(Class<D> dtoTypeParameterClass,
-                                       LogicallyDeletableRepository logicallyDeletableRepository,
-                                       ConverterService converterService) {
+  public LogicallyDeletableAbstractServiceImpl(Class<D> dtoTypeParameterClass,
+                                               LogicallyDeletableRepository logicallyDeletableRepository,
+                                               ConverterService converterService) {
     this.dtoTypeParameterClass = dtoTypeParameterClass;
     this.logicallyDeletableRepository = logicallyDeletableRepository;
     this.converterService = converterService;

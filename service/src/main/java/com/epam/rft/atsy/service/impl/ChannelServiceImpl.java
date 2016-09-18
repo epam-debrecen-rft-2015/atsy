@@ -2,12 +2,10 @@ package com.epam.rft.atsy.service.impl;
 
 import com.epam.rft.atsy.persistence.entities.ChannelEntity;
 import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
-import com.epam.rft.atsy.persistence.repositories.LogicallyDeletableRepository;
 import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.exception.DuplicateChannelException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,23 +15,18 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class ChannelServiceImpl extends LogicallyDeletableServiceImpl<ChannelDTO, ChannelEntity>
+public class ChannelServiceImpl
+    extends LogicallyDeletableAbstractServiceImpl<ChannelDTO, ChannelEntity>
     implements ChannelService {
 
   private ChannelRepository channelRepository;
 
   @Autowired
-  public ChannelServiceImpl(ChannelRepository channelRepository, ConverterService converterService) {
-    this(ChannelDTO.class, channelRepository, converterService);
+  public ChannelServiceImpl(ChannelRepository channelRepository,
+                            ConverterService converterService) {
+    super(ChannelDTO.class, channelRepository, converterService);
     this.channelRepository = channelRepository;
   }
-
-  public ChannelServiceImpl(Class<ChannelDTO> dtoTypeParameterClass,
-                            LogicallyDeletableRepository logicallyDeletableRepository,
-                            ConverterService converterService) {
-    super(dtoTypeParameterClass, logicallyDeletableRepository, converterService);
-  }
-
 
   @Transactional(readOnly = true)
   @Override

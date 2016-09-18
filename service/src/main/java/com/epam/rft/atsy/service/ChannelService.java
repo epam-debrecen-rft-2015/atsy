@@ -22,11 +22,4 @@ public interface ChannelService extends LogicallyDeletableService<ChannelDTO> {
    * @return the channel
    */
   ChannelDTO getChannelDtoByName(String channelName);
-
-  /**
-   * Saves a channel to the database.
-   *
-   * @param channel the channel
-   */
-  void saveOrUpdate(ChannelDTO channel);
 }

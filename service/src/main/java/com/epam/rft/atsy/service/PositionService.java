@@ -1,9 +1,7 @@
 package com.epam.rft.atsy.service;
 
 import com.epam.rft.atsy.service.domain.PositionDTO;
-import com.epam.rft.atsy.service.exception.ObjectNotFoundException;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -34,11 +32,4 @@ public interface PositionService extends LogicallyDeletableService<PositionDTO> 
    * @return the position object
    */
   PositionDTO getPositionDtoByName(String positionName);
-
-  /**
-   * Saves a position to the database.
-   *
-   * @param position the position
-   */
-  void saveOrUpdate(PositionDTO position);
 }

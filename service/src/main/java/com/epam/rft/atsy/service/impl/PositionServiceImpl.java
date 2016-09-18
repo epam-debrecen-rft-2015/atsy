@@ -1,13 +1,11 @@
 package com.epam.rft.atsy.service.impl;
 
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
-import com.epam.rft.atsy.persistence.repositories.LogicallyDeletableRepository;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.PositionService;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.exception.DuplicatePositionException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,26 +13,21 @@ import org.springframework.util.Assert;
 
 import java.util.Collections;
 import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class PositionServiceImpl extends LogicallyDeletableServiceImpl<PositionDTO, PositionEntity>
+public class PositionServiceImpl
+    extends LogicallyDeletableAbstractServiceImpl<PositionDTO, PositionEntity>
     implements PositionService {
 
   private PositionRepository positionRepository;
 
   @Autowired
-  public PositionServiceImpl(PositionRepository positionRepository, ConverterService converterService) {
-    this(PositionDTO.class, positionRepository, converterService);
-    this.positionRepository = positionRepository;
-  }
-
-  public PositionServiceImpl(Class<PositionDTO> dtoTypeParameterClass,
-                             LogicallyDeletableRepository logicallyDeletableRepository,
+  public PositionServiceImpl(PositionRepository positionRepository,
                              ConverterService converterService) {
-    super(dtoTypeParameterClass, logicallyDeletableRepository, converterService);
+    super(PositionDTO.class, positionRepository, converterService);
+    this.positionRepository = positionRepository;
   }
 
   @Transactional(readOnly = true)
@@ -45,7 +38,8 @@ public class PositionServiceImpl extends LogicallyDeletableServiceImpl<PositionD
     List<PositionEntity> positionEntities = positionRepository.findAll(ids);
     List<PositionDTO> emptyList = Collections.emptyList();
 
-    return positionEntities.isEmpty() ? emptyList : converterService.convert(positionEntities, PositionDTO.class);
+    return positionEntities.isEmpty() ? emptyList
+        : converterService.convert(positionEntities, PositionDTO.class);
   }
 
   @Transactional(readOnly = true)
