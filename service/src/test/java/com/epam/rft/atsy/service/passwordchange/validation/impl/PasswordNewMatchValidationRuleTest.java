@@ -35,7 +35,8 @@ public class PasswordNewMatchValidationRuleTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void isValidNewPasswordShouldThrowIllegalArgumentExceptionWhenParameterNewPasswordConfirmFieldIsNull() throws
+  public void isValidNewPasswordShouldThrowIllegalArgumentExceptionWhenParameterNewPasswordConfirmFieldIsNull()
+      throws
       PasswordNewMatchValidationException {
     PasswordChangeDTO passwordChangeDTO = getPasswordChangeDTO(NEW_PASSWORD, null);
     passwordNewMatchValidationRule.validate(passwordChangeDTO);
@@ -58,7 +59,8 @@ public class PasswordNewMatchValidationRuleTest {
   }
 
   @Test(expected = PasswordNewMatchValidationException.class)
-  public void isValidNewPasswordShouldBeNotRightUpperCase() throws PasswordNewMatchValidationException {
+  public void isValidNewPasswordShouldBeNotRightUpperCase()
+      throws PasswordNewMatchValidationException {
     PasswordChangeDTO
         passwordChangeDTO =
         getPasswordChangeDTO(NEW_PASSWORD, NEW_PASSWORD_CONFIRM_UPPER_CASE_NOT_RIGHT);

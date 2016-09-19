@@ -11,7 +11,8 @@ import java.io.IOException;
 @Component
 public class CandidateCVFileHandler {
 
-  public File createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(String folderLocation, Long candidateId,
+  public File createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(String folderLocation,
+                                                                         Long candidateId,
                                                                          String cvFilename) {
     Assert.notNull(folderLocation);
     Assert.notNull(candidateId);
@@ -19,13 +20,15 @@ public class CandidateCVFileHandler {
     return new File(folderLocation + File.separator + candidateId + File.separator + cvFilename);
   }
 
-  public void createCandidateFolderOnFolderLocation(String folderLocation, Long candidateId) throws IOException {
+  public void createCandidateFolderOnFolderLocation(String folderLocation, Long candidateId)
+      throws IOException {
     Assert.notNull(folderLocation);
     Assert.notNull(candidateId);
     FileUtils.forceMkdir(new File(folderLocation + File.separator + candidateId));
   }
 
-  public boolean existCandidateFolderOnFolderLocation(String folderLocation, Long candidateId) throws IOException {
+  public boolean existCandidateFolderOnFolderLocation(String folderLocation, Long candidateId)
+      throws IOException {
     Assert.notNull(folderLocation);
     Assert.notNull(candidateId);
     File originalFolder = new File(folderLocation);

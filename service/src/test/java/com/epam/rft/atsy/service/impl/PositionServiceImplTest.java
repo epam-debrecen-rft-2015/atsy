@@ -1,12 +1,23 @@
 package com.epam.rft.atsy.service.impl;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.exception.DuplicatePositionException;
 import com.epam.rft.atsy.service.exception.PositionNotFoundException;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,18 +32,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PositionServiceImplTest {
@@ -66,13 +65,17 @@ public class PositionServiceImplTest {
 
   @Before
   public void setUp() {
-    developerEntity = PositionEntity.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(false).build();
+    developerEntity =
+        PositionEntity.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(false).build();
 
-    developerDto = PositionDTO.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(false).build();
+    developerDto =
+        PositionDTO.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(false).build();
 
-    deletedDeveloperEntity = PositionEntity.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(true).build();
+    deletedDeveloperEntity =
+        PositionEntity.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(true).build();
 
-    deletedDeveloperDto = PositionDTO.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(true).build();
+    deletedDeveloperDto =
+        PositionDTO.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(true).build();
 
     expectedPositionEntityList = Arrays.asList(developerEntity, developerEntity, developerEntity);
 
@@ -158,7 +161,8 @@ public class PositionServiceImplTest {
   @Test
   public void getAllNonDeletedPositionDtoShouldReturnEmptyListWhenThereAreNoPositions() {
     // Given
-    given(positionRepository.findAllNonDeletedPositionEntity()).willReturn(EMPTY_POSITION_ENTITY_LIST);
+    given(positionRepository.findAllNonDeletedPositionEntity())
+        .willReturn(EMPTY_POSITION_ENTITY_LIST);
     given(converterService.convert(EMPTY_POSITION_ENTITY_LIST, PositionDTO.class))
         .willReturn(EMPTY_POSITION_DTO_LIST);
 
@@ -194,7 +198,8 @@ public class PositionServiceImplTest {
   @Test
   public void getAllNonDeletedPositionDtoShouldReturnThreeElementListWhenThereAreThreePositions() {
     // Given
-    given(positionRepository.findAllNonDeletedPositionEntity()).willReturn(expectedPositionEntityList);
+    given(positionRepository.findAllNonDeletedPositionEntity())
+        .willReturn(expectedPositionEntityList);
     given(converterService.convert(expectedPositionEntityList, PositionDTO.class))
         .willReturn(expectedPositionDtoList);
 
@@ -306,7 +311,8 @@ public class PositionServiceImplTest {
   public void saveOrUpdateShouldSaveValidPositionDtoDTO() {
     // Given
     given(this.positionRepository.findByName(DEVELOPER_NAME)).willReturn(null);
-    given(this.converterService.convert(developerDto, PositionEntity.class)).willReturn(developerEntity);
+    given(this.converterService.convert(developerDto, PositionEntity.class))
+        .willReturn(developerEntity);
 
     // When
     this.positionService.saveOrUpdate(developerDto);

@@ -271,7 +271,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .recommendation(RECOMMENDATION_YES_BOOL)
         .build();
   }
-
+  
   @Test
   public void saveOrUpdateShouldRespondWithErrorJSONWhenClaimIsNegative() throws Exception {
     StateHistoryViewRepresentation stateHistoryViewRepresentation =

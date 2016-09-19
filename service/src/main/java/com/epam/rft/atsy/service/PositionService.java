@@ -13,7 +13,6 @@ public interface PositionService {
 
   /**
    * Returns the position with the specified id.
-   *
    * @param ids the id of the searched position
    * @return the position
    */
@@ -21,7 +20,6 @@ public interface PositionService {
 
   /**
    * Returns the position object with the given id.
-   *
    * @param positionId the id of position
    * @return the position object
    */
@@ -29,14 +27,12 @@ public interface PositionService {
 
   /**
    * Returns the list of PositionDTOs where the deleted fields are null or false.
-   *
    * @return the list of PositionDTOs where the deleted fields are null or false
    */
   Collection<PositionDTO> getAllNonDeletedPositionDto();
 
   /**
    * Returns the position object with the given name.
-   *
    * @param positionName the name of the position
    * @return the position object
    */
@@ -44,14 +40,12 @@ public interface PositionService {
 
   /**
    * Saves a position to the database.
-   *
    * @param position the position
    */
   void saveOrUpdate(PositionDTO position);
 
   /**
    * Setups the deleted field to true in the position in the database.
-   *
    * @param positionId is the id of the position
    * @throws {@code PositionNotFoundException} If the position by this @{code positionId} not found
    */

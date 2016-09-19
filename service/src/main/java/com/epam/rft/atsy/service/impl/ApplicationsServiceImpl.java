@@ -10,7 +10,6 @@ import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,7 +86,9 @@ public class ApplicationsServiceImpl implements ApplicationsService {
 
     ApplicationEntity applicationEntity =
         converterService.convert(applicationDTO, ApplicationEntity.class);
-    ApplicationEntity savedOrUpdateApplicationEntity = applicationsRepository.saveAndFlush(applicationEntity);
+    ApplicationEntity
+        savedOrUpdateApplicationEntity =
+        applicationsRepository.saveAndFlush(applicationEntity);
 
     return converterService.convert(savedOrUpdateApplicationEntity, ApplicationDTO.class);
   }
