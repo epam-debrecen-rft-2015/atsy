@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class PositionServiceImpl
-    extends LogicallyDeletableAbstractServiceImpl<PositionDTO, PositionEntity>
+    extends AbstractLogicallyDeletableService<PositionDTO, PositionEntity>
     implements PositionService {
 
   private PositionRepository positionRepository;

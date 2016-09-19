@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class ChannelServiceImpl
-    extends LogicallyDeletableAbstractServiceImpl<ChannelDTO, ChannelEntity>
+    extends AbstractLogicallyDeletableService<ChannelDTO, ChannelEntity>
     implements ChannelService {
 
   private ChannelRepository channelRepository;
