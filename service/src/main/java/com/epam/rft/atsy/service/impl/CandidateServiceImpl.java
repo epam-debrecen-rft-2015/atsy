@@ -107,9 +107,9 @@ public class CandidateServiceImpl implements CandidateService {
     String
         positions =
         MoreObjects.firstNonNull(candidateFilterRequest.getCandiadtePositions(), StringUtils.EMPTY);
-    Page<CandidateEntity> candidateEntitiesPage;
 
-    candidateEntitiesPage =
+    Page<CandidateEntity>
+        candidateEntitiesPage =
         candidateRepository
             .findByCandidateFilterRequest(name, email, phone, positions, pageRequest);
 

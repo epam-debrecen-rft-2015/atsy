@@ -166,7 +166,7 @@ public class CandidateServiceImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void getCandidatesByFilterRequestShouldThrowIllegalARgumentExceptionWhenCandidateFilterRequestIsnull() {
+  public void getCandidatesByFilterRequestShouldThrowIllegalArgumentExceptionWhenCandidateFilterRequestIsnull() {
     // Given
 
     // When
@@ -175,7 +175,7 @@ public class CandidateServiceImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void getCandidatesByFilterRequestShouldThrowIllegalARgumentExceptionWhenPageSizeIsnull() {
+  public void getCandidatesByFilterRequestShouldThrowIllegalArgumentExceptionWhenPageSizeIsnull() {
     // Given
     CandidateFilterRequest
         candidateFilterRequest =
@@ -186,7 +186,7 @@ public class CandidateServiceImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void getCandidatesByFilterRequestShouldThrowIllegalARgumentExceptionWhenPageNumberIsnull() {
+  public void getCandidatesByFilterRequestShouldThrowIllegalArgumentExceptionWhenPageNumberIsnull() {
     // Given
     CandidateFilterRequest
         candidateFilterRequest =
@@ -197,7 +197,7 @@ public class CandidateServiceImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void getCandidatesByFilterRequestShouldThrowIllegalARgumentExceptionWhenSortNameIsNotNullButSortOrderIsNull() {
+  public void getCandidatesByFilterRequestShouldThrowIllegalArgumentExceptionWhenSortNameIsNotNullButSortOrderIsNull() {
     // Given
     CandidateFilterRequest
         candidateFilterRequest =
@@ -208,7 +208,7 @@ public class CandidateServiceImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void getCandidatesByFilterRequestShouldThrowIllegalARgumentExceptionWhenSortOrderIsNotNullButSortNameIsNull() {
+  public void getCandidatesByFilterRequestShouldThrowIllegalArgumentExceptionWhenSortOrderIsNotNullButSortNameIsNull() {
     // Given
     CandidateFilterRequest
         candidateFilterRequest =
@@ -219,7 +219,7 @@ public class CandidateServiceImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void getCandidatesByFilterRequestShouldThrowIllegalARgumentExceptionWhenSortOrderIsInvalid() {
+  public void getCandidatesByFilterRequestShouldThrowIllegalArgumentExceptionWhenSortOrderIsInvalid() {
     // Given
     CandidateFilterRequest
         candidateFilterRequest =
@@ -231,7 +231,7 @@ public class CandidateServiceImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void getCandidatesByFilterRequestShouldThrowIllegalARgumentExceptionWhenSortNameIsInvalid() {
+  public void getCandidatesByFilterRequestShouldThrowIllegalArgumentExceptionWhenSortNameIsInvalid() {
     // Given
     CandidateFilterRequest
         candidateFilterRequest =
@@ -246,28 +246,28 @@ public class CandidateServiceImplTest {
   public void getCandidatesByFilterRequestShouldFindDummyCandidateDTOInAscendingOrderByNameWhenThereIsARightCandidateFilterRequest() {
     // Given
 
-    CandidateFilterRequest
+    final CandidateFilterRequest
         candidateFilterRequest =
         CandidateFilterRequest.builder().pageNumber(DEFAULT_PAGE_NUMBER).pageSize(DEFAULT_PAGE_SIZE)
             .sortName(SORT_NAME_NAME).sortOrder(SORT_ORDER_ASC).candidateName(NAME).build();
 
-    PageRequest
+    final PageRequest
         pageRequest =
         new PageRequest(candidateFilterRequest.getPageNumber(),
             candidateFilterRequest.getPageSize(),
             Sort.Direction.fromString(candidateFilterRequest.getSortOrder()),
             candidateFilterRequest.getSortName());
 
-    String name = candidateFilterRequest.getCandidateName();
-    String email = StringUtils.EMPTY;
-    String phone = StringUtils.EMPTY;
-    String positions = StringUtils.EMPTY;
+    final String name = candidateFilterRequest.getCandidateName();
+    final String email = StringUtils.EMPTY;
+    final String phone = StringUtils.EMPTY;
+    final String positions = StringUtils.EMPTY;
 
-    Page<CandidateEntity>
+    final Page<CandidateEntity>
         dummyCandidateEntityPage =
         new PageImpl<>(Arrays.asList(dummyCandidateEntity));
 
-    List<CandidateDTO> dummyCandidateDTOs = Arrays.asList(dummyCandidateDto);
+    final List<CandidateDTO> dummyCandidateDTOs = Arrays.asList(dummyCandidateDto);
 
     given(candidateRepository
         .findByCandidateFilterRequest(name, email, phone, positions, pageRequest))
@@ -276,15 +276,16 @@ public class CandidateServiceImplTest {
     given(converterService.convert(dummyCandidateEntityPage.getContent(), CandidateDTO.class))
         .willReturn(dummyCandidateDTOs);
 
-    PagingResponse<CandidateDTO>
+    final PagingResponse<CandidateDTO>
         expectedPagingResponse =
         new PagingResponse<>(dummyCandidateEntityPage.getTotalElements(), dummyCandidateDTOs);
-    // When
 
-    PagingResponse<CandidateDTO>
+    // When
+    final PagingResponse<CandidateDTO>
         actualPagingResponse =
         candidateService.getCandidatesByFilterRequest(candidateFilterRequest);
 
+    //Then
     assertEquals(actualPagingResponse, expectedPagingResponse);
     then(converterService).should(times(1))
         .convert(dummyCandidateEntityPage.getContent(), CandidateDTO.class);
@@ -314,6 +315,7 @@ public class CandidateServiceImplTest {
 
     // When
     candidateService.saveOrUpdate(dummyCandidateDto);
+    // Then
   }
 
   @Test
@@ -332,6 +334,7 @@ public class CandidateServiceImplTest {
 
     // When
     candidateService.saveOrUpdate(dummyCandidateDto);
+    // Then
   }
 
   @Test
