@@ -14,7 +14,7 @@ public class ManageChannelsControllerTest extends AbstractControllerTest {
 
   @Override
   protected Object[] controllersUnderTest() {
-    return new Object[] { new ManageChannelsController() };
+    return new Object[]{new ManageChannelsController()};
   }
 
   @Test

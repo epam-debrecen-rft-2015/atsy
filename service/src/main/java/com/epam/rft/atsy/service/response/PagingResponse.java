@@ -12,5 +12,4 @@ public class PagingResponse<T> {
 
   private Long total;
   private List<T> rows;
-
 }

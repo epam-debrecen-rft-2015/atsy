@@ -42,7 +42,8 @@ public class PasswordUniqueRule implements PasswordValidationRule {
    * @return true if the new password is unique among the previous passwords of the same user
    */
   @Override
-  public void validate(PasswordChangeDTO passwordChangeDTO) throws PasswordUniqueValidationException {
+  public void validate(PasswordChangeDTO passwordChangeDTO)
+      throws PasswordUniqueValidationException {
     UserDetailsAdapter userDetails = null;
 
     try {

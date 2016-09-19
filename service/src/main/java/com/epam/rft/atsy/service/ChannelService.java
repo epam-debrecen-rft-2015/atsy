@@ -12,7 +12,6 @@ public interface ChannelService {
 
   /**
    * Returns the channel with the specified id.
-   *
    * @param channelId the id of the searched channel
    * @return the channel
    */
@@ -20,14 +19,12 @@ public interface ChannelService {
 
   /**
    * Returns the list of ChannelDTOs where the deleted fields are null or false.
-   *
    * @return the list of ChannelDTOs where the deleted fields are null or false
    */
   Collection<ChannelDTO> getAllNonDeletedChannelDto();
 
   /**
    * Returns the channel with the specified name.
-   *
    * @param channelName the name of the searched channel
    * @return the channel
    */
@@ -35,14 +32,12 @@ public interface ChannelService {
 
   /**
    * Saves a channel to the database.
-   *
    * @param channel the channel
    */
   void saveOrUpdate(ChannelDTO channel);
 
   /**
    * Setups the deleted field to true in the channel in the database.
-   *
    * @param channelId is the id of the channel
    * @throws {@code ChannelNotFoundException} If the channel by this @{code channelId} not found
    */

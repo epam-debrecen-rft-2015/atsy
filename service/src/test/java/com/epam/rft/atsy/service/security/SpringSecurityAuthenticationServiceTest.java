@@ -66,7 +66,7 @@ public class SpringSecurityAuthenticationServiceTest {
         new UserDetailsAdapter(USER_ID, USER_PASSWORD, USER_NAME);
 
     SecurityContextHolder.getContext()
-        .setAuthentication(new UsernamePasswordAuthenticationToken(userDetailsAdapter,null,
+        .setAuthentication(new UsernamePasswordAuthenticationToken(userDetailsAdapter, null,
             Arrays.asList(new SimpleGrantedAuthority("ROLE_GRANTED"))));
 
     //When

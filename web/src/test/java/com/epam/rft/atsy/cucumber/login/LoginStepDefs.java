@@ -55,9 +55,9 @@ public class LoginStepDefs {
   @Then("^(.*) message appears above the (.*) field$")
   public void fieldMessageAppearance(String message, String fieldName) {
     WebElement messageElement = driverProvider.getDriver()
-      .findElement(By.id(fieldName))
-      .findElement(By.xpath("..")) //parent
-      .findElement(By.tagName("span"));
+        .findElement(By.id(fieldName))
+        .findElement(By.xpath("..")) //parent
+        .findElement(By.tagName("span"));
     assertThat(messageElement.isDisplayed(), is(true));
     assertThat(messageElement.getText(), is(message));
   }
@@ -74,7 +74,8 @@ public class LoginStepDefs {
 
   @Then("the username field is in focus")
   public void usernameFieldNotInFocus() {
-    assertThat(driverProvider.getDriver().findElement(By.id("name")).equals(driverProvider.getDriver().switchTo().activeElement()), is(true));
+    assertThat(driverProvider.getDriver().findElement(By.id("name"))
+        .equals(driverProvider.getDriver().switchTo().activeElement()), is(true));
   }
 
 }

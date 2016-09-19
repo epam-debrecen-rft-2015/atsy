@@ -103,8 +103,10 @@ public class ApplicationStateController {
 
       if (clickedState.equals(NEW_STATE)) {
         ApplicationDTO applicationDTO = applicationsService.getApplicationDtoById(applicationId);
-        representation.setChannelName(channelService.getChannelDtoById(applicationDTO.getChannelId()).getName());
-        representation.setPositionName(positionService.getPositionDtoById(applicationDTO.getPositionId()).getName());
+        representation.setChannelName(
+            channelService.getChannelDtoById(applicationDTO.getChannelId()).getName());
+        representation.setPositionName(
+            positionService.getPositionDtoById(applicationDTO.getPositionId()).getName());
       }
 
       stateHistoryViewRepresentations.add(0, representation);
