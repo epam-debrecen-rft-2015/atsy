@@ -44,8 +44,11 @@
             </h1>
 
             <div id="candidate_data">
-                <div class="row">
+
                     <form data-toggle="validator" class="form" role="form" method="POST" id="candidate-create-form" action="${candidateURL}" data-bind="css: { 'has-error': showError }">
+                        <input type="hidden" name="candidateId" id="candidateId" data-bind="valueWithInit: 'id'" value="${candidate.id}" >
+                        <input type="hidden" name="cvFilename" id="cvFilename" data-bind="valueWithInit: 'cvFilename'" value="${candidate.cvFilename}" >
+
                         <div class="panel panel-danger hidden" role="alert"  data-bind="css: { hidden: !showError() }">
                             <div class="panel-heading" data-bind="text: errorMessage"></div>
                             <div class="panel-body">
@@ -56,55 +59,52 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="form-group"
-                             id="nameDiv">
-                            <input type="hidden" name="candidateId" id="candidateId" data-bind="valueWithInit: 'id'" value="${candidate.id}" >
-                            <input type="hidden" name="cvFilename" id="cvFilename" data-bind="valueWithInit: 'cvFilename'" value="${candidate.cvFilename}" >
-                            <spring:message code="candidate.name.field" var="i18nname"/>
-                            <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
-                                   for="name"><spring:message
-                                    code="candidate.name.label"/></label>
-
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4 labels">
-                               <spring:message code="candidate.error.name.empty" var="nameEmptyValue"/> <input type="text" class="input form-control " name="name" id="name" data-bind="valueWithInit: 'name'"
-                                      value="${fn:escapeXml(candidate.name)}"
+                         <div class="row">
+                            <div class="form-group col-lg-2 col-md-2 col-sm-2 text-right" id="nameLabelDiv">
+                              <spring:message code="candidate.name.field" var="i18nname"/>
+                              <label class="control-label" for="name">
+                                <spring:message code="candidate.name.label"/>
+                              </label>
+                            </div>
+                            <div class="form-group col-lg-4 col-md-4 col-sm-4 labels" id="nameValueDiv">
+                                <spring:message code="candidate.error.name.empty" var="nameEmptyValue"/>
+                                    <input type="text" class="input form-control" name="name" id="name" data-bind="valueWithInit: 'name'"
+                                       value="${fn:escapeXml(candidate.name)}"
                                        placeholder="${i18nname}"
                                        data-error="${nameEmptyValue}"
                                        required maxlength="100">
 
-                                <p class="showValue"><c:out value="${candidate.name}"/></p>
-                                <div id="name-errors" class="help-block with-errors"></div>
+                                  <p class="showValue"><c:out value="${candidate.name}"/></p>
+                                  <div id="name-errors" class="help-block with-errors"></div>
                             </div>
+                            <div class="form-group col-lg-2 col-md-2 col-sm-2" id="placeLabelDiv">
+                                <spring:message code="candidate.place.field" var="i18nplace"/>
+                                <label class="control-label text-right" for="referer">
+                                  <spring:message code="candidate.place.label"/>
+                                </label>
+                             </div>
+                             <div class="col-lg-4 col-md-4 col-sm-4 " id="placeValueDiv">
+                                  <input type="text" class="input form-control" name="referer" id="referer" data-bind="valueWithInit: 'referer'"
+                                         value="${fn:escapeXml(candidate.referer)}"
+                                         placeholder="${i18nplace}" maxlength="20">
 
-                        </div>
-                        <div class="form-group"
-                             id="placeDiv">
-                            <spring:message code="candidate.place.field" var="i18nplace"/>
-                            <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
-                                   for="referer"><spring:message
-                                    code="candidate.place.label"/></label>
+                                  <p class="showValue"><c:out value = "${candidate.referer}"/></p>
+                              </div>
+                         </div>
 
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4 labels">
-                                <input type="text" class="input form-control" name="referer" id="referer" data-bind="valueWithInit: 'referer'"
-                                       value="${fn:escapeXml(candidate.referer)}"
-                                       placeholder="${i18nplace}" maxlength="20">
 
-                                <p class="showValue"><c:out value = "${candidate.referer}"/></p>
-                            </div>
-
-                        </div>
-                        <div class="error col-lg-12 col-md-12 col-sm-12">
-                        </div>
-                        <div class="form-group"
-                             id="emailDiv">
+                        <div class="row">
+                          <div class="form-group"
+                             id="emailLabelDiv">
                             <spring:message code="candidate.email.field" var="i18nemail"/>
                             <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
                                    for="email"><spring:message
-                                    code="candidate.email.label"/></label>
-
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4 labels">
-                            <spring:message code="candidate.error.email.empty" var="emailEmptyValue"/>
-                            <spring:message code="candidate.error.email.incorrect" var="emailIncorrectValue"/>
+                                   code="candidate.email.label"/>
+                            </label>
+                           <div class="form-group" id="emailValueDiv">
+                              <div class="form-group col-lg-4 col-md-4 col-sm-4 labels">
+                              <spring:message code="candidate.error.email.empty" var="emailEmptyValue"/>
+                              <spring:message code="candidate.error.email.incorrect" var="emailIncorrectValue"/>
 
                                <input type="text" class="input form-control" name="email" id="email" data-bind="valueWithInit: 'email'"
                                        value="${candidate.email}"
@@ -117,175 +117,175 @@
                                 <p class="showValue">
                                   <a href="mailto:${candidate.email}"><c:out value = "${candidate.email}"/></a>
                                 </p>
-                                <span id="email-errors" class="help-block with-errors"></span>
+                                    <span id="email-errors" class="help-block with-errors"></span>
                             </div>
+                          </div>
 
+                          </div>
+                            <div class="form-group"
+                                 id="englishLabelDiv">
+                                <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
+                                       for="drop"><spring:message
+                                        code="candidate.english.label"/></label>
+                                   </div>
+                                   <div class="form-group" id="englishValueDiv">
+                                <div class="selectContainer col-lg-4 col-md-4 col-sm-4 labels">
+                                    <select class="input form-control" name="languageSkill" id="languageSkill" data-bind="valueWithInit: 'languageSkill'">
+                                        <option value=0 <c:if
+                                                test="${0 eq candidate.languageSkill}"> selected="selected" </c:if>>
+                                            <spring:message code="candidate.english.level.default"/></option>
+                                        <c:forEach begin="1" end="10" step="1" var="index">
+                                            <option value="${index}" <c:if
+                                                    test="${index eq candidate.languageSkill}"> selected="selected" </c:if>>${index}</option>
+                                        </c:forEach>
+                                    </select>
+
+                                    <p class="showValue"><c:out value = "${candidate.languageSkill}"/></p>
+                                </div>
                         </div>
-                        <div class="form-group"
-                             id="englishDiv">
-                            <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
-                                   for="drop"><spring:message
-                                    code="candidate.english.label"/></label>
-
-                            <div class="selectContainer col-lg-4 col-md-4 col-sm-4 labels">
-                                <select class="input form-control" name="languageSkill" id="languageSkill" data-bind="valueWithInit: 'languageSkill'">
-                                    <option value=0 <c:if
-                                            test="${0 eq candidate.languageSkill}"> selected="selected" </c:if>>
-                                        <spring:message code="candidate.english.level.default"/></option>
-                                    <c:forEach begin="1" end="10" step="1" var="index">
-                                        <option value="${index}" <c:if
-                                                test="${index eq candidate.languageSkill}"> selected="selected" </c:if>>${index}</option>
-                                    </c:forEach>
-                                </select>
-
-                                <p class="showValue"><c:out value = "${candidate.languageSkill}"/></p>
-                            </div>
                         </div>
 
-                        <div class="error col-lg-12 col-md-12 col-sm-12">
-                        </div>
-                        <div class="form-group"
-                             id="phoneDiv">
+                        <div class="row">
+                          <div class="form-group"
+                             id="phoneLabelDiv">
                             <spring:message code="candidate.phone.field" var="i18nphone"/>
                             <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
-                                   for="phone"><spring:message
-                                    code="candidate.phone.label"/></label>
+                               for="phone"><spring:message
+                               code="candidate.phone.label"/>
+                            </label>
 
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4 labels">
-                            <spring:message code="candidate.error.phone.incorrect" var="phoneIncorrectValue"/>
+                            <div class="form-group col-lg-4 col-md-4 col-sm-4 labels" id="phoneValueDiv">
+                              <spring:message code="candidate.error.phone.incorrect" var="phoneIncorrectValue"/>
                                 <input type="text" class="input form-control" name="phone" id="phone" data-bind="valueWithInit: 'phone'"
                                        value="${candidate.phone}"
                                        placeholder="${i18nphone}" data-error="${phoneIncorrectValue}"
-                                       pattern="^\+?[0-9]+" maxlength="20">
-
+                                       pattern="^\+?[0-9]+" maxlength="20"/>
                                 <p class="showValue"><c:out value ="${candidate.phone}"/></p>
                                <div id="phone-errors" class="help-block with-errors"></div>
                             </div>
-
-                        </div>
-                        <div class="error col-lg-12 col-md-12 col-sm-12">
-                        </div>
-                        <div class="form-group"
-                             id="descriptionDiv">
-                            <spring:message code="candidate.description.field" var="i18ndescription"/>
-                            <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
-                                   for="description"><spring:message
-                                    code="candidate.description.label"/></label>
-
-                            <div class="col-lg-10 col-md-10 col-sm-10">
-                                <textarea rows="4" cols="4" class="input form-control" id="description" data-bind="valueWithInit: 'description'"
-                                          placeholder="${i18ndescription}"><c:out value = "${candidate.description}"/></textarea>
-
-                                <p class="showValue"><c:out value = "${candidate.description}"/></p>
+                          </div>
+                          </div>
+                          <div class="row">
+                            <div class="form-group"
+                               id="descriptionDiv">
+                              <spring:message code="candidate.description.field" var="i18ndescription"/>
+                                <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
+                                      for="description"><spring:message
+                                      code="candidate.description.label"/>
+                                </label>
+                                <div class="col-lg-10 col-md-10 col-sm-10">
+                                    <textarea rows="4" cols="4" class="input form-control" id="description" data-bind="valueWithInit: 'description'"
+                                       placeholder="${i18ndescription}"><c:out value = "${candidate.description}"/>
+                                    </textarea>
+                                    <p class="showValue"><c:out value = "${candidate.description}"/></p>
+                                </div>
+                              </div>
+                              </div>
+                              <div class="row">
+                              <div class="text-right col-lg-12 col-md-12 col-sm-12">
+                                <a class="btn btn-default showValue" href="${welcome}" id="cancelButton"><spring:message
+                                        code="back.button"/></a>
+                                <button class="btn btn-primary showValue" id="enableModify" data-bind="click: modify_display_false"><spring:message
+                                        code="candidate.modify.button"/></button>
+                                <c:choose>
+                                    <c:when test="${not empty candidate.id}">
+                                        <button class="btn btn-danger " id="cancelButtonModify" type="reset" data-bind="click: modify_display_true"><spring:message
+                                                code="cancel.button"/></button>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a class="btn btn-danger" href="${welcome}" id="cancelButtonAdd"><spring:message
+                                                code="cancel.button"/></a>
+                                    </c:otherwise>
+                                </c:choose>
+                                <button type="submit" id="save-button" class="btn btn-success">
+                                    <spring:message code="save.button"/>
+                                </button>
                             </div>
-                        </div>
-
-                        <div class="text-right col-lg-12 col-md-12 col-sm-12">
-                            <a class="btn btn-default showValue" href="${welcome}" id="cancelButton"><spring:message
-                                    code="back.button"/></a>
-                            <button class="btn btn-primary showValue" id="enableModify" data-bind="click: modify_display_false"><spring:message
-                                    code="candidate.modify.button"/></button>
-                            <c:choose>
-                                <c:when test="${not empty candidate.id}">
-                                    <button class="btn btn-danger " id="cancelButtonModify" type="reset" data-bind="click: modify_display_true"><spring:message
-                                            code="cancel.button"/></button>
-                                </c:when>
-                                <c:otherwise>
-                                    <a class="btn btn-danger" href="${welcome}" id="cancelButtonAdd"><spring:message
-                                            code="cancel.button"/></a>
-                                </c:otherwise>
-                            </c:choose>
-                            <button type="submit" id="save-button" class="btn btn-success">
-                                <spring:message code="save.button"/>
-                            </button>
-                        </div>
+                          </div>
+                          </div>
                     </form>
-                </div>
-            </div>
-        </div>
-
-        <c:if test="${not empty candidateId}">
-            <form:form method="POST" action="${fileUpload}/${candidateId}" enctype="multipart/form-data">
-                <c:if test="${not empty validationSuccessKey}">
-                    <div id="globalMessage" class="alert alert-success" role="alert">
-                        <span class="glyphicon glyphicon-ok" aria-hidden="false"></span>
-                        <spring:message code="${validationSuccessKey}"/>
-                    </div>
-                </c:if>
-
-                <c:if test="${not empty validationErrorKey}">
-                    <div id="globalMessage" class="alert alert-danger" role="alert">
-                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
-                        <spring:message code="${validationErrorKey}"/>
-                    </div>
-                </c:if>
-
-                <c:if test="${not empty fileErrorMessage}">
-                    <div id="globalMessage" class="alert alert-danger" role="alert">
-                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
-                        <spring:message code="${fileErrorMessage}"/>
-                    </div>
-                </c:if>
-
-                <c:if test="${empty candidate.cvFilename}">
-                    <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="name">
-                        <spring:message code="cv"/>
-                    </label>
-
-                    <div class="form-group">
-                        <input type="file" name="file" />
-                        <button type="submit" class="btn btn-link"><spring:message code="upload.button"/></button>
-                    </div>
-                </c:if>
-
-                <c:if test="${not empty candidate.cvFilename}">
-                    <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="name">
-                        <spring:message code="cv"/>
-                    </label>
-
-                    <label class="control-label col-lg-2 col-md-4 col-sm-4 text-left" for="name">
-                       <c:url value='/secure/candidate/fileDownload/${candidateId}' var="urlValue" /> <a href="${urlValue}">
-                            <c:out value="${candidate.cvFilename}"/>
-                        </a>
-                    </label>
-                </c:if>
 
 
-            </form:form>
-        </c:if>
+                    <c:if test="${not empty candidateId}">
+                        <form:form method="POST" action="${fileUpload}/${candidateId}" enctype="multipart/form-data">
+                            <c:if test="${not empty validationSuccessKey}">
+                                <div id="globalMessage" class="alert alert-success" role="alert">
+                                    <span class="glyphicon glyphicon-ok" aria-hidden="false"></span>
+                                    <spring:message code="${validationSuccessKey}"/>
+                                </div>
+                            </c:if>
+
+                            <c:if test="${not empty validationErrorKey}">
+                                <div id="globalMessage" class="alert alert-danger" role="alert">
+                                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
+                                    <spring:message code="${validationErrorKey}"/>
+                                </div>
+                            </c:if>
+
+                            <c:if test="${not empty fileErrorMessage}">
+                                <div id="globalMessage" class="alert alert-danger" role="alert">
+                                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
+                                    <spring:message code="${fileErrorMessage}"/>
+                                </div>
+                            </c:if>
+
+                            <c:if test="${empty candidate.cvFilename}">
+                                <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="name">
+                                    <spring:message code="cv"/>
+                                </label>
+
+                                <div class="form-group">
+                                    <input type="file" name="file" />
+                                    <button type="submit" class="btn btn-link"><spring:message code="upload.button"/></button>
+                                </div>
+                            </c:if>
+
+                            <c:if test="${not empty candidate.cvFilename}">
+                                <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="name">
+                                    <spring:message code="cv"/>
+                                </label>
+
+                                <label class="control-label col-lg-2 col-md-4 col-sm-4 text-left" for="name">
+                                   <c:url value='/secure/candidate/fileDownload/${candidateId}' var="urlValue" /> <a href="${urlValue}">
+                                        <c:out value="${candidate.cvFilename}"/>
+                                    </a>
+                                </label>
+                            </c:if>
+
+                        </form:form>
+                    </c:if>
 
 
-        <c:choose>
-            <c:when test="${not empty candidate.id}">
-                <div id="new_application" class="text-right">
-                    <a class="btn btn-success" href="${application}?candidateId=${candidate.id}" id="add_application_button"><spring:message
-                            code="candidate.new.application.button"/></a>
-                </div>
-                <%--table--%>
-                <div id="application_table">
-                        <table class="table table-hover cursor-pointer" id="applications_table"  data-toggle="table" data-url="../applications/${candidate.id}" data-height="500"
-                               data-sort-name="name" data-escape="true">
-                            <thead>
-                            <tr>
-                                <th data-field="positionName" data-align="left"><spring:message
-                                        code="candidate.table.application.position"/></th>
-                                <th data-field="creationDate" data-align="left" data-formatter="creationDateFormatter">
-                                    <spring:message code="candidate.table.application.added.date"/>
-                                </th>
-                                <th data-field="modificationDate" data-align="left" data-formatter="modificationDateFormatter">
-                                <spring:message
-                                        code="candidate.table.application.modified.date"/></th>
-                                <th data-field="stateType" data-align="left"><spring:message
-                                        code="candidate.table.application.state"/></th>
+                    <c:choose>
+                        <c:when test="${not empty candidate.id}">
+                            <div id="new_application" class="text-right">
+                                <a class="btn btn-success" href="${application}?candidateId=${candidate.id}" id="add_application_button"><spring:message
+                                        code="candidate.new.application.button"/></a>
+                            </div>
+                            <%--table--%>
+                            <div id="application_table">
+                                    <table class="table table-hover cursor-pointer" id="applications_table"  data-toggle="table" data-url="../applications/${candidate.id}" data-height="500"
+                                           data-sort-name="name" data-escape="true">
+                                        <thead>
+                                        <tr>
+                                            <th data-field="positionName" data-align="left"><spring:message
+                                                    code="candidate.table.application.position"/></th>
+                                            <th data-field="creationDate" data-align="left" data-formatter="creationDateFormatter">
+                                                <spring:message code="candidate.table.application.added.date"/>
+                                            </th>
+                                            <th data-field="modificationDate" data-align="left" data-formatter="modificationDateFormatter">
+                                            <spring:message
+                                                    code="candidate.table.application.modified.date"/></th>
+                                            <th data-field="stateType" data-align="left"><spring:message
+                                                    code="candidate.table.application.state"/></th>
 
-                            </tr>
+                                        </tr>
 
-                            </thead>
-                        </table>
-                    </div>
-                </div>
-
-            </c:when>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </c:when>
         </c:choose>
     </jsp:body>
 </atsy:secure_page>

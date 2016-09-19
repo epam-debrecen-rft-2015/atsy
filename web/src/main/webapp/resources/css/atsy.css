@@ -167,8 +167,8 @@ textarea {
 #candidate_creation.display .showValue {
     display: inline-block;
     vertical-align: middle;
-    padding-top: 6.5px;
-    padding-bottom: 7.5px;
+    padding-top: 6px;
+    padding-bottom: 7px;
 }
 
 #candidate_creation.display .btn.showValue {
