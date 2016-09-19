@@ -40,6 +40,8 @@ public class PersistenceConfiguration {
             : env.getActiveProfiles()[0];
     flyway.setLocations("classpath:db/migration/schema",
         "classpath:db/migration/data/" + currentProfileName);
+
+    flyway.setOutOfOrder(true);
     return flyway;
   }
 
