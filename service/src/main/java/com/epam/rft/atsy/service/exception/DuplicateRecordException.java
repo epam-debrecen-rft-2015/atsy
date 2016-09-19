@@ -8,9 +8,10 @@ public class DuplicateRecordException extends RuntimeException {
 
   /**
    * Constructs a new instance of {@code DuplicateRecordException}, with the specified parameters.
-   * @param name the name
+   *
+   * @param name    the name
    * @param message the message
-   * @param cause the cause
+   * @param cause   the cause
    */
   public DuplicateRecordException(String name, String message, Throwable cause) {
     super(message, cause);
@@ -19,7 +20,17 @@ public class DuplicateRecordException extends RuntimeException {
   }
 
   /**
+   * Constructs a new instance of {@code DuplicateRecordException}, with the specified parameter.
+   *
+   * @param name the name
+   */
+  public DuplicateRecordException(String name) {
+    this.name = name;
+  }
+
+  /**
    * Returns the name.
+   *
    * @return the name
    */
   public String getName() {

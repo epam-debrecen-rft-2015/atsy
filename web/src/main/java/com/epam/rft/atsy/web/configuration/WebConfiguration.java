@@ -2,10 +2,12 @@ package com.epam.rft.atsy.web.configuration;
 
 import com.epam.rft.atsy.service.configuration.ServiceConfiguration;
 import com.epam.rft.atsy.web.exceptionhandling.UncheckedExceptionResolver;
+import com.epam.rft.atsy.web.messageresolution.AtsyReloadableResourceBundleMessageSource;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolverImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.commons.lang3.CharEncoding;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -75,13 +76,17 @@ public class WebConfiguration extends DelegatingWebMvcConfiguration {
   }
 
   @Bean
-  public MessageKeyResolver messageSource() {
-    ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
+  public AtsyReloadableResourceBundleMessageSource atsyInternalMessageSource() {
+    AtsyReloadableResourceBundleMessageSource source = new AtsyReloadableResourceBundleMessageSource();
     source.setBasename("classpath:i18n/messages");
-    source.setDefaultEncoding("UTF-8");
+    source.setDefaultEncoding(CharEncoding.UTF_8);
+    source.setFallbackToSystemLocale(false);
+    return source;
+  }
 
-    MessageKeyResolver messageKeyResolver = new MessageKeyResolverImpl(source);
-
+  @Bean
+  public MessageKeyResolver messageSource() {
+    MessageKeyResolver messageKeyResolver = new MessageKeyResolverImpl(atsyInternalMessageSource());
     return messageKeyResolver;
   }
 

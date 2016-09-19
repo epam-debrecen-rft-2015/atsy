@@ -39,20 +39,20 @@ public class ExceptionMapperConfiguration {
 
     // add password validation rule exceptions
     exceptionMessagePairValidationExceptionSet
-        .add(new ExceptionMessagePair("allfieldfilled",
+        .add(new ExceptionMessagePair("passwordchange.validation.allfieldfilled",
             PasswordAllFieldFilledValidationException.class));
     exceptionMessagePairValidationExceptionSet
-        .add(new ExceptionMessagePair("contains", PasswordContainsValidationException.class));
+        .add(new ExceptionMessagePair("passwordchange.validation.contains", PasswordContainsValidationException.class));
     exceptionMessagePairValidationExceptionSet
-        .add(new ExceptionMessagePair("length", PasswordLengthValidationException.class));
+        .add(new ExceptionMessagePair("passwordchange.validation.length", PasswordLengthValidationException.class));
     exceptionMessagePairValidationExceptionSet
-        .add(new ExceptionMessagePair("newpasswordmatch",
+        .add(new ExceptionMessagePair("passwordchange.validation.newpasswordmatch",
             PasswordNewMatchValidationException.class));
     exceptionMessagePairValidationExceptionSet
-        .add(new ExceptionMessagePair("oldpasswordmatch",
+        .add(new ExceptionMessagePair("passwordchange.validation.oldpasswordmatch",
             PasswordOldMatchValidationException.class));
     exceptionMessagePairValidationExceptionSet
-        .add(new ExceptionMessagePair("unique", PasswordUniqueValidationException.class));
+        .add(new ExceptionMessagePair("passwordchange.validation.unique", PasswordUniqueValidationException.class));
 
     // add file validation rule exceptions
     exceptionMessagePairValidationExceptionSet
