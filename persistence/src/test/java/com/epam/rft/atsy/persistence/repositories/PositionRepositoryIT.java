@@ -1,21 +1,21 @@
 package com.epam.rft.atsy.persistence.repositories;
 
-import static junit.framework.TestCase.assertFalse;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static junit.framework.TestCase.assertFalse;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 public class PositionRepositoryIT extends AbstractRepositoryIT {
 
-  private static final Long POSITION_ID_DEVELOPER = 1L;
   private static final String POSITION_NAME_DEVELOPER = "Fejlesztő";
   private static final String POSITION_NAME_NON_EXISTENT = "Asztalitenisz oktató";
   private static final String POSITION_NAME_WITH_TRUE_DELETED_FIELD = "Table tennis instructor";
@@ -48,8 +48,7 @@ public class PositionRepositoryIT extends AbstractRepositoryIT {
   @Test
   public void findByNameShouldReturnExistingPositionEntityWhenPositionNameIsExisting() {
     // Given
-    PositionEntity
-        expectedPositionEntity =
+    PositionEntity expectedPositionEntity =
         this.positionRepository.findByName(POSITION_NAME_DEVELOPER);
 
     // When
@@ -61,13 +60,11 @@ public class PositionRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-  public void findAllNonDeletedPositionEntityShouldReturnOnlyNonDeletedPositions() {
+  public void findAllByDeletedFalseShouldReturnOnlyNonDeletedPositions() {
     // Given
 
     // When
-    List<PositionEntity>
-        actualPositionList =
-        this.positionRepository.findAllNonDeletedPositionEntity();
+    List<PositionEntity> actualPositionList = this.positionRepository.findAllByDeletedFalse();
 
     // Then
     assertThat(actualPositionList, notNullValue());
@@ -76,16 +73,13 @@ public class PositionRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-  public void findAllNonDeletedPositionEntityShouldNotContainAnEntityThatHasDeletedFieldWithTrueValue() {
+  public void findAllByDeletedFalseShouldNotContainAnEntityThatHasDeletedFieldWithTrueValue() {
     // Given
-    PositionEntity
-        positionEntityWithTrueDeletedField =
+    PositionEntity positionEntityWithTrueDeletedField =
         this.positionRepository.findByName(POSITION_NAME_WITH_TRUE_DELETED_FIELD);
 
     // When
-    List<PositionEntity>
-        actualPositionList =
-        this.positionRepository.findAllNonDeletedPositionEntity();
+    List<PositionEntity> actualPositionList = this.positionRepository.findAllByDeletedFalse();
 
     // Then
     assertThat(actualPositionList, notNullValue());

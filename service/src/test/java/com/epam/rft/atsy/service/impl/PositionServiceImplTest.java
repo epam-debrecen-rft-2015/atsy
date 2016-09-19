@@ -1,5 +1,26 @@
 package com.epam.rft.atsy.service.impl;
 
+import com.epam.rft.atsy.persistence.entities.PositionEntity;
+import com.epam.rft.atsy.persistence.repositories.PositionRepository;
+import com.epam.rft.atsy.service.ConverterService;
+import com.epam.rft.atsy.service.domain.PositionDTO;
+import com.epam.rft.atsy.service.exception.DuplicatePositionException;
+import com.epam.rft.atsy.service.exception.ObjectNotFoundException;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -11,27 +32,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
-
-import com.epam.rft.atsy.persistence.entities.PositionEntity;
-import com.epam.rft.atsy.persistence.repositories.PositionRepository;
-import com.epam.rft.atsy.service.ConverterService;
-import com.epam.rft.atsy.service.domain.PositionDTO;
-import com.epam.rft.atsy.service.exception.DuplicatePositionException;
-import com.epam.rft.atsy.service.exception.PositionNotFoundException;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PositionServiceImplTest {
@@ -53,7 +53,6 @@ public class PositionServiceImplTest {
   @Mock
   private PositionRepository positionRepository;
 
-  @InjectMocks
   private PositionServiceImpl positionService;
 
   private PositionEntity developerEntity;
@@ -65,17 +64,15 @@ public class PositionServiceImplTest {
 
   @Before
   public void setUp() {
-    developerEntity =
-        PositionEntity.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(false).build();
+    this.positionService = new PositionServiceImpl(positionRepository, converterService);
 
-    developerDto =
-        PositionDTO.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(false).build();
+    developerEntity = PositionEntity.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(false).build();
 
-    deletedDeveloperEntity =
-        PositionEntity.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(true).build();
+    developerDto = PositionDTO.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(false).build();
 
-    deletedDeveloperDto =
-        PositionDTO.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(true).build();
+    deletedDeveloperEntity = PositionEntity.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(true).build();
+
+    deletedDeveloperDto = PositionDTO.builder().id(DEVELOPER_ID).name(DEVELOPER_NAME).deleted(true).build();
 
     expectedPositionEntityList = Arrays.asList(developerEntity, developerEntity, developerEntity);
 
@@ -159,57 +156,55 @@ public class PositionServiceImplTest {
   }
 
   @Test
-  public void getAllNonDeletedPositionDtoShouldReturnEmptyListWhenThereAreNoPositions() {
+  public void getAllNonDeletedDtoShouldReturnEmptyListWhenThereAreNoPositions() {
     // Given
-    given(positionRepository.findAllNonDeletedPositionEntity())
-        .willReturn(EMPTY_POSITION_ENTITY_LIST);
+    given(positionRepository.findAllByDeletedFalse()).willReturn(EMPTY_POSITION_ENTITY_LIST);
     given(converterService.convert(EMPTY_POSITION_ENTITY_LIST, PositionDTO.class))
         .willReturn(EMPTY_POSITION_DTO_LIST);
 
     // When
-    Collection<PositionDTO> positions = positionService.getAllNonDeletedPositionDto();
+    Collection<PositionDTO> positions = positionService.getAllNonDeletedDto();
 
     // Then
     assertThat(positions, notNullValue());
     assertThat(positions.isEmpty(), is(true));
 
-    then(positionRepository).should().findAllNonDeletedPositionEntity();
+    then(positionRepository).should().findAllByDeletedFalse();
   }
 
   @Test
-  public void getAllNonDeletedPositionDtoShouldReturnSingleElementListWhenThereIsOnePosition() {
+  public void getAllNonDeletedDtoShouldReturnSingleElementListWhenThereIsOnePosition() {
     // Given
     List<PositionEntity> positions = Arrays.asList(developerEntity);
 
     List<PositionDTO> expected = Arrays.asList(developerDto);
 
-    given(positionRepository.findAllNonDeletedPositionEntity()).willReturn(positions);
+    given(positionRepository.findAllByDeletedFalse()).willReturn(positions);
     given(converterService.convert(positions, PositionDTO.class)).willReturn(expected);
 
     // When
-    Collection<PositionDTO> result = positionService.getAllNonDeletedPositionDto();
+    Collection<PositionDTO> result = positionService.getAllNonDeletedDto();
 
     // Then
     assertEquals(result, expected);
 
-    then(positionRepository).should().findAllNonDeletedPositionEntity();
+    then(positionRepository).should().findAllByDeletedFalse();
   }
 
   @Test
-  public void getAllNonDeletedPositionDtoShouldReturnThreeElementListWhenThereAreThreePositions() {
+  public void getAllNonDeletedDtoShouldReturnThreeElementListWhenThereAreThreePositions() {
     // Given
-    given(positionRepository.findAllNonDeletedPositionEntity())
-        .willReturn(expectedPositionEntityList);
+    given(positionRepository.findAllByDeletedFalse()).willReturn(expectedPositionEntityList);
     given(converterService.convert(expectedPositionEntityList, PositionDTO.class))
         .willReturn(expectedPositionDtoList);
 
     // When
-    Collection<PositionDTO> result = positionService.getAllNonDeletedPositionDto();
+    Collection<PositionDTO> result = positionService.getAllNonDeletedDto();
 
     // Then
     assertEquals(result, expectedPositionDtoList);
 
-    then(positionRepository).should().findAllNonDeletedPositionEntity();
+    then(positionRepository).should().findAllByDeletedFalse();
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -311,8 +306,7 @@ public class PositionServiceImplTest {
   public void saveOrUpdateShouldSaveValidPositionDtoDTO() {
     // Given
     given(this.positionRepository.findByName(DEVELOPER_NAME)).willReturn(null);
-    given(this.converterService.convert(developerDto, PositionEntity.class))
-        .willReturn(developerEntity);
+    given(this.converterService.convert(developerDto, PositionEntity.class)).willReturn(developerEntity);
 
     // When
     this.positionService.saveOrUpdate(developerDto);
@@ -324,38 +318,38 @@ public class PositionServiceImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void deletePositionDtoLogicallyByIdShouldThrowIllegalArgumentExceptionWhenPositionIdIsNull()
-      throws PositionNotFoundException {
+  public void deleteDtoLogicallyByIdShouldThrowIllegalArgumentExceptionWhenPositionIdIsNull()
+      throws ObjectNotFoundException {
     // Given
 
     // When
-    this.positionService.deletePositionDtoLogicallyById(null);
+    this.positionService.deleteDtoLogicallyById(null);
 
     // Then
   }
 
-  @Test(expected = PositionNotFoundException.class)
-  public void deletePositionDtoLogicallyByIdShouldThrowPositionNotFoundExceptionWhenPositionEntityNotExists()
-      throws PositionNotFoundException {
+  @Test(expected = ObjectNotFoundException.class)
+  public void deleteDtoLogicallyByIdShouldThrowPositionNotFoundExceptionWhenPositionEntityNotExists()
+      throws ObjectNotFoundException {
     // Given
     given(this.positionRepository.findOne(POSITION_ID_NON_EXISTENT)).willReturn(null);
 
     // When
-    this.positionService.deletePositionDtoLogicallyById(POSITION_ID_NON_EXISTENT);
+    this.positionService.deleteDtoLogicallyById(POSITION_ID_NON_EXISTENT);
 
     // Then
   }
 
   @Test
-  public void deletePositionDtoLogicallyByIdShouldDeletedLogicallyWhenPositionEntityExists()
-      throws PositionNotFoundException {
+  public void deleteDtoLogicallyByIdShouldDeletedLogicallyWhenPositionEntityExists()
+      throws ObjectNotFoundException {
     // Given
     ArgumentCaptor<PositionEntity> positionEntityArgumentCaptor =
         ArgumentCaptor.forClass(PositionEntity.class);
     given(this.positionRepository.findOne(DEVELOPER_ID)).willReturn(developerEntity);
 
     // When
-    this.positionService.deletePositionDtoLogicallyById(DEVELOPER_ID);
+    this.positionService.deleteDtoLogicallyById(DEVELOPER_ID);
 
     // Then
     verify(positionRepository).saveAndFlush(positionEntityArgumentCaptor.capture());

@@ -1,5 +1,26 @@
 package com.epam.rft.atsy.service.impl;
 
+import com.epam.rft.atsy.persistence.entities.ChannelEntity;
+import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
+import com.epam.rft.atsy.service.ConverterService;
+import com.epam.rft.atsy.service.domain.ChannelDTO;
+import com.epam.rft.atsy.service.exception.DuplicateChannelException;
+import com.epam.rft.atsy.service.exception.ObjectNotFoundException;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -10,27 +31,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
-
-import com.epam.rft.atsy.persistence.entities.ChannelEntity;
-import com.epam.rft.atsy.persistence.repositories.ChannelRepository;
-import com.epam.rft.atsy.service.ConverterService;
-import com.epam.rft.atsy.service.domain.ChannelDTO;
-import com.epam.rft.atsy.service.exception.ChannelNotFoundException;
-import com.epam.rft.atsy.service.exception.DuplicateChannelException;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ChannelServiceImplTest {
@@ -45,7 +45,6 @@ public class ChannelServiceImplTest {
   private static final List<ChannelEntity> EMPTY_CHANNEL_ENTITY_LIST = Collections.emptyList();
   private static final List<ChannelDTO> EMPTY_CHANNEL_DTO_LIST = Collections.emptyList();
 
-
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 
@@ -55,7 +54,6 @@ public class ChannelServiceImplTest {
   @Mock
   private ChannelRepository channelRepository;
 
-  @InjectMocks
   private ChannelServiceImpl channelService;
 
   private ChannelDTO facebookDto;
@@ -71,6 +69,8 @@ public class ChannelServiceImplTest {
 
   @Before
   public void init() {
+    this.channelService = new ChannelServiceImpl(channelRepository, converterService);
+
     facebookDto =
         ChannelDTO.builder().id(CHANNEL_ID_FACEBOOK).name(CHANNEL_NAME_FACEBOOK).deleted(false)
             .build();
@@ -139,57 +139,57 @@ public class ChannelServiceImplTest {
   }
 
   @Test
-  public void getAllNonDeletedChannelDtoShouldReturnEmptyListWhenThereAreNoChannels() {
+  public void getAllNonDeletedDtoShouldReturnEmptyListWhenThereAreNoChannels() {
     // Given
-    given(channelRepository.findAllNonDeletedChannelEntity()).willReturn(EMPTY_CHANNEL_ENTITY_LIST);
+    given(channelRepository.findAllByDeletedFalse()).willReturn(EMPTY_CHANNEL_ENTITY_LIST);
     given(converterService.convert(EMPTY_CHANNEL_ENTITY_LIST, ChannelDTO.class))
         .willReturn(EMPTY_CHANNEL_DTO_LIST);
 
     // When
-    Collection<ChannelDTO> channels = channelService.getAllNonDeletedChannelDto();
+    Collection<ChannelDTO> channels = channelService.getAllNonDeletedDto();
 
     // Then
     assertThat(channels, notNullValue());
     assertTrue(channels.isEmpty());
 
-    then(channelRepository).should().findAllNonDeletedChannelEntity();
+    then(channelRepository).should().findAllByDeletedFalse();
     then(converterService).should().convert(EMPTY_CHANNEL_ENTITY_LIST, ChannelDTO.class);
   }
 
   @Test
-  public void getAllNonDeletedChannelDtoShouldReturnSingleElementListWhenThereIsOneChannel() {
+  public void getAllNonDeletedDtoShouldReturnSingleElementListWhenThereIsOneChannel() {
     // Given
     List<ChannelEntity> channels = Arrays.asList(facebookEntity);
 
     List<ChannelDTO> expected = Arrays.asList(facebookDto);
 
-    given(channelRepository.findAllNonDeletedChannelEntity()).willReturn(channels);
+    given(channelRepository.findAllByDeletedFalse()).willReturn(channels);
     given(converterService.convert(channels, ChannelDTO.class)).willReturn(expected);
 
     // When
-    Collection<ChannelDTO> result = channelService.getAllNonDeletedChannelDto();
+    Collection<ChannelDTO> result = channelService.getAllNonDeletedDto();
 
     // Then
     assertEquals(result, expected);
 
-    then(channelRepository).should().findAllNonDeletedChannelEntity();
+    then(channelRepository).should().findAllByDeletedFalse();
     then(converterService).should().convert(channels, ChannelDTO.class);
   }
 
   @Test
-  public void getAllNonDeletedChannelDtoShouldReturnThreeElementListWhenThereAreThreeChannels() {
+  public void getAllNonDeletedDtoShouldReturnThreeElementListWhenThereAreThreeChannels() {
     // Given
-    given(channelRepository.findAllNonDeletedChannelEntity()).willReturn(expectedChannelEntityList);
+    given(channelRepository.findAllByDeletedFalse()).willReturn(expectedChannelEntityList);
     given(converterService.convert(expectedChannelEntityList, ChannelDTO.class))
         .willReturn(expectedChannelDTOList);
 
     // When
-    Collection<ChannelDTO> result = channelService.getAllNonDeletedChannelDto();
+    Collection<ChannelDTO> result = channelService.getAllNonDeletedDto();
 
     // Then
     assertEquals(result, expectedChannelDTOList);
 
-    then(channelRepository).should().findAllNonDeletedChannelEntity();
+    then(channelRepository).should().findAllByDeletedFalse();
     then(converterService).should().convert(expectedChannelEntityList, ChannelDTO.class);
   }
 
@@ -305,39 +305,39 @@ public class ChannelServiceImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void deleteChannelDtoLogicallyByIdShouldThrowIllegalArgumentExceptionWhenChannelIdIsNull()
+  public void deleteDtoLogicallyByIdShouldThrowIllegalArgumentExceptionWhenChannelIdIsNull()
       throws
-      ChannelNotFoundException {
+      ObjectNotFoundException {
     // Given
 
     // When
-    this.channelService.deleteChannelDtoLogicallyById(null);
+    this.channelService.deleteDtoLogicallyById(null);
 
     // Then
   }
 
-  @Test(expected = ChannelNotFoundException.class)
-  public void deleteChannelDtoLogicallyByIdShouldThrowChannelNotFoundExceptionWhenChannelEntityNotExists()
-      throws ChannelNotFoundException {
+  @Test(expected = ObjectNotFoundException.class)
+  public void deleteDtoLogicallyByIddShouldThrowChannelNotFoundExceptionWhenChannelEntityNotExists()
+      throws ObjectNotFoundException {
     // Given
     given(this.channelRepository.findOne(CHANNEL_ID_NON_EXISTENT)).willReturn(null);
 
     // When
-    this.channelService.deleteChannelDtoLogicallyById(CHANNEL_ID_NON_EXISTENT);
+    this.channelService.deleteDtoLogicallyById(CHANNEL_ID_NON_EXISTENT);
 
     // Then
   }
 
   @Test
-  public void deleteChannelDtoLogicallyByIdShouldDeletedLogicallyWhenChannelEntityExists()
-      throws ChannelNotFoundException {
+  public void deleteDtoLogicallyByIdShouldDeletedLogicallyWhenChannelEntityExists()
+      throws ObjectNotFoundException {
     // Given
     ArgumentCaptor<ChannelEntity> channelEntityArgumentCaptor =
         ArgumentCaptor.forClass(ChannelEntity.class);
     given(this.channelRepository.findOne(CHANNEL_ID_FACEBOOK)).willReturn(facebookEntity);
 
     // When
-    this.channelService.deleteChannelDtoLogicallyById(CHANNEL_ID_FACEBOOK);
+    this.channelService.deleteDtoLogicallyById(CHANNEL_ID_FACEBOOK);
 
     // Then
     verify(channelRepository).saveAndFlush(channelEntityArgumentCaptor.capture());
