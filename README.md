@@ -71,6 +71,7 @@ Definition of Done
 1. Database migrations scripts are honored:
   * Migration script is added if the changes require database modifications.
   * Flyway migrations have the following format (date is used with seconds precision): V3_20160902100610_What_is_changed.
+  * No existing flyway migration script changes
 1. Project documentation is kept up-to-date:
   * README.md is updated if there are some changes in the application setup process.
 1. Version control is kept clean:
