@@ -34,6 +34,14 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
   public static final Pageable DEFAULT_PAGE_REQUEST = new PageRequest(0, 10);
   public static final Pageable ZERO_TWO_PAGE_REQUEST = new PageRequest(0, 2);
 
+  public static final String CHANNEL_NAME_DIRECT = "direkt";
+  public static final String POSITION_NAME_DEVELOPER = "Fejlesztő";
+  public static final String CHANNEL_NAME_PROFESSION_ADVERTISEMENT = "profession hírdetés";
+  public static final String CHANNEL_NAME_PROFESSION_DATABASE = "profession adatbázis";
+  public static final String CHANNEL_NAME_FACEBOOK = "facebook";
+  public static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss";
+  public static final String DATE_SAMPLE = "2016-07-26 11:48:55";
+
   @Autowired
   private ApplicationsRepository repository;
 
@@ -75,12 +83,12 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
     CandidateEntity candidateEntityA = this.candidateRepository.findOne(CANDIDATE_A_ID);
     ChannelEntity expectedChannelEntity = ChannelEntity.builder()
         .id(1L)
-        .name("direkt")
+        .name(CHANNEL_NAME_DIRECT)
         .deleted(false)
         .build();
     PositionEntity expectedPositionEntity = PositionEntity.builder()
         .id(1L)
-        .name("Fejlesztő")
+        .name(POSITION_NAME_DEVELOPER)
         .deleted(false)
         .build();
     Date nearNow = currentDateMinus(5);
@@ -102,12 +110,12 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
     CandidateEntity candidateEntityA = this.candidateRepository.findOne(CANDIDATE_A_ID);
     ChannelEntity expectedChannelEntity = ChannelEntity.builder()
         .id(1L)
-        .name("direkt")
+        .name(CHANNEL_NAME_DIRECT)
         .deleted(false)
         .build();
     PositionEntity expectedPositionEntity = PositionEntity.builder()
         .id(1L)
-        .name("Fejlesztő")
+        .name(POSITION_NAME_DEVELOPER)
         .deleted(false)
         .build();
     Date nearNow = currentDateMinus(5);
@@ -135,27 +143,27 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
     CandidateEntity candidateEntityC = this.candidateRepository.findOne(CANDIDATE_C_ID);
     ChannelEntity expectedChannelEntity = ChannelEntity.builder()
         .id(2L)
-        .name("profession hírdetés")
+        .name(CHANNEL_NAME_PROFESSION_ADVERTISEMENT)
         .deleted(false)
         .build();
     ChannelEntity expectedSecondChannelEntity = ChannelEntity.builder()
         .id(3L)
-        .name("profession adatbázis")
+        .name(CHANNEL_NAME_PROFESSION_DATABASE)
         .deleted(false)
         .build();
     ChannelEntity expectedThirdChannelEntity = ChannelEntity.builder()
         .id(4L)
-        .name("facebook")
+        .name(CHANNEL_NAME_FACEBOOK)
         .deleted(false)
         .build();
     PositionEntity expectedPositionEntity = PositionEntity.builder()
         .id(1L)
-        .name("Fejlesztő")
+        .name(POSITION_NAME_DEVELOPER)
         .deleted(false)
         .build();
 
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    Date expectedDate = simpleDateFormat.parse("2016-07-26 11:48:55");
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
+    Date expectedDate = simpleDateFormat.parse(DATE_SAMPLE);
     // When
     List<ApplicationEntity> result = this.repository.findByCandidateEntity(candidateEntityC);
 
@@ -178,27 +186,27 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
     CandidateEntity candidateEntityC = this.candidateRepository.findOne(CANDIDATE_C_ID);
     ChannelEntity expectedChannelEntity = ChannelEntity.builder()
         .id(2L)
-        .name("profession hírdetés")
+        .name(CHANNEL_NAME_PROFESSION_ADVERTISEMENT)
         .deleted(false)
         .build();
     ChannelEntity expectedSecondChannelEntity = ChannelEntity.builder()
         .id(3L)
-        .name("profession adatbázis")
+        .name(CHANNEL_NAME_PROFESSION_DATABASE)
         .deleted(false)
         .build();
     ChannelEntity expectedThirdChannelEntity = ChannelEntity.builder()
         .id(4L)
-        .name("facebook")
+        .name(CHANNEL_NAME_FACEBOOK)
         .deleted(false)
         .build();
     PositionEntity expectedPositionEntity = PositionEntity.builder()
         .id(1L)
-        .name("Fejlesztő")
+        .name(POSITION_NAME_DEVELOPER)
         .deleted(false)
         .build();
 
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    Date expectedDate = simpleDateFormat.parse("2016-07-26 11:48:55");
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
+    Date expectedDate = simpleDateFormat.parse(DATE_SAMPLE);
 
     // When
     Page<ApplicationEntity>
@@ -227,22 +235,22 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
     CandidateEntity candidateEntityC = this.candidateRepository.findOne(CANDIDATE_C_ID);
     ChannelEntity expectedChannelEntity = ChannelEntity.builder()
         .id(2L)
-        .name("profession hírdetés")
+        .name(CHANNEL_NAME_PROFESSION_ADVERTISEMENT)
         .deleted(false)
         .build();
     ChannelEntity expectedSecondChannelEntity = ChannelEntity.builder()
         .id(3L)
-        .name("profession adatbázis")
+        .name(CHANNEL_NAME_PROFESSION_DATABASE)
         .deleted(false)
         .build();
     PositionEntity expectedPositionEntity = PositionEntity.builder()
         .id(1L)
-        .name("Fejlesztő")
+        .name(POSITION_NAME_DEVELOPER)
         .deleted(false)
         .build();
 
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    Date expectedDate = simpleDateFormat.parse("2016-07-26 11:48:55");
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
+    Date expectedDate = simpleDateFormat.parse(DATE_SAMPLE);
 
     // When
     Page<ApplicationEntity>
