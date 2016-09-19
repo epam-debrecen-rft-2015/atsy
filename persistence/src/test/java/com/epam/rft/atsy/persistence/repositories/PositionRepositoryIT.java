@@ -48,9 +48,7 @@ public class PositionRepositoryIT extends AbstractRepositoryIT {
   @Test
   public void findByNameShouldReturnExistingPositionEntityWhenPositionNameIsExisting() {
     // Given
-
-    PositionEntity
-        expectedPositionEntity =
+    PositionEntity expectedPositionEntity =
         this.positionRepository.findByName(POSITION_NAME_DEVELOPER);
 
     // When
@@ -62,7 +60,6 @@ public class PositionRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-
   public void findAllByDeletedFalseShouldReturnOnlyNonDeletedPositions() {
     // Given
 
@@ -76,12 +73,9 @@ public class PositionRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-
   public void findAllByDeletedFalseShouldNotContainAnEntityThatHasDeletedFieldWithTrueValue() {
     // Given
-
-    PositionEntity
-        positionEntityWithTrueDeletedField =
+    PositionEntity positionEntityWithTrueDeletedField =
         this.positionRepository.findByName(POSITION_NAME_WITH_TRUE_DELETED_FIELD);
 
     // When

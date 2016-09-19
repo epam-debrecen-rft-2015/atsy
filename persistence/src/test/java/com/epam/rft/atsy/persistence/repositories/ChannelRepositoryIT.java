@@ -51,9 +51,7 @@ public class ChannelRepositoryIT extends AbstractRepositoryIT {
   public void findByNameShouldReturnExistingChannelEntityWhenChannelNameIsExisting() {
     // Given
     ChannelEntity expectedChannelEntity =
-
-        ChannelEntity.builder().id(CHANNEL_ID_FACEBOOK).name(CHANNEL_NAME_FACEBOOK).deleted(false)
-            .build();
+        ChannelEntity.builder().id(CHANNEL_ID_FACEBOOK).name(CHANNEL_NAME_FACEBOOK).deleted(false).build();
 
     // When
     ChannelEntity actualChannelEntity = channelRepository.findByName(CHANNEL_NAME_FACEBOOK);
@@ -64,13 +62,10 @@ public class ChannelRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-
   public void findAllByDeletedFalseShouldNotContainAnEntityThatHasDeletedFieldWithTrueValue() {
     // Given
-
     ChannelEntity
-        channelEntityWithTrueDeletedField =
-        this.channelRepository.findByName(CHANNEL_NAME_WITH_TRUE_DELETED_FIELD);
+        channelEntityWithTrueDeletedField = this.channelRepository.findByName(CHANNEL_NAME_WITH_TRUE_DELETED_FIELD);
 
     // When
     List<ChannelEntity> actualChannelEntityList = this.channelRepository.findAllByDeletedFalse();
@@ -82,7 +77,6 @@ public class ChannelRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-
   public void findAllByDeletedFalseShouldReturnWithOnlyNonDeletedChannelEntities() {
     // Given
 
