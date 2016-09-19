@@ -95,29 +95,29 @@ public class CandidateServiceImpl implements CandidateService {
               candidateFilterRequest.getPageSize());
     }
 
-    String
+    final String
         name =
         MoreObjects.firstNonNull(candidateFilterRequest.getCandidateName(), StringUtils.EMPTY);
-    String
+    final String
         email =
         MoreObjects.firstNonNull(candidateFilterRequest.getCandidateEmail(), StringUtils.EMPTY);
-    String
+    final String
         phone =
         MoreObjects.firstNonNull(candidateFilterRequest.getCandidatePhone(), StringUtils.EMPTY);
-    String
+    final String
         positions =
         MoreObjects.firstNonNull(candidateFilterRequest.getCandiadtePositions(), StringUtils.EMPTY);
 
-    Page<CandidateEntity>
+    final Page<CandidateEntity>
         candidateEntitiesPage =
         candidateRepository
             .findByCandidateFilterRequest(name, email, phone, positions, pageRequest);
 
-    List<CandidateDTO>
+    final List<CandidateDTO>
         candidateDTOs =
         converterService.convert(candidateEntitiesPage.getContent(), CandidateDTO.class);
 
-    PagingResponse<CandidateDTO>
+    final PagingResponse<CandidateDTO>
         result =
         new PagingResponse<>(candidateEntitiesPage.getTotalElements(), candidateDTOs);
 
