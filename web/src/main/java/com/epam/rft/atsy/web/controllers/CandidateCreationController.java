@@ -2,7 +2,6 @@ package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +27,6 @@ public class CandidateCreationController {
 
   /**
    * Loads the candidate with the given ID and gives back its information.
-   *
    * @param candidateId the identifier of the candidate whose data should be given back
    * @return a ModelAndView object which contains the all candidate information and the name of the
    * page that handles the candidate data
@@ -42,7 +40,6 @@ public class CandidateCreationController {
 
   /**
    * Creates an empty DTO object that can be filled with the data of a new candidate.
-   *
    * @return a ModelAndView object which contains an empty DTO for the new candidate and the name of
    * the page that handles the candidate data
    */

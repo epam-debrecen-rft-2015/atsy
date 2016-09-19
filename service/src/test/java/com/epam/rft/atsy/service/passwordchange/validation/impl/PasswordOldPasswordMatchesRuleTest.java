@@ -54,7 +54,8 @@ public class PasswordOldPasswordMatchesRuleTest {
   }
 
   @Test
-  public void isValidShouldBeValidWhenOldPasswordMatches() throws PasswordOldMatchValidationException {
+  public void isValidShouldBeValidWhenOldPasswordMatches()
+      throws PasswordOldMatchValidationException {
     // Given
     PasswordChangeDTO
         passwordChangeDTO =
@@ -67,7 +68,8 @@ public class PasswordOldPasswordMatchesRuleTest {
   }
 
   @Test(expected = PasswordOldMatchValidationException.class)
-  public void isValidShouldNotBeValidWhenOldPasswordsAreDifferent() throws PasswordOldMatchValidationException {
+  public void isValidShouldNotBeValidWhenOldPasswordsAreDifferent()
+      throws PasswordOldMatchValidationException {
     // Given
     PasswordChangeDTO
         passwordChangeDTO =
@@ -80,13 +82,15 @@ public class PasswordOldPasswordMatchesRuleTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void isValidShouldNotBeValidWhenPasswordChangeDTOIsNull() throws PasswordOldMatchValidationException {
+  public void isValidShouldNotBeValidWhenPasswordChangeDTOIsNull()
+      throws PasswordOldMatchValidationException {
     // When
     passwordOldPasswordMatchesRule.validate(null);
   }
 
   @Test(expected = PasswordOldMatchValidationException.class)
-  public void isValidShouldNotBeValidWhenUserIsNotLoggedIn() throws UserNotLoggedInException, PasswordOldMatchValidationException {
+  public void isValidShouldNotBeValidWhenUserIsNotLoggedIn()
+      throws UserNotLoggedInException, PasswordOldMatchValidationException {
     // Given
     PasswordChangeDTO
         passwordChangeDTO =
@@ -100,7 +104,8 @@ public class PasswordOldPasswordMatchesRuleTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void isValidShouldNotBeValidWhenPasswordChangeDTOsPasswordFieldIsNull() throws PasswordOldMatchValidationException {
+  public void isValidShouldNotBeValidWhenPasswordChangeDTOsPasswordFieldIsNull()
+      throws PasswordOldMatchValidationException {
     // Given
     PasswordChangeDTO
         passwordChangeDTO =

@@ -22,7 +22,8 @@ public class PasswordLengthValidationRuleTest {
   }
 
   @Test(expected = PasswordLengthValidationException.class)
-  public void isValidShouldNotBeValidUnderMinPasswordLength() throws PasswordLengthValidationException {
+  public void isValidShouldNotBeValidUnderMinPasswordLength()
+      throws PasswordLengthValidationException {
     //Given
     PasswordChangeDTO passwordChangeDtoUnderMinLength = PasswordChangeDTO.builder()
         .newPassword(PASSWORD_WITH_LENGTH_UNDER_MIN)
@@ -33,7 +34,8 @@ public class PasswordLengthValidationRuleTest {
   }
 
   @Test
-  public void isValidShouldBeValidWithExactMinPasswordLength() throws PasswordLengthValidationException {
+  public void isValidShouldBeValidWithExactMinPasswordLength()
+      throws PasswordLengthValidationException {
     //Given
     PasswordChangeDTO passwordChangeDtoExactMinLength = PasswordChangeDTO.builder()
         .newPassword(PASSWORD_WITH_LENGTH_EQUAL_TO_MIN)

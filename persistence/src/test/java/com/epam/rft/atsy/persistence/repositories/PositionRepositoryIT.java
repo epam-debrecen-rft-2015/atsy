@@ -1,7 +1,5 @@
 package com.epam.rft.atsy.persistence.repositories;
 
-
-import com.epam.rft.atsy.persistence.entities.ChannelEntity;
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
 
 import org.junit.Assert;
@@ -18,7 +16,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class PositionRepositoryIT extends AbstractRepositoryIT {
 
-  private static final Long POSITION_ID_DEVELOPER = 1L;
   private static final String POSITION_NAME_DEVELOPER = "Fejlesztő";
   private static final String POSITION_NAME_NON_EXISTENT = "Asztalitenisz oktató";
   private static final String POSITION_NAME_WITH_TRUE_DELETED_FIELD = "Table tennis instructor";
@@ -51,7 +48,10 @@ public class PositionRepositoryIT extends AbstractRepositoryIT {
   @Test
   public void findByNameShouldReturnExistingPositionEntityWhenPositionNameIsExisting() {
     // Given
-    PositionEntity expectedPositionEntity = this.positionRepository.findByName(POSITION_NAME_DEVELOPER);
+
+    PositionEntity
+        expectedPositionEntity =
+        this.positionRepository.findByName(POSITION_NAME_DEVELOPER);
 
     // When
     PositionEntity actualPositionEntity = positionRepository.findByName(POSITION_NAME_DEVELOPER);
@@ -62,6 +62,7 @@ public class PositionRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
+
   public void findAllByDeletedFalseShouldReturnOnlyNonDeletedPositions() {
     // Given
 
@@ -75,9 +76,13 @@ public class PositionRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
+
   public void findAllByDeletedFalseShouldNotContainAnEntityThatHasDeletedFieldWithTrueValue() {
     // Given
-    PositionEntity positionEntityWithTrueDeletedField = this.positionRepository.findByName(POSITION_NAME_WITH_TRUE_DELETED_FIELD);
+
+    PositionEntity
+        positionEntityWithTrueDeletedField =
+        this.positionRepository.findByName(POSITION_NAME_WITH_TRUE_DELETED_FIELD);
 
     // When
     List<PositionEntity> actualPositionList = this.positionRepository.findAllByDeletedFalse();
@@ -93,6 +98,4 @@ public class PositionRepositoryIT extends AbstractRepositoryIT {
       Assert.fail();
     }
   }
-
-
 }
