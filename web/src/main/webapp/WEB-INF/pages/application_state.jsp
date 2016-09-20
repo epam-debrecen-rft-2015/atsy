@@ -73,10 +73,14 @@
       <c:forEach var="data" items="${states}" varStatus="stat">
 
           <div class="page-header">
-              <h4 class="col-sm-6 col-md-6 col-lg-6">${data.stateFullName}</h4>
-              <c:if test="${stat.first}">
-              <h4 class="glyphicon glyphicon-edit pull-right" id="latestStateEditButton" onclick="editLatestStateOnClick()"></h4>
-              </c:if>
+              <h4>
+                  <span>${data.stateFullName}</span>
+                  <c:if test="${stat.first}">
+                      <button class="btn btn-default pull-right" id="latestStateEditButton" onclick="editLatestStateOnClick()">
+                          <span class="glyphicon glyphicon-edit"></span>
+                      </button>
+                  </c:if>
+              </h4>
           </div>
           <form data-toggle="validator" class="form form-horizontal" role="form" method="POST" id="create-state-form" action="#">
               <c:if test="${stat.first}">
@@ -85,7 +89,7 @@
                 <input type="hidden" name="stateName" value="${data.stateName}" data-bind="valueWithInit: 'stateName'"/>
               </c:if>
 
-              <div class="form-group col-sm-12 col-md-12 col-lg-12">
+              <div class="form-group">
                   <label for="creationDateInput" class="control-label col-sm-4"><spring:message code="statehistory.field.date"/></label>
                   <div class="col-sm-8">
                       <fmt:formatDate value='${data.creationDate}' pattern='yyyy-MM-dd HH:mm' var="formattedCreationDate"/>
