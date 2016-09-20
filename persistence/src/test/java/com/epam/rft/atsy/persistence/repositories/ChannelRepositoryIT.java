@@ -1,6 +1,5 @@
 package com.epam.rft.atsy.persistence.repositories;
 
-
 import com.epam.rft.atsy.persistence.entities.ChannelEntity;
 
 import org.junit.Assert;
@@ -8,7 +7,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -64,12 +62,13 @@ public class ChannelRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-  public void findAllNonDeletedChannelEntityShouldNotContainAnEntityThatHasDeletedFieldWithTrueValue() {
+  public void findAllByDeletedFalseShouldNotContainAnEntityThatHasDeletedFieldWithTrueValue() {
     // Given
-    ChannelEntity channelEntityWithTrueDeletedField = this.channelRepository.findByName(CHANNEL_NAME_WITH_TRUE_DELETED_FIELD);
+    ChannelEntity
+        channelEntityWithTrueDeletedField = this.channelRepository.findByName(CHANNEL_NAME_WITH_TRUE_DELETED_FIELD);
 
     // When
-    List<ChannelEntity> actualChannelEntityList = this.channelRepository.findAllNonDeletedChannelEntity();
+    List<ChannelEntity> actualChannelEntityList = this.channelRepository.findAllByDeletedFalse();
 
     // Then
     assertThat(actualChannelEntityList, notNullValue());
@@ -78,11 +77,11 @@ public class ChannelRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-  public void findAllNonDeletedChannelEntityShouldReturnWithOnlyNonDeletedChannelEntities() {
+  public void findAllByDeletedFalseShouldReturnWithOnlyNonDeletedChannelEntities() {
     // Given
 
     // When
-    List<ChannelEntity> actualChannelEntityList = this.channelRepository.findAllNonDeletedChannelEntity();
+    List<ChannelEntity> actualChannelEntityList = this.channelRepository.findAllByDeletedFalse();
 
     // Then
     assertThat(actualChannelEntityList, notNullValue());
@@ -95,5 +94,4 @@ public class ChannelRepositoryIT extends AbstractRepositoryIT {
       Assert.fail();
     }
   }
-
 }

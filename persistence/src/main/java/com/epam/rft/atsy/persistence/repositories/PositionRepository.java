@@ -1,16 +1,17 @@
 package com.epam.rft.atsy.persistence.repositories;
 
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 /**
  * Repository that allows operations with positions in database.
  */
-public interface PositionRepository extends JpaRepository<PositionEntity, Long> {
+public interface PositionRepository extends LogicallyDeletableRepository<PositionEntity, Long> {
 
+  /**
+   * Returns the {@code PositionEntity} that contains the {@code positionName}.
+   *
+   * @param positionName the name of the position
+   * @return the {@code PositionEntity} that contains the {@code positionName}
+   */
   PositionEntity findByName(String positionName);
-
-  List<PositionEntity> findAllNonDeletedPositionEntity();
 }

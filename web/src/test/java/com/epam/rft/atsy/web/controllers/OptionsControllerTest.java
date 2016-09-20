@@ -14,7 +14,7 @@ public class OptionsControllerTest extends AbstractControllerTest {
 
   @Override
   protected Object[] controllersUnderTest() {
-    return new Object[] { new OptionsController() };
+    return new Object[]{new OptionsController()};
   }
 
   @Test

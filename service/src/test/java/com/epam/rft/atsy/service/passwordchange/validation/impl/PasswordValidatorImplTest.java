@@ -40,14 +40,16 @@ public class PasswordValidatorImplTest {
 
     passwordValidator = new PasswordValidatorImpl(passwordValidationRules);
     try {
-      doThrow(new PasswordValidationException()).when(failingRule).validate(any(PasswordChangeDTO.class));
+      doThrow(new PasswordValidationException()).when(failingRule)
+          .validate(any(PasswordChangeDTO.class));
     } catch (PasswordValidationException e) {
       e.printStackTrace();
     }
   }
 
   @Test
-  public void validateShouldReturnTrueWhenAllRulesAreSatisfied() throws PasswordValidationException {
+  public void validateShouldReturnTrueWhenAllRulesAreSatisfied()
+      throws PasswordValidationException {
     // Given
     passwordValidationRules.add(successfulRule);
 
@@ -68,7 +70,8 @@ public class PasswordValidatorImplTest {
   }
 
   @Test
-  public void validateShouldCallEachRulesIsValidMethodUntilTheFirstFailingRule() throws PasswordValidationException {
+  public void validateShouldCallEachRulesIsValidMethodUntilTheFirstFailingRule()
+      throws PasswordValidationException {
     // Given
     passwordValidationRules.add(successfulRule);
     passwordValidationRules.add(failingRule);

@@ -13,7 +13,6 @@ public interface ApplicationsService {
 
   /**
    * Returns the application with the specified id.
-   *
    * @param applicationId the id of the searched application
    * @return the application
    */
@@ -21,7 +20,6 @@ public interface ApplicationsService {
 
   /**
    * Returns a list of the applications of a specified candidate.
-   *
    * @param candidateDTO the candidate
    * @return a list of applications
    */
@@ -31,7 +29,6 @@ public interface ApplicationsService {
 
   /**
    * Saves an application to the database and returns it's id.
-   *
    * @param applicationDTO the application
    * @return the id of application
    */
@@ -39,8 +36,7 @@ public interface ApplicationsService {
 
   /**
    * Saves an application and a state to the database and returns the application's id.
-   *
-   * @param applicationDTO  the application
+   * @param applicationDTO the application
    * @param stateHistoryDTO the state of application
    * @return the id of application
    */

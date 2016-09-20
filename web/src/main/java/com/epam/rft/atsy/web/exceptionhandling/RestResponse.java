@@ -35,7 +35,6 @@ public class RestResponse {
    * Adds a new key-value pair to the map of fields. By default the key is
    * the name of the field containing malformed input and the value is the
    * corresponding detail message.
-   *
    * @param field the name of the field
    * @param value the corresponding detail message
    */

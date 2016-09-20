@@ -69,7 +69,8 @@ public class PasswordUniqueRuleTest {
   }
 
   @Test
-  public void validateShouldBeValidForEmptyPasswordHistory() throws PasswordUniqueValidationException {
+  public void validateShouldBeValidForEmptyPasswordHistory()
+      throws PasswordUniqueValidationException {
     //Given
     PasswordChangeDTO passwordChangeDto = PasswordChangeDTO.builder()
         .newPassword(NEW_PASSWORD)

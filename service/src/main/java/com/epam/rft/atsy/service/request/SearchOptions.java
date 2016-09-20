@@ -20,6 +20,7 @@ public class SearchOptions {
   private String name;
   private String email;
   private String phone;
+  private String position;
 
   /**
    * Constructs a new instance of {@code SearchOptions}.
@@ -29,10 +30,13 @@ public class SearchOptions {
    * the database
    * @param phone a String which represents the value of the phone field which will be searched in
    * the database
+   * @param positions a String which represents the value of the positions field which will be
+   * searched in the database
    */
-  public SearchOptions(String name, String email, String phone) {
+  public SearchOptions(String name, String email, String phone, String position) {
     this.name = MoreObjects.firstNonNull(name, StringUtils.EMPTY);
     this.email = MoreObjects.firstNonNull(email, StringUtils.EMPTY);
     this.phone = MoreObjects.firstNonNull(phone, StringUtils.EMPTY);
+    this.position = MoreObjects.firstNonNull(position, StringUtils.EMPTY);
   }
 }

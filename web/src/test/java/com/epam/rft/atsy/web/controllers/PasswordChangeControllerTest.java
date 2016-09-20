@@ -111,14 +111,16 @@ public class PasswordChangeControllerTest extends AbstractControllerTest {
       throws Exception {
 
     try {
-      doThrow(PasswordValidationException.class).when(passwordValidator).validate(passwordChangeDto);
+      doThrow(PasswordValidationException.class).when(passwordValidator)
+          .validate(passwordChangeDto);
     } catch (PasswordValidationException e) {
       mockMvc.perform(buildPostRequest())
           .andExpect(status().isOk())
           .andExpect(view().name(VIEW_NAME))
           .andExpect(forwardedUrl(VIEW_PREFIX + VIEW_NAME + VIEW_SUFFIX))
           .andExpect(model().attributeExists(VALIDATION_ERROR_KEY))
-          .andExpect(model().attribute(VALIDATION_ERROR_KEY, PASSWORD_VALIDATION_ERROR_MESSAGE_KEY));
+          .andExpect(
+              model().attribute(VALIDATION_ERROR_KEY, PASSWORD_VALIDATION_ERROR_MESSAGE_KEY));
 
       then(passwordValidator).should().validate(passwordChangeDto);
       verifyZeroInteractions(passwordChangeService);
