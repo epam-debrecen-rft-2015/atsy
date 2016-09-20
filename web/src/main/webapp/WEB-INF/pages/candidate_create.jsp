@@ -70,7 +70,8 @@
                                       value="${fn:escapeXml(candidate.name)}"
                                        placeholder="${i18nname}"
                                        data-error="${nameEmptyValue}"
-                                       required maxlength="100">
+                                       required maxlength="100"
+                                       autofocus>
 
                                 <div id="name-errors" class="help-block with-errors"></div>
                                 <p class="showValue form-control-static"><c:out value="${candidate.name}"/></p>

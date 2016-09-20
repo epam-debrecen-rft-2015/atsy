@@ -3,6 +3,8 @@ package com.epam.rft.atsy.cucumber.candidate.creation;
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForPageLoadAfter;
 import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.openqa.selenium.support.ui.ExpectedConditions.textToBe;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfAllElementsLocatedBy;
 
@@ -210,4 +212,10 @@ public class CandidateCreationStepDefs {
         "document.getElementById('" + id + "').setAttribute('maxlength', '" + String.valueOf(length)
             + "')");
   }
+
+  @Then("the name field is in focus")
+  public void usernameFieldNotInFocus() {
+    assertThat(getDriver().findElement(By.id("name")).equals(getDriver().switchTo().activeElement()), is(true));
+  }
+
 }
