@@ -229,9 +229,8 @@
                               <c:if test="${stat.first}">
                                   <spring:message code="statehistory.error.result.range" var="errorResultRangeMessage"/>
 
-                                  <input required class="stateInput hidden" type="number" name="result" id="resultInput" value="${data.result}"
+                                  <input required class="stateInput hidden" type="text" pattern="^(?:100|[1-9]?[0-9])$" name="result" id="resultInput" value="${data.result}"
                                     data-bind="valueWithInit: 'result'"
-                                    max="100" min="0"
                                     data-error="${errorResultRangeMessage}" />
                               </c:if>
                           </div>
