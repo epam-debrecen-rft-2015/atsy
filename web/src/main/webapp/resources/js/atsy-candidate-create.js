@@ -29,34 +29,95 @@ function CandidateCreateModel(){
         }
     };
 
-    self.ajaxCall = function() {
-        var form = $("#candidate-create-form");
-        $.ajax({
-            url: form.attr('action'),
-            method: form.attr('method'),
-            contentType: 'application/json',
-            dataType: "json",
-            data: JSON.stringify({
-                id: self.id(),
-                name: self.name(),
-                referer: self.referer(),
-                email: self.email(),
-                languageSkill: self.languageSkill(),
-                phone: self.phone(),
-                description: self.description(),
-                cvFilename: self.cvFilename()
-            })
-        }).done(function (xhr) {
-            window.location = form.attr('action')+ '/' + xhr.id;
-        }).error(function (xhr) {
-            self.errorResponse(xhr.responseJSON);
+    function sendCandidateWithAjax(url, method) {
+        return $.ajax({
+                   url: url,
+                   method: method,
+                   contentType: 'application/json',
+                   dataType: "json",
+                   data: JSON.stringify({
+                       id: self.id(),
+                       name: self.name(),
+                       referer: self.referer(),
+                       email: self.email(),
+                       languageSkill: self.languageSkill(),
+                       phone: self.phone(),
+                       description: self.description(),
+                       cvFilename: self.cvFilename()
+                   })
+               });
+    }
 
-            self.showError(true);
+    function sendFileWithAjax(url, formData) {
+        return $.ajax({
+                   url: url,
+                   data: formData,
+                   type: 'POST',
+                   contentType: false,
+                   processData: false,
+               });
+    }
+
+    self.ajaxCall = function() {
+        var candidateStatusCode, fileStatusCode;
+        var form = $("#candidate-create-form");
+
+        sendCandidateWithAjax("./candidate/validate", form.attr('method')).done(function (xhr) {
+            candidateStatusCode = xhr.statusCode;
+            var formData = new FormData();
+            formData.append('file', $('input[type=file]')[0].files[0]);
+
+            sendFileWithAjax('./candidate/fileUpload/validate', formData).done(function (xhr) {
+                fileStatusCode = xhr.statusCode;
+
+                if (candidateStatusCode === 200 && fileStatusCode === 200) {
+                   sendCandidateWithAjax(form.attr('action'), form.attr('method')).done(function (xhr) {
+                       var formData = new FormData();
+                       formData.append('file', $('input[type=file]')[0].files[0]);
+                       sendFileWithAjax('./candidate/fileUpload/' + xhr.id, formData).done(function (xhr) {
+                           window.location = form.attr('action')+ '/' + xhr.id;
+                       }).error(function (xhr) {
+                           self.errorResponse(xhr.responseJSON);
+                           self.showError(true);
+                       });
+                   });
+                }
+            }).error(function (xhr) {
+                fileStatusCode = xhr.statusCode;
+                self.errorResponse(xhr.responseJSON);
+                self.showError(true);
+            });
+        }).error(function (xhr) {
+
+            var formData = new FormData();
+            formData.append('file', $('input[type=file]')[0].files[0]);
+            sendFileWithAjax('./candidate/fileUpload/validate', formData).done(function (xhr) {
+                fileStatusCode = 200;
+            }).error(function (xhr) {
+                fileStatusCode = 400;
+            });
+
+            sendCandidateWithAjax(form.attr('action'), form.attr('method')).error(function (xhr) {
+                self.errorResponse(xhr.responseJSON);
+                self.showError(true);
+
+                if (fileStatusCode === 400) {
+                    var formData = new FormData();
+                    formData.append('file', $('input[type=file]')[0].files[0]);
+                    sendFileWithAjax('./candidate/fileUpload/' + 1, formData).error(function (xhr) {
+                        self.fileErrorResponse(xhr.responseJSON);
+                        self.showFileError(true);
+                    });
+
+                }
+            });
         });
     }
 
     self.errorResponse = ko.observable(null);
+    self.fileErrorResponse = ko.observable(null);
     self.showError = ko.observable(false);
+    self.showFileError = ko.observable(false);
 
     self.errorMessage = ko.pureComputed(function() {
       if (self.errorResponse() === null) {
@@ -64,6 +125,14 @@ function CandidateCreateModel(){
       }
 
       return self.errorResponse().errorMessage;
+    });
+
+    self.fileErrorMessage = ko.pureComputed(function() {
+        if (self.fileErrorResponse() === null) {
+            return "";
+        }
+
+        return self.fileErrorResponse().errorMessage;
     });
 
     self.fieldMessages = ko.pureComputed(function() {
@@ -81,6 +150,7 @@ function CandidateCreateModel(){
     self.modify_display_true = function() {
         self.modify(true);
         self.showError(false);
+        self.showFileError(false);
         $("#candidate-create-form").validator('destroy');
         candidateModel.id(savedModel.id);
         candidateModel.name(savedModel.name);

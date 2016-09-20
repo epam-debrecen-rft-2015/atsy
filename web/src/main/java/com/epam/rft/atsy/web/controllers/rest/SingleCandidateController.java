@@ -4,6 +4,7 @@ import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+
 import javax.validation.Valid;
 
 /**
@@ -26,6 +28,7 @@ import javax.validation.Valid;
 @RequestMapping(value = "/secure/candidate")
 public class SingleCandidateController {
   private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
+  private static final String STATUS_CODE = "statusCode";
 
   @Autowired
   private CandidateService candidateService;
@@ -35,9 +38,10 @@ public class SingleCandidateController {
 
   /**
    * Saves or updates and existing candidate.
+   *
    * @param candidateDTO an object which wraps the data of a candidate
-   * @param result an object used to check if any error occurs
-   * @param locale language of the response
+   * @param result       an object used to check if any error occurs
+   * @param locale       language of the response
    * @return a ResponseEntity object, which contains HTTP status code and error message if it occurs
    */
   @RequestMapping(method = RequestMethod.POST)
@@ -52,10 +56,22 @@ public class SingleCandidateController {
     }
   }
 
+  @RequestMapping(path = "/validate", method = RequestMethod.POST)
+  public ResponseEntity validate(@Valid @RequestBody CandidateDTO candidateDTO, BindingResult result, Locale locale) {
+    if (result.hasErrors()) {
+      return new ResponseEntity(Collections.singletonMap(STATUS_CODE, Long.valueOf(HttpStatus.BAD_REQUEST.value())),
+          HttpStatus.BAD_REQUEST);
+    }
+    if (candidateService.getCandidateDtoByPhone(candidateDTO.getPhone()) != null || candidateService.getCandidateDtoByEmail(candidateDTO.getEmail()) != null) {
+      return new ResponseEntity(Collections.singletonMap(STATUS_CODE, Long.valueOf(HttpStatus.BAD_REQUEST.value())),
+          HttpStatus.BAD_REQUEST);
+    }
+    return new ResponseEntity(Collections.singletonMap(STATUS_CODE, Long.valueOf(HttpStatus.OK.value())),
+        HttpStatus.OK);
+  }
+
   private RestResponse parseValidationErrors(List<FieldError> fieldErrors, Locale locale) {
-    String
-        errorMessage =
-        messageKeyResolver.resolveMessageOrDefault(COMMON_INVALID_INPUT_MESSAGE_KEY);
+    String errorMessage = messageKeyResolver.resolveMessageOrDefault(COMMON_INVALID_INPUT_MESSAGE_KEY);
     RestResponse restResponse = new RestResponse(errorMessage);
 
     for (FieldError fieldError : fieldErrors) {
