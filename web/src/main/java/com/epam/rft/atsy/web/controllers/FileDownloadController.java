@@ -2,7 +2,8 @@ package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
-import com.epam.rft.atsy.web.util.CandidateCVFileHandler;
+import com.epam.rft.atsy.web.handler.FileHandler;
+import com.epam.rft.atsy.web.handler.FolderHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,7 +41,10 @@ public class FileDownloadController {
   private CandidateService candidateService;
 
   @Autowired
-  private CandidateCVFileHandler candidateCVFileHandler;
+  private FolderHandler folderHandler;
+
+  @Autowired
+  private FileHandler fileHandler;
 
   @ResponseBody
   @RequestMapping(value = "/secure/candidate/fileDownload/{candidateId}", method = RequestMethod.GET)
@@ -53,9 +57,9 @@ public class FileDownloadController {
     if (StringUtils.isNotBlank(candidateCVFilename)) {
 
       try {
-        File file = candidateCVFileHandler
-            .createCVFileFromFolderLocationAndCandidateDtoAndCVFilename(uploadLocation, candidateId,
-                candidateCVFilename);
+        File file = fileHandler
+            .getFileByParentDirectoryPathAndFolderNameAndFilename(uploadLocation,
+                String.valueOf(candidateId), candidateCVFilename);
         if (!file.exists()) {
           throw new IOException();
         }
