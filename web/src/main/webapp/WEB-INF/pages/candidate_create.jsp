@@ -207,6 +207,7 @@
 
 
                     <c:if test="${not empty candidateId}">
+                      <div class="row">
                         <form:form method="POST" action="${fileUpload}/${candidateId}" enctype="multipart/form-data">
                             <c:if test="${not empty validationSuccessKey}">
                                 <div id="globalMessage" class="alert alert-success" role="alert">
@@ -234,6 +235,7 @@
                                     <spring:message code="cv"/>
                                 </label>
 
+
                                 <div class="form-group">
                                     <input type="file" name="file" />
                                     <button type="submit" class="btn btn-link"><spring:message code="upload.button"/></button>
@@ -253,13 +255,14 @@
                             </c:if>
 
                         </form:form>
+                        </div>
                     </c:if>
 
 
                     <c:choose>
                         <c:when test="${not empty candidate.id}">
                             <div id="new_application" class="text-right">
-                                <a class="btn btn-success" href="${application}?candidateId=${candidate.id}" id="add_application_button"><spring:message
+                                <a class="btn btn-success showValue" href="${application}?candidateId=${candidate.id}" id="add_application_button"><spring:message
                                         code="candidate.new.application.button"/></a>
                             </div>
                             <%--table--%>
