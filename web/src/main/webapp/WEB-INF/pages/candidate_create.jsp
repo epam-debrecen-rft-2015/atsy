@@ -117,7 +117,7 @@
                                 <p class="showValue">
                                   <a href="mailto:${candidate.email}"><c:out value = "${candidate.email}"/></a>
                                 </p>
-                                    <span id="email-errors" class="help-block with-errors"></span>
+                                    <div id="email-errors" class="help-block with-errors"></div>
                             </div>
                           </div>
 

@@ -1,11 +1,16 @@
 package com.epam.rft.atsy.cucumber.candidate.modification;
 
+import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
+import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForAjax;
+import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForPageLoadAfter;
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfAllElementsLocatedBy;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
+
 import com.epam.rft.atsy.cucumber.util.DriverProvider;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
-import cucumber.api.java.en.And;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -15,11 +20,10 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.epam.rft.atsy.cucumber.util.DriverProvider.*;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.openqa.selenium.support.ui.ExpectedConditions.*;
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 
 public class CandidateModificationStepDefs {
 
