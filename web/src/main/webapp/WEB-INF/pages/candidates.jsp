@@ -54,7 +54,7 @@
                             <th data-field="phone" data-align="left" data-sortable="true"><spring:message
                                     code="welcome.candidates.table.phone.title"/></th>
 
-                            <th data-field="positions" data-align="left" data-sortable="true"><spring:message
+                            <th data-field="positions" data-align="left" data-sortable="true" data-formatter="escapeHTMLFormatter"><spring:message
                                     code="welcome.candidates.table.positions.title"/></th>
                         </tr>
                         </thead>
