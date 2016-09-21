@@ -3,6 +3,7 @@ package com.epam.rft.atsy.web.controllers.rest;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
+import com.epam.rft.atsy.web.helper.CandidateValidatorHelper;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +29,15 @@ import javax.validation.Valid;
 @RequestMapping(value = "/secure/candidate")
 public class SingleCandidateController {
   private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
-  private static final String CANDIDATE_ERROR_DUPLICATE_MESSAGE_KEY = "candidate.error.duplicate";
 
   @Autowired
   private CandidateService candidateService;
 
   @Autowired
   private MessageKeyResolver messageKeyResolver;
+
+  @Autowired
+  private CandidateValidatorHelper candidateValidatorHelper;
 
   /**
    * Saves or updates and existing candidate.
@@ -57,16 +60,17 @@ public class SingleCandidateController {
   }
 
   @RequestMapping(path = "/validate", method = RequestMethod.POST)
-  public ResponseEntity validateCandidate(@Valid @RequestBody CandidateDTO candidateDTO, BindingResult result, Locale locale) {
+  public ResponseEntity validateCandidate(@Valid @RequestBody CandidateDTO candidateDTO, BindingResult result,
+                                          Locale locale) {
     if (result.hasErrors()) {
       return new ResponseEntity(parseValidationErrors(result.getFieldErrors(), locale), HttpStatus.BAD_REQUEST);
     }
-    if (candidateService.getCandidateDtoByPhone(candidateDTO.getPhone()) != null
-        || candidateService.getCandidateDtoByEmail(candidateDTO.getEmail()) != null) {
-      String errorMessage = messageKeyResolver.resolveMessageOrDefault(CANDIDATE_ERROR_DUPLICATE_MESSAGE_KEY);
-      return new ResponseEntity(new RestResponse(errorMessage), HttpStatus.BAD_REQUEST);
+    // Create a new candidate
+    if (candidateDTO.getId() == null) {
+      return candidateValidatorHelper.validateNonExistingCandidate(candidateDTO);
+    } else {
+      return candidateValidatorHelper.validateExistingCandidate(candidateDTO);
     }
-    return new ResponseEntity(RestResponse.NO_ERROR, HttpStatus.OK);
   }
 
   private RestResponse parseValidationErrors(List<FieldError> fieldErrors, Locale locale) {
