@@ -4,6 +4,13 @@ $('.table').bootstrapTable({
     }
 });
 
+$("document").ready(function(){
+
+    $("#file").change(function() {
+        $("#fileName").text(new Option($('input[type=file]')[0].files[0].name).innerHTML);
+    });
+});
+
 function CandidateCreateModel(){
     var self = this;
 
@@ -162,6 +169,7 @@ function CandidateCreateModel(){
         candidateModel.email(savedModel.email);
         candidateModel.languageSkill(savedModel.languageSkill);
         candidateModel.phone(savedModel.phone);
+        $("#fileName").text('');
     };
 
     self.modify_display_false = function() {

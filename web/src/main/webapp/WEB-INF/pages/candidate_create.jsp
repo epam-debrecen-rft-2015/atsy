@@ -145,9 +145,36 @@
                             </div>
                         </div>
 
+                        <div class="error col-lg-12 col-md-12 col-sm-12"></div>
 
-                        <div class="error col-lg-12 col-md-12 col-sm-12">
+                        <div class="form-group" id="cvDiv">
+                            <label class="control-label col-lg-2 col-md-8 col-sm-2 text-right" for="name">
+                                <spring:message code="cv"/>
+                            </label>
+
+                            <c:if test="${empty candidate.cvFilename}">
+
+                                <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                                    <label class="btn btn-primary" for="file">
+                                        <i class="glyphicon glyphicon-upload"></i>
+                                    </label>
+                                    <input class="input form-control" type="file" name="file" id="file" style="display:none;"/>
+                                    <p id="fileName"/>
+                                </div>
+                            </c:if>
+
+                            <c:if test="${not empty candidate.cvFilename}">
+
+                                <label class="control-label col-lg-2 col-md-4 col-sm-4 text-left" for="name">
+                                    <c:url value='/secure/candidate/fileDownload/${candidateId}' var="urlValue" />
+                                    <a href="${urlValue}">
+                                        <c:out value="${candidate.cvFilename}"/>
+                                    </a>
+                                </label>
+                            </c:if>
                         </div>
+                        <div class="error col-lg-12 col-md-12 col-sm-12"></div>
+
                         <div class="form-group"
                              id="phoneDiv">
                             <spring:message code="candidate.phone.field" var="i18nphone"/>
@@ -168,32 +195,7 @@
                             </div>
 
                         </div>
-
-                        <c:if test="${empty candidate.cvFilename}">
-                            <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="name">
-                                <spring:message code="cv"/>
-                            </label>
-
-                            <div class="form-group">
-                                <input type="file" name="file" id="file" />
-                            </div>
-                        </c:if>
-
-                        <c:if test="${not empty candidate.cvFilename}">
-                            <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="name">
-                                <spring:message code="cv"/>
-                            </label>
-
-                            <label class="control-label col-lg-2 col-md-4 col-sm-4 text-left" for="name">
-                                <c:url value='/secure/candidate/fileDownload/${candidateId}' var="urlValue" /> <a href="${urlValue}">
-                                <c:out value="${candidate.cvFilename}"/>
-                                </a>
-                            </label>
-                        </c:if>
-                        <div class="error col-lg-12 col-md-12 col-sm-12">
-                        </div>
-
-
+                        <div class="error col-lg-12 col-md-12 col-sm-12"></div>
 
                         <div class="form-group"
                              id="descriptionDiv">
