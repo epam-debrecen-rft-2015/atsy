@@ -40,7 +40,6 @@ public class FileUploadController {
 
   private static final String CANDIDATE_ALREADY_HAS_CV_FILE_MESSAGE_KEY = "candidate.already.has.cv.file";
   private static final String FILE = "file";
-  private static final String STATUS_CODE = "statusCode";
 
   @Value("${upload_location_cv}")
   private String uploadLocation;
@@ -112,17 +111,15 @@ public class FileUploadController {
     MultipartFile multipartFile = multipartHttpServletRequest.getFile(FILE);
 
     if (multipartFile == null) {
-      return new ResponseEntity(Collections.singletonMap(STATUS_CODE, Long.valueOf(HttpStatus.OK.value())),
-          HttpStatus.OK);
+      return new ResponseEntity(RestResponse.NO_ERROR, HttpStatus.OK);
     }
     try {
       fileValidator.validate(multipartFile);
     } catch (FileValidationException e) {
-      return new ResponseEntity(Collections.singletonMap(STATUS_CODE, Long.valueOf(HttpStatus.BAD_REQUEST.value())),
-          HttpStatus.BAD_REQUEST);
+      String errorMessage = this.messageKeyResolver.resolveMessageOrDefault(ruleValidationExceptionMapper.getMessageKeyByException(e));
+      return new ResponseEntity(new RestResponse(errorMessage) ,HttpStatus.BAD_REQUEST);
     }
-    return new ResponseEntity(Collections.singletonMap(STATUS_CODE, Long.valueOf(HttpStatus.OK.value())),
-        HttpStatus.OK);
+    return new ResponseEntity(RestResponse.NO_ERROR, HttpStatus.OK);
 
   }
 

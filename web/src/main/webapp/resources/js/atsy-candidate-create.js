@@ -59,72 +59,76 @@ function CandidateCreateModel(){
     }
 
     self.ajaxCall = function() {
-        var candidateStatusCode, fileStatusCode;
+        var candidateValidationUrl = '/atsy/secure/candidate/validate';
+        var candidateUrl = '/atsy/secure/candidate';
+        var fileValidationUrl = '/atsy/secure/candidate/fileUpload/validate';
+        var fileUploadUrl = '/atsy/secure/candidate/fileUpload/';
+
         var form = $("#candidate-create-form");
+        var formData = new FormData();
+        formData.append('file', $('input[type=file]')[0].files[0]);
 
-        sendCandidateWithAjax("./candidate/validate", form.attr('method')).done(function (xhr) {
-            candidateStatusCode = xhr.statusCode;
-            var formData = new FormData();
-            formData.append('file', $('input[type=file]')[0].files[0]);
-
-            sendFileWithAjax('./candidate/fileUpload/validate', formData).done(function (xhr) {
-                fileStatusCode = xhr.statusCode;
-
-                if (candidateStatusCode === 200 && fileStatusCode === 200) {
-                   sendCandidateWithAjax(form.attr('action'), form.attr('method')).done(function (xhr) {
-                       var formData = new FormData();
-                       formData.append('file', $('input[type=file]')[0].files[0]);
-                       sendFileWithAjax('./candidate/fileUpload/' + xhr.id, formData).done(function (xhr) {
-                           window.location = form.attr('action')+ '/' + xhr.id;
-                       }).error(function (xhr) {
-                           self.errorResponse(xhr.responseJSON);
-                           self.showError(true);
-                       });
-                   });
-                }
-            }).error(function (xhr) {
-                fileStatusCode = xhr.statusCode;
-                self.errorResponse(xhr.responseJSON);
-                self.showError(true);
-            });
-        }).error(function (xhr) {
-
-            var formData = new FormData();
-            formData.append('file', $('input[type=file]')[0].files[0]);
-            sendFileWithAjax('./candidate/fileUpload/validate', formData).done(function (xhr) {
-                fileStatusCode = 200;
-            }).error(function (xhr) {
-                fileStatusCode = 400;
-            });
-
-            sendCandidateWithAjax(form.attr('action'), form.attr('method')).error(function (xhr) {
-                self.errorResponse(xhr.responseJSON);
-                self.showError(true);
-
-                if (fileStatusCode === 400) {
-                    var formData = new FormData();
-                    formData.append('file', $('input[type=file]')[0].files[0]);
-                    sendFileWithAjax('./candidate/fileUpload/' + 1, formData).error(function (xhr) {
+        // Send candidate to validate
+        sendCandidateWithAjax(candidateValidationUrl, form.attr('method')).done(function (xhr) {
+            // If candidate is valid, then hide the error msg
+            self.showError(false);
+            // If candidate is valid, then send file to validate
+            sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
+                // If candidate and file are valid, then hide error msg
+                self.showFileError(false);
+                // Send candidate to save or update
+                sendCandidateWithAjax(candidateUrl, form.attr('method')).done(function (xhr) {
+                    // If there is no error, then hide error msg
+                    self.showError(false);
+                    // Send file to save
+                    sendFileWithAjax(fileUploadUrl + xhr.id, formData).done(function (xhr) {
+                        // If there is no error with file, then hide error msg
+                        self.showFileError(false);
+                        // If candidate and file are correct
+                        window.location = form.attr('action')+ '/' + xhr.id;
+                    // If there is error with file, then show error msg
+                    }).error(function (xhr) {
                         self.fileErrorResponse(xhr.responseJSON);
                         self.showFileError(true);
                     });
+                // If there is error with candidate, then show error msg
+                }).error(function (xhr) {
+                    self.candidateErrorResponse(xhr.responseJSON);
+                    self.showError(true);
+                });
+            // If file is not valid, then show error msg
+            }).error(function (xhr) {
+                self.fileErrorResponse(xhr.responseJSON);
+                self.showFileError(true);
+            });
+        // If candidate is not valid, then show error msg
+        }).error(function (xhr) {
+            self.candidateErrorResponse(xhr.responseJSON);
+            self.showError(true);
 
-                }
+            // Candidate is not valid but we send file to validate
+            sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
+                // If file is valid, then hide error msg
+                 self.showFileError(false);
+            // If file is not valid, then show error msg
+            }).error(function (xhr) {
+                 self.fileErrorResponse(xhr.responseJSON);
+                 self.showFileError(true);
             });
         });
     }
 
-    self.errorResponse = ko.observable(null);
+    self.candidateErrorResponse = ko.observable(null);
     self.fileErrorResponse = ko.observable(null);
     self.showError = ko.observable(false);
     self.showFileError = ko.observable(false);
 
     self.errorMessage = ko.pureComputed(function() {
-      if (self.errorResponse() === null) {
+      if (self.candidateErrorResponse() === null) {
         return ""
       }
 
-      return self.errorResponse().errorMessage;
+      return self.candidateErrorResponse().errorMessage;
     });
 
     self.fileErrorMessage = ko.pureComputed(function() {
@@ -136,12 +140,12 @@ function CandidateCreateModel(){
     });
 
     self.fieldMessages = ko.pureComputed(function() {
-        if (self.errorResponse() === null) {
+        if (self.candidateErrorResponse() === null) {
           return [];
         }
 
-        return Object.keys(self.errorResponse().fields).map(function(key) {
-            return self.errorResponse().fields[key];
+        return Object.keys(self.candidateErrorResponse().fields).map(function(key) {
+            return self.candidateErrorResponse().fields[key];
         });
     });
 
@@ -158,7 +162,6 @@ function CandidateCreateModel(){
         candidateModel.email(savedModel.email);
         candidateModel.languageSkill(savedModel.languageSkill);
         candidateModel.phone(savedModel.phone);
-        candidateModel.referer(savedModel.referer);
     };
 
     self.modify_display_false = function() {
