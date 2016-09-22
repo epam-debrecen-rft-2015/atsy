@@ -27,7 +27,7 @@ public class CandidateValidatorHelper {
     CandidateDTO candidateDTOByEmail = this.candidateService.getCandidateDtoByEmail(candidateDTO.getEmail());
     CandidateDTO candidateDTOByPhone = this.candidateService.getCandidateDtoByPhone(candidateDTO.getPhone());
 
-    if (candidateDTOByEmail == null || candidateDTOByPhone == null) {
+    if (candidateDTOByEmail == null && candidateDTOByPhone == null) {
       return new ResponseEntity(RestResponse.NO_ERROR, HttpStatus.OK);
     }
 

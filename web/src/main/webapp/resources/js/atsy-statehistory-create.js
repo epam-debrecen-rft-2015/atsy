@@ -14,6 +14,10 @@ $(document).ready(function() {
   $('#feedbackDateInput').datetimepicker({
     format: 'YYYY-MM-DD HH:mm',
   });
+
+  $("#file").change(function() {
+      $("#fileName").text(new Option($('input[type=file]')[0].files[0].name).innerHTML);
+  });
 });
 
 function StateHistoryModel() {
@@ -47,8 +51,10 @@ function StateHistoryModel() {
           }
       };
 
- self.errorResponse = ko.observable(null);
+    self.errorResponse = ko.observable(null);
+    self.fileErrorResponse = ko.observable(null);
     self.showError = ko.observable(false);
+    self.showFileError = ko.observable(false);
 
     self.errorMessage = ko.pureComputed(function() {
       if (self.errorResponse() === null) {
@@ -57,6 +63,15 @@ function StateHistoryModel() {
 
       return self.errorResponse().errorMessage;
     });
+
+    self.fileErrorMessage = ko.pureComputed(function() {
+        if (self.fileErrorResponse() === null) {
+            return "";
+        }
+
+        return self.fileErrorResponse().errorMessage;
+    });
+
 
     self.fieldMessages = ko.pureComputed(function() {
         if (self.errorResponse() === null) {
@@ -68,26 +83,107 @@ function StateHistoryModel() {
         });
     });
 
+    function sendFileWithAjax(url, formData) {
+        return $.ajax({
+                   url: url,
+                   data: formData,
+                   type: 'POST',
+                   contentType: false,
+                   processData: false,
+               });
+    }
+
+    function sendStateHistoryViewRepresentationWithAjax(url, method) {
+        return $.ajax({
+                   url: url,
+                   method: method,
+                   contentType: 'application/json',
+                   dataType: 'json',
+                   data: ko.toJSON(self)
+               });
+    }
+
    self.ajaxCall = function() {
+
+    var stateHistoryViewRepresentationValidationUrl = '/atsy/secure/application_state/validate';
+    var fileValidationUrl = '/atsy/secure/fileUpload/validate';
+    var fileUploadUrl = '/atsy/secure/fileUpload/stateHistory/';
+
     var form = $("#create-state-form");
+    var formData = new FormData();
+
+    if(($('input[type=file]'))[0] != undefined) {
+        formData.append('file', $('input[type=file]')[0].files[0]);
+    }
 
     console.log(ko.toJSON(self));
 
-     $.ajax({
-       url: form.attr('action'),
-       method: form.attr('method'),
-             contentType: 'application/json',
-             dataType: 'json',
-             data: ko.toJSON(self),
-             success: function(data) {
-              self.redirectWithoutState();
-             },
-             error: function(xhr) {
-               self.errorResponse(xhr.responseJSON);
-               self.showError(true);
-             }
-     });
-   }
+    // Send stateHistoryViewRepresentation to validate
+    sendStateHistoryViewRepresentationWithAjax(stateHistoryViewRepresentationValidationUrl, form.attr('method')).done(function (xhr) {
+        // If stateHistoryViewRepresentation is valid, then hide the error msg
+        self.showError(false);
+        // If the file not exists
+        if (($('input[type=file]')[0] === undefined) || ($('input[type=file]').val() === '')) {
+            // Send stateHistoryViewRepresentation to save
+            sendStateHistoryViewRepresentationWithAjax(form.attr('action'), form.attr('method')).done(function (xhr) {
+                // If there is no error with stateHistoryViewRepresentation, then hide the error msg
+                self.showError(false);
+                self.redirectWithoutState();
+                // If there is error with stateHistoryViewRepresentation, then show the error msg
+            }).error(function (xhr) {
+                self.errorResponse(xhr.responseJSON);
+                self.showError(true);
+            });
+        // If the file exists
+        } else {
+            // If file exists, then send file to validate
+            sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
+                // If file is valid, then hide the error msg
+                self.showFileError(false);
+                // Send stateHistoryViewRepresentation to save or update
+                sendStateHistoryViewRepresentationWithAjax(form.attr('action'), form.attr('method')).done(function (xhr) {
+                    // If there is no error with stateHistoryViewRepresentation, then hide the error msg
+                    self.showError(false);
+                    // Send file to save
+                    sendFileWithAjax(fileUploadUrl + xhr.applicationId, formData).done(function (xhr) {
+                        // If there is no error with file, then hide error msg
+                        self.showFileError(false);
+                        // If stateHistoryViewRepresentation and file are corrects
+                        self.redirectWithoutState();
+                    }).error(function (xhr) {
+                        // If there is error with file, then show the error msg
+                        self.fileErrorResponse(xhr.responseJSON);
+                        self.showFileError(true);
+                    });
+                // If there is error with stateHistoryViewRepresentation, then show the error msg
+                }).error(function (xhr) {
+                        self.errorResponse(xhr.responseJSON);
+                        self.showError(true);
+                });
+             // If file is not valid, then show the error msg
+            }).error(function (xhr) {
+                self.fileErrorResponse(xhr.responseJSON);
+                self.showFileError(true);
+            });
+        }
+    // If stateHistoryViewRepresentation is not valid, then show error msg
+    }).error(function (xhr) {
+        self.errorResponse(xhr.responseJSON);
+        self.showError(true);
+        // If the file exists
+        if (($('input[type=file]')[0] != undefined) && ($('input[type=file]').val() != '')) {
+            // Send file to save
+            sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
+                // If there is no error with file, then hide the error msg
+                self.showFileError(false);
+            // If file is not valid, then show the error msg
+            }).error(function (xhr) {
+                self.fileErrorResponse(xhr.responseJSON);
+                self.showFileError(true);
+            });
+        }
+    });
+  }
 
    self.isRecommendationValid = ko.pureComputed(function() {
        var recomm = typeof self.recommendation !== 'undefined' ? self.recommendation() : "0";
@@ -119,6 +215,10 @@ function StateHistoryModel() {
             && self.isDayOfStartValid()
             && self.isDateOfEnterValid();
    });
+
+   self.modify_display_true = function() {
+       $("#fileName").text('');
+   };
 }
 
 

@@ -4,7 +4,7 @@ $('.table').bootstrapTable({
     }
 });
 
-$("document").ready(function(){
+$(document).ready(function() {
 
     $("#file").change(function() {
         $("#fileName").text(new Option($('input[type=file]')[0].files[0].name).innerHTML);
@@ -68,60 +68,79 @@ function CandidateCreateModel(){
     self.ajaxCall = function() {
         var candidateValidationUrl = '/atsy/secure/candidate/validate';
         var candidateUrl = '/atsy/secure/candidate';
-        var fileValidationUrl = '/atsy/secure/candidate/fileUpload/validate';
-        var fileUploadUrl = '/atsy/secure/candidate/fileUpload/';
+        var fileValidationUrl = '/atsy/secure/fileUpload/validate';
+        var fileUploadUrl = '/atsy/secure/fileUpload/candidate/';
 
         var form = $("#candidate-create-form");
         var formData = new FormData();
-        formData.append('file', $('input[type=file]')[0].files[0]);
+
+        if(($('input[type=file]'))[0] != undefined) {
+            formData.append('file', $('input[type=file]')[0].files[0]);
+        }
 
         // Send candidate to validate
         sendCandidateWithAjax(candidateValidationUrl, form.attr('method')).done(function (xhr) {
             // If candidate is valid, then hide the error msg
             self.showError(false);
-            // If candidate is valid, then send file to validate
-            sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
-                // If candidate and file are valid, then hide error msg
-                self.showFileError(false);
-                // Send candidate to save or update
+            if (($('input[type=file]')[0] === undefined) || ($('input[type=file]').val() === '')) {
+                // Send candidate to save
                 sendCandidateWithAjax(candidateUrl, form.attr('method')).done(function (xhr) {
-                    // If there is no error, then hide error msg
+                    // If there is no error with candidate, then hide the error msg
                     self.showError(false);
-                    // Send file to save
-                    sendFileWithAjax(fileUploadUrl + xhr.id, formData).done(function (xhr) {
-                        // If there is no error with file, then hide error msg
-                        self.showFileError(false);
-                        // If candidate and file are correct
-                        window.location = form.attr('action')+ '/' + xhr.id;
-                    // If there is error with file, then show error msg
-                    }).error(function (xhr) {
-                        self.fileErrorResponse(xhr.responseJSON);
-                        self.showFileError(true);
-                    });
-                // If there is error with candidate, then show error msg
+                    window.location = form.attr('action')+ '/' + xhr.id;
+                    // If there is error with candidate, then show the error msg
                 }).error(function (xhr) {
                     self.candidateErrorResponse(xhr.responseJSON);
                     self.showError(true);
                 });
-            // If file is not valid, then show error msg
-            }).error(function (xhr) {
-                self.fileErrorResponse(xhr.responseJSON);
-                self.showFileError(true);
-            });
+             // If the file exists
+            } else {
+                // If file exists, then send file to validate
+                sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
+                    // If file is valid, then hide the error msg
+                    self.showFileError(false);
+                    // Send candidate to save or update
+                    sendCandidateWithAjax(candidateUrl, form.attr('method')).done(function (xhr) {
+                        // If there is no error with candidate, then hide the error msg
+                        self.showError(false);
+                        // Send file to save
+                        sendFileWithAjax(fileUploadUrl + xhr.id, formData).done(function (xhr) {
+                            // If there is no error with file, then hide error msg
+                            self.showFileError(false);
+                            // If candidate and file are corrects
+                            window.location = form.attr('action')+ '/' + xhr.id;
+                        }).error(function (xhr) {
+                            // If there is error with file, then show the error msg
+                            self.fileErrorResponse(xhr.responseJSON);
+                            self.showFileError(true);
+                        });
+                    // If there is error with candidate, then show the error msg
+                    }).error(function (xhr) {
+                        self.candidateErrorResponse(xhr.responseJSON);
+                        self.showError(true);
+                    });
+                // If file is not valid, then show the error msg
+                }).error(function (xhr) {
+                    self.fileErrorResponse(xhr.responseJSON);
+                    self.showFileError(true);
+                });
+            }
         // If candidate is not valid, then show error msg
         }).error(function (xhr) {
             self.candidateErrorResponse(xhr.responseJSON);
             self.showError(true);
-
-            // Candidate is not valid but we send file to validate
-            sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
-                // If file is valid, then hide error msg
-                 self.showFileError(false);
-            // If file is not valid, then show error msg
-            }).error(function (xhr) {
-                 self.fileErrorResponse(xhr.responseJSON);
-                 self.showFileError(true);
-            });
+            // If the file exists
+            if (($('input[type=file]')[0] != undefined) && ($('input[type=file]').val() != '')) {
+                // Send file to save
+                sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
+                    // If there is no error with file, then hide the error msg
+                    self.showFileError(false);
+                // If file is not valid, then show the error msg
+                }).error(function (xhr) {
+                    self.fileErrorResponse(xhr.responseJSON);
+                    self.showFileError(true);
+                });
+            }
         });
     }
 

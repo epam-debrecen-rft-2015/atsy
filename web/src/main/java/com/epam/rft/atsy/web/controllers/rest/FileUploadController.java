@@ -35,11 +35,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/secure/candidate/fileUpload")
+@RequestMapping(value = "/secure/fileUpload")
 public class FileUploadController {
 
   private static final String CANDIDATE_ALREADY_HAS_CV_FILE_MESSAGE_KEY = "candidate.already.has.cv.file";
-  private static final String FILE = "file";
+  private static final String FILE_PARAMETER_NAME = "file";
 
   @Value("${upload_location_cv}")
   private String uploadLocation;
@@ -62,20 +62,51 @@ public class FileUploadController {
   @Autowired
   private MessageKeyResolver messageKeyResolver;
 
-  @RequestMapping(path = "/{candidateId}", method = RequestMethod.POST)
-  public ResponseEntity uploadFile(@PathVariable("candidateId") Long candidateId,
-                                   HttpServletRequest httpServletRequest)
-      throws IOException, ServletException {
+  @RequestMapping(path = "/candidate/{candidateId}", method = RequestMethod.POST)
+  public ResponseEntity uploadFileF(@PathVariable("candidateId") Long candidateId,
+                                    HttpServletRequest httpServletRequest) throws IOException, ServletException {
+
+    return uploadFile(candidateId, candidateId, httpServletRequest);
+  }
+
+  @RequestMapping(path = "/stateHistory/{applicationId}", method = RequestMethod.POST)
+  public ResponseEntity uploadFileForState(@PathVariable("applicationId") Long applicationId,
+                                           HttpServletRequest httpServletRequest) throws IOException, ServletException {
+
+    Long candidateId = this.candidateService.getCandidateByApplicationID(applicationId).getId();
+    return uploadFile(candidateId, applicationId, httpServletRequest);
+  }
+
+  @RequestMapping(path = "/validate", method = RequestMethod.POST)
+  public ResponseEntity validateFile(HttpServletRequest httpServletRequest) {
 
     MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) httpServletRequest;
-    MultipartFile multipartFile = multipartHttpServletRequest.getFile(FILE);
+    MultipartFile multipartFile = multipartHttpServletRequest.getFile(FILE_PARAMETER_NAME);
 
     if (multipartFile == null) {
-      return new ResponseEntity(Collections.singletonMap("id", candidateId), HttpStatus.OK);
+      return new ResponseEntity(RestResponse.NO_ERROR, HttpStatus.OK);
+    }
+    try {
+      fileValidator.validate(multipartFile);
+    } catch (FileValidationException e) {
+      String
+          errorMessage =
+          this.messageKeyResolver.resolveMessageOrDefault(ruleValidationExceptionMapper.getMessageKeyByException(e));
+      return new ResponseEntity(new RestResponse(errorMessage), HttpStatus.BAD_REQUEST);
+    }
+    return new ResponseEntity(RestResponse.NO_ERROR, HttpStatus.OK);
+  }
+
+  public ResponseEntity uploadFile(Long candidateId, Long returnedId, HttpServletRequest httpServletRequest)
+      throws IOException {
+    MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) httpServletRequest;
+    MultipartFile multipartFile = multipartHttpServletRequest.getFile(FILE_PARAMETER_NAME);
+
+    if (multipartFile == null) {
+      return new ResponseEntity(Collections.singletonMap("id", returnedId), HttpStatus.OK);
     }
 
     String fileName = multipartFile.getOriginalFilename();
-
     try {
       CandidateDTO candidateDTO = candidateService.getCandidate(candidateId);
       String candidateCVFilename = candidateDTO.getCvFilename();
@@ -88,8 +119,8 @@ public class FileUploadController {
       FileCopyUtils.copy(multipartFile.getBytes(), file);
 
       candidateDTO.setCvFilename(fileName);
-      candidateId = candidateService.saveOrUpdate(candidateDTO);
-      return new ResponseEntity<>(Collections.singletonMap("id", candidateId), HttpStatus.OK);
+      candidateService.saveOrUpdate(candidateDTO);
+      return new ResponseEntity<>(Collections.singletonMap("id", returnedId), HttpStatus.OK);
     } catch (CandidateAlreadyHasCVFileException e) {
       log.error(FileUploadController.class.getName(), e);
       String
@@ -102,25 +133,6 @@ public class FileUploadController {
           this.messageKeyResolver.resolveMessageOrDefault(ruleValidationExceptionMapper.getMessageKeyByException(e));
       return new ResponseEntity(new RestResponse(errorMessageKey), HttpStatus.BAD_REQUEST);
     }
-  }
-
-  @RequestMapping(path = "/validate", method = RequestMethod.POST)
-  public ResponseEntity validateFile(HttpServletRequest httpServletRequest) {
-
-    MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) httpServletRequest;
-    MultipartFile multipartFile = multipartHttpServletRequest.getFile(FILE);
-
-    if (multipartFile == null) {
-      return new ResponseEntity(RestResponse.NO_ERROR, HttpStatus.OK);
-    }
-    try {
-      fileValidator.validate(multipartFile);
-    } catch (FileValidationException e) {
-      String errorMessage = this.messageKeyResolver.resolveMessageOrDefault(ruleValidationExceptionMapper.getMessageKeyByException(e));
-      return new ResponseEntity(new RestResponse(errorMessage) ,HttpStatus.BAD_REQUEST);
-    }
-    return new ResponseEntity(RestResponse.NO_ERROR, HttpStatus.OK);
-
   }
 
   protected File createFile(String folderName, String filename) throws IOException {
