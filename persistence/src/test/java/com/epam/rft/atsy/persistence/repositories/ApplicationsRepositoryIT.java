@@ -67,10 +67,10 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
     CandidateEntity candidateB = this.candidateRepository.findOne(CANDIDATE_B_ID);
 
     // When
-    Page<ApplicationEntity>
+    final Page<ApplicationEntity>
         pageResult =
         this.repository.findByCandidateEntity(candidateB, DEFAULT_PAGE_REQUEST);
-    List<ApplicationEntity> result = pageResult.getContent();
+    final List<ApplicationEntity> result = pageResult.getContent();
 
     // Then
     assertThat(result, notNullValue());
@@ -121,10 +121,10 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
     Date nearNow = currentDateMinus(5);
 
     // When
-    Page<ApplicationEntity>
+    final Page<ApplicationEntity>
         pageResult =
         this.repository.findByCandidateEntity(candidateEntityA, DEFAULT_PAGE_REQUEST);
-    List<ApplicationEntity> result = pageResult.getContent();
+    final List<ApplicationEntity> result = pageResult.getContent();
 
     // Then
     assertThat(pageResult.getTotalPages(), is(1));
@@ -140,23 +140,23 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
   public void findByCandidateEntityShouldFindThreeApplicationForCandidateWithThreeApplication()
       throws ParseException {
     // Given
-    CandidateEntity candidateEntityC = this.candidateRepository.findOne(CANDIDATE_C_ID);
-    ChannelEntity expectedChannelEntity = ChannelEntity.builder()
+    final CandidateEntity candidateEntityC = this.candidateRepository.findOne(CANDIDATE_C_ID);
+    final ChannelEntity expectedChannelEntity = ChannelEntity.builder()
         .id(2L)
         .name(CHANNEL_NAME_PROFESSION_ADVERTISEMENT)
         .deleted(false)
         .build();
-    ChannelEntity expectedSecondChannelEntity = ChannelEntity.builder()
+    final ChannelEntity expectedSecondChannelEntity = ChannelEntity.builder()
         .id(3L)
         .name(CHANNEL_NAME_PROFESSION_DATABASE)
         .deleted(false)
         .build();
-    ChannelEntity expectedThirdChannelEntity = ChannelEntity.builder()
+    final ChannelEntity expectedThirdChannelEntity = ChannelEntity.builder()
         .id(4L)
         .name(CHANNEL_NAME_FACEBOOK)
         .deleted(false)
         .build();
-    PositionEntity expectedPositionEntity = PositionEntity.builder()
+    final PositionEntity expectedPositionEntity = PositionEntity.builder()
         .id(1L)
         .name(POSITION_NAME_DEVELOPER)
         .deleted(false)
@@ -183,36 +183,36 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
   public void pageFindByCandidateEntityShouldFindThreeApplicationForCandidateWithThreeApplication()
       throws ParseException {
     // Given
-    CandidateEntity candidateEntityC = this.candidateRepository.findOne(CANDIDATE_C_ID);
-    ChannelEntity expectedChannelEntity = ChannelEntity.builder()
+    final CandidateEntity candidateEntityC = this.candidateRepository.findOne(CANDIDATE_C_ID);
+    final ChannelEntity expectedChannelEntity = ChannelEntity.builder()
         .id(2L)
         .name(CHANNEL_NAME_PROFESSION_ADVERTISEMENT)
         .deleted(false)
         .build();
-    ChannelEntity expectedSecondChannelEntity = ChannelEntity.builder()
+    final ChannelEntity expectedSecondChannelEntity = ChannelEntity.builder()
         .id(3L)
         .name(CHANNEL_NAME_PROFESSION_DATABASE)
         .deleted(false)
         .build();
-    ChannelEntity expectedThirdChannelEntity = ChannelEntity.builder()
+    final ChannelEntity expectedThirdChannelEntity = ChannelEntity.builder()
         .id(4L)
         .name(CHANNEL_NAME_FACEBOOK)
         .deleted(false)
         .build();
-    PositionEntity expectedPositionEntity = PositionEntity.builder()
+    final PositionEntity expectedPositionEntity = PositionEntity.builder()
         .id(1L)
         .name(POSITION_NAME_DEVELOPER)
         .deleted(false)
         .build();
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
-    Date expectedDate = simpleDateFormat.parse(DATE_SAMPLE);
+    final Date expectedDate = simpleDateFormat.parse(DATE_SAMPLE);
 
     // When
-    Page<ApplicationEntity>
+    final Page<ApplicationEntity>
         pageResult =
         this.repository.findByCandidateEntity(candidateEntityC, DEFAULT_PAGE_REQUEST);
-    List<ApplicationEntity> result = pageResult.getContent();
+    final List<ApplicationEntity> result = pageResult.getContent();
 
     // Then
     assertThat(pageResult.getTotalPages(), is(1));

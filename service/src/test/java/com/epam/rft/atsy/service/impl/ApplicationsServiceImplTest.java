@@ -187,7 +187,7 @@ public class ApplicationsServiceImplTest {
         .willReturn(new PageImpl<ApplicationEntity>(Collections.emptyList()));
 
     // When
-    PagingResponse<CandidateApplicationDTO>
+    final PagingResponse<CandidateApplicationDTO>
         result =
         applicationsService
             .getApplicationsByCandidateId(NON_EXISTENT_CANDIDATE_ID, PAGE_NUMBER_ZERO,
@@ -221,8 +221,10 @@ public class ApplicationsServiceImplTest {
   @Test
   public void getApplicationByCandidateIdShouldReturnOneElementListOfApplicationDTOWhenCandidateIdExists() {
     // Given
-    List<ApplicationEntity> applicationEntities = Collections.singletonList(applicationEntity);
-    List<CandidateApplicationDTO>
+    final List<ApplicationEntity>
+        applicationEntities =
+        Collections.singletonList(applicationEntity);
+    final List<CandidateApplicationDTO>
         candidateApplicationDTOs =
         Collections.singletonList(dummyCandidateApplicationDTO);
 
@@ -233,7 +235,7 @@ public class ApplicationsServiceImplTest {
         .willReturn(candidateApplicationDTOs);
 
     // When
-    PagingResponse<CandidateApplicationDTO>
+    final PagingResponse<CandidateApplicationDTO>
         result =
         applicationsService
             .getApplicationsByCandidateId(CANDIDATE_ID, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
@@ -270,10 +272,10 @@ public class ApplicationsServiceImplTest {
   @Test
   public void getApplicationByCandidateIdShouldReturnThreeElementListOfApplicationDTOWhenCandidateIdExists() {
     // Given
-    List<ApplicationEntity>
+    final List<ApplicationEntity>
         applicationEntities =
         Arrays.asList(applicationEntity, applicationEntity, applicationEntity);
-    List<CandidateApplicationDTO>
+    final List<CandidateApplicationDTO>
         candidateApplicationDTOs =
         Arrays.asList(dummyCandidateApplicationDTO, dummyCandidateApplicationDTO,
             dummyCandidateApplicationDTO);
@@ -285,7 +287,7 @@ public class ApplicationsServiceImplTest {
         .willReturn(candidateApplicationDTOs);
 
     // When
-    PagingResponse<CandidateApplicationDTO>
+    final PagingResponse<CandidateApplicationDTO>
         result =
         applicationsService
             .getApplicationsByCandidateId(CANDIDATE_ID, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
@@ -298,10 +300,10 @@ public class ApplicationsServiceImplTest {
   @Test
   public void getApplicationByCandidateIdShouldReturnAMaximumNumberOfApplicationsGivenByTheSizeParameter() {
     // Given
-    List<ApplicationEntity>
+    final List<ApplicationEntity>
         applicationEntities =
         Arrays.asList(applicationEntity, applicationEntity);
-    List<CandidateApplicationDTO>
+    final List<CandidateApplicationDTO>
         candidateApplicationDTOs =
         Arrays.asList(dummyCandidateApplicationDTO, dummyCandidateApplicationDTO);
 
@@ -312,7 +314,7 @@ public class ApplicationsServiceImplTest {
         .willReturn(candidateApplicationDTOs);
 
     // When
-    PagingResponse<CandidateApplicationDTO>
+    final PagingResponse<CandidateApplicationDTO>
         result =
         applicationsService
             .getApplicationsByCandidateId(CANDIDATE_ID, PAGE_NUMBER_ZERO, PAGE_SIZE_TWO);

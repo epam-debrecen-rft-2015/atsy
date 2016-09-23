@@ -51,10 +51,8 @@ public class CandidateApplicationController {
         .getRows()) {
       String stateType = candidateApplicationDTO.getStateType();
 
-      stateType =
-          messageKeyResolver.resolveMessageOrDefault(APPLICATION_STATE + stateType, stateType);
-
-      candidateApplicationDTO.setStateType(stateType);
+      candidateApplicationDTO.setStateType(
+          messageKeyResolver.resolveMessageOrDefault(APPLICATION_STATE + stateType, stateType));
     }
     return candidateApplicationDTOPagingResponse;
   }

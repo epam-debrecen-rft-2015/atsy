@@ -65,27 +65,19 @@ public class ApplicationsServiceImpl implements ApplicationsService {
 
     Pageable pageRequest = new PageRequest(page, size);
 
-    Page<ApplicationEntity>
+    final Page<ApplicationEntity>
         pageResult =
         applicationsRepository.findByCandidateEntity(candidateEntity, pageRequest);
 
-    List<ApplicationEntity> applicationEntities = pageResult.getContent();
-
     List<CandidateApplicationDTO>
         candidateApplicationDTOs =
-        converterService.convert(applicationEntities, CandidateApplicationDTO.class);
+        converterService.convert(pageResult.getContent(), CandidateApplicationDTO.class);
 
     candidateApplicationDTOs = candidateApplicationDTOs.stream()
         .sorted((m1, m2) -> m2.getModificationDate().compareTo(m1.getModificationDate()))
         .collect(Collectors.toList());
 
-    Long total = pageResult.getTotalElements();
-
-    PagingResponse<CandidateApplicationDTO>
-        response =
-        new PagingResponse<>(total, candidateApplicationDTOs);
-
-    return response;
+    return new PagingResponse<>(pageResult.getTotalElements(), candidateApplicationDTOs);
   }
 
   @Transactional
