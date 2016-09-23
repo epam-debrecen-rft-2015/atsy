@@ -147,7 +147,7 @@
                         <div class="error col-lg-12 col-md-12 col-sm-12"></div>
 
                         <div class="form-group" id="cvDiv">
-                            <label class="control-label col-lg-2 col-md-8 col-sm-2 text-right" for="name">
+                            <label class="control-label col-lg-8 col-md-8 col-sm-6 text-right" for="name">
                                 <spring:message code="cv"/>
                             </label>
 
@@ -165,8 +165,8 @@
                             <c:if test="${not empty candidate.cvFilename}">
 
                                 <label class="control-label col-lg-2 col-md-4 col-sm-4 text-left" for="name">
-                                    <c:url value='/secure/candidate/fileDownload/${candidateId}' var="urlValue" />
-                                    <a href="${urlValue}">
+                                    <c:url value='/secure/fileDownload/validate/${candidateId}' var="urlValue" />
+                                    <a href="javascript:void(0)" data-file="${urlValue}" id="downloadLink">
                                         <c:out value="${candidate.cvFilename}"/>
                                     </a>
                                 </label>

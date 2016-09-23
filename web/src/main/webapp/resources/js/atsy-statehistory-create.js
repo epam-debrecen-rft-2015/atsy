@@ -18,6 +18,28 @@ $(document).ready(function() {
   $("#file").change(function() {
       $("#fileName").text(new Option($('input[type=file]')[0].files[0].name).innerHTML);
   });
+
+  $("#latestStateEditButton").on('click', function () {
+      if (localStorage['isShowFileUploadIcon'] == 'false') {
+          $('#fileUploadLabel').show();
+          localStorage['isShowFileUploadIcon'] = 'true';
+      }
+  });
+
+  $("#newStateButton").on('click', function () {
+      if (localStorage['isShowFileUploadIcon'] == 'false') {
+          $('#fileUploadLabel').show();
+          localStorage['isShowFileUploadIcon'] = 'true';
+      }
+  });
+
+  if (!localStorage['isShowFileUploadIcon']) {
+      localStorage['isShowFileUploadIcon'] = 'false';
+  } else if (localStorage['isShowFileUploadIcon'] == 'true') {
+      $('#fileUploadLabel').show();
+  } else if (localStorage['isShowFileUploadIcon'] == 'false') {
+      $('#fileUploadLabel').hide();
+  }
 });
 
 function StateHistoryModel() {
@@ -140,6 +162,8 @@ function StateHistoryModel() {
             sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
                 // If file is valid, then hide the error msg
                 self.showFileError(false);
+                $('#fileUploadLabel').show();
+                localStorage['isShowFileUploadIcon'] = 'true';
                 // Send stateHistoryViewRepresentation to save or update
                 sendStateHistoryViewRepresentationWithAjax(form.attr('action'), form.attr('method')).done(function (xhr) {
                     // If there is no error with stateHistoryViewRepresentation, then hide the error msg
@@ -148,12 +172,16 @@ function StateHistoryModel() {
                     sendFileWithAjax(fileUploadUrl + xhr.applicationId, formData).done(function (xhr) {
                         // If there is no error with file, then hide error msg
                         self.showFileError(false);
+                        $('#fileUploadLabel').show();
+                        localStorage['isShowFileUploadIcon'] = 'true';
                         // If stateHistoryViewRepresentation and file are corrects
                         self.redirectWithoutState();
                     }).error(function (xhr) {
                         // If there is error with file, then show the error msg
                         self.fileErrorResponse(xhr.responseJSON);
                         self.showFileError(true);
+                        $('#fileUploadLabel').show();
+                        localStorage['isShowFileUploadIcon'] = 'true';
                     });
                 // If there is error with stateHistoryViewRepresentation, then show the error msg
                 }).error(function (xhr) {
@@ -164,6 +192,8 @@ function StateHistoryModel() {
             }).error(function (xhr) {
                 self.fileErrorResponse(xhr.responseJSON);
                 self.showFileError(true);
+                $('#fileUploadLabel').show();
+                localStorage['isShowFileUploadIcon'] = 'true';
             });
         }
     // If stateHistoryViewRepresentation is not valid, then show error msg
@@ -176,10 +206,14 @@ function StateHistoryModel() {
             sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
                 // If there is no error with file, then hide the error msg
                 self.showFileError(false);
+                $('#fileUploadLabel').show();
+                localStorage['isShowFileUploadIcon'] = 'true';
             // If file is not valid, then show the error msg
             }).error(function (xhr) {
                 self.fileErrorResponse(xhr.responseJSON);
                 self.showFileError(true);
+                $('#fileUploadLabel').show();
+                localStorage['isShowFileUploadIcon'] = 'true';
             });
         }
     });
@@ -219,6 +253,40 @@ function StateHistoryModel() {
    self.modify_display_true = function() {
        $("#fileName").text('');
    };
+
+   $("#downloadLink").on('click', function (event) {
+       var url = $(this).data('file');
+
+       event.preventDefault();
+       event.stopPropagation();
+
+       $.ajax({
+           url: url,
+           type: 'GET'
+       }).done(function (xhr) {
+           var downloadUrl = "/atsy/secure/fileDownload/" + xhr.id;
+           window.location = downloadUrl;
+       }).error(function (xhr) {
+           self.fileErrorResponse(xhr.responseJSON);
+           self.showFileError(true);
+       });
+    });
+
+    $("#saveButton").on('click', function () {
+          if (localStorage['isShowFileUploadIcon'] == 'true') {
+              $('#fileUploadLabel').hide();
+              localStorage['isShowFileUploadIcon'] = 'false';
+          }
+      });
+
+      $("#cancelButton").on('click', function () {
+          if (localStorage['isShowFileUploadIcon'] == 'true') {
+              $('#fileUploadLabel').hide();
+              localStorage['isShowFileUploadIcon'] = 'false';
+          }
+          self.showError(false);
+          self.showFileError(false);
+      });
 }
 
 

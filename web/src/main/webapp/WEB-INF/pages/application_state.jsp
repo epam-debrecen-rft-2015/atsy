@@ -48,7 +48,7 @@
                                 <a href="?applicationId=${applicationId}&state=${stateflow.toStateDTO.name}" class="btn btn-danger"><spring:message code="statehistory.buttons.${stateflow.toStateDTO.name}"/></a>
                             </c:when>
                             <c:otherwise>
-                                <a href="?applicationId=${applicationId}&state=${stateflow.toStateDTO.name}" class="btn btn-default"><spring:message code="statehistory.buttons.${stateflow.toStateDTO.name}"/></a>
+                                <a href="?applicationId=${applicationId}&state=${stateflow.toStateDTO.name}" class="btn btn-default" id="newStateButton"><spring:message code="statehistory.buttons.${stateflow.toStateDTO.name}"/></a>
                             </c:otherwise>
                         </c:choose>
                         </c:forEach>
@@ -187,7 +187,7 @@
                           <c:if test="${empty candidate.cvFilename}">
 
                               <div class="form-group col-lg-4 col-md-4 col-sm-4">
-                                  <label class="btn btn-primary" for="file">
+                                  <label class="btn btn-primary" for="file" id="fileUploadLabel">
                                       <i class="glyphicon glyphicon-upload"></i>
                                   </label>
                                   <input class="input form-control" type="file" name="file" id="file" style="display:none;"/>
@@ -197,9 +197,9 @@
 
                           <c:if test="${not empty candidate.cvFilename}">
 
-                              <label class="control-label col-lg-1 col-md-1 col-sm-1 text-left" for="name">
-                                  <c:url value='/secure/candidate/fileDownload/${candidateId}' var="urlValue" />
-                                  <a href="${urlValue}">
+                              <label class="control-label col-lg-4 text-left" for="name">
+                                  <c:url value='/secure/fileDownload/validate/${candidate.id}' var="urlValue" />
+                                  <a href="javascript:void(0)" data-file="${urlValue}" id="downloadLink">
                                       <c:out value="${candidate.cvFilename}"/>
                                   </a>
                               </label>
@@ -445,10 +445,10 @@
                   </c:when>
               </c:choose>
               <c:if test="${stat.first}">
-                  <button type="submit" class="btn btn-success stateInput hidden"  data-bind="enable: canSave">
+                  <button type="submit" class="btn btn-success stateInput hidden"  data-bind="enable: canSave" id="saveButton">
                       <spring:message code="save.button"/>
                   </button>
-                  <button type="reset" class="btn btn-danger stateInput hidden" data-bind="click: modify_display_true" onclick="cancelButtonOnClick()">
+                  <button type="reset" class="btn btn-danger stateInput hidden" data-bind="click: modify_display_true" onclick="cancelButtonOnClick()" id="cancelButton">
                       <spring:message code="cancel.button"/>
                   </button>
               </c:if>

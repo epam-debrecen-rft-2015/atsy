@@ -5,7 +5,6 @@ $('.table').bootstrapTable({
 });
 
 $(document).ready(function() {
-
     $("#file").change(function() {
         $("#fileName").text(new Option($('input[type=file]')[0].files[0].name).innerHTML);
     });
@@ -195,6 +194,24 @@ function CandidateCreateModel(){
         self.modify(false);
         savedModel = ko.toJS(candidateModel);
     };
+
+     $("#downloadLink").on('click', function (event) {
+         var url = $(this).data('file');
+
+         event.preventDefault();
+         event.stopPropagation();
+
+         $.ajax({
+             url: url,
+             type: 'GET'
+         }).done(function (xhr) {
+            var downloadUrl = "/atsy/secure/fileDownload/" + xhr.id;
+            window.location = downloadUrl;
+         }).error(function (xhr) {
+             self.fileErrorResponse(xhr.responseJSON);
+             self.showFileError(true);
+         });
+     });
 }
 
 var savedModel;
