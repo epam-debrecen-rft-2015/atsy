@@ -8,6 +8,8 @@ import static org.junit.Assert.assertThat;
 
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import org.apache.commons.lang3.StringUtils;
+import org.hamcrest.MatcherAssert;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -65,6 +67,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
 
   private static final CandidateEntity candidateA = CandidateEntity.builder()
       .id(CANDIDATE_A_ID)
+      .deleted(false)
       .name(CANDIDATE_A_NAME)
       .email(CANDIDATE_A_EMAIL)
       .phone(CANDIDATE_A_PHONE)
@@ -73,6 +76,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
       .languageSkill(CANDIDATE_A_LANGUAGE_SKILL).build();
   private static final CandidateEntity candidateB = CandidateEntity.builder()
       .id(CANDIDATE_B_ID)
+      .deleted(false)
       .name(CANDIDATE_B_NAME)
       .email(CANDIDATE_B_EMAIL)
       .phone(CANDIDATE_B_PHONE)
@@ -82,6 +86,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
       .build();
   private static final CandidateEntity candidateC = CandidateEntity.builder()
       .id(CANDIDATE_C_ID)
+      .deleted(false)
       .name(CANDIDATE_C_NAME)
       .email(CANDIDATE_C_EMAIL)
       .phone(CANDIDATE_C_PHONE)
@@ -399,6 +404,28 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
+  public void findByCandidateFilterRequestShouldNotFindCandidateThatHasDeletedFieldWithTrueValue() {
+    //Given
+    final String name = StringUtils.EMPTY;
+    final String email = StringUtils.EMPTY;
+    final String phone = StringUtils.EMPTY;
+    final String position = StringUtils.EMPTY;
+
+    //When
+    final List<CandidateEntity>
+        actualCandidates =
+        candidateRepository
+            .findByCandidateFilterRequest(name, email, phone, position, DEFAULT_PAGEREQUEST)
+            .getContent();
+
+    //Then
+    MatcherAssert.assertThat(actualCandidates, notNullValue());
+    MatcherAssert.assertThat(actualCandidates.isEmpty(), is(false));
+    assertNonDeletedCandidateList(actualCandidates);
+  }
+
+
+  @Test
   public void findByEmailShouldNotFindNonexistentCandidate() {
     //When
     CandidateEntity candidate = this.candidateRepository.findByEmail(NON_EXISTENT_CANDIDATE_EMAIL);
@@ -415,5 +442,11 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     //Then
     assertThat(candidate, notNullValue());
     assertThat(candidate.getEmail(), is(EXISTING_CANDIDATE_EMAIL));
+  }
+
+  private void assertNonDeletedCandidateList(List<CandidateEntity> candidateEntityList) {
+    if (candidateEntityList.stream().anyMatch(x -> x.isDeleted() == true)) {
+      Assert.fail();
+    }
   }
 }
