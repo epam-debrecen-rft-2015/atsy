@@ -37,12 +37,13 @@ public class CandidateValidatorHelper {
 
   public ResponseEntity validateExistingCandidate(CandidateDTO candidateDTO) {
     preValidateCandidate(candidateDTO);
+    Long candidateId = candidateDTO.getId();
 
     CandidateDTO candidateDTOByEmail = this.candidateService.getCandidateDtoByEmail(candidateDTO.getEmail());
     CandidateDTO candidateDTOByPhone = this.candidateService.getCandidateDtoByPhone(candidateDTO.getPhone());
 
-    if ((candidateDTOByEmail == null || candidateDTO.getEmail().equals(candidateDTOByEmail.getEmail())) &&
-        (candidateDTOByPhone == null || candidateDTO.getPhone().equals(candidateDTOByPhone.getPhone()))) {
+    if ((candidateDTOByEmail == null || candidateDTOByEmail.getId().equals(candidateId)) &&
+        (candidateDTOByPhone == null || candidateDTOByPhone.getId().equals(candidateId))) {
       return new ResponseEntity(RestResponse.NO_ERROR, HttpStatus.OK);
     }
 
