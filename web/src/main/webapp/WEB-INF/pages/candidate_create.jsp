@@ -175,8 +175,7 @@
                                 </label>
                                 <div class="col-lg-10 col-md-10 col-sm-10">
                                     <textarea rows="4" cols="4" class="input form-control" id="description" data-bind="valueWithInit: 'description'"
-                                       placeholder="${i18ndescription}"><c:out value = "${candidate.description}"/>
-                                    </textarea>
+                                       placeholder="${i18ndescription}"><c:out value = "${candidate.description}"/></textarea>
                                     <p class="showValue"><c:out value = "${candidate.description}"/></p>
                                 </div>
                               </div>
