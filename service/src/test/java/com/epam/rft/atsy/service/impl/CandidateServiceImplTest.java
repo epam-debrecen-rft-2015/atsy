@@ -90,8 +90,9 @@ public class CandidateServiceImplTest {
         ApplicationEntity.builder().id(APPLICATION_ID).candidateEntity(dummyCandidateEntity)
             .build();
 
-    dummyCandidateDto = CandidateDTO.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
-        .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).build();
+    dummyCandidateDto =
+        CandidateDTO.builder().id(ID).deleted(false).name(NAME).email(EMAIL).phone(PHONE)
+            .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).build();
   }
 
   @Test(expected = IllegalArgumentException.class)
