@@ -197,7 +197,7 @@
 
                           <c:if test="${not empty candidate.cvFilename}">
 
-                              <label class="control-label col-lg-4 text-left" for="name">
+                              <label class="control-label col-lg-1 text-left" for="name">
                                   <c:url value='/secure/fileDownload/validate/${candidate.id}' var="urlValue" />
                                   <a href="javascript:void(0)" data-file="${urlValue}" id="downloadLink">
                                       <c:out value="${candidate.cvFilename}"/>
