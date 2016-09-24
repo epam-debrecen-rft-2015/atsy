@@ -5,7 +5,6 @@ import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
 import com.epam.rft.atsy.web.helper.CandidateValidatorHelper;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-
 import javax.validation.Valid;
 
 /**
@@ -29,6 +27,7 @@ import javax.validation.Valid;
 @RequestMapping(value = "/secure/candidate")
 public class SingleCandidateController {
   private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
+  private static final String CANDIDATE_ERROR_DUPLICATE_MESSAGE_KEY = "candidate.error.duplicate";
 
   @Autowired
   private CandidateService candidateService;
@@ -41,10 +40,9 @@ public class SingleCandidateController {
 
   /**
    * Saves or updates and existing candidate.
-   *
    * @param candidateDTO an object which wraps the data of a candidate
-   * @param result       an object used to check if any error occurs
-   * @param locale       language of the response
+   * @param result an object used to check if any error occurs
+   * @param locale language of the response
    * @return a ResponseEntity object, which contains HTTP status code and error message if it occurs
    */
   @RequestMapping(method = RequestMethod.POST)
@@ -60,21 +58,36 @@ public class SingleCandidateController {
   }
 
   @RequestMapping(path = "/validate", method = RequestMethod.POST)
-  public ResponseEntity validateCandidate(@Valid @RequestBody CandidateDTO candidateDTO, BindingResult result,
+  public ResponseEntity validateCandidate(@Valid @RequestBody CandidateDTO candidateDTO,
+                                          BindingResult result,
                                           Locale locale) {
     if (result.hasErrors()) {
-      return new ResponseEntity(parseValidationErrors(result.getFieldErrors(), locale), HttpStatus.BAD_REQUEST);
+      return new ResponseEntity(parseValidationErrors(result.getFieldErrors(), locale),
+          HttpStatus.BAD_REQUEST);
     }
     // Create a new candidate
     if (candidateDTO.getId() == null) {
-      return candidateValidatorHelper.validateNonExistingCandidate(candidateDTO);
+      return createResponseEntityForCandidateValidation(
+          this.candidateValidatorHelper.isValidNonExistingCandidate(candidateDTO));
     } else {
-      return candidateValidatorHelper.validateExistingCandidate(candidateDTO);
+      return createResponseEntityForCandidateValidation(
+          this.candidateValidatorHelper.isValidExistingCandidate(candidateDTO));
     }
   }
 
+  private ResponseEntity createResponseEntityForCandidateValidation(boolean hasNoErrors) {
+    if (hasNoErrors) {
+      return new ResponseEntity(RestResponse.NO_ERROR, HttpStatus.OK);
+    }
+    String errorMessage =
+        this.messageKeyResolver.resolveMessageOrDefault(CANDIDATE_ERROR_DUPLICATE_MESSAGE_KEY);
+    return new ResponseEntity(new RestResponse(errorMessage), HttpStatus.BAD_REQUEST);
+  }
+
   private RestResponse parseValidationErrors(List<FieldError> fieldErrors, Locale locale) {
-    String errorMessage = messageKeyResolver.resolveMessageOrDefault(COMMON_INVALID_INPUT_MESSAGE_KEY);
+    String
+        errorMessage =
+        messageKeyResolver.resolveMessageOrDefault(COMMON_INVALID_INPUT_MESSAGE_KEY);
     RestResponse restResponse = new RestResponse(errorMessage);
 
     for (FieldError fieldError : fieldErrors) {
