@@ -1,5 +1,6 @@
 package com.epam.rft.atsy.persistence.repositories;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.containsString;
@@ -52,6 +53,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
 
   private static final String NON_EXISTENT_CANDIDATE_EMAIL = "does@not.exist";
   private static final String NON_EXISTENT_CANDIDATE_NAME = "Candidate X";
+  private static final String NON_EXISTENT_CANDIDATE_PHONE = "+36666666666666666666666";
 
   private static final String CANDIDATE_NAME_FRAGMENT = "Candidate";
   private static final String CANDIDATE_EMAIL_FRAGMENT = "atsy.com";
@@ -415,5 +417,41 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
     //Then
     assertThat(candidate, notNullValue());
     assertThat(candidate.getEmail(), is(EXISTING_CANDIDATE_EMAIL));
+  }
+
+  @Test
+  public void findByPhoneShouldFindNullWhenParamPhoneIsNull() {
+    // Given
+
+    // When
+    CandidateEntity actualCandidateEntity = this.candidateRepository.findByPhone(null);
+
+    // Then
+    assertThat(actualCandidateEntity, nullValue());
+  }
+
+  @Test
+  public void findByPhoneShouldFindNullWhenParamPhoneNotExists() {
+    // Given
+
+    // When
+    CandidateEntity
+        actualCandidateEntity =
+        this.candidateRepository.findByPhone(NON_EXISTENT_CANDIDATE_PHONE);
+
+    // Then
+    assertThat(actualCandidateEntity, nullValue());
+  }
+
+  @Test
+  public void findByPhoneShouldFindCandidateAWhenFindByThePhoneOfCandidateA() {
+    // Given
+
+    // When
+    CandidateEntity actualCandidateEntity = this.candidateRepository.findByPhone(CANDIDATE_A_PHONE);
+
+    // Then
+    assertThat(actualCandidateEntity, notNullValue());
+    assertThat(actualCandidateEntity, equalTo(candidateA));
   }
 }
