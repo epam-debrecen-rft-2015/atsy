@@ -66,7 +66,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
       DESCRIPTION_LENGTH_MESSAGE_KEY =
       "statehistory.error.description.length";
 
-  private static final String CREATION_DATE_NULL_MESSAGE_KEY = "statehistory.creationDate.null";
+  private static final String NOT_NULL_MESSAGE_KEY = "javax.validation.constraints.NotNull.message";
 
   private static final String RESULT_RANGE_MESSAGE_KEY = "candidate.error.result.range";
 
@@ -484,7 +484,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
     this.doTestValidateStateHistoryViewRepresentationWhenThereIsValidationError(
         stateHistoryViewRepresentation, FIELD_CREATION_DATE, JSON_PATH_FIELD_CREATION_DATE,
-        CREATION_DATE_NULL_MESSAGE_KEY);
+        NOT_NULL_MESSAGE_KEY);
   }
 
   @Test

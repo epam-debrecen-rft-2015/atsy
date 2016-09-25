@@ -29,7 +29,7 @@ public class StateHistoryViewRepresentation {
 
   private ApplicationDTO applicationDTO;
 
-  @NotNull(message = "statehistory.creationDate.null")
+  @NotNull
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
   private Date creationDate;
 
