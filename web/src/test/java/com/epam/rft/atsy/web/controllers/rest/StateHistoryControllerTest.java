@@ -26,6 +26,7 @@ import com.epam.rft.atsy.web.FieldErrorResponseComposer;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
 import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -45,12 +46,12 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
   private static final String REQUEST_BASE_URL = "/secure/application_state";
 
-  private static final String REQUEST_URL =
+  private static final String REQUEST_URL_TO_SAVE_OR_UPDATE =
       REQUEST_BASE_URL + "?applicationId=" + APPLICATION_ID.toString();
 
-  private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
+  private static final String REQUEST_URL_TO_VALIDATE = REQUEST_BASE_URL + "/validate";
 
-  private static final String DATE_PARSE_ERROR_MESSAGE_KEY = "statehistory.error.parse.date";
+  private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
 
   private static final String CLAIM_NEGATIVE_MESSAGE_KEY = "statehistory.error.claim.negative";
 
@@ -61,11 +62,29 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
   private static final String CHANNEL_NOT_FOUND_MESSAGE_KEY = "channel.not.found.error.message";
 
+  private static final String
+      DESCRIPTION_LENGTH_MESSAGE_KEY =
+      "statehistory.error.description.length";
+
+  private static final String CREATION_DATE_NULL_MESSAGE_KEY = "statehistory.creationDate.null";
+
+  private static final String RESULT_RANGE_MESSAGE_KEY = "candidate.error.result.range";
+
+  private static final String
+      RECOMMENDATION_RANGE_MESSAGE_KEY =
+      "statehistory.error.recommendation.range";
+
+  private static final String REVIEWER_NAME_MESSAGE_KEY = "statehistory.error.reviewerName.length";
+
+  private static final String
+      RECOMMENDATION_POSITION_LEVEL_RANGE_MESSAGE_KEY =
+      "statehistory.error.recommendedPositionLevel.range";
+
   private static final String JSON_PATH_ERROR_MESSAGE = "$.errorMessage";
 
-  private static final String JSON_PATH_APPLICATION_ID = "$.applicationId";
+  private static final String JSON_PATH_FIELDS = "$.fields";
 
-  private static final String JSON_PATH_FEEDBACK_DATE = "$.fields.feedbackDate";
+  private static final String JSON_PATH_APPLICATION_ID = "$.applicationId";
 
   private static final String JSON_PATH_FIELD_CLAIM = "$.fields.claim";
 
@@ -75,7 +94,19 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
   private static final String JSON_PATH_FIELD_CHANNEL_NAME = "$.fields.channelName";
 
-  private static final String FIELD_FEEDBACK_DATE = "feedbackDate";
+  private static final String JSON_PATH_FIELD_DESCRIPTION = "$.fields.description";
+
+  private static final String JSON_PATH_FIELD_CREATION_DATE = "$.fields.creationDate";
+
+  private static final String JSON_PATH_FIELD_RESULT = "$.fields.result";
+
+  private static final String JSON_PATH_FIELD_RECOMMENDATION = "$.fields.recommendation";
+
+  private static final String JSON_PATH_FIELD_REVIEWER_NAME = "$.fields.reviewerName";
+
+  private static final String
+      JSON_PATH_FIELD_RECOMMENDATION_POSITION_LEVEL =
+      "$.fields.recommendedPositionLevel";
 
   private static final String FIELD_CLAIM = "claim";
 
@@ -85,7 +116,17 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
   private static final String FIELD_NAME_POSITION = "positionName";
 
-  private static final String MALFORMED_DATE = "malformed";
+  private static final String FIELD_DESCRIPTION = "description";
+
+  private static final String FIELD_CREATION_DATE = "creationDate";
+
+  private static final String FIELD_RESULT = "result";
+
+  private static final String FIELD_RECOMMENDATION = "recommendation";
+
+  private static final String FIELD_REVIEWER_NAME = "reviewerName";
+
+  private static final String FIELD_RECOMMENDATION_POSITION_LEVEL = "recommendedPositionLevel";
 
   private static final Long NEGATIVE_CLAIM = -1L;
 
@@ -271,7 +312,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .recommendation(RECOMMENDATION_YES_BOOL)
         .build();
   }
-  
+
   @Test
   public void saveOrUpdateShouldRespondWithErrorJSONWhenClaimIsNegative() throws Exception {
     StateHistoryViewRepresentation stateHistoryViewRepresentation =
@@ -281,7 +322,8 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
         .willReturn(composeResponseFromField(FIELD_CLAIM, CLAIM_NEGATIVE_MESSAGE_KEY));
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
+    mockMvc.perform(
+        buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
 
         .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
@@ -301,7 +343,8 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .willReturn(
             composeResponseFromField(FIELD_OFFERED_MONEY, OFFERED_MONEY_NEGATIVE_MESSAGE_KEY));
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
+    mockMvc.perform(
+        buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
 
         .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
@@ -317,7 +360,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
     given(applicationsService.getApplicationDtoById(APPLICATION_ID))
         .willReturn(dummyApplicationDto);
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, dummyStateHistory))
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, dummyStateHistory))
         .andExpect(status().isOk())
 
         .andExpect(jsonPath(JSON_PATH_APPLICATION_ID).value(APPLICATION_ID.intValue()));
@@ -343,7 +386,8 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
     given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
         .willReturn(composeResponseFromField(FIELD_NAME_POSITION, POSITION_NOT_FOUND_MESSAGE_KEY));
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
+    mockMvc.perform(
+        buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
         .andExpect(jsonPath(JSON_PATH_FIELD_POSITION_NAME).value(POSITION_NOT_FOUND_MESSAGE_KEY));
@@ -366,7 +410,8 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
     given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
         .willReturn(composeResponseFromField(FIELD_NAME_CHANNEL, CHANNEL_NOT_FOUND_MESSAGE_KEY));
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
+    mockMvc.perform(
+        buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
         .andExpect(jsonPath(JSON_PATH_FIELD_CHANNEL_NAME).value(CHANNEL_NOT_FOUND_MESSAGE_KEY));
@@ -393,7 +438,8 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .willReturn(composeResponseFromField(FIELD_NAME_POSITION, POSITION_NOT_FOUND_MESSAGE_KEY,
             FIELD_NAME_CHANNEL, CHANNEL_NOT_FOUND_MESSAGE_KEY));
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, stateHistoryViewRepresentation))
+    mockMvc.perform(
+        buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
         .andExpect(jsonPath(JSON_PATH_FIELD_POSITION_NAME).value(POSITION_NOT_FOUND_MESSAGE_KEY))
@@ -414,7 +460,8 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
     given(applicationsService.getApplicationDtoById(APPLICATION_ID))
         .willReturn(dummyApplicationDto);
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, dummyStateHistoryWithNewState))
+    mockMvc
+        .perform(buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, dummyStateHistoryWithNewState))
         .andExpect(status().isOk())
         .andExpect(jsonPath(JSON_PATH_APPLICATION_ID).value(APPLICATION_ID.intValue()));
 
@@ -427,6 +474,193 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
     then(channelService).should(times(2)).getChannelDtoByName(CHANNEL_NAME);
     then(statesHistoryService).should().saveStateHistory(any(StateHistoryDTO.class));
     verifyZeroInteractions(fieldErrorResponseComposer);
+  }
+
+  @Test
+  public void validateStateHistoryViewRepresentationShouldRespondWithErrorJSONWhenCreationDateIsNull()
+      throws Exception {
+    final StateHistoryViewRepresentation stateHistoryViewRepresentation =
+        StateHistoryViewRepresentation.builder().creationDate(null).build();
+
+    this.doTestValidateStateHistoryViewRepresentationWhenThereIsValidationError(
+        stateHistoryViewRepresentation, FIELD_CREATION_DATE, JSON_PATH_FIELD_CREATION_DATE,
+        CREATION_DATE_NULL_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateStateHistoryViewRepresentationShouldRespondWithErrorJSONWhenDescriptionIsTooLong()
+      throws Exception {
+    final String description = StringUtils.repeat("a", 2001);
+    final StateHistoryViewRepresentation stateHistoryViewRepresentation =
+        StateHistoryViewRepresentation.builder().description(description)
+            .creationDate(CREATION_DATE).build();
+
+    this.doTestValidateStateHistoryViewRepresentationWhenThereIsValidationError(
+        stateHistoryViewRepresentation, FIELD_DESCRIPTION, JSON_PATH_FIELD_DESCRIPTION,
+        DESCRIPTION_LENGTH_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateStateHistoryViewRepresentationShouldRespondWithErrorJSONWhenResultIsLessThanZero()
+      throws Exception {
+    final short result = -1;
+    final StateHistoryViewRepresentation stateHistoryViewRepresentation =
+        StateHistoryViewRepresentation.builder().result(result).creationDate(CREATION_DATE)
+            .build();
+
+    this.doTestValidateStateHistoryViewRepresentationWhenThereIsValidationError(
+        stateHistoryViewRepresentation, FIELD_RESULT, JSON_PATH_FIELD_RESULT,
+        RESULT_RANGE_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateStateHistoryViewRepresentationShouldRespondWithErrorJSONWhenResultIsGreaterThanHundred()
+      throws Exception {
+    final short result = 101;
+    final StateHistoryViewRepresentation stateHistoryViewRepresentation =
+        StateHistoryViewRepresentation.builder().result(result).creationDate(CREATION_DATE)
+            .build();
+
+    this.doTestValidateStateHistoryViewRepresentationWhenThereIsValidationError(
+        stateHistoryViewRepresentation, FIELD_RESULT, JSON_PATH_FIELD_RESULT,
+        RESULT_RANGE_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateStateHistoryViewRepresentationShouldRespondWithErrorJSONWhenOfferedMoneyIsLessThanZero()
+      throws Exception {
+    final long offeredMoney = -1;
+    final StateHistoryViewRepresentation stateHistoryViewRepresentation =
+        StateHistoryViewRepresentation.builder().offeredMoney(offeredMoney)
+            .creationDate(CREATION_DATE).build();
+
+    this.doTestValidateStateHistoryViewRepresentationWhenThereIsValidationError(
+        stateHistoryViewRepresentation, FIELD_OFFERED_MONEY, JSON_PATH_FIELD_OFFERED_MONEY,
+        OFFERED_MONEY_NEGATIVE_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateStateHistoryViewRepresentationShouldRespondWithErrorJSONWhenClaimIsLessThanZero()
+      throws Exception {
+    final long claim = -1;
+    final StateHistoryViewRepresentation stateHistoryViewRepresentation =
+        StateHistoryViewRepresentation.builder().claim(claim).creationDate(CREATION_DATE)
+            .build();
+
+    this.doTestValidateStateHistoryViewRepresentationWhenThereIsValidationError(
+        stateHistoryViewRepresentation, FIELD_CLAIM, JSON_PATH_FIELD_CLAIM,
+        CLAIM_NEGATIVE_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateStateHistoryViewRepresentationShouldRespondWithErrorJSONWhenRecommendationIsLessThanZero()
+      throws Exception {
+    final int recommendation = -1;
+    final StateHistoryViewRepresentation stateHistoryViewRepresentation =
+        StateHistoryViewRepresentation.builder().recommendation(recommendation)
+            .creationDate(CREATION_DATE).build();
+
+    this.doTestValidateStateHistoryViewRepresentationWhenThereIsValidationError(
+        stateHistoryViewRepresentation, FIELD_RECOMMENDATION, JSON_PATH_FIELD_RECOMMENDATION,
+        RECOMMENDATION_RANGE_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateStateHistoryViewRepresentationShouldRespondWithErrorJSONWhenRecommendationIsGreaterThanOne()
+      throws Exception {
+    final int recommendation = 2;
+    final StateHistoryViewRepresentation stateHistoryViewRepresentation =
+        StateHistoryViewRepresentation.builder().recommendation(recommendation)
+            .creationDate(CREATION_DATE).build();
+
+    this.doTestValidateStateHistoryViewRepresentationWhenThereIsValidationError(
+        stateHistoryViewRepresentation, FIELD_RECOMMENDATION, JSON_PATH_FIELD_RECOMMENDATION,
+        RECOMMENDATION_RANGE_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateStateHistoryViewRepresentationShouldRespondWithErrorJSONWhenReviewerNameLengthIsLessThanThree()
+      throws Exception {
+    final String reviewerName = "aa";
+    final StateHistoryViewRepresentation stateHistoryViewRepresentation =
+        StateHistoryViewRepresentation.builder().reviewerName(reviewerName)
+            .creationDate(CREATION_DATE).build();
+
+    this.doTestValidateStateHistoryViewRepresentationWhenThereIsValidationError(
+        stateHistoryViewRepresentation, FIELD_REVIEWER_NAME, JSON_PATH_FIELD_REVIEWER_NAME,
+        REVIEWER_NAME_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateStateHistoryViewRepresentationShouldRespondWithErrorJSONWhenReviewerNameLengthIsGreaterThanHundred()
+      throws Exception {
+    final String reviewerName = StringUtils.repeat("a", 101);
+    final StateHistoryViewRepresentation stateHistoryViewRepresentation =
+        StateHistoryViewRepresentation.builder().reviewerName(reviewerName)
+            .creationDate(CREATION_DATE).build();
+
+    this.doTestValidateStateHistoryViewRepresentationWhenThereIsValidationError(
+        stateHistoryViewRepresentation, FIELD_REVIEWER_NAME, JSON_PATH_FIELD_REVIEWER_NAME,
+        REVIEWER_NAME_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateStateHistoryViewRepresentationShouldRespondWithErrorJSONWhenRecommendedPositionLevelIsLessThanZero()
+      throws Exception {
+    final short recommendedPositionLevel = -1;
+    final StateHistoryViewRepresentation stateHistoryViewRepresentation =
+        StateHistoryViewRepresentation.builder().recommendedPositionLevel(recommendedPositionLevel)
+            .creationDate(CREATION_DATE).build();
+
+    this.doTestValidateStateHistoryViewRepresentationWhenThereIsValidationError(
+        stateHistoryViewRepresentation, FIELD_RECOMMENDATION_POSITION_LEVEL,
+        JSON_PATH_FIELD_RECOMMENDATION_POSITION_LEVEL,
+        RECOMMENDATION_POSITION_LEVEL_RANGE_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateStateHistoryViewRepresentationShouldRespondWithErrorJSONWhenRecommendedPositionLevelIsGreaterThanFive()
+      throws Exception {
+    final short recommendedPositionLevel = 6;
+    final StateHistoryViewRepresentation stateHistoryViewRepresentation =
+        StateHistoryViewRepresentation.builder().recommendedPositionLevel(recommendedPositionLevel)
+            .creationDate(CREATION_DATE).build();
+
+    this.doTestValidateStateHistoryViewRepresentationWhenThereIsValidationError(
+        stateHistoryViewRepresentation, FIELD_RECOMMENDATION_POSITION_LEVEL,
+        JSON_PATH_FIELD_RECOMMENDATION_POSITION_LEVEL,
+        RECOMMENDATION_POSITION_LEVEL_RANGE_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateStateHistoryViewRepresentationShouldRespondNoErrorWhenAllFieldsAreValid()
+      throws Exception {
+
+    this.mockMvc
+        .perform(buildJsonPostRequest(REQUEST_URL_TO_VALIDATE, dummyStateHistory))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).isEmpty())
+        .andExpect(jsonPath(JSON_PATH_FIELDS).isEmpty());
+
+    verifyZeroInteractions(this.fieldErrorResponseComposer);
+  }
+
+  private void doTestValidateStateHistoryViewRepresentationWhenThereIsValidationError(
+      StateHistoryViewRepresentation stateHistoryViewRepresentation, String fieldName,
+      String jsonPathFieldName,
+      String errorMessageKey) throws Exception {
+
+    given(this.fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
+        .willReturn(composeResponseFromField(fieldName, errorMessageKey));
+
+    this.mockMvc
+        .perform(buildJsonPostRequest(REQUEST_URL_TO_VALIDATE, stateHistoryViewRepresentation))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
+        .andExpect(jsonPath(jsonPathFieldName).exists())
+        .andExpect(jsonPath(jsonPathFieldName).value(errorMessageKey));
+
+    then(this.fieldErrorResponseComposer).should().composeResponse(any(BindingResult.class));
   }
 
   private ResponseEntity<RestResponse> composeResponseFromField(String fieldName,

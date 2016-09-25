@@ -11,7 +11,6 @@ import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.web.FieldErrorResponseComposer;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.Locale;
-
 import javax.validation.Valid;
 
 @RestController
@@ -54,10 +52,9 @@ public class StateHistoryController {
 
   /**
    * This method is used to save new states or update the information of the latest state.
-   *
-   * @param applicationId                  identifier of the application whose states are viewed and edited
+   * @param applicationId identifier of the application whose states are viewed and edited
    * @param stateHistoryViewRepresentation this attribute contains all the state information of the
-   *                                       given application
+   * given application
    * @return a ModelAndView object filled with the data to stay on the same page and view the states
    * of the same application, but including the latest modification
    */
@@ -112,21 +109,28 @@ public class StateHistoryController {
       }
 
       statesHistoryService.saveStateHistory(stateHistoryDTO);
-      return new ResponseEntity<>(Collections.singletonMap("applicationId", applicationId), HttpStatus.OK);
+      return new ResponseEntity<>(Collections.singletonMap("applicationId", applicationId),
+          HttpStatus.OK);
     }
   }
 
+  /**
+   * This method is used to pre-validate new states.
+   * @param stateHistoryViewRepresentation this attribute contains all the state information of the
+   * given application
+   * @return a ResponseEntity which contains the HttpStatus code and the error message if it exists
+   */
   @RequestMapping(path = "/validate", method = RequestMethod.POST)
   public ResponseEntity validateStateHistoryViewRepresentation(
       @Valid @RequestBody StateHistoryViewRepresentation stateHistoryViewRepresentation,
-      BindingResult bindingResult, Locale locale) {
+      BindingResult bindingResult) {
 
     if (bindingResult.hasErrors()) {
       return fieldErrorResponseComposer.composeResponse(bindingResult);
     }
     return new ResponseEntity(RestResponse.NO_ERROR, HttpStatus.OK);
-
   }
+
 
   protected boolean isNewState(String stateName) {
     return stateName != null && stateName.equals(NEW_STATE);

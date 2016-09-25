@@ -29,7 +29,7 @@ public class StateHistoryViewRepresentation {
 
   private ApplicationDTO applicationDTO;
 
-  @NotNull
+  @NotNull(message = "statehistory.creationDate.null")
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
   private Date creationDate;
 
@@ -50,7 +50,6 @@ public class StateHistoryViewRepresentation {
 
   @Min(value = 0, message = "statehistory.error.claim.negative")
   private Long claim;
-
 
   private Date dayOfStart;
 
