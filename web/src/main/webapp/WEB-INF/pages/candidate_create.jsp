@@ -263,10 +263,9 @@
                     <a class="btn btn-success" href="${application}?candidateId=${candidate.id}" id="add_application_button"><spring:message
                             code="candidate.new.application.button"/></a>
                 </div>
-                <%--table--%>
                 <div id="application_table">
                         <table class="table table-hover cursor-pointer" id="applications_table"  data-toggle="table" data-url="../applications/${candidate.id}" data-height="500"
-                               data-sort-name="name" data-escape="true">
+                               data-sort-name="name" data-escape="true" data-pagination="true" data-side-pagination="server" data-query-params-type="">
                             <thead>
                             <tr>
                                 <th data-field="positionName" data-align="left"><spring:message

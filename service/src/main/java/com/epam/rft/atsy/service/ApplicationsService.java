@@ -1,8 +1,10 @@
 package com.epam.rft.atsy.service;
 
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
+import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+import com.epam.rft.atsy.service.response.PagingResponse;
 
 import java.util.List;
 
@@ -24,6 +26,18 @@ public interface ApplicationsService {
    * @return a list of applications
    */
   List<ApplicationDTO> getApplicationsByCandidateDTO(CandidateDTO candidateDTO);
+
+  /**
+   * Returns a PagingResponse object for a candidate, which contains a list of ApplicationDTOs with
+   * the number of size, and the number of all ApplicationDTOs.
+   * @param candidateId the id of the candidate
+   * @param page the number of the required page
+   * @param size the required page size
+   * @return a PagingResponse object
+   */
+  PagingResponse<CandidateApplicationDTO> getApplicationsByCandidateId(Long candidateId,
+                                                                       int page,
+                                                                       int size);
 
   void deleteApplicationsByCandidateDTO(CandidateDTO candidateDTO);
 

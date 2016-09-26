@@ -10,8 +10,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.epam.rft.atsy.service.StatesHistoryService;
+import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
+import com.epam.rft.atsy.service.response.PagingResponse;
 import com.epam.rft.atsy.web.MediaTypes;
 import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
@@ -27,13 +28,14 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CandidateApplicationControllerTest extends AbstractControllerTest {
   private static final String REQUEST_URL = "/secure/applications/";
+
+  private static final String URL_PAGE_REQUEST_ENDING = "?pageNumber=1&pageSize=10";
 
   private static final String APPLICATION_STATE = "candidate.table.state.";
 
@@ -55,8 +57,11 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
 
   private static final String LOCALIZED_STATE_TYPE = "localized";
 
+  private static final int PAGE_NUMBER_ZERO = 0;
+  private static final int PAGE_SIZE_TEN = 10;
+
   @Mock
-  private StatesHistoryService statesHistoryService;
+  private ApplicationsService applicationsService;
 
   @Mock
   private MessageKeyResolver messageKeyResolver;
@@ -67,8 +72,6 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
   private CandidateApplicationDTO developerApplicationDto;
 
   private CandidateApplicationDTO sysadminApplicationDto;
-
-  private Collection<CandidateApplicationDTO> candidateApplicationCollection;
 
   @Override
   protected Object[] controllersUnderTest() {
@@ -93,8 +96,6 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
             .stateType(RAW_STATE_TYPE)
             .build();
 
-    candidateApplicationCollection = Arrays.asList(developerApplicationDto, sysadminApplicationDto);
-
     given(messageKeyResolver
         .resolveMessageOrDefault(Matchers.anyString(), Matchers.any(Object[].class)))
         .willReturn(LOCALIZED_STATE_TYPE);
@@ -103,19 +104,23 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
   @Test
   public void loadApplicationsShouldRespondWithEmptyCollectionWhenThereAreNoApplications()
       throws Exception {
-    given(statesHistoryService
-        .getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID)).willReturn(
-        Collections.emptyList());
+
+    given(applicationsService
+        .getApplicationsByCandidateId(CANDIDATE_ID, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN))
+        .willReturn(new PagingResponse<CandidateApplicationDTO>(0L, Collections.emptyList()));
 
     mockMvc.perform(
-        get(REQUEST_URL + CANDIDATE_ID.toString()).accept(MediaTypes.APPLICATION_JSON_UTF8))
+        get(REQUEST_URL + CANDIDATE_ID.toString() + URL_PAGE_REQUEST_ENDING)
+            .accept(MediaTypes.APPLICATION_JSON_UTF8))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaTypes.APPLICATION_JSON_UTF8))
-        .andExpect(jsonPath("$").isArray())
-        .andExpect(jsonPath("$").isEmpty());
+        .andExpect(jsonPath("$.total").isNumber())
+        .andExpect(jsonPath("$.total").value(0))
+        .andExpect(jsonPath("$.rows").isArray())
+        .andExpect(jsonPath("$.rows").isEmpty());
 
-    then(statesHistoryService).should()
-        .getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID);
+    then(applicationsService).should()
+        .getApplicationsByCandidateId(CANDIDATE_ID, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
 
     verifyZeroInteractions(messageKeyResolver);
   }
@@ -123,22 +128,27 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
   @Test
   public void loadApplicationsShouldRespondWithSingleElementArrayWhenThereIsOnlyOneApplication()
       throws Exception {
-    given(statesHistoryService
-        .getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID))
-        .willReturn(Collections.singletonList(developerApplicationDto));
+
+    given(applicationsService
+        .getApplicationsByCandidateId(CANDIDATE_ID, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN)).willReturn(
+        new PagingResponse<CandidateApplicationDTO>(1L,
+            Collections.singletonList(developerApplicationDto)));
 
     ResultActions resultActions = mockMvc.perform(
-        get(REQUEST_URL + CANDIDATE_ID.toString()).accept(MediaTypes.APPLICATION_JSON_UTF8))
+        get(REQUEST_URL + CANDIDATE_ID.toString() + URL_PAGE_REQUEST_ENDING)
+            .accept(MediaTypes.APPLICATION_JSON_UTF8))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaTypes.APPLICATION_JSON_UTF8))
-        .andExpect(jsonPath("$").isArray())
-        .andExpect(jsonPath("$[0]").exists())
-        .andExpect(jsonPath("$[1]").doesNotExist());
+        .andExpect(jsonPath("$.total").isNumber())
+        .andExpect(jsonPath("$.total").value(1))
+        .andExpect(jsonPath("$.rows").isArray())
+        .andExpect(jsonPath("$.rows[0]").exists())
+        .andExpect(jsonPath("$.rows[1]").doesNotExist());
 
     assertApplicationResponse(resultActions, 0, developerApplicationDto);
 
-    then(statesHistoryService).should()
-        .getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID);
+    then(applicationsService).should()
+        .getApplicationsByCandidateId(CANDIDATE_ID, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
 
     then(messageKeyResolver).should()
         .resolveMessageOrDefault(APPLICATION_STATE + RAW_STATE_TYPE, RAW_STATE_TYPE);
@@ -147,25 +157,30 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
   @Test
   public void loadApplicationsShouldRespondWithTwoElementArrayWhenThereAreTwoApplications()
       throws Exception {
-    given(statesHistoryService
-        .getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID))
-        .willReturn(candidateApplicationCollection);
+
+    given(applicationsService
+        .getApplicationsByCandidateId(CANDIDATE_ID, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN)).willReturn(
+        new PagingResponse<CandidateApplicationDTO>(2L,
+            Arrays.asList(developerApplicationDto, sysadminApplicationDto)));
 
     ResultActions resultActions = mockMvc.perform(
-        get(REQUEST_URL + CANDIDATE_ID.toString()).accept(MediaTypes.APPLICATION_JSON_UTF8))
+        get(REQUEST_URL + CANDIDATE_ID.toString() + URL_PAGE_REQUEST_ENDING)
+            .accept(MediaTypes.APPLICATION_JSON_UTF8))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaTypes.APPLICATION_JSON_UTF8))
-        .andExpect(jsonPath("$").isArray())
-        .andExpect(jsonPath("$[0]").exists())
-        .andExpect(jsonPath("$[1]").exists())
-        .andExpect(jsonPath("$[2]").doesNotExist());
+        .andExpect(jsonPath("$.total").isNumber())
+        .andExpect(jsonPath("$.total").value(2))
+        .andExpect(jsonPath("$.rows").isArray())
+        .andExpect(jsonPath("$.rows[0]").exists())
+        .andExpect(jsonPath("$.rows[1]").exists())
+        .andExpect(jsonPath("$.rows[2]").doesNotExist());
 
     assertApplicationResponse(resultActions, 0, developerApplicationDto);
 
     assertApplicationResponse(resultActions, 1, sysadminApplicationDto);
 
-    then(statesHistoryService).should()
-        .getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(CANDIDATE_ID);
+    then(applicationsService).should()
+        .getApplicationsByCandidateId(CANDIDATE_ID, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
 
     then(messageKeyResolver).should(times(2))
         .resolveMessageOrDefault(APPLICATION_STATE + RAW_STATE_TYPE, RAW_STATE_TYPE);
@@ -173,7 +188,7 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
 
   private void assertApplicationResponse(ResultActions resultActions, int index,
                                          CandidateApplicationDTO applicationDto) throws Exception {
-    String basePath = "$[" + index + "].";
+    String basePath = "$.rows[" + index + "].";
 
     resultActions
         .andExpect(jsonPath(basePath + "lastStateId",
