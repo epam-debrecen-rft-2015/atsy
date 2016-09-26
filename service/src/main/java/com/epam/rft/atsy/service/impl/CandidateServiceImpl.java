@@ -140,11 +140,11 @@ public class CandidateServiceImpl
 
   @Transactional
   @Override
-  public void saveOrUpdate(CandidateDTO candidate) {
+  public Long saveOrUpdate(CandidateDTO candidate) {
     Assert.notNull(candidate);
     CandidateEntity entity = converterService.convert(candidate, CandidateEntity.class);
     try {
-      candidateRepository.saveAndFlush(entity).getId();
+      return candidateRepository.saveAndFlush(entity).getId();
     } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
       log.error("Save to repository failed.", ex);
 

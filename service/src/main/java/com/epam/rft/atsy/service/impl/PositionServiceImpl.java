@@ -68,7 +68,7 @@ public class PositionServiceImpl
 
   @Transactional
   @Override
-  public void saveOrUpdate(PositionDTO position) {
+  public Long saveOrUpdate(PositionDTO position) {
     Assert.notNull(position);
     Assert.notNull(position.getName());
 
@@ -82,6 +82,6 @@ public class PositionServiceImpl
       throw new DuplicatePositionException(position.getName());
     }
 
-    this.positionRepository.saveAndFlush(positionEntity);
+    return this.positionRepository.saveAndFlush(positionEntity).getId();
   }
 }

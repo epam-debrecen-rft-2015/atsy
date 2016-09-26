@@ -54,7 +54,7 @@ public class ChannelServiceImpl
 
   @Transactional
   @Override
-  public void saveOrUpdate(ChannelDTO channel) {
+  public Long saveOrUpdate(ChannelDTO channel) {
     Assert.notNull(channel);
     Assert.notNull(channel.getName());
 
@@ -68,6 +68,6 @@ public class ChannelServiceImpl
       throw new DuplicateChannelException(channel.getName());
     }
 
-    this.channelRepository.saveAndFlush(channelEntity);
+    return this.channelRepository.saveAndFlush(channelEntity).getId();
   }
 }
