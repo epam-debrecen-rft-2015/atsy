@@ -47,13 +47,9 @@ public class FileDownloadControllerTest extends AbstractControllerTest {
   private static final String INLINE_FORMAT = "inline; filename=\"";
 
   private static final String UPLOAD_LOCATION_VARIABLE_NAME = "uploadLocation";
-  private static final String CATALINA_BASE = "${catalina.base}";
   private static final String CV_TEST_FOLDER_NAME = "cv_test_folder";
 
-  private static final String
-      CV_TEST_FOLDER_LOCATION_PATH =
-      System.getProperty(CATALINA_BASE) + File.separator + CV_TEST_FOLDER_NAME;
-  private static final File TEST_FOLDER = new File(CV_TEST_FOLDER_LOCATION_PATH);
+  private static final File TEST_FOLDER = new File(CV_TEST_FOLDER_NAME);
 
   private static final String JSON_PATH_ERROR_MESSAGE = "$.errorMessage";
 
@@ -106,14 +102,14 @@ public class FileDownloadControllerTest extends AbstractControllerTest {
   @Before
   public void setup() throws IOException {
     FileUtils.forceMkdir(TEST_FOLDER);
-    FileUtils.forceMkdir(new File(CV_TEST_FOLDER_LOCATION_PATH + File.separator + CANDIDATE_ID));
+    FileUtils.forceMkdir(new File(CV_TEST_FOLDER_NAME + File.separator + CANDIDATE_ID));
     cvFileExisting =
-        new File(CV_TEST_FOLDER_LOCATION_PATH + File.separator + CANDIDATE_ID + File.separator + CANDIDATE_CV_FILENAME);
+        new File(CV_TEST_FOLDER_NAME + File.separator + CANDIDATE_ID + File.separator + CANDIDATE_CV_FILENAME);
     cvFileNonExistent =
         new File(
-            CV_TEST_FOLDER_LOCATION_PATH + File.separator + CANDIDATE_ID + File.separator + NON_EXISTENT_CV_FILENAME);
+            CV_TEST_FOLDER_NAME + File.separator + CANDIDATE_ID + File.separator + NON_EXISTENT_CV_FILENAME);
     FileCopyUtils.copy(StringUtils.repeat(CHARACTER, FILE_SIZE_HUNDRED_BYTE).getBytes(), cvFileExisting);
-    ReflectionTestUtils.setField(fileDownloadController, UPLOAD_LOCATION_VARIABLE_NAME, CV_TEST_FOLDER_LOCATION_PATH);
+    ReflectionTestUtils.setField(fileDownloadController, UPLOAD_LOCATION_VARIABLE_NAME, CV_TEST_FOLDER_NAME);
   }
 
   @After
@@ -166,7 +162,7 @@ public class FileDownloadControllerTest extends AbstractControllerTest {
   public void downloadFileShouldNotDownloadWhenTheNameOfTheCVFileExistsInDBAndNotExistsInFileSystem() throws Exception {
     given(this.candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithNonExistentCVFilename);
     given(this.messageKeyResolver.resolveMessageOrDefault(FILE_ERROR_MESSAGE_KEY)).willReturn(FILE_ERROR_MESSAGE);
-    given(this.fileHandler.getFileByParentDirectoryPathAndFolderNameAndFilename(CV_TEST_FOLDER_LOCATION_PATH,
+    given(this.fileHandler.getFileByParentDirectoryPathAndFolderNameAndFilename(CV_TEST_FOLDER_NAME,
         String.valueOf(CANDIDATE_ID), NON_EXISTENT_CV_FILENAME)).willReturn(cvFileNonExistent);
 
     this.mockMvc.perform(get(REQUEST_URL_TO_DOWNLOAD).param(CANDIDATE_ID_PARAM_NAME, CANDIDATE_ID_PARAM_VALUE))
@@ -176,14 +172,14 @@ public class FileDownloadControllerTest extends AbstractControllerTest {
 
     then(this.candidateService).should().getCandidate(CANDIDATE_ID);
     then(this.messageKeyResolver).should().resolveMessageOrDefault(FILE_ERROR_MESSAGE_KEY);
-    then(this.fileHandler).should().getFileByParentDirectoryPathAndFolderNameAndFilename(CV_TEST_FOLDER_LOCATION_PATH,
+    then(this.fileHandler).should().getFileByParentDirectoryPathAndFolderNameAndFilename(CV_TEST_FOLDER_NAME,
         String.valueOf(CANDIDATE_ID), NON_EXISTENT_CV_FILENAME);
   }
 
   @Test
   public void downloadFileShouldDownloadWhenTheNameOfTheCVFileExistsInDBAndInFileSystem() throws Exception {
     given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithValidCVFilename);
-    given(this.fileHandler.getFileByParentDirectoryPathAndFolderNameAndFilename(CV_TEST_FOLDER_LOCATION_PATH,
+    given(this.fileHandler.getFileByParentDirectoryPathAndFolderNameAndFilename(CV_TEST_FOLDER_NAME,
         String.valueOf(CANDIDATE_ID), CANDIDATE_CV_FILENAME)).willReturn(cvFileExisting);
     MockHttpServletResponse
         result =
@@ -197,7 +193,7 @@ public class FileDownloadControllerTest extends AbstractControllerTest {
     assertThat(result.getContentLength(), equalTo(FILE_SIZE_HUNDRED_BYTE));
 
     then(this.candidateService).should().getCandidate(CANDIDATE_ID);
-    then(this.fileHandler).should().getFileByParentDirectoryPathAndFolderNameAndFilename(CV_TEST_FOLDER_LOCATION_PATH,
+    then(this.fileHandler).should().getFileByParentDirectoryPathAndFolderNameAndFilename(CV_TEST_FOLDER_NAME,
         String.valueOf(CANDIDATE_ID), CANDIDATE_CV_FILENAME);
     verifyZeroInteractions(this.messageKeyResolver);
   }
@@ -249,7 +245,7 @@ public class FileDownloadControllerTest extends AbstractControllerTest {
       throws Exception {
     given(this.candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithNonExistentCVFilename);
     given(this.messageKeyResolver.resolveMessageOrDefault(FILE_ERROR_MESSAGE_KEY)).willReturn(FILE_ERROR_MESSAGE);
-    given(this.fileHandler.getFileByParentDirectoryPathAndFolderNameAndFilename(CV_TEST_FOLDER_LOCATION_PATH,
+    given(this.fileHandler.getFileByParentDirectoryPathAndFolderNameAndFilename(CV_TEST_FOLDER_NAME,
         String.valueOf(CANDIDATE_ID), NON_EXISTENT_CV_FILENAME)).willReturn(cvFileNonExistent);
 
     this.mockMvc.perform(get(REQUEST_URL_TO_VALIDATE).param(CANDIDATE_ID_PARAM_NAME, CANDIDATE_ID_PARAM_VALUE))
@@ -259,14 +255,14 @@ public class FileDownloadControllerTest extends AbstractControllerTest {
 
     then(this.candidateService).should().getCandidate(CANDIDATE_ID);
     then(this.messageKeyResolver).should().resolveMessageOrDefault(FILE_ERROR_MESSAGE_KEY);
-    then(this.fileHandler).should().getFileByParentDirectoryPathAndFolderNameAndFilename(CV_TEST_FOLDER_LOCATION_PATH,
+    then(this.fileHandler).should().getFileByParentDirectoryPathAndFolderNameAndFilename(CV_TEST_FOLDER_NAME,
         String.valueOf(CANDIDATE_ID), NON_EXISTENT_CV_FILENAME);
   }
 
   @Test
   public void validateFileShouldValidatedSuccessFulWhenTheNameOfTheCVFileExistsInDBAndInFileSystem() throws Exception {
     given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithValidCVFilename);
-    given(this.fileHandler.getFileByParentDirectoryPathAndFolderNameAndFilename(CV_TEST_FOLDER_LOCATION_PATH,
+    given(this.fileHandler.getFileByParentDirectoryPathAndFolderNameAndFilename(CV_TEST_FOLDER_NAME,
         String.valueOf(CANDIDATE_ID), CANDIDATE_CV_FILENAME)).willReturn(cvFileExisting);
 
     this.mockMvc.perform(get(REQUEST_URL_TO_DOWNLOAD).param(CANDIDATE_ID_PARAM_NAME, CANDIDATE_ID_PARAM_VALUE))
@@ -274,7 +270,7 @@ public class FileDownloadControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).doesNotExist());
 
     then(this.candidateService).should().getCandidate(CANDIDATE_ID);
-    then(this.fileHandler).should().getFileByParentDirectoryPathAndFolderNameAndFilename(CV_TEST_FOLDER_LOCATION_PATH,
+    then(this.fileHandler).should().getFileByParentDirectoryPathAndFolderNameAndFilename(CV_TEST_FOLDER_NAME,
         String.valueOf(CANDIDATE_ID), CANDIDATE_CV_FILENAME);
     verifyZeroInteractions(this.messageKeyResolver);
   }
