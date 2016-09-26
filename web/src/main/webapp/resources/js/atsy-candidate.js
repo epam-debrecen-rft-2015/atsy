@@ -81,6 +81,4 @@ function actionsFormatter(value, row, index) {
                 '<i class="glyphicon glyphicon-remove"></i>',
              '</a>',
             ].join('');
-}
 };
-
