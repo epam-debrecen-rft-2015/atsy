@@ -1,9 +1,7 @@
 package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.service.CandidateService;
-import com.epam.rft.atsy.service.LogicallyDeletableService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
-import com.epam.rft.atsy.web.controllers.LogicallyDeletableAbstractController;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +24,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping(value = "/secure/candidate")
-public class SingleCandidateController extends LogicallyDeletableAbstractController<CandidateDTO> {
+public class SingleCandidateController {
   private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
 
   @Autowired
@@ -34,12 +32,6 @@ public class SingleCandidateController extends LogicallyDeletableAbstractControl
 
   @Autowired
   private MessageKeyResolver messageKeyResolver;
-
-  public SingleCandidateController(
-      LogicallyDeletableService logicallyDeletableService,
-      MessageKeyResolver messageKeyResolver) {
-    super(logicallyDeletableService, messageKeyResolver);
-  }
 
   /**
    * Saves or updates and existing candidate.
