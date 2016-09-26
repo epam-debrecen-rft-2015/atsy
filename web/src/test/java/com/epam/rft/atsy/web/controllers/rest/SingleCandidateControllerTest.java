@@ -2,7 +2,6 @@ package com.epam.rft.atsy.web.controllers.rest;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -290,18 +289,5 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
             jsonPath("$.fields.languageSkill", equalTo(LANGUAGE_SKILL_TOO_HIGH_MESSAGE_KEY)));
 
     verifyZeroInteractions(candidateService);
-  }
-
-  @Test
-  public void saveOrUpdateShouldRespondWithAnIdWhenPostedDtoIsCorrect() throws Exception {
-    given(candidateService.saveOrUpdate(correctCandidateDto)).willReturn(candidateId);
-
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, correctCandidateDto))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").exists())
-        .andExpect(jsonPath("$.id").isNumber())
-        .andExpect(jsonPath("$.id", equalTo(candidateId.intValue())));
-
-    then(candidateService).should().saveOrUpdate(correctCandidateDto);
   }
 }

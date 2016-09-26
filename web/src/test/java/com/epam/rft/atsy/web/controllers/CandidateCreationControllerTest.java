@@ -52,7 +52,7 @@ public class CandidateCreationControllerTest extends AbstractControllerTest {
 
   @Before
   public void setUpTestDate() {
-    emptyCandidateDto = CandidateDTO.builder().build();
+    emptyCandidateDto = CandidateDTO.builder().deleted(false).build();
 
     persistedCandidateDto = CandidateDTO.builder().id(CANDIDATE_ID).build();
   }
