@@ -52,12 +52,12 @@ public class FileDownloadController {
   @RequestMapping(path = "/{candidateId}", method = RequestMethod.GET)
   public ResponseEntity downloadFile(@PathVariable("candidateId") Long candidateId) throws Exception {
 
-    CandidateDTO candidateDTO = candidateService.getCandidate(candidateId);
+    CandidateDTO candidateDTO = this.candidateService.getCandidate(candidateId);
     String candidateCVFilename = candidateDTO.getCvFilename();
     if (StringUtils.isNotBlank(candidateCVFilename)) {
 
       try {
-        File file = fileHandler
+        File file = this.fileHandler
             .getFileByParentDirectoryPathAndFolderNameAndFilename(uploadLocation,
                 String.valueOf(candidateId), candidateCVFilename);
         if (!file.exists()) {
@@ -73,23 +73,21 @@ public class FileDownloadController {
 
         return new ResponseEntity<>(inputStreamResource, responseHeaders, HttpStatus.OK);
       } catch (IOException e) {
-        String errorMessage = this.messageKeyResolver.resolveMessageOrDefault(FILE_ERROR_MESSAGE_KEY);
-        return new ResponseEntity<>(new RestResponse(errorMessage), HttpStatus.BAD_REQUEST);
+        return getResponseEntityWithFileErrorMessage();
       }
     } else {
-      String errorMessage = this.messageKeyResolver.resolveMessageOrDefault(FILE_ERROR_MESSAGE_KEY);
-      return new ResponseEntity<>(new RestResponse(errorMessage), HttpStatus.BAD_REQUEST);
+      return getResponseEntityWithFileErrorMessage();
     }
   }
 
   @RequestMapping(path = "/validate/{candidateId}", method = RequestMethod.GET)
   public ResponseEntity validateFile(@PathVariable("candidateId") Long candidateId) throws Exception {
-    CandidateDTO candidateDTO = candidateService.getCandidate(candidateId);
+    CandidateDTO candidateDTO = this.candidateService.getCandidate(candidateId);
     String candidateCVFilename = candidateDTO.getCvFilename();
     if (StringUtils.isNotBlank(candidateCVFilename)) {
 
       try {
-        File file = fileHandler
+        File file = this.fileHandler
             .getFileByParentDirectoryPathAndFolderNameAndFilename(uploadLocation,
                 String.valueOf(candidateId), candidateCVFilename);
         if (!file.exists()) {
@@ -97,12 +95,15 @@ public class FileDownloadController {
         }
         return new ResponseEntity(Collections.singletonMap("id", candidateId), HttpStatus.OK);
       } catch (IOException e) {
-        String errorMessage = this.messageKeyResolver.resolveMessageOrDefault(FILE_ERROR_MESSAGE_KEY);
-        return new ResponseEntity<>(new RestResponse(errorMessage), HttpStatus.BAD_REQUEST);
+        return getResponseEntityWithFileErrorMessage();
       }
     } else {
-      String errorMessage = this.messageKeyResolver.resolveMessageOrDefault(FILE_ERROR_MESSAGE_KEY);
-      return new ResponseEntity<>(new RestResponse(errorMessage), HttpStatus.BAD_REQUEST);
+      return getResponseEntityWithFileErrorMessage();
     }
+  }
+
+  private ResponseEntity getResponseEntityWithFileErrorMessage() {
+    String errorMessage = this.messageKeyResolver.resolveMessageOrDefault(FILE_ERROR_MESSAGE_KEY);
+    return new ResponseEntity<>(new RestResponse(errorMessage), HttpStatus.BAD_REQUEST);
   }
 }
