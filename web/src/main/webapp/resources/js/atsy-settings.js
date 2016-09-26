@@ -19,6 +19,8 @@ function SettingsForm() {
             event.preventDefault();
             if ($this.find(".name").val() === "") {
                 showError($this, window.messages[validationMessageKey]);
+            } else if($this.find(".newPassword").val() === "" || $this.find(".newPasswordConfirm").val() === "" || $this.find(".oldPassword").val() === "") {
+                showError($this, window.messages[validationMessageKey]);
             } else {
                 data = {};
                 $this.serializeArray().map(function (x) {
@@ -59,6 +61,7 @@ function SettingsForm() {
 $(function () {
     new SettingsForm().init('#positions_section','settings.positions.error.empty');
     new SettingsForm().init('#channels_section','settings.channels.error.empty');
+    new SettingsForm().init('#password_section','settings.password.error.empty');
 });
 
 function actionFormatter(value, row, index) {
