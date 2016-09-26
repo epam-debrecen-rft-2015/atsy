@@ -10,11 +10,13 @@
 
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
-     <c:url value="/resources/js/atsy-candidate.js" var="urlValue"/><script src="${urlValue}"></script>
-      <c:url value="/resources/js/atsy-deletable-event-config.js" var="urlValue" /><script src="${urlValue}"></script>
-              <c:url value="/resources/thirdparty/bootstrap/js/bootstrap.min.js" var="urlValue"/><script src="${urlValue}"></script>
-              <c:url value="/resources/thirdparty/bootbox/bootbox.js" var="urlValue"/><script src="${urlValue}"></script>
-              <c:url value="/resources/thirdparty/jquery/jquery.i18n.properties.js" var="urlValue"/><script src="${urlValue}"></script>
+        <c:url value="/resources/js/atsy-settings.js" var="urlValue"/><script src="${urlValue}"></script>
+        <c:url value="/resources/js/atsy-candidate.js" var="urlValue"/><script src="${urlValue}"></script>
+        <c:url value="/resources/js/atsy-deletable-event-config.js" var="urlValue" /><script src="${urlValue}"></script>
+        <c:url value="/resources/thirdparty/bootstrap/js/bootstrap.min.js" var="urlValue"/><script src="${urlValue}"></script>
+        <c:url value="/resources/thirdparty/bootbox/bootbox.js" var="urlValue"/><script src="${urlValue}"></script>
+        <c:url value="/resources/thirdparty/jquery/jquery.i18n.properties.js" var="urlValue"/><script src="${urlValue}"></script>
+        <c:url value="/resources/js/atsy-i18n-config.js" var="urlValue" /><script src="${urlValue}"></script>
     </jsp:attribute>
     <jsp:body>
         <div id="welcome">
@@ -70,8 +72,6 @@
                             <th data-field="operations" data-align="left" data-sortable="false" data-formatter="actionsFormatter" data-events="candidatesEvents">
                                 <spring:message code="welcome.candidates.table.actions.title"/>
                             </th>
-
-
                         </tr>
                         </thead>
                     </table>

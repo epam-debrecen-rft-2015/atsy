@@ -82,12 +82,5 @@ function actionsFormatter(value, row, index) {
              '</a>',
             ].join('');
 }
-
-window.candidatesEvents = {
-    'click .remove': function (e, value, row) {
-         var container = $('#candidates_table');
-         var options = getOptions('question.delete.channel.js', 'selected.channel.not.found.js', row, container, "candidates");
-         bootbox.dialog(options);
-    }
 };
 
