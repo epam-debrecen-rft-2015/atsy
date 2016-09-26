@@ -40,22 +40,34 @@
                 <a class="btn btn-success" href="${newcandidate}" id="add_candidate_button"><spring:message code="welcome.candidates.add.button"/></a>
             </div>
             <div id="candidates_table">
+
+                <div class="globalMessage alert alert-danger" id="errorMessageForDeleting" role="alert" style="display: none">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="error-message"></span>
+                </div>
+
                 <div>
                     <table class="table table-striped table-hover cursor-pointer" data-toggle="table" id="candidates"
                     data-url="${candidates}" data-height="500" data-sort-name="name" data-escape="true"
                     data-pagination="true" data-side-pagination="server" data-query-params-type="" >
                         <thead>
                         <tr>
-                            <th data-field="name" data-align="left" data-sortable="true" data-formatter="escapeHTMLFormatter"><spring:message
-                                    code="welcome.candidates.table.name.title"/></th>
+                            <th data-field="name" data-align="left" data-sortable="true" data-formatter="escapeHTMLFormatter">
+                                <spring:message code="welcome.candidates.table.name.title"/>
+                            </th>
                             <th data-field="email" data-align="left" data-sortable="true">
                                 <spring:message code="welcome.candidates.table.email.title"/>
                             </th>
-                            <th data-field="phone" data-align="left" data-sortable="true"><spring:message
-                                    code="welcome.candidates.table.phone.title"/></th>
+                            <th data-field="phone" data-align="left" data-sortable="true">
+                                <spring:message code="welcome.candidates.table.phone.title"/></th>
+                            <th data-field="positions" data-align="left" data-sortable="true" data-formatter="escapeHTMLFormatter">
+                                <spring:message code="welcome.candidates.table.positions.title"/>
+                            </th>
+                            <th data-field="operations" data-align="left" data-sortable="false" data-formatter="actionsFormatter" data-events="candidatesEvents">
+                                <spting:message code="welcome.candidates.table.actions.title"/>
+                            </th>
 
-                            <th data-field="positions" data-align="left" data-sortable="true" data-formatter="escapeHTMLFormatter"><spring:message
-                                    code="welcome.candidates.table.positions.title"/></th>
+
                         </tr>
                         </thead>
                     </table>

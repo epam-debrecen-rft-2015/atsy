@@ -78,3 +78,20 @@ $('.table').bootstrapTable({
         return  p
       }
 });
+
+function actionsFormatter(value, row, index) {
+    return [
+             '<a class="remove ml10 little-space" href="javascript:void(0)" title="Remove">',
+                '<i class="glyphicon glyphicon-remove"></i>',
+             '</a>',
+            ].join('');
+}
+
+window.candidatesEvents = {
+    'click .remove': function (e, value, row) {
+         var container = $('#candidates_table');
+         var options = getOptions('question.delete.channel.js', 'selected.channel.not.found.js', row, container);
+         bootbox.dialog(options);
+    }
+};
+
