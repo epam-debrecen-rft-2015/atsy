@@ -2,7 +2,7 @@ package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
-import com.epam.rft.atsy.service.exception.CandidateAlreadyHasCVFileException;
+import com.epam.rft.atsy.service.exception.file.CandidateAlreadyHasCVFileException;
 import com.epam.rft.atsy.service.exception.file.FileValidationException;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
 import com.epam.rft.atsy.web.handler.FileHandler;
@@ -63,7 +63,7 @@ public class FileUploadController {
   private MessageKeyResolver messageKeyResolver;
 
   @RequestMapping(path = "/candidate/{candidateId}", method = RequestMethod.POST)
-  public ResponseEntity uploadFileF(@PathVariable("candidateId") Long candidateId,
+  public ResponseEntity uploadFileForCandidate(@PathVariable("candidateId") Long candidateId,
                                     HttpServletRequest httpServletRequest) throws IOException, ServletException {
 
     return uploadFile(candidateId, candidateId, httpServletRequest);
@@ -89,15 +89,13 @@ public class FileUploadController {
     try {
       fileValidator.validate(multipartFile);
     } catch (FileValidationException e) {
-      String
-          errorMessage =
-          this.messageKeyResolver.resolveMessageOrDefault(ruleValidationExceptionMapper.getMessageKeyByException(e));
-      return new ResponseEntity(new RestResponse(errorMessage), HttpStatus.BAD_REQUEST);
+      log.error(FileUploadController.class.getName(), e);
+      return getResponseEntityWithFileErrorMessageByException(e);
     }
     return new ResponseEntity(RestResponse.NO_ERROR, HttpStatus.OK);
   }
 
-  public ResponseEntity uploadFile(Long candidateId, Long returnedId, HttpServletRequest httpServletRequest)
+  private ResponseEntity uploadFile(Long candidateId, Long returnedId, HttpServletRequest httpServletRequest)
       throws IOException {
     MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) httpServletRequest;
     MultipartFile multipartFile = multipartHttpServletRequest.getFile(FILE_PARAMETER_NAME);
@@ -121,25 +119,22 @@ public class FileUploadController {
       candidateDTO.setCvFilename(fileName);
       candidateService.saveOrUpdate(candidateDTO);
       return new ResponseEntity<>(Collections.singletonMap("id", returnedId), HttpStatus.OK);
-    } catch (CandidateAlreadyHasCVFileException e) {
-      log.error(FileUploadController.class.getName(), e);
-      String
-          errorMessageKey =
-          this.messageKeyResolver.resolveMessageOrDefault(CANDIDATE_ALREADY_HAS_CV_FILE_MESSAGE_KEY);
-      return new ResponseEntity<>(new RestResponse(errorMessageKey), HttpStatus.BAD_REQUEST);
     } catch (FileValidationException e) {
       log.error(FileUploadController.class.getName(), e);
-      String errorMessageKey =
-          this.messageKeyResolver.resolveMessageOrDefault(ruleValidationExceptionMapper.getMessageKeyByException(e));
-      return new ResponseEntity(new RestResponse(errorMessageKey), HttpStatus.BAD_REQUEST);
+      return getResponseEntityWithFileErrorMessageByException(e);
     }
   }
 
-  protected File createFile(String folderName, String filename) throws IOException {
+  private File createFile(String folderName, String filename) throws IOException {
     if (!folderHandler.existFolderNameInParentDirectoryPath(String.valueOf(folderName), uploadLocation)) {
       folderHandler.createFolderInParentDirectoryPath(String.valueOf(folderName), uploadLocation);
     }
     return fileHandler.getFileByParentDirectoryPathAndFolderNameAndFilename(uploadLocation, folderName, filename);
+  }
+
+  private ResponseEntity getResponseEntityWithFileErrorMessageByException(Exception e) {
+    String errorMessage = this.messageKeyResolver.resolveMessageOrDefault(ruleValidationExceptionMapper.getMessageKeyByException(e));
+    return new ResponseEntity<>(new RestResponse(errorMessage), HttpStatus.BAD_REQUEST);
   }
 
 }
