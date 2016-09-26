@@ -1,4 +1,8 @@
-function getOptions(dialogMessageKey, errorMessageKey, row, container) {
+function getOptions(dialogMessageKey, errorMessageKey, row, container, optionalPrefix) {
+
+    if (typeof optionalPrefix === 'undefined') { optionalPrefix = ''; }
+    console.log(optionalPrefix);
+
     var options = {
         size: 'small',
         message: $.i18n.prop(dialogMessageKey) + " (" + new Option(row.name).innerHTML + ")",
@@ -19,7 +23,7 @@ function getOptions(dialogMessageKey, errorMessageKey, row, container) {
                 callback: function() {
                     $.ajax({
                         type: 'DELETE',
-                        url: "./delete?" + 'id=' + row.id,
+                        url: "./" + optionalPrefix + "/" + "delete?" + 'id=' + row.id,
                         cache: false,
                     }).done(function() {
                         var table = container.find('table');

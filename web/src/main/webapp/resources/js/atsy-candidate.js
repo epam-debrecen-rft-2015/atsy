@@ -58,10 +58,6 @@ $(document).ready(function () {
 });
 
 $('.table').bootstrapTable({
-    onClickRow: function (row, $element) {
-      window.location.href="candidate/" + row.id;
-    },
-
     queryParams: function (p) {
         var sortName = p.sortName;
 
@@ -90,7 +86,7 @@ function actionsFormatter(value, row, index) {
 window.candidatesEvents = {
     'click .remove': function (e, value, row) {
          var container = $('#candidates_table');
-         var options = getOptions('question.delete.channel.js', 'selected.channel.not.found.js', row, container);
+         var options = getOptions('question.delete.channel.js', 'selected.channel.not.found.js', row, container, "candidates");
          bootbox.dialog(options);
     }
 };
