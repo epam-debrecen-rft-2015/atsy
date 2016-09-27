@@ -146,8 +146,29 @@
 
                         <div class="error col-lg-12 col-md-12 col-sm-12"></div>
 
+                        <div class="form-group"
+                             id="phoneDiv">
+                            <spring:message code="candidate.phone.field" var="i18nphone"/>
+                            <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
+                                   for="phone"><spring:message
+                                    code="candidate.phone.label"/></label>
+
+                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <spring:message code="candidate.error.phone.incorrect" var="phoneIncorrectValue"/>
+                                <input type="text" class="input form-control" name="phone" id="phone" data-bind="valueWithInit: 'phone'"
+                                       value="${candidate.phone}"
+                                       placeholder="${i18nphone}" data-error="${phoneIncorrectValue}"
+                                       pattern="^\+?[0-9]+" maxlength="20">
+
+                                <div id="phone-errors" class="help-block with-errors"></div>
+
+                                <p class="showValue form-control-static"><c:out value ="${candidate.phone}"/></p>
+                            </div>
+
+                        </div>
+
                         <div class="form-group" id="cvDiv">
-                            <label class="control-label col-lg-8 col-md-8 col-sm-6 text-right" for="name">
+                            <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="name">
                                 <spring:message code="cv"/>
                             </label>
 
@@ -171,28 +192,6 @@
                                     </a>
                                 </label>
                             </c:if>
-                        </div>
-                        <div class="error col-lg-12 col-md-12 col-sm-12"></div>
-
-                        <div class="form-group"
-                             id="phoneDiv">
-                            <spring:message code="candidate.phone.field" var="i18nphone"/>
-                            <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
-                                   for="phone"><spring:message
-                                    code="candidate.phone.label"/></label>
-
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
-                            <spring:message code="candidate.error.phone.incorrect" var="phoneIncorrectValue"/>
-                                <input type="text" class="input form-control" name="phone" id="phone" data-bind="valueWithInit: 'phone'"
-                                       value="${candidate.phone}"
-                                       placeholder="${i18nphone}" data-error="${phoneIncorrectValue}"
-                                       pattern="^\+?[0-9]+" maxlength="20">
-
-                                <div id="phone-errors" class="help-block with-errors"></div>
-
-                                <p class="showValue form-control-static"><c:out value ="${candidate.phone}"/></p>
-                            </div>
-
                         </div>
                         <div class="error col-lg-12 col-md-12 col-sm-12"></div>
 

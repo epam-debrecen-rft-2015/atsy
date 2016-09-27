@@ -1,20 +1,11 @@
 package com.epam.rft.atsy.web.controllers.rest;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
 import com.epam.rft.atsy.web.helper.CandidateValidatorHelper;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolverImpl;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +15,16 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.Locale;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SingleCandidateControllerTest extends AbstractControllerTest {
@@ -519,7 +520,6 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
         .isValidNonExistingCandidate(any(CandidateDTO.class));
     verifyZeroInteractions(this.messageKeyResolver);
   }
-
 
   private void doTestValidateCandidateWhenThereIsValidationFieldError(
       CandidateDTO candidateDTO, String jsonPathFieldName, String errorMessageKey)

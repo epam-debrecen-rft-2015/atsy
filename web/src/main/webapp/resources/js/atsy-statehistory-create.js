@@ -59,7 +59,6 @@ function StateHistoryModel() {
           }
       };
 
-
   ko.bindingHandlers.datetimepickerBinding = {
           init: function(element, valueAccessor, allBindingsAccessor, data) {
               var property = valueAccessor()
@@ -93,7 +92,6 @@ function StateHistoryModel() {
 
         return self.fileErrorResponse().errorMessage;
     });
-
 
     self.fieldMessages = ko.pureComputed(function() {
         if (self.errorResponse() === null) {
@@ -288,8 +286,6 @@ function StateHistoryModel() {
           self.showFileError(false);
       });
 }
-
-
 
 StateHistoryModel.prototype.redirectWithoutState = function() {
   var appIdRegex = /applicationId\=[\d]+/;

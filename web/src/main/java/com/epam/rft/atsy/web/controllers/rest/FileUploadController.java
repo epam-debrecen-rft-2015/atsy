@@ -38,7 +38,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(value = "/secure/fileUpload")
 public class FileUploadController {
 
-  private static final String CANDIDATE_ALREADY_HAS_CV_FILE_MESSAGE_KEY = "candidate.already.has.cv.file";
   private static final String FILE_PARAMETER_NAME = "file";
 
   @Value("${upload_location_cv}")
@@ -64,7 +63,8 @@ public class FileUploadController {
 
   @RequestMapping(path = "/candidate/{candidateId}", method = RequestMethod.POST)
   public ResponseEntity uploadFileForCandidate(@PathVariable("candidateId") Long candidateId,
-                                    HttpServletRequest httpServletRequest) throws IOException, ServletException {
+                                               HttpServletRequest httpServletRequest)
+      throws IOException, ServletException {
 
     return uploadFile(candidateId, candidateId, httpServletRequest);
   }
@@ -133,7 +133,9 @@ public class FileUploadController {
   }
 
   private ResponseEntity getResponseEntityWithFileErrorMessageByException(Exception e) {
-    String errorMessage = this.messageKeyResolver.resolveMessageOrDefault(ruleValidationExceptionMapper.getMessageKeyByException(e));
+    String
+        errorMessage =
+        this.messageKeyResolver.resolveMessageOrDefault(ruleValidationExceptionMapper.getMessageKeyByException(e));
     return new ResponseEntity<>(new RestResponse(errorMessage), HttpStatus.BAD_REQUEST);
   }
 

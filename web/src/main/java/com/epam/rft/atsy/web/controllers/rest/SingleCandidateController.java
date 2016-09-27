@@ -65,7 +65,8 @@ public class SingleCandidateController {
       return new ResponseEntity(parseValidationErrors(result.getFieldErrors(), locale),
           HttpStatus.BAD_REQUEST);
     }
-    // Create a new candidate
+
+    // If candidate id is null, it means new candidate would like to be created
     if (candidateDTO.getId() == null) {
       return createResponseEntityForCandidateValidation(
           this.candidateValidatorHelper.isValidNonExistingCandidate(candidateDTO));

@@ -1,12 +1,11 @@
 package com.epam.rft.atsy.web.handler;
 
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import org.junit.Test;
 
 import java.io.File;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class FileHandlerTest extends AbstractHandlerTest {
 
@@ -14,33 +13,45 @@ public class FileHandlerTest extends AbstractHandlerTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void getFileByParentDirectoryPathAndFolderNameAndFilenameShouldThrowIllegalArgumentExceptionWhenParentDirectoryPathIsNull() {
-    fileHandler
-        .getFileByParentDirectoryPathAndFolderNameAndFilename(null, FOLDER_NAME_ACTUAL, FILENAME);
+    // Given
+
+    // When
+    fileHandler.getFileByParentDirectoryPathAndFolderNameAndFilename(null, FOLDER_NAME_ACTUAL, FILENAME);
+
+    // Then
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void getFileByParentDirectoryPathAndFolderNameAndFilenameShouldThrowIllegalArgumentExceptionWhenFolderNameIsNull() {
-    fileHandler
-        .getFileByParentDirectoryPathAndFolderNameAndFilename(FOLDER_NAME_PARENT, null, FILENAME);
+    // Given
+
+    // When
+    fileHandler.getFileByParentDirectoryPathAndFolderNameAndFilename(FOLDER_NAME_PARENT, null, FILENAME);
+
+    // Then
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void getFileByParentDirectoryPathAndFolderNameAndFilenameShouldThrowIllegalArgumentExceptionWhenFilenameIsNull() {
-    fileHandler
-        .getFileByParentDirectoryPathAndFolderNameAndFilename(FOLDER_NAME_PARENT,
-            FOLDER_NAME_ACTUAL, null);
+    // Given
+
+    // When
+    fileHandler.getFileByParentDirectoryPathAndFolderNameAndFilename(FOLDER_NAME_PARENT, FOLDER_NAME_ACTUAL, null);
+
+    // Then
   }
 
   @Test
   public void getFileByParentDirectoryPathAndFolderNameAndFilenameShouldReturnExistingFileWhenAllParamIsValid() {
+    // Given
     File expectedFile =
-        new File(
-            FOLDER_NAME_PARENT + File.separator + FOLDER_NAME_ACTUAL + File.separator + FILENAME);
+        new File(FOLDER_NAME_PARENT + File.separator + FOLDER_NAME_ACTUAL + File.separator + FILENAME);
 
+    // When
     File actualFile = fileHandler
-        .getFileByParentDirectoryPathAndFolderNameAndFilename(FOLDER_NAME_PARENT,
-            FOLDER_NAME_ACTUAL, FILENAME);
+        .getFileByParentDirectoryPathAndFolderNameAndFilename(FOLDER_NAME_PARENT, FOLDER_NAME_ACTUAL, FILENAME);
 
+    // Then
     assertThat(actualFile, equalTo(expectedFile));
   }
 }
