@@ -46,7 +46,7 @@
                     data-pagination="true" data-side-pagination="server" data-query-params-type="" >
                         <thead>
                         <tr>
-                            <th data-field="name" data-align="left" data-sortable="true"><spring:message
+                            <th data-field="name" data-align="left" data-sortable="true" data-formatter="escapeHTMLFormatter"><spring:message
                                     code="welcome.candidates.table.name.title"/></th>
                             <th data-field="email" data-align="left" data-sortable="true">
                                 <spring:message code="welcome.candidates.table.email.title"/>
@@ -54,7 +54,7 @@
                             <th data-field="phone" data-align="left" data-sortable="true"><spring:message
                                     code="welcome.candidates.table.phone.title"/></th>
 
-                            <th data-field="positions" data-align="left" data-sortable="true"><spring:message
+                            <th data-field="positions" data-align="left" data-sortable="true" data-formatter="escapeHTMLFormatter"><spring:message
                                     code="welcome.candidates.table.positions.title"/></th>
                         </tr>
                         </thead>

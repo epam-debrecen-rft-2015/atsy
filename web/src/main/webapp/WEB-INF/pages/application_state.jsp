@@ -48,7 +48,7 @@
                                 <a href="?applicationId=${applicationId}&state=${stateflow.toStateDTO.name}" class="btn btn-danger"><spring:message code="statehistory.buttons.${stateflow.toStateDTO.name}"/></a>
                             </c:when>
                             <c:otherwise>
-                                <a href="?applicationId=${applicationId}&state=${stateflow.toStateDTO.name}" class="btn btn-default"><spring:message code="statehistory.buttons.${stateflow.toStateDTO.name}"/></a>
+                                <a href="?applicationId=${applicationId}&state=${stateflow.toStateDTO.name}" class="btn btn-default" id="newStateButton"><spring:message code="statehistory.buttons.${stateflow.toStateDTO.name}"/></a>
                             </c:otherwise>
                         </c:choose>
                         </c:forEach>
@@ -68,6 +68,9 @@
               </ul>
           </div>
       </div>
+      <div class="panel panel-danger hidden" role="alert"  data-bind="css: { hidden: !showFileError() }">
+          <div class="panel-heading" data-bind="text: fileErrorMessage"></div>
+      </div>
 
       <div id="stateList">
       <c:forEach var="data" items="${states}" varStatus="stat">
@@ -82,7 +85,7 @@
                   </c:if>
               </h4>
           </div>
-          <form data-toggle="validator" class="form form-horizontal" role="form" method="POST" id="create-state-form" action="#">
+          <form data-toggle="validator" class="form form-horizontal" role="form" method="POST" enctype="multipart/form-data" id="create-state-form" action="#">
               <c:if test="${stat.first}">
                 <input type="hidden" name="id" value="${data.id}" data-bind="valueWithInit: 'id'"/>
                 <input type="hidden" id="stateId" name="stateId" value="${data.stateId}" data-bind="valueWithInit: 'stateId'"/>
@@ -180,9 +183,27 @@
                   <c:when test="${data.stateName == 'cv'}">
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.cv"/></label>
-                          <div class="col-sm-8">
-                              <p class="form-control-static glyphicon glyphicon-paperclip"></p>
-                          </div>
+
+                          <c:if test="${empty candidate.cvFilename}">
+
+                              <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                                  <label class="btn btn-primary" for="file" id="fileUploadLabel">
+                                      <i class="glyphicon glyphicon-upload"></i>
+                                  </label>
+                                  <input class="input form-control" type="file" name="file" id="file" style="display:none;"/>
+                                  <p id="fileName"/>
+                              </div>
+                          </c:if>
+
+                          <c:if test="${not empty candidate.cvFilename}">
+
+                              <label class="control-label col-lg-1 text-left" for="name">
+                                  <c:url value='/secure/fileDownload/validate/${candidate.id}' var="urlValue" />
+                                  <a href="javascript:void(0)" data-file="${urlValue}" id="downloadLink">
+                                      <c:out value="${candidate.cvFilename}"/>
+                                  </a>
+                              </label>
+                          </c:if>
                       </div>
                   </c:when>
 
@@ -428,10 +449,10 @@
                   </c:when>
               </c:choose>
               <c:if test="${stat.first}">
-                  <button type="submit" class="btn btn-success stateInput hidden"  data-bind="enable: canSave">
+                  <button type="submit" class="btn btn-success stateInput hidden"  data-bind="enable: canSave" id="saveButton">
                       <spring:message code="save.button"/>
                   </button>
-                  <button type="reset" class="btn btn-danger stateInput hidden" onclick="cancelButtonOnClick()">
+                  <button type="reset" class="btn btn-danger stateInput hidden" data-bind="click: modify_display_true" onclick="cancelButtonOnClick()" id="cancelButton">
                       <spring:message code="cancel.button"/>
                   </button>
               </c:if>
