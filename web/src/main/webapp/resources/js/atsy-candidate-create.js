@@ -1,6 +1,6 @@
 $('.table').bootstrapTable({
     onClickRow: function (row, $element) {
-      window.location.href = "../application_state?applicationId=" + row.applicationId;
+      window.location.href = "../application_state?applicationId=" + row.id;
     }
 });
 
@@ -128,3 +128,20 @@ function dateTimeFormatter(dateTime) {
     var options = {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
     return dateTime.toLocaleDateString('hu-HU', options);
 }
+
+function actionFormatter(value, row, index) {
+    return [
+        '<a class="remove ml10 little-space" href="javascript:void(0)" title="Remove">',
+        '<i class="glyphicon glyphicon-remove"></i>',
+        '</a>',
+    ].join('');
+}
+
+window.channelsEvents = {
+    'click .remove': function (e, value, row) {
+         var container = $('#application_table');
+         var options = getOptions('/secure/application', 'question.delete.application.js', 'selected.channel.not.found.js', row, container);
+         e.stopImmediatePropagation();
+         bootbox.dialog(options);
+    }
+};
