@@ -7,15 +7,15 @@ $(document).ready(function() {
         return false;
       }
   }));
-  $('#dayOfStartInput').datetimepicker({
-    format: 'YYYY-MM-DD'
-  });
   $('#dateOfEnterInput').datepicker({
       format: 'yyyy-mm-dd',
       autoclose: true
   });
   $('#feedbackDateInput').datetimepicker({
-    format: 'YYYY-MM-DD HH:mm',
+    format: 'YYYY-MM-DD HH:mm'
+  });
+  $('#dayOfStartInput').datetimepicker({
+    format: 'YYYY-MM-DD'
   });
 
   $("#file").change(function() {
