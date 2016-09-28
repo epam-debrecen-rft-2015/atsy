@@ -51,6 +51,7 @@ public class StateHistoryViewRepresentation {
   @Min(value = 0, message = "statehistory.error.claim.negative")
   private Long claim;
 
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
   private Date dayOfStart;
 
   private Date dateOfEnter;
