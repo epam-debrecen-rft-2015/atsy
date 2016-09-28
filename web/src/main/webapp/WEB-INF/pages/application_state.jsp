@@ -402,11 +402,15 @@
                               <fmt:formatDate value="${data.dayOfStart}" type="date" pattern="yyyy-MM-dd" var="formattedDayOfStart"/>
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedDayOfStart}</p>
                               <c:if test="${stat.first}">
-
-                                  <input class="stateInput hidden" type="date" name="dayOfStart" id="dayOfStartInput" value="${fn:escapeXml(formattedDayOfStart)}"
-                                  data-bind="valueWithInit: 'dayOfStart'" required>
+                                  <div class='input-group date' name='dayOfStart' id='dayOfStartInput'>
+                                      <input required type='text' class="form-control stateInput hidden" value="${formattedDayOfStart}" data-bind="datetimepickerBinding: 'dayOfStart'" />
+                                      <span class="input-group-addon stateInput hidden">
+                                          <span class="glyphicon glyphicon-calendar"></span>
+                                      </span>
+                                  </div>
                               </c:if>
                           </div>
+                          <div class="help-block with-errors"></div>
                       </div>
                   </c:when>
                   <c:when test="${data.stateName == 'accept'}">
