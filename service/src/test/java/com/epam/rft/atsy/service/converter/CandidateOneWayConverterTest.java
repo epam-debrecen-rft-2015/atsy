@@ -36,7 +36,6 @@ public class CandidateOneWayConverterTest {
   private static final String CANDIDATE_NAME = "Candidate D";
   private static final String CANDIDATE_PHONE_NUMBER = "+55555555555";
   private static final String CANDIDATE_REFERRER = "google";
-  private static final String CANDIDATE_CV_FILENAME = "test.pdf";
 
   private static final long CHANNEL_ID = 4L;
   private static final String CHANNEL_NAME = "google";
@@ -66,7 +65,6 @@ public class CandidateOneWayConverterTest {
       .name(CANDIDATE_NAME)
       .phone(CANDIDATE_PHONE_NUMBER)
       .referer(CANDIDATE_REFERRER)
-      .cvFilename(CANDIDATE_CV_FILENAME)
       .build();
 
   private CandidateDTO candidateDTO = CandidateDTO.builder()
@@ -77,7 +75,6 @@ public class CandidateOneWayConverterTest {
       .name(CANDIDATE_NAME)
       .phone(CANDIDATE_PHONE_NUMBER)
       .referer(CANDIDATE_REFERRER)
-      .cvFilename(CANDIDATE_CV_FILENAME)
       .positions(positionsSet)
       .build();
 

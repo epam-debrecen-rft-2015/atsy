@@ -1,16 +1,14 @@
 package com.epam.rft.atsy.web.controllers.rest;
 
-import com.epam.rft.atsy.service.ApplicationsService;
+import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
-import com.epam.rft.atsy.service.response.PagingResponse;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
 import java.util.Locale;
 import javax.annotation.Resource;
 
@@ -24,8 +22,8 @@ public class CandidateApplicationController {
 
   private static final String APPLICATION_STATE = "candidate.table.state.";
 
-  @Autowired
-  private ApplicationsService applicationsService;
+  @Resource
+  private StatesHistoryService statesHistoryService;
 
   @Resource
   private MessageKeyResolver messageKeyResolver;
@@ -38,22 +36,21 @@ public class CandidateApplicationController {
    * @return a collection with all applications of the specified candidate
    */
   @RequestMapping(method = RequestMethod.GET)
-  public PagingResponse<CandidateApplicationDTO> loadApplications(
-      @PathVariable(value = "candidateId") Long candidateId, Locale locale,
-      @RequestParam(name = "pageNumber") Integer pageNumber,
-      @RequestParam(name = "pageSize") Integer pageSize) {
+  public Collection<CandidateApplicationDTO> loadApplications(
+      @PathVariable(value = "candidateId") Long candidateId, Locale locale) {
+    Collection<CandidateApplicationDTO>
+        applicationStates =
+        statesHistoryService
+            .getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(candidateId);
 
-    PagingResponse<CandidateApplicationDTO>
-        candidateApplicationDTOPagingResponse =
-        applicationsService.getApplicationsByCandidateId(candidateId, pageNumber - 1, pageSize);
-
-    for (CandidateApplicationDTO candidateApplicationDTO : candidateApplicationDTOPagingResponse
-        .getRows()) {
+    for (CandidateApplicationDTO candidateApplicationDTO : applicationStates) {
       String stateType = candidateApplicationDTO.getStateType();
 
-      candidateApplicationDTO.setStateType(
-          messageKeyResolver.resolveMessageOrDefault(APPLICATION_STATE + stateType, stateType));
+      stateType =
+          messageKeyResolver.resolveMessageOrDefault(APPLICATION_STATE + stateType, stateType);
+
+      candidateApplicationDTO.setStateType(stateType);
     }
-    return candidateApplicationDTOPagingResponse;
+    return applicationStates;
   }
 }

@@ -1,14 +1,24 @@
 package com.epam.rft.atsy.service;
 
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
+import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
  * Service that operates with states in the database layer and in the view layer.
  */
 public interface StatesHistoryService {
+
+  /**
+   * returns the collection of applications of the candidate.
+   * @param id the candidate's id
+   * @return the collection of applications
+   */
+  Collection<CandidateApplicationDTO> getCandidateApplicationsByCandidateIdOrderByModificationDateDesc(
+      Long id);
 
   void deleteStateHistoriesByApplication(ApplicationDTO applicationDTO);
 

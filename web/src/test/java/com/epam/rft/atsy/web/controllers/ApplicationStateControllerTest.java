@@ -50,7 +50,6 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   private static final String REQUEST_URL = "/secure/application_state";
   private static final String STATE_FLOW_OBJECT_KEY = "stateflows";
   private static final String STATES_OBJECT_KEY = "states";
-  private static final String CANDIDATE_OBJECT_KEY = "candidate";
   private static final String APPLICATION_STATE = "candidate.table.state.";
   private static final String ERROR_VIEW_NAME = "error";
 
@@ -301,8 +300,6 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
             .andExpect(model().attributeExists(STATE_FLOW_OBJECT_KEY))
             .andExpect(model().attribute(STATE_FLOW_OBJECT_KEY, stateFlowDTOListWithSingleElement))
             .andExpect(model().attributeExists(STATES_OBJECT_KEY))
-            .andExpect(model().attributeExists(CANDIDATE_OBJECT_KEY))
-            .andExpect(model().attribute(CANDIDATE_OBJECT_KEY, candidateDTO))
             .andReturn();
 
     List<StateHistoryViewRepresentation> representationList =
@@ -357,8 +354,6 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
         .andExpect(model().attributeExists(STATE_FLOW_OBJECT_KEY))
         .andExpect(model().attribute(STATE_FLOW_OBJECT_KEY, stateFlowDTOListWithSingleElement))
         .andExpect(model().attributeExists(STATES_OBJECT_KEY))
-        .andExpect(model().attributeExists(CANDIDATE_OBJECT_KEY))
-        .andExpect(model().attribute(CANDIDATE_OBJECT_KEY, candidateDTO))
         .andReturn();
 
     List<StateHistoryViewRepresentation> representationList =
