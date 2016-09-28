@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Repository that allows operations with applications in database.
  */
-public interface ApplicationsRepository extends JpaRepository<ApplicationEntity, Long> {
+public interface ApplicationsRepository extends LogicallyDeletableRepository<ApplicationEntity, Long> {
 
   /**
    * Returns the list of ApplicationEntities of the candidate.
