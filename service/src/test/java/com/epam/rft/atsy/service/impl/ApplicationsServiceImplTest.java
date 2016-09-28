@@ -77,7 +77,7 @@ public class ApplicationsServiceImplTest {
   private final ApplicationDTO applicationDTO =
       ApplicationDTO.builder().id(APPLICATION_ID).creationDate(APPLICATION_CREATION_DATE)
           .candidateId(CANDIDATE_ID)
-          .positionId(POSITION_ID).channelId(CHANNEL_ID).build();
+          .positionId(POSITION_ID).channelId(CHANNEL_ID).deleted(false).build();
 
   private final List<ApplicationDTO> applicationDTOs = Arrays.asList(applicationDTO);
 
@@ -415,11 +415,11 @@ public class ApplicationsServiceImplTest {
         .willReturn(applicationDTO);
 
     // When
-    ApplicationDTO result = applicationsService.saveOrUpdate(applicationDTO);
+    Long result = applicationsService.saveOrUpdate(applicationDTO);
 
     // Then
     assertThat(result, notNullValue());
-    assertThat(result, equalTo(applicationDTO));
+    assertThat(result, equalTo(applicationDTO.getId()));
 
     then(converterService).should().convert(applicationDTO, ApplicationEntity.class);
 

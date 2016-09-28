@@ -4,6 +4,7 @@ import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
+import com.epam.rft.atsy.persistence.repositories.LogicallyDeletableRepository;
 import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StatesHistoryService;
@@ -11,6 +12,7 @@ import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+import com.epam.rft.atsy.service.exception.ObjectNotFoundException;
 import com.epam.rft.atsy.service.response.PagingResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,12 +26,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ApplicationsServiceImpl implements ApplicationsService {
+public class ApplicationsServiceImpl extends AbstractLogicallyDeletableService<ApplicationDTO, ApplicationEntity> implements ApplicationsService {
 
   @Autowired
   private StatesHistoryService statesHistoryService;
 
-  @Autowired
   private ApplicationsRepository applicationsRepository;
 
   @Autowired
@@ -37,6 +38,13 @@ public class ApplicationsServiceImpl implements ApplicationsService {
 
   @Autowired
   private CandidateRepository candidateRepository;
+
+  @Autowired
+  public ApplicationsServiceImpl(
+      ApplicationsRepository applicationRepository,
+      ConverterService converterService) {
+    super(ApplicationDTO.class, applicationRepository, converterService);
+  }
 
   @Transactional(readOnly = true)
   @Override
@@ -111,7 +119,7 @@ public class ApplicationsServiceImpl implements ApplicationsService {
 
   @Transactional
   @Override
-  public ApplicationDTO saveOrUpdate(ApplicationDTO applicationDTO) {
+  public Long saveOrUpdate(ApplicationDTO applicationDTO) {
     Assert.notNull(applicationDTO);
     Assert.notNull(applicationDTO.getCandidateId());
     Assert.notNull(applicationDTO.getPositionId());
@@ -119,11 +127,10 @@ public class ApplicationsServiceImpl implements ApplicationsService {
 
     ApplicationEntity applicationEntity =
         converterService.convert(applicationDTO, ApplicationEntity.class);
-    ApplicationEntity
-        savedOrUpdateApplicationEntity =
+    ApplicationEntity savedOrUpdateApplicationEntity =
         applicationsRepository.saveAndFlush(applicationEntity);
 
-    return converterService.convert(savedOrUpdateApplicationEntity, ApplicationDTO.class);
+    return savedOrUpdateApplicationEntity.getId();
   }
 
   @Transactional
@@ -131,7 +138,9 @@ public class ApplicationsServiceImpl implements ApplicationsService {
   public Long saveApplication(ApplicationDTO applicationDTO, StateHistoryDTO stateHistoryDTO) {
     Assert.notNull(stateHistoryDTO);
 
-    ApplicationDTO savedOrUpdatedApplicationDto = saveOrUpdate(applicationDTO);
+    Long applicationId = saveOrUpdate(applicationDTO);
+    ApplicationEntity applicationEntity = applicationsRepository.findOne(applicationId);
+    ApplicationDTO savedOrUpdatedApplicationDto = converterService.convert(applicationEntity, ApplicationDTO.class);
     stateHistoryDTO.setApplicationDTO(savedOrUpdatedApplicationDto);
     statesHistoryService.saveStateHistory(stateHistoryDTO);
     return savedOrUpdatedApplicationDto.getId();

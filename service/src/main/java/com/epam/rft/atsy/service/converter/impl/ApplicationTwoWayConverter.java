@@ -36,6 +36,7 @@ public class ApplicationTwoWayConverter
         .candidateId(source.getCandidateEntity().getId())
         .positionId(source.getPositionEntity().getId())
         .channelId(source.getChannelEntity().getId())
+        .deleted(source.isDeleted())
         .build();
   }
 
@@ -48,6 +49,7 @@ public class ApplicationTwoWayConverter
         .candidateEntity(candidateRepository.findOne(source.getCandidateId()))
         .positionEntity(positionRepository.findOne(source.getPositionId()))
         .channelEntity(channelRepository.findOne(source.getChannelId()))
+        .deleted(source.isDeleted())
         .build();
   }
 }

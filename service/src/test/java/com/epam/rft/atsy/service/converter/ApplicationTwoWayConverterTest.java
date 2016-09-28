@@ -68,6 +68,7 @@ public class ApplicationTwoWayConverterTest {
       .candidateEntity(candidateEntity)
       .positionEntity(positionEntity)
       .channelEntity(channelEntity)
+      .deleted(false)
       .build();
 
   private ApplicationDTO applicationDTO = ApplicationDTO.builder()
@@ -76,6 +77,7 @@ public class ApplicationTwoWayConverterTest {
       .candidateId(CANDIDATE_ID)
       .positionId(POSITION_ID)
       .channelId(CHANNEL_ID)
+      .deleted(false)
       .build();
 
   @Mock
