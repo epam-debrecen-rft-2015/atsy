@@ -13,9 +13,6 @@ import com.epam.rft.atsy.persistence.entities.ChannelEntity;
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.text.ParseException;
@@ -30,17 +27,6 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
   public static final long CANDIDATE_A_ID = 1L;
   public static final long CANDIDATE_B_ID = 2L;
   public static final long CANDIDATE_C_ID = 3L;
-
-  public static final Pageable DEFAULT_PAGE_REQUEST = new PageRequest(0, 10);
-  public static final Pageable ZERO_TWO_PAGE_REQUEST = new PageRequest(0, 2);
-
-  public static final String CHANNEL_NAME_DIRECT = "direkt";
-  public static final String POSITION_NAME_DEVELOPER = "Fejlesztő";
-  public static final String CHANNEL_NAME_PROFESSION_ADVERTISEMENT = "profession hírdetés";
-  public static final String CHANNEL_NAME_PROFESSION_DATABASE = "profession adatbázis";
-  public static final String CHANNEL_NAME_FACEBOOK = "facebook";
-  public static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss";
-  public static final String DATE_SAMPLE = "2016-07-26 11:48:55";
 
   @Autowired
   private ApplicationsRepository repository;
@@ -62,33 +48,17 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-  public void pageFindByCandidateEntityShouldNotFindApplicationForCandidateWithoutApplications() {
-    // Given
-    CandidateEntity candidateB = this.candidateRepository.findOne(CANDIDATE_B_ID);
-
-    // When
-    final Page<ApplicationEntity>
-        pageResult =
-        this.repository.findByCandidateEntity(candidateB, DEFAULT_PAGE_REQUEST);
-    final List<ApplicationEntity> result = pageResult.getContent();
-
-    // Then
-    assertThat(result, notNullValue());
-    assertThat(result, empty());
-  }
-
-  @Test
   public void findByCandidateEntityShouldFindSingleApplicationForCandidateWithSingleApplication() {
     // Given
     CandidateEntity candidateEntityA = this.candidateRepository.findOne(CANDIDATE_A_ID);
     ChannelEntity expectedChannelEntity = ChannelEntity.builder()
         .id(1L)
-        .name(CHANNEL_NAME_DIRECT)
+        .name("direkt")
         .deleted(false)
         .build();
     PositionEntity expectedPositionEntity = PositionEntity.builder()
         .id(1L)
-        .name(POSITION_NAME_DEVELOPER)
+        .name("Fejlesztő")
         .deleted(false)
         .build();
     Date nearNow = currentDateMinus(5);
@@ -105,65 +75,33 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
   }
 
   @Test
-  public void pageFindByCandidateEntityShouldFindSingleApplicationForCandidateWithSingleApplication() {
+  public void findByCandidateEntityShouldFindThreeApplicationForCandidateWithThreeApplication()
+      throws ParseException {
     // Given
-    CandidateEntity candidateEntityA = this.candidateRepository.findOne(CANDIDATE_A_ID);
+    CandidateEntity candidateEntityC = this.candidateRepository.findOne(CANDIDATE_C_ID);
     ChannelEntity expectedChannelEntity = ChannelEntity.builder()
-        .id(1L)
-        .name(CHANNEL_NAME_DIRECT)
+        .id(2L)
+        .name("profession hírdetés")
+        .deleted(false)
+        .build();
+    ChannelEntity expectedSecondChannelEntity = ChannelEntity.builder()
+        .id(3L)
+        .name("profession adatbázis")
+        .deleted(false)
+        .build();
+    ChannelEntity expectedThirdChannelEntity = ChannelEntity.builder()
+        .id(4L)
+        .name("facebook")
         .deleted(false)
         .build();
     PositionEntity expectedPositionEntity = PositionEntity.builder()
         .id(1L)
-        .name(POSITION_NAME_DEVELOPER)
-        .deleted(false)
-        .build();
-    Date nearNow = currentDateMinus(5);
-
-    // When
-    final Page<ApplicationEntity>
-        pageResult =
-        this.repository.findByCandidateEntity(candidateEntityA, DEFAULT_PAGE_REQUEST);
-    final List<ApplicationEntity> result = pageResult.getContent();
-
-    // Then
-    assertThat(pageResult.getTotalPages(), is(1));
-    assertThat(pageResult.getTotalElements(), is(1L));
-    assertThat(result, notNullValue());
-    assertThat(result.size(), is(1));
-
-    assertApplicationEntity(result.get(0), candidateEntityA, expectedChannelEntity,
-        expectedPositionEntity, nearNow);
-  }
-
-  @Test
-  public void findByCandidateEntityShouldFindThreeApplicationForCandidateWithThreeApplication()
-      throws ParseException {
-    // Given
-    final CandidateEntity candidateEntityC = this.candidateRepository.findOne(CANDIDATE_C_ID);
-    final ChannelEntity expectedChannelEntity = ChannelEntity.builder()
-        .id(2L)
-        .name(CHANNEL_NAME_PROFESSION_ADVERTISEMENT)
-        .deleted(false)
-        .build();
-    final ChannelEntity expectedSecondChannelEntity = ChannelEntity.builder()
-        .id(3L)
-        .name(CHANNEL_NAME_PROFESSION_DATABASE)
-        .deleted(false)
-        .build();
-    final ChannelEntity expectedThirdChannelEntity = ChannelEntity.builder()
-        .id(4L)
-        .name(CHANNEL_NAME_FACEBOOK)
-        .deleted(false)
-        .build();
-    final PositionEntity expectedPositionEntity = PositionEntity.builder()
-        .id(1L)
-        .name(POSITION_NAME_DEVELOPER)
+        .name("Fejlesztő")
         .deleted(false)
         .build();
 
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
-    Date expectedDate = simpleDateFormat.parse(DATE_SAMPLE);
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    Date expectedDate = simpleDateFormat.parse("2016-07-26 11:48:55");
     // When
     List<ApplicationEntity> result = this.repository.findByCandidateEntity(candidateEntityC);
 
@@ -177,98 +115,6 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
         expectedPositionEntity, expectedDate);
     assertApplicationEntity(result.get(2), candidateEntityC, expectedThirdChannelEntity,
         expectedPositionEntity, expectedDate);
-  }
-
-  @Test
-  public void pageFindByCandidateEntityShouldFindThreeApplicationForCandidateWithThreeApplication()
-      throws ParseException {
-    // Given
-    final CandidateEntity candidateEntityC = this.candidateRepository.findOne(CANDIDATE_C_ID);
-    final ChannelEntity expectedChannelEntity = ChannelEntity.builder()
-        .id(2L)
-        .name(CHANNEL_NAME_PROFESSION_ADVERTISEMENT)
-        .deleted(false)
-        .build();
-    final ChannelEntity expectedSecondChannelEntity = ChannelEntity.builder()
-        .id(3L)
-        .name(CHANNEL_NAME_PROFESSION_DATABASE)
-        .deleted(false)
-        .build();
-    final ChannelEntity expectedThirdChannelEntity = ChannelEntity.builder()
-        .id(4L)
-        .name(CHANNEL_NAME_FACEBOOK)
-        .deleted(false)
-        .build();
-    final PositionEntity expectedPositionEntity = PositionEntity.builder()
-        .id(1L)
-        .name(POSITION_NAME_DEVELOPER)
-        .deleted(false)
-        .build();
-
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
-    final Date expectedDate = simpleDateFormat.parse(DATE_SAMPLE);
-
-    // When
-    final Page<ApplicationEntity>
-        pageResult =
-        this.repository.findByCandidateEntity(candidateEntityC, DEFAULT_PAGE_REQUEST);
-    final List<ApplicationEntity> result = pageResult.getContent();
-
-    // Then
-    assertThat(pageResult.getTotalPages(), is(1));
-    assertThat(pageResult.getTotalElements(), is(3L));
-    assertThat(result, notNullValue());
-    assertThat(result.size(), is(3));
-
-    assertApplicationEntity(result.get(0), candidateEntityC, expectedChannelEntity,
-        expectedPositionEntity, expectedDate);
-    assertApplicationEntity(result.get(1), candidateEntityC, expectedSecondChannelEntity,
-        expectedPositionEntity, expectedDate);
-    assertApplicationEntity(result.get(2), candidateEntityC, expectedThirdChannelEntity,
-        expectedPositionEntity, expectedDate);
-  }
-
-  @Test
-  public void findByCandidateEntityShouldFindAMaximumNumberOfApplicationsGivenInThePageRequest()
-      throws ParseException {
-    // Given
-    CandidateEntity candidateEntityC = this.candidateRepository.findOne(CANDIDATE_C_ID);
-    ChannelEntity expectedChannelEntity = ChannelEntity.builder()
-        .id(2L)
-        .name(CHANNEL_NAME_PROFESSION_ADVERTISEMENT)
-        .deleted(false)
-        .build();
-    ChannelEntity expectedSecondChannelEntity = ChannelEntity.builder()
-        .id(3L)
-        .name(CHANNEL_NAME_PROFESSION_DATABASE)
-        .deleted(false)
-        .build();
-    PositionEntity expectedPositionEntity = PositionEntity.builder()
-        .id(1L)
-        .name(POSITION_NAME_DEVELOPER)
-        .deleted(false)
-        .build();
-
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
-    Date expectedDate = simpleDateFormat.parse(DATE_SAMPLE);
-
-    // When
-    Page<ApplicationEntity>
-        pageResult =
-        this.repository.findByCandidateEntity(candidateEntityC, ZERO_TWO_PAGE_REQUEST);
-    List<ApplicationEntity> result = pageResult.getContent();
-
-    // Then
-    assertThat(pageResult.getTotalPages(), is(2));
-    assertThat(pageResult.getTotalElements(), is(3L));
-    assertThat(result, notNullValue());
-    assertThat(result.size(), is(2));
-
-    assertApplicationEntity(result.get(0), candidateEntityC, expectedChannelEntity,
-        expectedPositionEntity, expectedDate);
-    assertApplicationEntity(result.get(1), candidateEntityC, expectedSecondChannelEntity,
-        expectedPositionEntity, expectedDate);
-
   }
 
   private void assertApplicationEntity(ApplicationEntity application,

@@ -19,6 +19,3 @@ $(document).ready(function () {
     });
 });
 
-function escapeHTMLFormatter(value, row, index) {
-    return new Option(value).innerHTML;
-}

@@ -8,20 +8,14 @@ import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
-import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
-import com.epam.rft.atsy.service.response.PagingResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ApplicationsServiceImpl implements ApplicationsService {
@@ -51,33 +45,6 @@ public class ApplicationsServiceImpl implements ApplicationsService {
         applicationsRepository.findByCandidateEntity(candidateEntity);
 
     return converterService.convert(applicationEntities, ApplicationDTO.class);
-  }
-
-  @Transactional(readOnly = true)
-  @Override
-  public PagingResponse<CandidateApplicationDTO> getApplicationsByCandidateId(
-      Long candidateId,
-      int page,
-      int size) {
-    Assert.notNull(candidateId);
-
-    CandidateEntity candidateEntity = candidateRepository.findOne(candidateId);
-
-    Pageable pageRequest = new PageRequest(page, size);
-
-    final Page<ApplicationEntity>
-        pageResult =
-        applicationsRepository.findByCandidateEntity(candidateEntity, pageRequest);
-
-    List<CandidateApplicationDTO>
-        candidateApplicationDTOs =
-        converterService.convert(pageResult.getContent(), CandidateApplicationDTO.class);
-
-    candidateApplicationDTOs = candidateApplicationDTOs.stream()
-        .sorted((m1, m2) -> m2.getModificationDate().compareTo(m1.getModificationDate()))
-        .collect(Collectors.toList());
-
-    return new PagingResponse<>(pageResult.getTotalElements(), candidateApplicationDTOs);
   }
 
   @Transactional

@@ -22,21 +22,16 @@ import com.epam.rft.atsy.persistence.repositories.StatesHistoryRepository;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
-import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
-import com.epam.rft.atsy.service.response.PagingResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -63,16 +58,6 @@ public class ApplicationsServiceImplTest {
 
   private static final Long CHANNEL_ID = 8L;
   private static final String CHANNEL_NAME = "állásbörze";
-
-  private static final int PAGE_NUMBER_ZERO = 0;
-  private static final int PAGE_SIZE_TEN = 10;
-  private static final int PAGE_SIZE_TWO = 2;
-  private static final Pageable
-      DEFAULT_PAGE_REQUEST =
-      new PageRequest(PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
-  private static final Pageable
-      ZERO_TWO_PAGE_REQUEST =
-      new PageRequest(PAGE_NUMBER_ZERO, PAGE_SIZE_TWO);
 
   private final ApplicationDTO applicationDTO =
       ApplicationDTO.builder().id(APPLICATION_ID).creationDate(APPLICATION_CREATION_DATE)
@@ -101,10 +86,6 @@ public class ApplicationsServiceImplTest {
 
   private final StateHistoryDTO
       stateHistoryDTO = StateHistoryDTO.builder().stateDTO(new StateDTO(1L, "newstate")).build();
-
-  private final CandidateApplicationDTO
-      dummyCandidateApplicationDTO =
-      CandidateApplicationDTO.builder().modificationDate(APPLICATION_CREATION_DATE).build();
 
   @Mock
   private ConverterService converterService;
@@ -135,32 +116,12 @@ public class ApplicationsServiceImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void getApplicationsByCandidateIdShouldThrowIllegalArgumentExceptionWhenCandidateDTOIsNull() {
-    // Given
-
-    // When
-    applicationsService.getApplicationsByCandidateId(null, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
-
-    // Then
-  }
-
-  @Test(expected = IllegalArgumentException.class)
   public void getApplicationsByCandidateDTOShouldThrowIllegalArgumentExceptionWhenCandidateDTOsIdIsNull() {
     // Given
     CandidateDTO candidateDTO = CandidateDTO.builder().id(null).build();
 
     // When
     applicationsService.getApplicationsByCandidateDTO(candidateDTO);
-
-    // Then
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void getApplicationsByCandidateIdShouldThrowIllegalArgumentExceptionWhenCandidateDTOsIdIsNull() {
-    // Given
-
-    // When
-    applicationsService.getApplicationsByCandidateId(null, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
 
     // Then
   }
@@ -177,25 +138,6 @@ public class ApplicationsServiceImplTest {
 
     // Then
     assertTrue(result.isEmpty());
-  }
-
-  @Test
-  public void getApplicationByCandidateIdShouldReturnEmptyListWhenCandidateIdIsNotFound() {
-    // Given
-    given(candidateRepository.findOne(NON_EXISTENT_CANDIDATE_ID)).willReturn(null);
-    given(applicationsRepository.findByCandidateEntity(null, DEFAULT_PAGE_REQUEST))
-        .willReturn(new PageImpl<ApplicationEntity>(Collections.emptyList()));
-
-    // When
-    final PagingResponse<CandidateApplicationDTO>
-        result =
-        applicationsService
-            .getApplicationsByCandidateId(NON_EXISTENT_CANDIDATE_ID, PAGE_NUMBER_ZERO,
-                PAGE_SIZE_TEN);
-
-    // Then
-    assertThat(result.getTotal(), is(0L));
-    assertTrue(result.getRows().isEmpty());
   }
 
   @Test
@@ -216,33 +158,6 @@ public class ApplicationsServiceImplTest {
 
     // Then
     assertThat(result, equalTo(applicationDTOs));
-  }
-
-  @Test
-  public void getApplicationByCandidateIdShouldReturnOneElementListOfApplicationDTOWhenCandidateIdExists() {
-    // Given
-    final List<ApplicationEntity>
-        applicationEntities =
-        Collections.singletonList(applicationEntity);
-    final List<CandidateApplicationDTO>
-        candidateApplicationDTOs =
-        Collections.singletonList(dummyCandidateApplicationDTO);
-
-    given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
-    given(applicationsRepository.findByCandidateEntity(candidateEntity, DEFAULT_PAGE_REQUEST))
-        .willReturn(new PageImpl<ApplicationEntity>(applicationEntities));
-    given(converterService.convert(applicationEntities, CandidateApplicationDTO.class))
-        .willReturn(candidateApplicationDTOs);
-
-    // When
-    final PagingResponse<CandidateApplicationDTO>
-        result =
-        applicationsService
-            .getApplicationsByCandidateId(CANDIDATE_ID, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
-
-    // Then
-    assertThat(result.getTotal(), is(1L));
-    assertThat(result.getRows(), equalTo(candidateApplicationDTOs));
   }
 
   @Test
@@ -267,61 +182,6 @@ public class ApplicationsServiceImplTest {
 
     // Then
     assertThat(result, equalTo(applicationDTOs));
-  }
-
-  @Test
-  public void getApplicationByCandidateIdShouldReturnThreeElementListOfApplicationDTOWhenCandidateIdExists() {
-    // Given
-    final List<ApplicationEntity>
-        applicationEntities =
-        Arrays.asList(applicationEntity, applicationEntity, applicationEntity);
-    final List<CandidateApplicationDTO>
-        candidateApplicationDTOs =
-        Arrays.asList(dummyCandidateApplicationDTO, dummyCandidateApplicationDTO,
-            dummyCandidateApplicationDTO);
-
-    given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
-    given(applicationsRepository.findByCandidateEntity(candidateEntity, DEFAULT_PAGE_REQUEST))
-        .willReturn(new PageImpl<ApplicationEntity>(applicationEntities));
-    given(converterService.convert(applicationEntities, CandidateApplicationDTO.class))
-        .willReturn(candidateApplicationDTOs);
-
-    // When
-    final PagingResponse<CandidateApplicationDTO>
-        result =
-        applicationsService
-            .getApplicationsByCandidateId(CANDIDATE_ID, PAGE_NUMBER_ZERO, PAGE_SIZE_TEN);
-
-    // Then
-    assertThat(result.getTotal(), is(3L));
-    assertThat(result.getRows(), equalTo(candidateApplicationDTOs));
-  }
-
-  @Test
-  public void getApplicationByCandidateIdShouldReturnAMaximumNumberOfApplicationsGivenByTheSizeParameter() {
-    // Given
-    final List<ApplicationEntity>
-        applicationEntities =
-        Arrays.asList(applicationEntity, applicationEntity);
-    final List<CandidateApplicationDTO>
-        candidateApplicationDTOs =
-        Arrays.asList(dummyCandidateApplicationDTO, dummyCandidateApplicationDTO);
-
-    given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
-    given(applicationsRepository.findByCandidateEntity(candidateEntity, ZERO_TWO_PAGE_REQUEST))
-        .willReturn(new PageImpl<ApplicationEntity>(applicationEntities));
-    given(converterService.convert(applicationEntities, CandidateApplicationDTO.class))
-        .willReturn(candidateApplicationDTOs);
-
-    // When
-    final PagingResponse<CandidateApplicationDTO>
-        result =
-        applicationsService
-            .getApplicationsByCandidateId(CANDIDATE_ID, PAGE_NUMBER_ZERO, PAGE_SIZE_TWO);
-
-    // Then
-    assertThat(result.getRows().size(), is(2));
-    assertThat(result.getRows(), equalTo(candidateApplicationDTOs));
   }
 
   @Test(expected = IllegalArgumentException.class)
