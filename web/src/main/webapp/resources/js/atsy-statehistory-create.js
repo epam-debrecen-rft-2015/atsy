@@ -14,6 +14,9 @@ $(document).ready(function() {
   $('#feedbackDateInput').datetimepicker({
     format: 'YYYY-MM-DD HH:mm',
   });
+  $('#dayOfStartInput').datetimepicker({
+    format: 'YYYY-MM-DD'
+  });
 });
 
 function StateHistoryModel() {
