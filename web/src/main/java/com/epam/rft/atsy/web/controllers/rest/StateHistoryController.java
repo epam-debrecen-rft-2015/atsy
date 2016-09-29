@@ -10,6 +10,7 @@ import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.web.FieldErrorResponseComposer;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
+import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Locale;
 import javax.validation.Valid;
@@ -29,8 +29,6 @@ import javax.validation.Valid;
 @RequestMapping(value = "/secure/application_state")
 public class StateHistoryController {
 
-  private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm";
-  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_CONSTANT);
   private static final String POSITION_NOT_FOUND_MESSAGE_KEY = "position.not.found.error.message";
   private static final String CHANNEL_NOT_FOUND_MESSAGE_KEY = "channel.not.found.error.message";
   private static final String FIELD_POSITION_NAME = "positionName";
@@ -115,6 +113,24 @@ public class StateHistoryController {
           HttpStatus.OK);
     }
   }
+
+  /**
+   * This method is used to pre-validate new states.
+   * @param stateHistoryViewRepresentation this attribute contains all the state information of the
+   * given application
+   * @return a ResponseEntity which contains the HttpStatus code and the error message if it exists
+   */
+  @RequestMapping(path = "/validate", method = RequestMethod.POST)
+  public ResponseEntity validateStateHistoryViewRepresentation(
+      @Valid @RequestBody StateHistoryViewRepresentation stateHistoryViewRepresentation,
+      BindingResult bindingResult) {
+
+    if (bindingResult.hasErrors()) {
+      return fieldErrorResponseComposer.composeResponse(bindingResult);
+    }
+    return new ResponseEntity(RestResponse.NO_ERROR, HttpStatus.OK);
+  }
+
 
   protected boolean isNewState(String stateName) {
     return stateName != null && stateName.equals(NEW_STATE);

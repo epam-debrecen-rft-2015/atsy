@@ -1,18 +1,11 @@
 package com.epam.rft.atsy.web.controllers.rest;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
+import com.epam.rft.atsy.web.helper.CandidateValidatorHelper;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolverImpl;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,9 +16,21 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.Locale;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @RunWith(MockitoJUnitRunner.class)
 public class SingleCandidateControllerTest extends AbstractControllerTest {
-  private static final String REQUEST_URL = "/secure/candidate";
+  private static final String REQUEST_URL_TO_SAVE_OR_UPDATE = "/secure/candidate";
+
+  private static final String REQUEST_URL_TO_VALIDATE = "/secure/candidate/validate";
 
   private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
 
@@ -48,6 +53,24 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
 
   private static final String LANGUAGE_SKILL_TOO_HIGH_MESSAGE_KEY =
       "javax.validation.constraints.Max.message";
+
+  private static final String CANDIDATE_ERROR_DUPLICATE_MESSAGE_KEY = "candidate.error.duplicate";
+
+  private static final String JSON_PATH_ERROR_MESSAGE = "$.errorMessage";
+
+  private static final String JSON_PATH_FIELD_NAME = "$.fields.name";
+
+  private static final String JSON_PATH_FIELD_EMAIL = "$.fields.email";
+
+  private static final String JSON_PATH_FIELD_PHONE = "$.fields.phone";
+
+  private static final String JSON_PATH_FIELD_REFERRER = "$.fields.referer";
+
+  private static final String JSON_PATH_FIELD_LANGUAGE_SKILL = "$.fields.languageSkill";
+
+  private static final String
+      CANDIDATE_DUPLICATE_ERROR_MESSAGE =
+      "Candidate email or phone number already exists!";
 
   private final String missingName = null;
   private final String emptyName = StringUtils.EMPTY;
@@ -77,6 +100,9 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
 
   @Mock
   private CandidateService candidateService;
+
+  @Mock
+  private CandidateValidatorHelper candidateValidatorHelper;
 
   @Mock
   private MessageKeyResolverImpl messageKeyResolver;
@@ -135,7 +161,7 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   public void saveOrUpdateShouldRespondWithErrorResponseWhenNameIsNull() throws Exception {
     baseCandidateDto.setName(missingName);
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, baseCandidateDto))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.name").exists())
@@ -148,7 +174,7 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   public void saveOrUpdateShouldRespondWithErrorResponseWhenNameIsEmpty() throws Exception {
     baseCandidateDto.setName(emptyName);
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, baseCandidateDto))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.name").exists())
@@ -162,7 +188,7 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   public void saveOrUpdateShouldRespondWithErrorResponseWhenNameIsTooLong() throws Exception {
     baseCandidateDto.setName(tooLongName);
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, baseCandidateDto))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.name").exists())
@@ -176,7 +202,7 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   public void saveOrUpdateShouldRespondWithErrorResponseWhenEmailIsNull() throws Exception {
     baseCandidateDto.setEmail(missingEmail);
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, baseCandidateDto))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.email").exists())
@@ -189,7 +215,7 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   public void saveOrUpdateShouldRespondWithErrorResponseWhenEmailIsEmpty() throws Exception {
     baseCandidateDto.setEmail(emptyEmail);
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, baseCandidateDto))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.email").exists())
@@ -202,7 +228,7 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   public void saveOrUpdateShouldRespondWithErrorResponseWhenEmailIsTooLong() throws Exception {
     baseCandidateDto.setEmail(tooLongEmail);
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, baseCandidateDto))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.email").exists())
@@ -215,7 +241,7 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   public void saveOrUpdateShouldRespondWithErrorResponseWhenEmailIsIncorrect() throws Exception {
     baseCandidateDto.setEmail(incorrectEmail);
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, baseCandidateDto))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.email").exists())
@@ -228,7 +254,7 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   public void saveOrUpdateShouldRespondWithErrorResponseWhenPhoneIsTooLong() throws Exception {
     baseCandidateDto.setPhone(tooLongPhone);
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, baseCandidateDto))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.phone").exists())
@@ -241,7 +267,7 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   public void saveOrUpdateShouldRespondWithErrorResponseWhenPhoneIsIncorrect() throws Exception {
     baseCandidateDto.setPhone(incorrectPhone);
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, baseCandidateDto))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.phone").exists())
@@ -254,7 +280,7 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   public void saveOrUpdateShouldRespondWithErrorResponseWhenRefererIsTooLong() throws Exception {
     baseCandidateDto.setReferer(tooLongReferer);
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, baseCandidateDto))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.referer").exists())
@@ -268,7 +294,7 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
       throws Exception {
     baseCandidateDto.setLanguageSkill(tooLowLanguageSkill);
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, baseCandidateDto))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.languageSkill").exists())
@@ -282,7 +308,7 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
       throws Exception {
     baseCandidateDto.setLanguageSkill(tooHighLanguageSkill);
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, baseCandidateDto))
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, baseCandidateDto))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errorMessage", equalTo(COMMON_INVALID_INPUT_MESSAGE_KEY)))
         .andExpect(jsonPath("$.fields.languageSkill").exists())
@@ -296,12 +322,216 @@ public class SingleCandidateControllerTest extends AbstractControllerTest {
   public void saveOrUpdateShouldRespondWithAnIdWhenPostedDtoIsCorrect() throws Exception {
     given(candidateService.saveOrUpdate(correctCandidateDto)).willReturn(candidateId);
 
-    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, correctCandidateDto))
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, correctCandidateDto))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").exists())
         .andExpect(jsonPath("$.id").isNumber())
         .andExpect(jsonPath("$.id", equalTo(candidateId.intValue())));
 
     then(candidateService).should().saveOrUpdate(correctCandidateDto);
+  }
+
+  @Test
+  public void validateCandidateShouldRespondWithAErrorJsonWhenNameIsNull() throws Exception {
+    baseCandidateDto.setName(null);
+
+    this.doTestValidateCandidateWhenThereIsValidationFieldError(baseCandidateDto,
+        JSON_PATH_FIELD_NAME, NOT_NULL_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateCandidateShouldRespondWithAErrorJsonWhenNameIsEmpty() throws Exception {
+    baseCandidateDto.setName(emptyName);
+
+    this.doTestValidateCandidateWhenThereIsValidationFieldError(baseCandidateDto,
+        JSON_PATH_FIELD_NAME, NAME_LENGTH_ERROR_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateCandidateShouldRespondWithAErrorJsonWhenNameIsTooLong() throws Exception {
+    baseCandidateDto.setName(tooLongName);
+
+    this.doTestValidateCandidateWhenThereIsValidationFieldError(baseCandidateDto,
+        JSON_PATH_FIELD_NAME, NAME_LENGTH_ERROR_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateCandidateShouldRespondWithAErrorJsonWhenEmailIsNull() throws Exception {
+    baseCandidateDto.setEmail(null);
+
+    this.doTestValidateCandidateWhenThereIsValidationFieldError(baseCandidateDto,
+        JSON_PATH_FIELD_EMAIL, NOT_NULL_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateCandidateShouldRespondWithAErrorJsonWhenEmailIsEmpty() throws Exception {
+    baseCandidateDto.setEmail(emptyEmail);
+
+    this.doTestValidateCandidateWhenThereIsValidationFieldError(baseCandidateDto,
+        JSON_PATH_FIELD_EMAIL, EMAIL_INCORRECT_ERROR_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateCandidateShouldRespondWithAErrorJsonWhenEmailIsTooLong() throws Exception {
+    baseCandidateDto.setEmail(tooLongEmail);
+
+    this.doTestValidateCandidateWhenThereIsValidationFieldError(baseCandidateDto,
+        JSON_PATH_FIELD_EMAIL, EMAIL_LENGTH_ERROR_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateCandidateShouldRespondWithAErrorJsonWhenEmailIsInCorrect() throws Exception {
+    baseCandidateDto.setEmail(incorrectEmail);
+
+    this.doTestValidateCandidateWhenThereIsValidationFieldError(baseCandidateDto,
+        JSON_PATH_FIELD_EMAIL, EMAIL_INCORRECT_ERROR_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateCandidateShouldRespondWithAErrorJsonWhenPhoneIsTooLong() throws Exception {
+    baseCandidateDto.setPhone(tooLongPhone);
+
+    this.doTestValidateCandidateWhenThereIsValidationFieldError(baseCandidateDto,
+        JSON_PATH_FIELD_PHONE, PHONE_LENGTH_ERROR_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateCandidateShouldRespondWithAErrorJsonWhenPhoneIsInCorrect() throws Exception {
+    baseCandidateDto.setPhone(incorrectPhone);
+
+    this.doTestValidateCandidateWhenThereIsValidationFieldError(baseCandidateDto,
+        JSON_PATH_FIELD_PHONE, PHONE_INCORRECT_ERROR_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateCandidateShouldRespondWithAErrorJsonWhenReferrerIsTooLong() throws Exception {
+    baseCandidateDto.setReferer(tooLongReferer);
+
+    this.doTestValidateCandidateWhenThereIsValidationFieldError(baseCandidateDto,
+        JSON_PATH_FIELD_REFERRER, REFERER_LENGTH_ERROR_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateCandidateShouldRespondWithAErrorJsonWhenLanguageSkillIsToLow()
+      throws Exception {
+    baseCandidateDto.setLanguageSkill(tooLowLanguageSkill);
+
+    this.doTestValidateCandidateWhenThereIsValidationFieldError(baseCandidateDto,
+        JSON_PATH_FIELD_LANGUAGE_SKILL, LANGUAGE_SKILL_TOO_LOW_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateCandidateShouldRespondWithAErrorJsonWhenLanguageSkillIsTooHigh()
+      throws Exception {
+    baseCandidateDto.setLanguageSkill(tooHighLanguageSkill);
+
+    this.doTestValidateCandidateWhenThereIsValidationFieldError(baseCandidateDto,
+        JSON_PATH_FIELD_LANGUAGE_SKILL, LANGUAGE_SKILL_TOO_HIGH_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateCandidateShouldRespondBadRequestWhenSavingCandidateAndEmailOrPhoneAlreadyExists()
+      throws Exception {
+    final CandidateDTO
+        candidateDTO =
+        CandidateDTO.builder().id(null).name(correctName).email(correctEmail).phone(correctPhone)
+            .build();
+    given(this.candidateValidatorHelper.isValidNonExistingCandidate(candidateDTO))
+        .willReturn(false);
+    given(this.messageKeyResolver.resolveMessageOrDefault(CANDIDATE_ERROR_DUPLICATE_MESSAGE_KEY))
+        .willReturn(CANDIDATE_DUPLICATE_ERROR_MESSAGE);
+
+    this.mockMvc
+        .perform(buildJsonPostRequest(REQUEST_URL_TO_VALIDATE, candidateDTO))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(CANDIDATE_DUPLICATE_ERROR_MESSAGE));
+
+    then(this.candidateValidatorHelper).should().isValidNonExistingCandidate(candidateDTO);
+    then(this.candidateValidatorHelper).should(never())
+        .isValidExistingCandidate(any(CandidateDTO.class));
+    then(this.messageKeyResolver).should()
+        .resolveMessageOrDefault(CANDIDATE_ERROR_DUPLICATE_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateCandidateShouldRespondOKWhenSavingCandidateAndEmailAndPhoneAreValid()
+      throws Exception {
+    final CandidateDTO
+        candidateDTO =
+        CandidateDTO.builder().id(null).name(correctName).email(correctEmail).phone(correctPhone)
+            .build();
+    given(this.candidateValidatorHelper.isValidNonExistingCandidate(candidateDTO))
+        .willReturn(true);
+
+    this.mockMvc
+        .perform(buildJsonPostRequest(REQUEST_URL_TO_VALIDATE, candidateDTO))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).isEmpty());
+
+    then(this.candidateValidatorHelper).should().isValidNonExistingCandidate(candidateDTO);
+    then(this.candidateValidatorHelper).should(never())
+        .isValidExistingCandidate(any(CandidateDTO.class));
+    verifyZeroInteractions(this.messageKeyResolver);
+  }
+
+  @Test
+  public void validateCandidateShouldRespondBadRequestWhenUpdatingCandidateAndEmailOrPhoneAlreadyExists()
+      throws Exception {
+    final CandidateDTO
+        candidateDTO =
+        CandidateDTO.builder().id(candidateId).name(correctName).email(correctEmail)
+            .phone(correctPhone)
+            .build();
+    given(this.candidateValidatorHelper.isValidExistingCandidate(candidateDTO))
+        .willReturn(false);
+    given(this.messageKeyResolver.resolveMessageOrDefault(CANDIDATE_ERROR_DUPLICATE_MESSAGE_KEY))
+        .willReturn(CANDIDATE_DUPLICATE_ERROR_MESSAGE);
+
+    this.mockMvc
+        .perform(buildJsonPostRequest(REQUEST_URL_TO_VALIDATE, candidateDTO))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(CANDIDATE_DUPLICATE_ERROR_MESSAGE));
+
+    then(this.candidateValidatorHelper).should().isValidExistingCandidate(candidateDTO);
+    then(this.candidateValidatorHelper).should(never())
+        .isValidNonExistingCandidate(any(CandidateDTO.class));
+    then(this.messageKeyResolver).should()
+        .resolveMessageOrDefault(CANDIDATE_ERROR_DUPLICATE_MESSAGE_KEY);
+  }
+
+  @Test
+  public void validateCandidateShouldRespondBadRequestWhenUpdatingCandidateAndEmailAndPhoneAreValid()
+      throws Exception {
+    final CandidateDTO
+        candidateDTO =
+        CandidateDTO.builder().id(candidateId).name(correctName).email(correctEmail)
+            .phone(correctPhone)
+            .build();
+    given(this.candidateValidatorHelper.isValidExistingCandidate(candidateDTO))
+        .willReturn(true);
+
+    this.mockMvc
+        .perform(buildJsonPostRequest(REQUEST_URL_TO_VALIDATE, candidateDTO))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).isEmpty());
+
+    then(this.candidateValidatorHelper).should().isValidExistingCandidate(candidateDTO);
+    then(this.candidateValidatorHelper).should(never())
+        .isValidNonExistingCandidate(any(CandidateDTO.class));
+    verifyZeroInteractions(this.messageKeyResolver);
+  }
+
+  private void doTestValidateCandidateWhenThereIsValidationFieldError(
+      CandidateDTO candidateDTO, String jsonPathFieldName, String errorMessageKey)
+      throws Exception {
+
+    this.mockMvc
+        .perform(buildJsonPostRequest(REQUEST_URL_TO_VALIDATE, candidateDTO))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
+        .andExpect(jsonPath(jsonPathFieldName).exists())
+        .andExpect(jsonPath(jsonPathFieldName).value(errorMessageKey));
+
+    verifyZeroInteractions(this.candidateValidatorHelper);
   }
 }

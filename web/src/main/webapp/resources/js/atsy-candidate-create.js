@@ -4,6 +4,12 @@ $('.table').bootstrapTable({
     }
 });
 
+$(document).ready(function() {
+    $("#file").change(function() {
+        $("#fileName").text(new Option($('input[type=file]')[0].files[0].name).innerHTML);
+    });
+});
+
 function CandidateCreateModel(){
     var self = this;
 
@@ -29,50 +35,142 @@ function CandidateCreateModel(){
         }
     };
 
-    self.ajaxCall = function() {
-        var form = $("#candidate-create-form");
-        $.ajax({
-            url: form.attr('action'),
-            method: form.attr('method'),
-            contentType: 'application/json',
-            dataType: "json",
-            data: JSON.stringify({
-                id: self.id(),
-                name: self.name(),
-                referer: self.referer(),
-                email: self.email(),
-                languageSkill: self.languageSkill(),
-                phone: self.phone(),
-                description: self.description(),
-                cvFilename: self.cvFilename()
-            })
-        }).done(function (xhr) {
-            window.location = form.attr('action')+ '/' + xhr.id;
-        }).error(function (xhr) {
-            self.errorResponse(xhr.responseJSON);
+    function sendCandidateWithAjax(url, method) {
+        return $.ajax({
+                   url: url,
+                   method: method,
+                   contentType: 'application/json',
+                   dataType: "json",
+                   data: JSON.stringify({
+                       id: self.id(),
+                       name: self.name(),
+                       referer: self.referer(),
+                       email: self.email(),
+                       languageSkill: self.languageSkill(),
+                       phone: self.phone(),
+                       description: self.description(),
+                       cvFilename: self.cvFilename()
+                   })
+               });
+    }
 
+    function sendFileWithAjax(url, formData) {
+        return $.ajax({
+                   url: url,
+                   data: formData,
+                   type: 'POST',
+                   contentType: false,
+                   processData: false,
+               });
+    }
+
+    self.ajaxCall = function() {
+        var candidateValidationUrl = '/atsy/secure/candidate/validate';
+        var candidateUrl = '/atsy/secure/candidate';
+        var fileValidationUrl = '/atsy/secure/fileUpload/validate';
+        var fileUploadUrl = '/atsy/secure/fileUpload/candidate/';
+
+        var form = $("#candidate-create-form");
+        var formData = new FormData();
+
+        if(($('input[type=file]'))[0] != undefined) {
+            formData.append('file', $('input[type=file]')[0].files[0]);
+        }
+
+        // Send candidate to validate
+        sendCandidateWithAjax(candidateValidationUrl, form.attr('method')).done(function (xhr) {
+            // If candidate is valid, then hide the error msg
+            self.showError(false);
+            if (($('input[type=file]')[0] === undefined) || ($('input[type=file]').val() === '')) {
+                // Send candidate to save
+                sendCandidateWithAjax(candidateUrl, form.attr('method')).done(function (xhr) {
+                    // If there is no error with candidate, then hide the error msg
+                    self.showError(false);
+                    window.location = form.attr('action')+ '/' + xhr.id;
+                    // If there is error with candidate, then show the error msg
+                }).error(function (xhr) {
+                    self.candidateErrorResponse(xhr.responseJSON);
+                    self.showError(true);
+                });
+             // If the file exists
+            } else {
+                // If file exists, then send file to validate
+                sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
+                    // If file is valid, then hide the error msg
+                    self.showFileError(false);
+                    // Send candidate to save or update
+                    sendCandidateWithAjax(candidateUrl, form.attr('method')).done(function (xhr) {
+                        // If there is no error with candidate, then hide the error msg
+                        self.showError(false);
+                        // Send file to save
+                        sendFileWithAjax(fileUploadUrl + xhr.id, formData).done(function (xhr) {
+                            // If there is no error with file, then hide error msg
+                            self.showFileError(false);
+                            // If candidate and file are corrects
+                            window.location = form.attr('action')+ '/' + xhr.id;
+                        }).error(function (xhr) {
+                            // If there is error with file, then show the error msg
+                            self.fileErrorResponse(xhr.responseJSON);
+                            self.showFileError(true);
+                        });
+                    // If there is error with candidate, then show the error msg
+                    }).error(function (xhr) {
+                        self.candidateErrorResponse(xhr.responseJSON);
+                        self.showError(true);
+                    });
+                // If file is not valid, then show the error msg
+                }).error(function (xhr) {
+                    self.fileErrorResponse(xhr.responseJSON);
+                    self.showFileError(true);
+                });
+            }
+        // If candidate is not valid, then show error msg
+        }).error(function (xhr) {
+            self.candidateErrorResponse(xhr.responseJSON);
             self.showError(true);
+            // If the file exists
+            if (($('input[type=file]')[0] != undefined) && ($('input[type=file]').val() != '')) {
+                // Send file to save
+                sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
+                    // If there is no error with file, then hide the error msg
+                    self.showFileError(false);
+                // If file is not valid, then show the error msg
+                }).error(function (xhr) {
+                    self.fileErrorResponse(xhr.responseJSON);
+                    self.showFileError(true);
+                });
+            }
         });
     }
 
-    self.errorResponse = ko.observable(null);
+    self.candidateErrorResponse = ko.observable(null);
+    self.fileErrorResponse = ko.observable(null);
     self.showError = ko.observable(false);
+    self.showFileError = ko.observable(false);
 
     self.errorMessage = ko.pureComputed(function() {
-      if (self.errorResponse() === null) {
+      if (self.candidateErrorResponse() === null) {
         return ""
       }
 
-      return self.errorResponse().errorMessage;
+      return self.candidateErrorResponse().errorMessage;
+    });
+
+    self.fileErrorMessage = ko.pureComputed(function() {
+        if (self.fileErrorResponse() === null) {
+            return "";
+        }
+
+        return self.fileErrorResponse().errorMessage;
     });
 
     self.fieldMessages = ko.pureComputed(function() {
-        if (self.errorResponse() === null) {
+        if (self.candidateErrorResponse() === null) {
           return [];
         }
 
-        return Object.keys(self.errorResponse().fields).map(function(key) {
-            return self.errorResponse().fields[key];
+        return Object.keys(self.candidateErrorResponse().fields).map(function(key) {
+            return self.candidateErrorResponse().fields[key];
         });
     });
 
@@ -81,6 +179,7 @@ function CandidateCreateModel(){
     self.modify_display_true = function() {
         self.modify(true);
         self.showError(false);
+        self.showFileError(false);
         $("#candidate-create-form").validator('destroy');
         candidateModel.id(savedModel.id);
         candidateModel.name(savedModel.name);
@@ -88,13 +187,31 @@ function CandidateCreateModel(){
         candidateModel.email(savedModel.email);
         candidateModel.languageSkill(savedModel.languageSkill);
         candidateModel.phone(savedModel.phone);
-        candidateModel.referer(savedModel.referer);
+        $("#fileName").text('');
     };
 
     self.modify_display_false = function() {
         self.modify(false);
         savedModel = ko.toJS(candidateModel);
     };
+
+     $("#downloadLink").on('click', function (event) {
+         var url = $(this).data('file');
+
+         event.preventDefault();
+         event.stopPropagation();
+
+         $.ajax({
+             url: url,
+             type: 'GET'
+         }).done(function (xhr) {
+            var downloadUrl = "/atsy/secure/fileDownload/" + xhr.id;
+            window.location = downloadUrl;
+         }).error(function (xhr) {
+             self.fileErrorResponse(xhr.responseJSON);
+             self.showFileError(true);
+         });
+     });
 }
 
 var savedModel;
@@ -127,6 +244,7 @@ function modificationDateFormatter(value, row, index) {
 function dateTimeFormatter(dateTime) {
     var options = {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
     return dateTime.toLocaleDateString('hu-HU', options);
+<<<<<<< HEAD
 }
 
 function actionFormatter(value, row, index) {
@@ -145,3 +263,6 @@ window.channelsEvents = {
          bootbox.dialog(options);
     }
 };
+=======
+}
+>>>>>>> origin/master
