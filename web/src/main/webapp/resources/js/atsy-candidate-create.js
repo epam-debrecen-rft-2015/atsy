@@ -244,7 +244,6 @@ function modificationDateFormatter(value, row, index) {
 function dateTimeFormatter(dateTime) {
     var options = {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
     return dateTime.toLocaleDateString('hu-HU', options);
-<<<<<<< HEAD
 }
 
 function actionFormatter(value, row, index) {
@@ -263,6 +262,3 @@ window.channelsEvents = {
          bootbox.dialog(options);
     }
 };
-=======
-}
->>>>>>> origin/master
