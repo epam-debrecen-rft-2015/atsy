@@ -54,6 +54,7 @@ public class CandidateRepositoryIT extends AbstractRepositoryIT {
 
   private static final String NON_EXISTENT_CANDIDATE_EMAIL = "does@not.exist";
   private static final String NON_EXISTENT_CANDIDATE_NAME = "Candidate X";
+  private static final String NON_EXISTENT_CANDIDATE_PHONE = "+36666666666666666666666";
 
   private static final String CANDIDATE_NAME_FRAGMENT = "Candidate";
   private static final String CANDIDATE_EMAIL_FRAGMENT = "atsy.com";

@@ -28,4 +28,27 @@ public interface CandidateService extends LogicallyDeletableService<CandidateDTO
       CandidateFilterRequest candidateFilterRequest);
 
   void deletePositionsByCandidate(CandidateDTO candidateDTO);
+
+  /**
+   * Saves a candidate to the database and returns it's id.
+   * @param candidate the candidate
+   * @return the id of candidate
+   */
+  Long saveOrUpdate(CandidateDTO candidate);
+
+  /**
+   * Returns the candidate whose email is equal to the specified email. If candidate not exists then
+   * returns null.
+   * @param email the email of the candidate we're searching for
+   * @return the candidate
+   */
+  CandidateDTO getCandidateDtoByEmail(String email);
+
+  /**
+   * Returns the candidate whose phone is equal to the specified phone. If candidate not exists then
+   * returns null.
+   * @param phone the phone of the candidate we're searching for
+   * @return the candidate
+   */
+  CandidateDTO getCandidateDtoByPhone(String phone);
 }

@@ -154,6 +154,28 @@ public class CandidateServiceImpl
     }
   }
 
+  @Transactional(readOnly = true)
+  @Override
+  public CandidateDTO getCandidateDtoByEmail(String email) {
+    Assert.notNull(email);
+    CandidateEntity candidateEntity = this.candidateRepository.findByEmail(email);
+    if (candidateEntity != null) {
+      return converterService.convert(candidateEntity, CandidateDTO.class);
+    }
+    return null;
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public CandidateDTO getCandidateDtoByPhone(String phone) {
+    Assert.notNull(phone);
+    CandidateEntity candidateEntity = this.candidateRepository.findByPhone(phone);
+    if (candidateEntity != null) {
+      return converterService.convert(candidateEntity, CandidateDTO.class);
+    }
+    return null;
+  }
+
   private void validateCandidateFilterRequest(CandidateFilterRequest candidateFilterRequest) {
     Assert.notNull(candidateFilterRequest);
     Assert.notNull(candidateFilterRequest.getPageSize());

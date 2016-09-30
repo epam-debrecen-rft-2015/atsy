@@ -1,5 +1,6 @@
 package com.epam.rft.atsy.web.configuration;
 
+import com.epam.rft.atsy.service.exception.file.CandidateAlreadyHasCVFileException;
 import com.epam.rft.atsy.service.exception.file.FileAlreadyExistsValidationException;
 import com.epam.rft.atsy.service.exception.file.FileContainsInvalidCharacterValidationException;
 import com.epam.rft.atsy.service.exception.file.FileIsEmptyValidationException;
@@ -13,6 +14,7 @@ import com.epam.rft.atsy.service.exception.passwordchange.PasswordNewMatchValida
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordOldMatchValidationException;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordUniqueValidationException;
 import com.epam.rft.atsy.web.mapper.ExceptionMessagePair;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,6 +33,7 @@ public class ExceptionMapperConfiguration {
   /**
    * Creates the bean that stores all the exception-message pairs. After it's filled with the data,
    * the set becomes unmodifiable.
+   *
    * @return an unmodifiable Set object filled with all the exception-message pairs.
    */
   @Bean
@@ -71,6 +74,9 @@ public class ExceptionMapperConfiguration {
     exceptionMessagePairValidationExceptionSet
         .add(new ExceptionMessagePair("file.already.exists",
             FileAlreadyExistsValidationException.class));
+    exceptionMessagePairValidationExceptionSet
+        .add(new ExceptionMessagePair("candidate.already.has.cv.file",
+            CandidateAlreadyHasCVFileException.class));
 
     return Collections.unmodifiableSet(exceptionMessagePairValidationExceptionSet);
   }
