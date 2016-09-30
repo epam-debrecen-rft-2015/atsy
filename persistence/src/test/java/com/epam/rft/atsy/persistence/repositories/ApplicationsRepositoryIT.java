@@ -69,7 +69,7 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
     // When
     final Page<ApplicationEntity>
         pageResult =
-        this.repository.findByCandidateEntity(candidateB, DEFAULT_PAGE_REQUEST);
+        this.repository.findByCandidateEntityAndDeletedFalse(candidateB, DEFAULT_PAGE_REQUEST);
     final List<ApplicationEntity> result = pageResult.getContent();
 
     // Then
@@ -123,7 +123,7 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
     // When
     final Page<ApplicationEntity>
         pageResult =
-        this.repository.findByCandidateEntity(candidateEntityA, DEFAULT_PAGE_REQUEST);
+        this.repository.findByCandidateEntityAndDeletedFalse(candidateEntityA, DEFAULT_PAGE_REQUEST);
     final List<ApplicationEntity> result = pageResult.getContent();
 
     // Then
@@ -211,7 +211,7 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
     // When
     final Page<ApplicationEntity>
         pageResult =
-        this.repository.findByCandidateEntity(candidateEntityC, DEFAULT_PAGE_REQUEST);
+        this.repository.findByCandidateEntityAndDeletedFalse(candidateEntityC, DEFAULT_PAGE_REQUEST);
     final List<ApplicationEntity> result = pageResult.getContent();
 
     // Then
@@ -255,7 +255,7 @@ public class ApplicationsRepositoryIT extends AbstractRepositoryIT {
     // When
     Page<ApplicationEntity>
         pageResult =
-        this.repository.findByCandidateEntity(candidateEntityC, ZERO_TWO_PAGE_REQUEST);
+        this.repository.findByCandidateEntityAndDeletedFalse(candidateEntityC, ZERO_TWO_PAGE_REQUEST);
     List<ApplicationEntity> result = pageResult.getContent();
 
     // Then

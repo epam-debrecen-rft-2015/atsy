@@ -4,7 +4,6 @@ import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
-import com.epam.rft.atsy.persistence.repositories.LogicallyDeletableRepository;
 import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StatesHistoryService;
@@ -12,7 +11,6 @@ import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
-import com.epam.rft.atsy.service.exception.ObjectNotFoundException;
 import com.epam.rft.atsy.service.response.PagingResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,22 +26,25 @@ import java.util.stream.Collectors;
 @Service
 public class ApplicationsServiceImpl extends AbstractLogicallyDeletableService<ApplicationDTO, ApplicationEntity> implements ApplicationsService {
 
-  @Autowired
   private StatesHistoryService statesHistoryService;
 
   private ApplicationsRepository applicationsRepository;
 
-  @Autowired
   private ConverterService converterService;
 
-  @Autowired
   private CandidateRepository candidateRepository;
 
   @Autowired
   public ApplicationsServiceImpl(
       ApplicationsRepository applicationRepository,
+      StatesHistoryService statesHistoryService,
+      CandidateRepository candidateRepository,
       ConverterService converterService) {
     super(ApplicationDTO.class, applicationRepository, converterService);
+    this.applicationsRepository = applicationRepository;
+    this.statesHistoryService = statesHistoryService;
+    this.candidateRepository = candidateRepository;
+    this.converterService = converterService;
   }
 
   @Transactional(readOnly = true)
@@ -75,7 +76,7 @@ public class ApplicationsServiceImpl extends AbstractLogicallyDeletableService<A
 
     final Page<ApplicationEntity>
         pageResult =
-        applicationsRepository.findByCandidateEntity(candidateEntity, pageRequest);
+        applicationsRepository.findByCandidateEntityAndDeletedFalse(candidateEntity, pageRequest);
 
     List<CandidateApplicationDTO>
         candidateApplicationDTOs =

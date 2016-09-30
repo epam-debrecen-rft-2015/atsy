@@ -16,7 +16,7 @@
         <div id="welcome">
             <div id="search" class="col-lg-12 col-md-12 col-sm-12" >
                 <div class="well">
-                    <fieldset >
+                    <fieldset>
                         <form id="searchCandidate" class="form-inline" action="candidates" method="GET" role="form">
                             <div class="form-group">
                                 <spring:message code="candidate.name.field" var="i18nName"/>

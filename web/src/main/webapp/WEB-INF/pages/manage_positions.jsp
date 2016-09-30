@@ -40,7 +40,7 @@
                                 <tr>
                                     <th data-field="name" data-align="left" data-sortable="true"><spring:message
                                             code="settings.positions.table.name.title"/></th>
-                                    <th data-field="positionId" data-align="left"
+                                    <th data-field="id" data-align="left"
                                         data-formatter="actionFormatter"
                                         data-events="positionsEvents"><spring:message
                                             code="settings.positions.table.action.title"/>
@@ -60,7 +60,7 @@
                              </div>
 
                                     <div class="form-group">
-                                        <input type="hidden" name="id" id="positionId">
+                                        <input type="hidden" name="id" id="id">
                                         <label for="position_name"><spring:message
                                                 code="settings.positions.position_name"/></label>
                                         <input type="text" class="name form-control" name="name" id="position_name">

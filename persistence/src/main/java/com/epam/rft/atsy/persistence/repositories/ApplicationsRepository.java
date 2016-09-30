@@ -4,7 +4,6 @@ import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
@@ -26,6 +25,6 @@ public interface ApplicationsRepository extends LogicallyDeletableRepository<App
    * @param pageable a pageable object
    * @return a page of ApplicationEntities
    */
-  Page<ApplicationEntity> findByCandidateEntity(CandidateEntity candidateEntity, Pageable pageable);
+  Page<ApplicationEntity> findByCandidateEntityAndDeletedFalse(CandidateEntity candidateEntity, Pageable pageable);
 
 }

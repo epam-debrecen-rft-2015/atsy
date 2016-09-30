@@ -60,7 +60,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <input type="hidden" name="id" id="channelId">
+                                        <input type="hidden" name="id" id="id">
                                         <label for="channel_name"><spring:message
                                                 code="settings.channels.channel_name"/></label>
                                         <input type="text" class="name form-control" name="name" id="channel_name"/>

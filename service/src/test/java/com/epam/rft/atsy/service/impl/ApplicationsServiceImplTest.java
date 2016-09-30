@@ -183,7 +183,7 @@ public class ApplicationsServiceImplTest {
   public void getApplicationByCandidateIdShouldReturnEmptyListWhenCandidateIdIsNotFound() {
     // Given
     given(candidateRepository.findOne(NON_EXISTENT_CANDIDATE_ID)).willReturn(null);
-    given(applicationsRepository.findByCandidateEntity(null, DEFAULT_PAGE_REQUEST))
+    given(applicationsRepository.findByCandidateEntityAndDeletedFalse(null, DEFAULT_PAGE_REQUEST))
         .willReturn(new PageImpl<ApplicationEntity>(Collections.emptyList()));
 
     // When
@@ -229,7 +229,7 @@ public class ApplicationsServiceImplTest {
         Collections.singletonList(dummyCandidateApplicationDTO);
 
     given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
-    given(applicationsRepository.findByCandidateEntity(candidateEntity, DEFAULT_PAGE_REQUEST))
+    given(applicationsRepository.findByCandidateEntityAndDeletedFalse(candidateEntity, DEFAULT_PAGE_REQUEST))
         .willReturn(new PageImpl<ApplicationEntity>(applicationEntities));
     given(converterService.convert(applicationEntities, CandidateApplicationDTO.class))
         .willReturn(candidateApplicationDTOs);
@@ -281,7 +281,7 @@ public class ApplicationsServiceImplTest {
             dummyCandidateApplicationDTO);
 
     given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
-    given(applicationsRepository.findByCandidateEntity(candidateEntity, DEFAULT_PAGE_REQUEST))
+    given(applicationsRepository.findByCandidateEntityAndDeletedFalse(candidateEntity, DEFAULT_PAGE_REQUEST))
         .willReturn(new PageImpl<ApplicationEntity>(applicationEntities));
     given(converterService.convert(applicationEntities, CandidateApplicationDTO.class))
         .willReturn(candidateApplicationDTOs);
@@ -308,7 +308,7 @@ public class ApplicationsServiceImplTest {
         Arrays.asList(dummyCandidateApplicationDTO, dummyCandidateApplicationDTO);
 
     given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
-    given(applicationsRepository.findByCandidateEntity(candidateEntity, ZERO_TWO_PAGE_REQUEST))
+    given(applicationsRepository.findByCandidateEntityAndDeletedFalse(candidateEntity, ZERO_TWO_PAGE_REQUEST))
         .willReturn(new PageImpl<ApplicationEntity>(applicationEntities));
     given(converterService.convert(applicationEntities, CandidateApplicationDTO.class))
         .willReturn(candidateApplicationDTOs);
