@@ -98,7 +98,6 @@ window.positionsEvents = {
     'click .remove': function (e, value, row) {
         var container = $('#positions_section');
         var options = getOptions('question.delete.position.js', 'selected.position.not.found.js', row, container);
-        e.stopImmediatePropagation();
         bootbox.dialog(options);
     }
 };
@@ -107,6 +106,7 @@ window.candidatesEvents = {
     'click .remove': function (e, value, row) {
          var container = $('#candidates_table');
          var options = getOptions('question.delete.candidate.js', 'selected.candidate.not.found.js', row, container, "candidates");
+         e.stopImmediatePropagation();
          bootbox.dialog(options);
     }
 };

@@ -72,7 +72,11 @@ $('.table').bootstrapTable({
         }
         p.sortName = sortName
         return  p
-      }
+      },
+
+      onClickRow: function (row, $element) {
+             window.location.href="candidate/" + row.id;
+             }
 });
 
 function actionsFormatter(value, row, index) {
