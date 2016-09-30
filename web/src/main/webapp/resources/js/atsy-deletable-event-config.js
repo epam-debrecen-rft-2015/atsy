@@ -1,4 +1,4 @@
-function getOptions(dialogMessageKey, errorMessageKey, row, container) {
+function getOptions(prefixUrl, dialogMessageKey, errorMessageKey, row, container) {
     var options = {
         size: 'small',
         message: $.i18n.prop(dialogMessageKey) + " (" + new Option(row.name).innerHTML + ")",
@@ -19,7 +19,7 @@ function getOptions(dialogMessageKey, errorMessageKey, row, container) {
                 callback: function() {
                     $.ajax({
                         type: 'DELETE',
-                        url: "./delete?" + 'id=' + row.id,
+                        url: prefixUrl + "?" + 'id=' + row.id,
                         cache: false,
                     }).done(function() {
                         var table = container.find('table');
