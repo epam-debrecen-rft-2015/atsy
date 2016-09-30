@@ -20,8 +20,8 @@ import javax.validation.Valid;
  * candidate.
  */
 @Controller
-public class NewApplicationPopupController {
-  private static final String VIEW_NAME = "new_application_popup";
+public class NewApplicationController {
+  private static final String VIEW_NAME = "application";
 
   @Resource
   private ApplicationsService applicationsService;
@@ -30,7 +30,7 @@ public class NewApplicationPopupController {
    * Loads the popup window with the input fields to create a new application.
    * @return a ModelAndView object which contains the name of the page to be loaded
    */
-  @RequestMapping(method = RequestMethod.GET, value = "/new_application_popup")
+  @RequestMapping(method = RequestMethod.GET, value = "/new_application")
   public ModelAndView loadPage() {
     return new ModelAndView(VIEW_NAME);
   }
@@ -41,7 +41,7 @@ public class NewApplicationPopupController {
    * @param result an object used to check if any error occurs
    * @return a string which represents a path to be redirected
    */
-  @RequestMapping(method = RequestMethod.POST, value = "/secure/new_application_popup")
+  @RequestMapping(method = RequestMethod.POST, value = "/secure/new_application")
   public String saveOrUpdate(@Valid @ModelAttribute StateHistoryDTO stateHistoryDTO,
                              BindingResult result) {
     if (!result.hasErrors()) {

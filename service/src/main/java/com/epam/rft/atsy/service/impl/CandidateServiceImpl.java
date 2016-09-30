@@ -1,5 +1,7 @@
 package com.epam.rft.atsy.service.impl;
 
+import com.google.common.base.MoreObjects;
+
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
@@ -9,17 +11,19 @@ import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.DuplicateCandidateException;
-import com.epam.rft.atsy.service.request.FilterRequest;
-import com.epam.rft.atsy.service.request.SearchOptions;
+import com.epam.rft.atsy.service.request.CandidateFilterRequest;
+import com.epam.rft.atsy.service.response.PagingResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Collection;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
@@ -66,24 +70,61 @@ public class CandidateServiceImpl implements CandidateService {
 
   @Transactional(readOnly = true)
   @Override
-  public Collection<CandidateDTO> getAllCandidate(FilterRequest sortingRequest) {
-    validateFilterRequest(sortingRequest);
+  public PagingResponse<CandidateDTO> getCandidatesByFilterRequest(
+      CandidateFilterRequest candidateFilterRequest) {
 
-    SearchOptions searchOptions = sortingRequest.getSearchOptions();
+    PageRequest pageRequest;
 
-    Sort.Direction sortDirection = Sort.Direction.fromString(sortingRequest.getOrder().name());
+    validateCandidateFilterRequest(candidateFilterRequest);
 
-    Sort sort = new Sort(sortDirection, sortingRequest.getFieldName().toString());
+    if (candidateFilterRequest.getSortName() != null
+        && candidateFilterRequest.getSortOrder() != null) {
 
-    List<CandidateEntity>
-        candidateEntities =
-        candidateRepository.findAllByNameContainingAndEmailContainingAndPhoneContaining(
-            searchOptions.getName(), searchOptions.getEmail(), searchOptions.getPhone(), sort);
+      Sort.Direction
+          sortDirection =
+          Sort.Direction.fromString(candidateFilterRequest.getSortOrder());
 
-    return converterService.convert(candidateEntities, CandidateDTO.class);
+      pageRequest =
+          new PageRequest(candidateFilterRequest.getPageNumber(),
+              candidateFilterRequest.getPageSize(),
+              sortDirection, candidateFilterRequest.getSortName());
+
+    } else {
+      pageRequest =
+          new PageRequest(candidateFilterRequest.getPageNumber(),
+              candidateFilterRequest.getPageSize());
+    }
+
+    final String
+        name =
+        MoreObjects.firstNonNull(candidateFilterRequest.getCandidateName(), StringUtils.EMPTY);
+    final String
+        email =
+        MoreObjects.firstNonNull(candidateFilterRequest.getCandidateEmail(), StringUtils.EMPTY);
+    final String
+        phone =
+        MoreObjects.firstNonNull(candidateFilterRequest.getCandidatePhone(), StringUtils.EMPTY);
+    final String
+        positions =
+        MoreObjects.firstNonNull(candidateFilterRequest.getCandiadtePositions(), StringUtils.EMPTY);
+
+    final Page<CandidateEntity>
+        candidateEntitiesPage =
+        candidateRepository
+            .findByCandidateFilterRequest(name, email, phone, positions, pageRequest);
+
+    final List<CandidateDTO>
+        candidateDTOs =
+        converterService.convert(candidateEntitiesPage.getContent(), CandidateDTO.class);
+
+    final PagingResponse<CandidateDTO>
+        result =
+        new PagingResponse<>(candidateEntitiesPage.getTotalElements(), candidateDTOs);
+
+    return result;
   }
 
-  @Transactional(readOnly = false)
+  @Transactional
   @Override
   public void deletePositionsByCandidate(CandidateDTO candidateDTO) {
     candidateDTO.setPositions(null);
@@ -106,19 +147,30 @@ public class CandidateServiceImpl implements CandidateService {
     }
   }
 
-  /**
-   * Validates the fields of the passed filter request. Performs nullness-checks.
-   * @param filterRequest the object to validate
-   * @throws IllegalArgumentException if any member of the parameter (or the parameter itself) is
-   * {@code null}.
-   */
-  private void validateFilterRequest(FilterRequest filterRequest) {
-    Assert.notNull(filterRequest);
-    Assert.notNull(filterRequest.getFieldName());
-    Assert.notNull(filterRequest.getOrder());
+  private void validateCandidateFilterRequest(CandidateFilterRequest candidateFilterRequest) {
+    Assert.notNull(candidateFilterRequest);
+    Assert.notNull(candidateFilterRequest.getPageSize());
+    Assert.notNull(candidateFilterRequest.getPageNumber());
 
-    SearchOptions searchOptions = filterRequest.getSearchOptions();
+    if (candidateFilterRequest.getSortName() != null
+        || candidateFilterRequest.getSortOrder() != null) {
+      Assert.notNull(candidateFilterRequest.getSortName());
+      Assert.notNull(candidateFilterRequest.getSortOrder());
 
-    Assert.notNull(searchOptions);
+      try {
+        Sort.Direction.fromString(candidateFilterRequest.getSortOrder());
+      } catch (Exception e) {
+        throw new IllegalArgumentException(
+            "Invalid sort order: " + candidateFilterRequest.getSortOrder(), e);
+      }
+
+      try {
+        new PageRequest(0, 10, Sort.Direction.fromString(candidateFilterRequest.getSortOrder()),
+            candidateFilterRequest.getSortName());
+      } catch (Exception e) {
+        throw new IllegalArgumentException(
+            "Invalid sort name: " + candidateFilterRequest.getSortName(), e);
+      }
+    }
   }
 }

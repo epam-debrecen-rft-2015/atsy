@@ -1,14 +1,13 @@
 package com.epam.rft.atsy.web.validator;
 
 
+import com.epam.rft.atsy.helper.MultipartFileCreatorTestHelper;
 import com.epam.rft.atsy.service.exception.file.FileContainsInvalidCharacterValidationException;
 import com.epam.rft.atsy.service.exception.file.FileIsEmptyValidationException;
 import com.epam.rft.atsy.service.exception.file.FileIsInWrongExtensionValidationException;
 import com.epam.rft.atsy.service.exception.file.FileIsMissingValidationException;
 import com.epam.rft.atsy.service.exception.file.FileIsTooLargeValidationException;
 import com.epam.rft.atsy.service.exception.file.FileValidationException;
-import com.epam.rft.atsy.helper.MultipartFileCreatorTestHelper;
-
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,7 +32,8 @@ public class FileValidatorImplTest {
   private FileValidator fileValidator = new FileValidatorImpl();
 
   @Test(expected = IllegalArgumentException.class)
-  public void validateShouldThrowIllegalArgumentExceptionWhenFileIsNull() throws FileValidationException {
+  public void validateShouldThrowIllegalArgumentExceptionWhenFileIsNull()
+      throws FileValidationException {
 
     fileValidator.validate(null);
   }
@@ -48,10 +48,12 @@ public class FileValidatorImplTest {
   }
 
   @Test(expected = FileIsEmptyValidationException.class)
-  public void isEmptyFileShouldThrowFileIsEmptyValidationExceptionWhenFileIsEmpty() throws FileValidationException {
+  public void isEmptyFileShouldThrowFileIsEmptyValidationExceptionWhenFileIsEmpty()
+      throws FileValidationException {
 
     MultipartFile multipartFile =
-        MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_IS_VALID_PDF, FILE_SIZE_ZERO_MB);
+        MultipartFileCreatorTestHelper
+            .createMultipartFile(ORIGINAL_FILENAME_IS_VALID_PDF, FILE_SIZE_ZERO_MB);
     fileValidator.validate(multipartFile);
   }
 
@@ -70,7 +72,8 @@ public class FileValidatorImplTest {
       throws FileValidationException {
 
     MultipartFile multipartFile =
-        MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_IS_VALID_PDF, FILE_SIZE_TEN_MB);
+        MultipartFileCreatorTestHelper
+            .createMultipartFile(ORIGINAL_FILENAME_IS_VALID_PDF, FILE_SIZE_TEN_MB);
     fileValidator.validate(multipartFile);
   }
 
@@ -89,7 +92,8 @@ public class FileValidatorImplTest {
       throws FileValidationException {
 
     MultipartFile multipartFile =
-        MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_IN_WRONG_EXTENSION, FILE_SIZE_FIVE_MB);
+        MultipartFileCreatorTestHelper
+            .createMultipartFile(ORIGINAL_FILENAME_IN_WRONG_EXTENSION, FILE_SIZE_FIVE_MB);
     fileValidator.validate(multipartFile);
   }
 
@@ -108,7 +112,8 @@ public class FileValidatorImplTest {
       throws FileValidationException {
 
     MultipartFile multipartFile =
-        MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_IS_VALID_DOC, FILE_SIZE_FIVE_MB);
+        MultipartFileCreatorTestHelper
+            .createMultipartFile(ORIGINAL_FILENAME_IS_VALID_DOC, FILE_SIZE_FIVE_MB);
     fileValidator.validate(multipartFile);
   }
 
@@ -117,7 +122,8 @@ public class FileValidatorImplTest {
       throws FileValidationException {
 
     MultipartFile multipartFile =
-        MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_IS_VALID_DOCX, FILE_SIZE_FIVE_MB);
+        MultipartFileCreatorTestHelper
+            .createMultipartFile(ORIGINAL_FILENAME_IS_VALID_DOCX, FILE_SIZE_FIVE_MB);
     fileValidator.validate(multipartFile);
   }
 
@@ -126,7 +132,8 @@ public class FileValidatorImplTest {
       throws FileValidationException {
 
     MultipartFile multipartFile =
-        MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_IS_VALID_ODT, FILE_SIZE_FIVE_MB);
+        MultipartFileCreatorTestHelper
+            .createMultipartFile(ORIGINAL_FILENAME_IS_VALID_ODT, FILE_SIZE_FIVE_MB);
     fileValidator.validate(multipartFile);
   }
 
@@ -135,7 +142,8 @@ public class FileValidatorImplTest {
       throws FileValidationException {
 
     MultipartFile multipartFile =
-        MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_IS_VALID_PDF, FILE_SIZE_FIVE_MB);
+        MultipartFileCreatorTestHelper
+            .createMultipartFile(ORIGINAL_FILENAME_IS_VALID_PDF, FILE_SIZE_FIVE_MB);
     fileValidator.validate(multipartFile);
   }
 

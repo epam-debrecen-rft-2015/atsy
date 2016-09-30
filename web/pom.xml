@@ -125,7 +125,8 @@
                                         ${project.build.directory}/docker/provided-jars
                                     </outputDirectory>
                                     <includeScope>provided</includeScope>
-                                    <excludeArtifactIds>lombok, javax.servlet-api</excludeArtifactIds>
+                                    <excludeArtifactIds>lombok, javax.servlet-api
+                                    </excludeArtifactIds>
                                 </configuration>
                             </execution>
                         </executions>

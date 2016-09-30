@@ -6,32 +6,50 @@ import com.epam.rft.atsy.service.ChannelService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.exception.DuplicateChannelException;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Collection;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class ChannelServiceImpl implements ChannelService {
+public class ChannelServiceImpl
+    extends AbstractLogicallyDeletableService<ChannelDTO, ChannelEntity>
+    implements ChannelService {
 
-  @Autowired
-  private ConverterService converterService;
-
-  @Autowired
   private ChannelRepository channelRepository;
+
+  @Autowired
+  public ChannelServiceImpl(ChannelRepository channelRepository,
+                            ConverterService converterService) {
+    super(ChannelDTO.class, channelRepository, converterService);
+    this.channelRepository = channelRepository;
+  }
 
   @Transactional(readOnly = true)
   @Override
-  public Collection<ChannelDTO> getAllChannels() {
-    List<ChannelEntity> ChannelEntities = channelRepository.findAll();
-    return converterService.convert(ChannelEntities, ChannelDTO.class);
+  public ChannelDTO getChannelDtoById(Long channelId) {
+    Assert.notNull(channelId);
+    ChannelEntity channelEntity = channelRepository.findOne(channelId);
+
+    if (channelEntity != null) {
+      return converterService.convert(channelEntity, ChannelDTO.class);
+    }
+    return null;
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public ChannelDTO getChannelDtoByName(String channelName) {
+    Assert.notNull(channelName);
+    ChannelEntity channelEntity = channelRepository.findByName(channelName);
+
+    if (channelEntity != null) {
+      return converterService.convert(channelEntity, ChannelDTO.class);
+    }
+    return null;
   }
 
   @Transactional
@@ -40,15 +58,16 @@ public class ChannelServiceImpl implements ChannelService {
     Assert.notNull(channel);
     Assert.notNull(channel.getName());
 
-    ChannelEntity entity = converterService.convert(channel, ChannelEntity.class);
-    try {
-      channelRepository.saveAndFlush(entity);
-    } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
-      log.error("Save to repository failed.", ex);
+    ChannelEntity channelEntity = this.channelRepository.findByName(channel.getName());
 
-      String channelName = channel.getName();
-
-      throw new DuplicateChannelException(channelName, ex);
+    if (channelEntity == null) {
+      channelEntity = this.converterService.convert(channel, ChannelEntity.class);
+    } else if (channelEntity.isDeleted() != null && channelEntity.isDeleted()) {
+      channelEntity.setDeleted(false);
+    } else {
+      throw new DuplicateChannelException(channel.getName());
     }
+
+    this.channelRepository.saveAndFlush(channelEntity);
   }
 }

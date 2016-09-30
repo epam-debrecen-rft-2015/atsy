@@ -80,4 +80,8 @@ Feature: candidate creation test
     Examples:
       | field | email          | phone         | message                                                                                    |
       | email | email/atsy.com | +36301234567  | A jelentkező email címének megfelelő formában kell lennie, például kovacs.jozsef@email.hu! |
-      | phone | email@atsy.com | +36a301234567 | A jelentkező telefonszáma egy plusz jellel kezdődhet és utánna számjegyekből állhat!       |
+      | phone | email@atsy.com | +36a301234567 | A jelentkező telefonszáma egy plusz jellel kezdődhet és utána számjegyekből állhat!       |
+
+  Scenario: the "Név" field is focused on Candidate creation page
+    Given the user is on the Candidate creation page
+    Then the name field is in focus

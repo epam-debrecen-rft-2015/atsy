@@ -8,7 +8,7 @@
    <c:url value="/resources/thirdparty/bootstrap/css/bootstrap.min.css" var="urlValue" /> <link rel="stylesheet" href="${urlValue}">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/bootstrap-table.min.css">
     <c:url value="/resources/css/atsy.css" var="urValue" /><link rel="stylesheet" href="${urValue}">
-
+    <title>Applicant Tracking System</title>
 </head>
 <body>
 <div class="container">

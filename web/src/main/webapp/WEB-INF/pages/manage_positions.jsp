@@ -10,6 +10,11 @@
         <div>
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="globalMessage alert alert-danger" role="alert"
+                         style="display: none" id="errorMessageForDeleting">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="error-message"></span>
+                    </div>
                     <table data-toggle="table" id="positions" data-url="${positions}" data-height="299"
                            data-sort-name="name"
                            data-sort-order="desc"
@@ -34,7 +39,7 @@
                         <form role="form" method="POST" id="position-form" action="./positions">
 
                             <div class="globalMessage alert alert-danger" role="alert"
-                                 style="display: none">
+                                 style="display: none" id="errorMessageForCreating">
                                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                                 <span class="error-message"></span>
                             </div>

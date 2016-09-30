@@ -16,7 +16,8 @@ public class PasswordAllFieldFilledRule implements PasswordValidationRule {
    * @return true if every field of the given object is filled with data
    */
   @Override
-  public void validate(PasswordChangeDTO passwordChangeDTO) throws PasswordAllFieldFilledValidationException {
+  public void validate(PasswordChangeDTO passwordChangeDTO)
+      throws PasswordAllFieldFilledValidationException {
     String newPassword = passwordChangeDTO.getNewPassword();
     String oldPassword = passwordChangeDTO.getOldPassword();
     String newPasswordConfirm = passwordChangeDTO.getNewPasswordConfirm();

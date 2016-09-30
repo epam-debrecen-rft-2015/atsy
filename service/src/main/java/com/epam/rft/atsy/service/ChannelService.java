@@ -2,22 +2,24 @@ package com.epam.rft.atsy.service;
 
 import com.epam.rft.atsy.service.domain.ChannelDTO;
 
-import java.util.Collection;
-
 /**
  * Service that operates with channels in the database layer and in the view layer.
  */
-public interface ChannelService {
+public interface ChannelService extends LogicallyDeletableService<ChannelDTO> {
 
   /**
-   * Returns a collection of channels.
-   * @return the collection of channels
+   * Returns the channel with the specified id.
+   *
+   * @param channelId the id of the searched channel
+   * @return the channel
    */
-  Collection<ChannelDTO> getAllChannels();
+  ChannelDTO getChannelDtoById(Long channelId);
 
   /**
-   * Saves a channel to the database.
-   * @param channel the channel
+   * Returns the channel with the specified name.
+   *
+   * @param channelName the name of the searched channel
+   * @return the channel
    */
-  void saveOrUpdate(ChannelDTO channel);
+  ChannelDTO getChannelDtoByName(String channelName);
 }

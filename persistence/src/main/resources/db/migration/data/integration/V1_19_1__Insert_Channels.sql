@@ -1,0 +1,1 @@
+INSERT INTO channels (name, deleted) VALUES ('street', true);

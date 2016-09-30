@@ -6,27 +6,29 @@ import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.PositionService;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.exception.DuplicatePositionException;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class PositionServiceImpl implements PositionService {
+public class PositionServiceImpl
+    extends AbstractLogicallyDeletableService<PositionDTO, PositionEntity>
+    implements PositionService {
 
-  @Autowired
-  private ConverterService converterService;
-
-  @Autowired
   private PositionRepository positionRepository;
+
+  @Autowired
+  public PositionServiceImpl(PositionRepository positionRepository,
+                             ConverterService converterService) {
+    super(PositionDTO.class, positionRepository, converterService);
+    this.positionRepository = positionRepository;
+  }
 
   @Transactional(readOnly = true)
   @Override
@@ -42,24 +44,44 @@ public class PositionServiceImpl implements PositionService {
 
   @Transactional(readOnly = true)
   @Override
-  public Collection<PositionDTO> getAllPositions() {
-    List<PositionEntity> positionEntities = positionRepository.findAll();
-    return converterService.convert(positionEntities, PositionDTO.class);
+  public PositionDTO getPositionDtoById(Long positionId) {
+    Assert.notNull(positionId);
+    PositionEntity positionEntity = positionRepository.findOne(positionId);
+
+    if (positionEntity != null) {
+      return converterService.convert(positionEntity, PositionDTO.class);
+    }
+    return null;
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public PositionDTO getPositionDtoByName(String positionName) {
+    Assert.notNull(positionName);
+    PositionEntity positionEntity = positionRepository.findByName(positionName);
+
+    if (positionEntity != null) {
+      return converterService.convert(positionEntity, PositionDTO.class);
+    }
+    return null;
   }
 
   @Transactional
   @Override
   public void saveOrUpdate(PositionDTO position) {
     Assert.notNull(position);
-    PositionEntity entity = converterService.convert(position, PositionEntity.class);
-    try {
-      positionRepository.saveAndFlush(entity);
-    } catch (ConstraintViolationException | DataIntegrityViolationException ex) {
-      log.error("Save to repository failed.", ex);
+    Assert.notNull(position.getName());
 
-      String positionName = position.getName();
+    PositionEntity positionEntity = this.positionRepository.findByName(position.getName());
 
-      throw new DuplicatePositionException(positionName, ex);
+    if (positionEntity == null) {
+      positionEntity = this.converterService.convert(position, PositionEntity.class);
+    } else if (positionEntity.isDeleted() != null && positionEntity.isDeleted()) {
+      positionEntity.setDeleted(false);
+    } else {
+      throw new DuplicatePositionException(position.getName());
     }
+
+    this.positionRepository.saveAndFlush(positionEntity);
   }
 }

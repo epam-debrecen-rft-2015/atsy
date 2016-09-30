@@ -4,7 +4,6 @@ $(document).ready(function() {
         //nothing
       } else {
         stateHistoryModel.ajaxCall();
-
         return false;
       }
   }));
@@ -12,8 +11,10 @@ $(document).ready(function() {
       format: 'yyyy-mm-dd',
       autoclose: true
   });
+  $('#feedbackDateInput').datetimepicker({
+    format: 'YYYY-MM-DD HH:mm',
+  });
 });
-
 
 function StateHistoryModel() {
   var self = this;
@@ -27,10 +28,22 @@ function StateHistoryModel() {
               if (!ko.isWriteableObservable(data[property])) {
                   data[property] = ko.observable();
               }
-
               data[property](value);
-
               ko.applyBindingsToNode(element, { value: data[property] });
+          }
+      };
+
+
+  ko.bindingHandlers.datetimepickerBinding = {
+          init: function(element, valueAccessor, allBindingsAccessor, data) {
+              var property = valueAccessor()
+              if (!ko.isWriteableObservable(data[property])) {
+                 data[property] = ko.observable();
+              }
+                  $(element).parent().on("dp.change", function(event){
+                    var timeZonedDate = event.date.subtract(event.date.utcOffset(), 'm').format('YYYY-MM-DD HH:mm')
+                    data[property](timeZonedDate);
+                  });
           }
       };
 
@@ -119,3 +132,4 @@ StateHistoryModel.prototype.redirectWithoutState = function() {
 var stateHistoryModel = new StateHistoryModel();
 
 ko.applyBindings(stateHistoryModel);
+
