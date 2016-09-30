@@ -240,3 +240,7 @@ form > .button-panel > .btn {
 .labels{
   display: inline-block;
 }
+
+.form-group{
+margin-bottom:0px;
+}
