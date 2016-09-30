@@ -1,7 +1,6 @@
 function getOptions(dialogMessageKey, errorMessageKey, row, container, optionalPrefix) {
 
     if (typeof optionalPrefix === 'undefined') { optionalPrefix = ''; }
-    console.log(optionalPrefix);
 
     var options = {
         size: 'small',

@@ -98,6 +98,7 @@ window.positionsEvents = {
     'click .remove': function (e, value, row) {
         var container = $('#positions_section');
         var options = getOptions('question.delete.position.js', 'selected.position.not.found.js', row, container);
+        e.stopImmediatePropagation();
         bootbox.dialog(options);
     }
 };
