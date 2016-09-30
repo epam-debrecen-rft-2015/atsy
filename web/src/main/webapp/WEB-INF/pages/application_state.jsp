@@ -129,7 +129,7 @@
                        <div class="form-group">
                             <label for="positionSelector"  class="control-label col-sm-4"><spring:message code="statehistory.field.position"/></label>
                             <div class="col-sm-8">
-                                <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.positionName}</p>
+                                <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value="${data.positionName}"/></p>
                                   <c:if test="${stat.first}">
                                       <select required class="stateInput hidden" id="positionSelector" data-bind="valueWithInit: 'positionName'">
                                           <option disabled="disabled" selected="selected">
