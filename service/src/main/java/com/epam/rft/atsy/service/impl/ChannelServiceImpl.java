@@ -68,12 +68,7 @@ public class ChannelServiceImpl
       throw new DuplicateChannelException(channel.getName());
     }
 
-    ChannelEntity savedEntity = this.channelRepository.saveAndFlush(channelEntity);
-
-    try {
-      return savedEntity.getId();
-    } catch (NullPointerException ex) {
-      return -1L;
-    }
+    this.channelRepository.saveAndFlush(channelEntity);
+    return channelEntity.getId();
   }
 }

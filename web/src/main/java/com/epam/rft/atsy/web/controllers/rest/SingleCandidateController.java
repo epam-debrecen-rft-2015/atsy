@@ -49,8 +49,8 @@ public class SingleCandidateController {
   public ResponseEntity saveOrUpdate(@Valid @RequestBody CandidateDTO candidateDTO,
                                      BindingResult result, Locale locale) {
     if (!result.hasErrors()) {
-      Long CandidateId = candidateService.saveOrUpdate(candidateDTO);
-      return new ResponseEntity<>(Collections.singletonMap("id", CandidateId),
+      Long candidateId = candidateService.saveOrUpdate(candidateDTO);
+      return new ResponseEntity<>(Collections.singletonMap("id", candidateId),
           HttpStatus.OK);
     } else {
       RestResponse restResponse = parseValidationErrors(result.getFieldErrors(), locale);

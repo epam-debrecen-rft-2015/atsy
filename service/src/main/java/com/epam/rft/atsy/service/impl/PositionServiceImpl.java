@@ -81,12 +81,7 @@ public class PositionServiceImpl
     } else {
       throw new DuplicatePositionException(position.getName());
     }
-
-    try {
-      return this.positionRepository.saveAndFlush(positionEntity).getId();
-    } catch (NullPointerException e) {
-      return -1L;
-    }
-
+    this.positionRepository.saveAndFlush(positionEntity);
+    return positionEntity.getId();
   }
 }
