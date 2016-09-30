@@ -10,7 +10,6 @@
 
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
-        <c:url value="/resources/js/atsy-settings.js" var="urlValue"/><script src="${urlValue}"></script>
         <c:url value="/resources/js/atsy-candidate.js" var="urlValue"/><script src="${urlValue}"></script>
         <c:url value="/resources/js/atsy-deletable-event-config.js" var="urlValue" /><script src="${urlValue}"></script>
         <c:url value="/resources/thirdparty/bootstrap/js/bootstrap.min.js" var="urlValue"/><script src="${urlValue}"></script>
