@@ -9,9 +9,8 @@ import com.epam.rft.atsy.service.exception.passwordchange.PasswordValidationExce
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
 import com.epam.rft.atsy.service.security.UserDetailsAdapter;
 import com.epam.rft.atsy.web.CurrentUser;
-import com.epam.rft.atsy.web.controllers.PasswordChangeControllerBackup;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
-import com.epam.rft.atsy.web.mapper.PasswordValidationRuleMapper;
+import com.epam.rft.atsy.web.mapper.RuleValidationExceptionMapper;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,7 @@ public class PasswordChangeController {
 
   private static Logger
       logger =
-      LoggerFactory.getLogger(PasswordChangeControllerBackup.class);
+      LoggerFactory.getLogger(PasswordChangeController.class);
 
   @Resource
   MessageKeyResolver messageKeyResolver;
@@ -49,7 +48,7 @@ public class PasswordChangeController {
   UserService userService;
 
   @Resource
-  PasswordValidationRuleMapper passwordValidationRuleMapper;
+  RuleValidationExceptionMapper ruleValidationExceptionMapper;
 
   @Autowired
   PasswordValidator passwordValidator;
@@ -88,7 +87,8 @@ public class PasswordChangeController {
         logger.error(e.getMessage(), e);
         return new ResponseEntity<>(
             new RestResponse(messageKeyResolver
-                .resolveMessageOrDefault(passwordValidationRuleMapper.getMessageKeyByException(e))),
+                .resolveMessageOrDefault(
+                    ruleValidationExceptionMapper.getMessageKeyByException(e))),
             HttpStatus.BAD_REQUEST);
 
       }

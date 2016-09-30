@@ -8,7 +8,7 @@
     <div id="password_section">
         <form role="form" method="POST" id="pw-form" action="./password">
             <div class="globalMessage alert alert-danger" role="alert"
-                 style="display: none">
+                 style="display: none" id="errorMessageForCreating">
                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                 <span class="error-message"></span>
             </div>
