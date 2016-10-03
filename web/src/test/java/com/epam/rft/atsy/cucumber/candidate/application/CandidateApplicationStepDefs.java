@@ -25,7 +25,7 @@ import cucumber.api.java.en.Then;
 public class CandidateApplicationStepDefs {
 
   private static WebDriver webDriver = DriverProvider.getDriver();
-  private static final String CANDIDATE_PAGE_URL = "http://localhost:8080/atsy/secure/candidate/3";
+  private static final String CANDIDATE_PAGE_URL = "http://localhost:8080/atsy/secure/candidate/details/3";
   private static final SimpleDateFormat
       SIMPLE_DATE_FORMAT =
       new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss");

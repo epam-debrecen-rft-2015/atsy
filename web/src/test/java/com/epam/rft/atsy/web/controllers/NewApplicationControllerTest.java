@@ -1,24 +1,5 @@
 package com.epam.rft.atsy.web.controllers;
 
-import com.epam.rft.atsy.service.ApplicationsService;
-import com.epam.rft.atsy.service.domain.ApplicationDTO;
-import com.epam.rft.atsy.service.domain.ChannelDTO;
-import com.epam.rft.atsy.service.domain.PositionDTO;
-import com.epam.rft.atsy.service.domain.states.StateDTO;
-import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import java.time.ZonedDateTime;
-import java.util.Date;
-
-import lombok.val;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
@@ -31,6 +12,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import com.epam.rft.atsy.service.ApplicationsService;
+import com.epam.rft.atsy.service.domain.ApplicationDTO;
+import com.epam.rft.atsy.service.domain.ChannelDTO;
+import com.epam.rft.atsy.service.domain.PositionDTO;
+import com.epam.rft.atsy.service.domain.states.StateDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import java.time.ZonedDateTime;
+import java.util.Date;
+import lombok.val;
+
 @RunWith(MockitoJUnitRunner.class)
 
 public class NewApplicationControllerTest extends AbstractControllerTest {
@@ -38,8 +36,10 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
   private static final String VIEW_NAME = "application";
   private static final String REQUEST_URL_GET = "/new_application";
   private static final String REQUEST_URL_POST = "/secure/new_application";
-  private static final String REDIRECT_URL_FOR_CANDIDATE_A = "/secure/candidate/1";
-  private static final String REDIRECT_URL_FOR_NON_EXISTING_CANDIDATE = "/secure/candidate/null";
+  private static final String REDIRECT_URL_FOR_CANDIDATE_A = "/secure/candidate/details/1";
+  private static final String
+      REDIRECT_URL_FOR_NON_EXISTING_CANDIDATE =
+      "/secure/candidate/details/null";
 
   private static final String CHANNEL_NAME_FACEBOOK = "facebook";
   private static final String POSITION_NAME_DEVELOPER = "Fejlesztő";
@@ -53,9 +53,13 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
   @InjectMocks
   private NewApplicationController newApplicationController;
 
-  private ChannelDTO channelDTO = ChannelDTO.builder().id(1L).name(CHANNEL_NAME_FACEBOOK).deleted(false).build();
+  private ChannelDTO
+      channelDTO =
+      ChannelDTO.builder().id(1L).name(CHANNEL_NAME_FACEBOOK).deleted(false).build();
 
-  private PositionDTO positionDTO = PositionDTO.builder().id(1L).name(POSITION_NAME_DEVELOPER).deleted(false).build();
+  private PositionDTO
+      positionDTO =
+      PositionDTO.builder().id(1L).name(POSITION_NAME_DEVELOPER).deleted(false).build();
   private StateDTO stateDTO = StateDTO.builder().id(1L).name(NEW_STATE).build();
 
   private StateHistoryDTO stateHistoryDTO =
@@ -133,7 +137,8 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
     verifyZeroInteractions(applicationsService);
   }
 
-  private void assertApplicationDtoWhenSaveOrUpdateIsSuccess(ArgumentCaptor<ApplicationDTO> applicationDTOCaptor) {
+  private void assertApplicationDtoWhenSaveOrUpdateIsSuccess(
+      ArgumentCaptor<ApplicationDTO> applicationDTOCaptor) {
     Date presentDate = currentDateMinus(5);
     assertThat(applicationDTOCaptor.getValue().getCandidateId(), equalTo(1L));
     assertThat(applicationDTOCaptor.getValue().getChannelId(), equalTo(1L));
