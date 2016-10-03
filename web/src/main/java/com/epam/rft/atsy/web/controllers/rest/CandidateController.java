@@ -8,24 +8,18 @@ import com.epam.rft.atsy.service.request.CandidateFilterRequest;
 import com.epam.rft.atsy.service.request.SearchOptions;
 import com.epam.rft.atsy.service.response.PagingResponse;
 import com.epam.rft.atsy.web.controllers.LogicallyDeletableAbstractController;
-import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.Locale;
-import javax.validation.Valid;
 
 /**
  * REST controller used to retrieve information from the stored candidates in JSON format.
@@ -33,7 +27,8 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping(value = "/secure/candidates")
-public class CandidateController extends LogicallyDeletableAbstractController<CandidateDTO> {
+public abstract class CandidateController
+    extends LogicallyDeletableAbstractController<CandidateDTO> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CandidateController.class);
 
@@ -102,11 +97,5 @@ public class CandidateController extends LogicallyDeletableAbstractController<Ca
       LOGGER.error("Cannot read filters from json", e);
       return EMPTY_SERCH_OPTIONS;
     }
-  }
-
-  @Override
-  public ResponseEntity<RestResponse> saveOrUpdate(@Valid @RequestBody CandidateDTO dto,
-                                                   BindingResult bindingResult, Locale locale) {
-    return null;
   }
 }

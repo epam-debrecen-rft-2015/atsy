@@ -75,7 +75,7 @@ $('.table').bootstrapTable({
       },
 
       onClickRow: function (row, $element) {
-        window.location.href="candidate/" + row.id;
+        window.location.href = "candidate/" + row.id;
       }
 });
 
