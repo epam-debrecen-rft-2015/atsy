@@ -4,9 +4,8 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
 <%@page contentType="text/html;charset=UTF-8" %>
-<spring:url value="/secure/candidates" var="candidates"/>
-<spring:url value="/secure/candidate" var="newcandidate"/>
-
+<spring:url value="/secure/candidate" var="candidate"/>
+<spring:url value="/secure/candidate/details" var="candidateCreate"/>
 
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
@@ -22,7 +21,7 @@
             <div id="search" class="col-lg-12 col-md-12 col-sm-12" >
                 <div class="well">
                     <fieldset >
-                        <form id="searchCandidate" class="form-inline" action="candidates" method="GET" role="form">
+                        <form id="searchCandidate" class="form-inline" action="candidate" method="GET" role="form">
                             <div class="form-group">
                                 <spring:message code="candidate.name.field" var="i18nName"/>
                                 <label><spring:message
@@ -42,7 +41,7 @@
                 </div>
             </div>
             <div id="new_candidate" class="text-right">
-                <a class="btn btn-success" href="${newcandidate}" id="add_candidate_button"><spring:message code="welcome.candidates.add.button"/></a>
+                <a class="btn btn-success" href="${candidateCreate}" id="add_candidate_button"><spring:message code="welcome.candidates.add.button"/></a>
             </div>
             <div id="candidates_table">
 
@@ -53,7 +52,7 @@
 
                 <div>
                     <table class="table table-striped table-hover cursor-pointer" data-toggle="table" id="candidates"
-                    data-url="${candidates}" data-height="500" data-sort-name="name" data-escape="true"
+                    data-url="${candidate}" data-height="500" data-sort-name="name" data-escape="true"
                     data-pagination="true" data-side-pagination="server" data-query-params-type="" >
                         <thead>
                         <tr>
