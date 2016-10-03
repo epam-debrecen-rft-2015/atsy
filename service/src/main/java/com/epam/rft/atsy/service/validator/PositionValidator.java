@@ -1,0 +1,29 @@
+package com.epam.rft.atsy.service.validator;
+
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import com.epam.rft.atsy.service.PositionService;
+import com.epam.rft.atsy.service.domain.PositionDTO;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+
+public class PositionValidator implements ConstraintValidator<PositionExists, PositionDTO>, ApplicationContextAware {
+
+  private PositionService positionService;
+
+  @Override
+  public void initialize(PositionExists a) {
+  }
+
+  @Override
+  public boolean isValid(PositionDTO position, ConstraintValidatorContext context) {
+    return positionService.getPositionDtoById(position.getId()) != null;
+  }
+
+  @Override
+  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    this.positionService = applicationContext.getBean(PositionService.class);
+  }
+
+}

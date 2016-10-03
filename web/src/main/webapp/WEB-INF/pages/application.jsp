@@ -17,6 +17,19 @@
         <div id="application_page">
             <h1 class="page-header"><spring:message code="application.create.title"/></h1>
 
+            <c:if test="${not empty candidateIdErrorMessage or not empty positionErrorMessage or not empty channelErrorMessage}">
+              <div class="panel panel-danger" role="alert">
+                  <div class="panel-heading">${errorMessage}</div>
+                      <div class="panel-body">
+                          <ul>
+                              <c:if test="${not empty candidateIdErrorMessage}"><li>${candidateIdErrorMessage}</li></c:if>
+                              <c:if test="${not empty positionErrorMessage}"><li>${positionErrorMessage}</li></c:if>
+                              <c:if test="${not empty channelErrorMessage}"><li>${channelErrorMessage}</li></c:if>
+                          </ul>
+                      </div>
+              </div>
+            </c:if>
+
             <form class="form" role="form" method="POST" id="application-create-form" action="${new_application}">
                 <input type="hidden" name="candidateId" id="candidateId" value="${candidateId}">
                 <div class="form-group row" id="positionDiv">

@@ -49,7 +49,10 @@ public class CandidateServiceImpl implements CandidateService {
     Assert.notNull(id);
 
     CandidateEntity candidateEntity = candidateRepository.findOne(id);
-    return converterService.convert(candidateEntity, CandidateDTO.class);
+    if (candidateEntity != null) {
+      return converterService.convert(candidateEntity, CandidateDTO.class);
+    }
+    return null;
   }
 
   @Transactional(readOnly = true)

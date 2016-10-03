@@ -4,6 +4,7 @@ import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -12,8 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Date;
-import javax.annotation.Resource;
 import javax.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * Controller for a popup window, which appears when we want to add a new application for a
@@ -22,9 +24,14 @@ import javax.validation.Valid;
 @Controller
 public class NewApplicationController {
   private static final String VIEW_NAME = "application";
+  private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
+  private static final String COMMON_INVALID_INPUT_MESSAGE_NAME = "errorMessage";
 
-  @Resource
+  @Autowired
   private ApplicationsService applicationsService;
+
+  @Autowired
+  private MessageKeyResolver messageKeyResolver;
 
   /**
    * Loads the popup window with the input fields to create a new application.
@@ -43,7 +50,8 @@ public class NewApplicationController {
    */
   @RequestMapping(method = RequestMethod.POST, value = "/secure/new_application")
   public String saveOrUpdate(@Valid @ModelAttribute StateHistoryDTO stateHistoryDTO,
-                             BindingResult result) {
+                             BindingResult result,
+                             RedirectAttributes redirectAttributes) {
     if (!result.hasErrors()) {
       stateHistoryDTO.setStateDTO(new StateDTO(1L, "newstate"));
 
@@ -55,7 +63,14 @@ public class NewApplicationController {
           .build();
 
       applicationsService.saveApplication(applicationDTO, stateHistoryDTO);
+      return "redirect:/secure/candidate/" + stateHistoryDTO.getCandidateId();
     }
-    return "redirect:/secure/candidate/" + stateHistoryDTO.getCandidateId();
+
+    redirectAttributes.addFlashAttribute(COMMON_INVALID_INPUT_MESSAGE_NAME, this.messageKeyResolver.resolveMessageOrDefault(COMMON_INVALID_INPUT_MESSAGE_KEY));
+    result.getFieldErrors().forEach(error ->
+        redirectAttributes.addFlashAttribute(error.getField() + "ErrorMessage",
+            messageKeyResolver.resolveMessageOrDefault(error.getDefaultMessage())));
+
+    return "redirect:/secure/application?candidateId=" + stateHistoryDTO.getCandidateId();
   }
 }
