@@ -3,7 +3,11 @@ package com.epam.rft.atsy.web.controllers.rest;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -11,6 +15,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epam.rft.atsy.service.PasswordChangeService;
 import com.epam.rft.atsy.service.UserService;
 import com.epam.rft.atsy.service.domain.PasswordChangeDTO;
+import com.epam.rft.atsy.service.domain.PasswordHistoryDTO;
+import com.epam.rft.atsy.service.domain.UserDTO;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordAllFieldFilledValidationException;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordContainsValidationException;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordLengthValidationException;
@@ -19,15 +25,20 @@ import com.epam.rft.atsy.service.exception.passwordchange.PasswordOldMatchValida
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordUniqueValidationException;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordValidationException;
 import com.epam.rft.atsy.service.passwordchange.validation.PasswordValidator;
+import com.epam.rft.atsy.service.security.UserDetailsAdapter;
 import com.epam.rft.atsy.web.MediaTypes;
 import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
 import com.epam.rft.atsy.web.mapper.RuleValidationExceptionMapper;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PasswordChangeControllerTest extends AbstractControllerTest {
@@ -111,6 +122,19 @@ public class PasswordChangeControllerTest extends AbstractControllerTest {
       PasswordChangeDTO.builder().newPassword("nonunique").newPasswordConfirm("nonunique")
           .oldPassword("oldpassword").build();
 
+  private static final PasswordChangeDTO
+      CORRECT_PASSWORD_CHANGE_DTO =
+      PasswordChangeDTO.builder().newPassword("password123$").newPasswordConfirm("password123$")
+          .oldPassword("oldpassword").build();
+
+  private static final Long USER_ID = 1L;
+  private static final String USER_NAME = "username";
+  private static final String USER_PASSWORD = "password";
+
+  private static final UserDTO
+      DUMMY_USER_DTO =
+      UserDTO.builder().id(USER_ID).name(USER_NAME).password(USER_PASSWORD).build();
+
   @InjectMocks
   private PasswordChangeController passwordChangeController;
 
@@ -132,6 +156,16 @@ public class PasswordChangeControllerTest extends AbstractControllerTest {
   @Override
   protected Object[] controllersUnderTest() {
     return new Object[]{passwordChangeController};
+  }
+
+  @Before
+  public void setUpTestData() {
+
+    UserDetailsAdapter userDetailsAdapter =
+        new UserDetailsAdapter(USER_ID, USER_PASSWORD, USER_NAME);
+
+    SecurityContextHolder.getContext()
+        .setAuthentication(new UsernamePasswordAuthenticationToken(userDetailsAdapter, null));
   }
 
   @Test
@@ -264,6 +298,29 @@ public class PasswordChangeControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath("$.errorMessage").isNotEmpty())
         .andExpect(jsonPath("$.errorMessage", equalTo(VALIDATION_ERROR_MESSAGE)))
         .andExpect(jsonPath("$.fields").isEmpty());
+
+  }
+
+  @Test
+  public void saveOrUpdateShouldRespondWithNoErrorResponseWhenThePostedJsonIsCorrect()
+      throws Exception {
+
+    given(userService.findUserByName(anyString())).willReturn(DUMMY_USER_DTO);
+
+    mockMvc.perform(buildJsonPostRequest(REQUEST_URL, CORRECT_PASSWORD_CHANGE_DTO))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.errorMessage").isEmpty())
+        .andExpect(jsonPath("$.fields").isEmpty());
+
+    then(passwordValidator).should().validate(CORRECT_PASSWORD_CHANGE_DTO);
+    then(userService).should().findUserByName(USER_NAME);
+    then(userService).should().saveOrUpdate(DUMMY_USER_DTO);
+
+    ArgumentCaptor<PasswordHistoryDTO> historyCaptor =
+        ArgumentCaptor.forClass(PasswordHistoryDTO.class);
+    verify(passwordChangeService).saveOrUpdate(historyCaptor.capture());
+
+    verifyZeroInteractions(messageKeyResolver);
 
   }
 
