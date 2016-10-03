@@ -28,9 +28,11 @@ import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+import com.epam.rft.atsy.service.exception.ObjectNotFoundException;
 import com.epam.rft.atsy.service.response.PagingResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -48,6 +50,7 @@ public class ApplicationsServiceImplTest {
 
   private static final Long APPLICATION_ID = 1L;
   private static final Date APPLICATION_CREATION_DATE = new Date();
+  private static final Long APPLICATION_ID_NON_EXISTENT = -1L;
 
   private static final Long CANDIDATE_ID = 1L;
   private static final Long NON_EXISTENT_CANDIDATE_ID = 1L;
@@ -424,7 +427,6 @@ public class ApplicationsServiceImplTest {
     then(converterService).should().convert(applicationDTO, ApplicationEntity.class);
 
     then(applicationsRepository).should().saveAndFlush(applicationEntity);
-    then(converterService).should().convert(applicationEntity, ApplicationDTO.class);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -490,6 +492,7 @@ public class ApplicationsServiceImplTest {
         .willReturn(this.applicationEntity);
     given(converterService.convert(applicationEntity, ApplicationDTO.class))
         .willReturn(applicationDTO);
+    given(applicationsRepository.findOne(APPLICATION_ID)).willReturn(this.applicationEntity);
 
     // When
     Long result = applicationsService.saveApplication(applicationDTO, stateHistoryDTO);
@@ -525,4 +528,48 @@ public class ApplicationsServiceImplTest {
 
     // Then
   }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void deleteDtoLogicallyByIdShouldThrowIllegalArgumentExceptionWhenApplicationIdIsNull()
+      throws
+      ObjectNotFoundException {
+    // Given
+
+    // When
+    this.applicationsService.deleteDtoLogicallyById(null);
+
+    // Then
+  }
+
+  @Test(expected = ObjectNotFoundException.class)
+  public void deleteDtoLogicallyByIddShouldThrowApplicationNotFoundExceptionWhenApplicationEntityNotExists()
+      throws ObjectNotFoundException {
+    // Given
+    given(this.applicationsRepository.findOne(APPLICATION_ID_NON_EXISTENT)).willReturn(null);
+
+    // When
+    this.applicationsService.deleteDtoLogicallyById(APPLICATION_ID_NON_EXISTENT);
+
+    // Then
+  }
+
+  @Test
+  public void deleteDtoLogicallyByIdShouldDeletedLogicallyWhenChannelEntityExists()
+      throws ObjectNotFoundException {
+    // Given
+    ArgumentCaptor<ApplicationEntity> applicationsEntityArgumentCaptor =
+        ArgumentCaptor.forClass(ApplicationEntity.class);
+    given(this.applicationsRepository.findOne(APPLICATION_ID)).willReturn(applicationEntity);
+
+    // When
+    this.applicationsService.deleteDtoLogicallyById(APPLICATION_ID);
+
+    // Then
+    verify(applicationsRepository).saveAndFlush(applicationsEntityArgumentCaptor.capture());
+    assertThat(applicationEntity, equalTo(applicationsEntityArgumentCaptor.getValue()));
+
+    then(applicationsRepository).should().findOne(APPLICATION_ID);
+    then(applicationsRepository).should().saveAndFlush(applicationEntity);
+  }
 }
+

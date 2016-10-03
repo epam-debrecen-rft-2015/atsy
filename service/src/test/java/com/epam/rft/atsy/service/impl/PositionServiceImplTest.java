@@ -289,6 +289,7 @@ public class PositionServiceImplTest {
         ArgumentCaptor.forClass(PositionEntity.class);
     given(this.positionRepository.findByName(DEVELOPER_NAME))
         .willReturn(deletedDeveloperEntity);
+    given(this.positionRepository.saveAndFlush(deletedDeveloperEntity)).willReturn(deletedDeveloperEntity);
 
     // When
     this.positionService.saveOrUpdate(deletedDeveloperDto);
@@ -307,6 +308,7 @@ public class PositionServiceImplTest {
     // Given
     given(this.positionRepository.findByName(DEVELOPER_NAME)).willReturn(null);
     given(this.converterService.convert(developerDto, PositionEntity.class)).willReturn(developerEntity);
+    given(this.positionRepository.saveAndFlush(developerEntity)).willReturn(developerEntity);
 
     // When
     this.positionService.saveOrUpdate(developerDto);
