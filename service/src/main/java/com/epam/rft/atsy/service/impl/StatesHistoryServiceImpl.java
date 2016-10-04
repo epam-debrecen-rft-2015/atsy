@@ -13,10 +13,12 @@ import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
   private ConverterService converterService;
 
   @Autowired
+  @Lazy
   private ApplicationsService applicationsService;
 
   @Autowired
@@ -80,8 +83,12 @@ public class StatesHistoryServiceImpl implements StatesHistoryService {
   public List<StateHistoryDTO> getStateHistoriesByApplicationId(Long applicationId) {
     Assert.notNull(applicationId);
     ApplicationEntity applicationEntity = applicationsRepository.findOne(applicationId);
-
     Assert.notNull(applicationEntity);
+
+    if (applicationEntity.isDeleted()) {
+      return Collections.emptyList();
+    }
+
     List<StatesHistoryEntity> statesHistoryEntities =
         statesHistoryRepository.findByApplicationEntityOrderByCreationDateDesc(applicationEntity);
 

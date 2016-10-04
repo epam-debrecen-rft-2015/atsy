@@ -80,7 +80,7 @@ function actionFormatter(value, row, index) {
 window.channelsEvents = {
     'click .edit': function (e, value, row) {
         $('#channel-form #channel_name').val(row.name);
-        $('#channel-form #channelId').val(row.id);
+        $('#channel-form #id').val(row.id);
     },
     'click .remove': function (e, value, row) {
          var container = $('#channels_section');
@@ -92,7 +92,7 @@ window.channelsEvents = {
 window.positionsEvents = {
     'click .edit': function (e, value, row) {
         $('#position-form #position_name').val(row.name);
-        $('#position-form #positionId').val(row.id);
+        $('#position-form #id').val(row.id);
     },
 
     'click .remove': function (e, value, row) {
