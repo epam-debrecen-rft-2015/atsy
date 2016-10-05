@@ -47,3 +47,37 @@ $.getJSON('/atsy/secure/channels', { get_param: 'value' }, function(data) {
         $('#channelSelector').append($('<option value="'+element.name+'"></option>').text(element.name));
     });
 });
+
+ window.onhashchange = function() {
+    if (window.innerDocClick) {
+      window.innerDocClick = false;
+    } else {
+      if (window.location.hash != '#undefined') {
+        goBack();
+      } else {
+        history.pushState("", document.title, window.location.pathname);
+        location.reload();
+      }
+    }
+  }
+
+  document.onmouseover = function() {
+    //User's mouse is inside the page.
+    window.innerDocClick = true;
+  }
+
+  document.onmouseleave = function() {
+    //User's mouse has left the page.
+    window.innerDocClick = false;
+  }
+function Redirect() {
+               window.location=";
+            }
+
+  window.onhashchange = function() {
+    if (window.innerDocClick) {
+      
+    } else {
+Redirect();
+    }
+  }
