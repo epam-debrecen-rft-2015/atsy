@@ -4,20 +4,24 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
 <%@page contentType="text/html;charset=UTF-8" %>
-<spring:url value="/secure/candidates" var="candidates"/>
-<spring:url value="/secure/candidate" var="newcandidate"/>
-
+<spring:url value="/secure/candidate" var="candidate"/>
+<spring:url value="/secure/candidate/details" var="candidateCreate"/>
 
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
-     <c:url value="/resources/js/atsy-candidate.js" var="urlValue"/><script src="${urlValue}"></script>
+        <c:url value="/resources/js/atsy-candidate.js" var="urlValue"/><script src="${urlValue}"></script>
+        <c:url value="/resources/js/atsy-deletable-event-config.js" var="urlValue" /><script src="${urlValue}"></script>
+        <c:url value="/resources/thirdparty/bootstrap/js/bootstrap.min.js" var="urlValue"/><script src="${urlValue}"></script>
+        <c:url value="/resources/thirdparty/bootbox/bootbox.js" var="urlValue"/><script src="${urlValue}"></script>
+        <c:url value="/resources/thirdparty/jquery/jquery.i18n.properties.js" var="urlValue"/><script src="${urlValue}"></script>
+        <c:url value="/resources/js/atsy-i18n-config.js" var="urlValue" /><script src="${urlValue}"></script>
     </jsp:attribute>
     <jsp:body>
         <div id="welcome">
             <div id="search" class="col-lg-12 col-md-12 col-sm-12" >
                 <div class="well">
                     <fieldset >
-                        <form id="searchCandidate" class="form-inline" action="candidates" method="GET" role="form">
+                        <form id="searchCandidate" class="form-inline" action="candidate" method="GET" role="form">
                             <div class="form-group">
                                 <spring:message code="candidate.name.field" var="i18nName"/>
                                 <label><spring:message
@@ -37,25 +41,35 @@
                 </div>
             </div>
             <div id="new_candidate" class="text-right">
-                <a class="btn btn-success" href="${newcandidate}" id="add_candidate_button"><spring:message code="welcome.candidates.add.button"/></a>
+                <a class="btn btn-success" href="${candidateCreate}" id="add_candidate_button"><spring:message code="welcome.candidates.add.button"/></a>
             </div>
             <div id="candidates_table">
+
+                <div class="globalMessage alert alert-danger" id="errorMessageForDeleting" role="alert" style="display: none">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="error-message"></span>
+                </div>
+
                 <div>
                     <table class="table table-striped table-hover cursor-pointer" data-toggle="table" id="candidates"
-                    data-url="${candidates}" data-height="500" data-sort-name="name" data-escape="true"
+                    data-url="${candidate}" data-height="500" data-sort-name="name" data-escape="true"
                     data-pagination="true" data-side-pagination="server" data-query-params-type="" >
                         <thead>
                         <tr>
-                            <th data-field="name" data-align="left" data-sortable="true" data-formatter="escapeHTMLFormatter"><spring:message
-                                    code="welcome.candidates.table.name.title"/></th>
+                            <th data-field="name" data-align="left" data-sortable="true" data-formatter="escapeHTMLFormatter">
+                                <spring:message code="welcome.candidates.table.name.title"/>
+                            </th>
                             <th data-field="email" data-align="left" data-sortable="true">
                                 <spring:message code="welcome.candidates.table.email.title"/>
                             </th>
-                            <th data-field="phone" data-align="left" data-sortable="true"><spring:message
-                                    code="welcome.candidates.table.phone.title"/></th>
-
-                            <th data-field="positions" data-align="left" data-sortable="true" data-formatter="escapeHTMLFormatter"><spring:message
-                                    code="welcome.candidates.table.positions.title"/></th>
+                            <th data-field="phone" data-align="left" data-sortable="true">
+                                <spring:message code="welcome.candidates.table.phone.title"/></th>
+                            <th data-field="positions" data-align="left" data-sortable="true" data-formatter="escapeHTMLFormatter">
+                                <spring:message code="welcome.candidates.table.positions.title"/>
+                            </th>
+                            <th data-field="operations" data-align="left" data-sortable="false" data-formatter="actionsFormatter" data-events="candidatesEvents">
+                                <spring:message code="welcome.candidates.table.actions.title"/>
+                            </th>
                         </tr>
                         </thead>
                     </table>

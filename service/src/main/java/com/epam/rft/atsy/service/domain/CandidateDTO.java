@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 
@@ -17,13 +18,11 @@ import lombok.NoArgsConstructor;
  * web layers. Contains validation rules. See {@link com.epam.rft.atsy.persistence.entities.CandidateEntity
  * CandidateEntity}.
  */
-@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CandidateDTO {
-
-  private Long id;
+@EqualsAndHashCode(callSuper = true)
+public class CandidateDTO extends LogicallyDeletableDTO {
 
   @NotNull
   @Size(min = 1, max = 100, message = "candidate.error.name.long")
@@ -49,4 +48,20 @@ public class CandidateDTO {
 
   private Set<String> positions;
   private String cvFilename;
+
+  @Builder
+  public CandidateDTO(Long id, Boolean deleted, String name, String email, String phone,
+                      String referer, Short languageSkill, String description,
+                      Set<String> positions,
+                      String cvFilename) {
+    super(id, deleted);
+    this.name = name;
+    this.email = email;
+    this.phone = phone;
+    this.referer = referer;
+    this.languageSkill = languageSkill;
+    this.description = description;
+    this.positions = positions;
+    this.cvFilename = cvFilename;
+  }
 }

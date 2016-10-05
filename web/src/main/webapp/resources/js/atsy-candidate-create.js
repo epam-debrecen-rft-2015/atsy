@@ -1,6 +1,6 @@
 $('.table').bootstrapTable({
     onClickRow: function (row, $element) {
-      window.location.href = "../application_state?applicationId=" + row.applicationId;
+      window.location.href = "../../application_state?applicationId=" + row.applicationId;
     }
 });
 

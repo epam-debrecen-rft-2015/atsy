@@ -63,7 +63,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <a href="candidate/${candidateId}" class="btn btn-danger" id="cancel_button"><spring:message code="cancel.button"/></a>
+                    <a href="candidate/details/${candidateId}" class="btn btn-danger" id="cancel_button"><spring:message code="cancel.button"/></a>
                     <button type="submit" class="btn btn-success" id="save_new_apply_button" >
                         <spring:message code="save.button"/>
                     </button>

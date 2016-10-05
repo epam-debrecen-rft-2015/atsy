@@ -50,7 +50,7 @@ public class NewApplicationStepDefs {
 
   @Given("^the user is on a Candidate A profile page$")
   public void the_user_is_on_a_candidate_A_profile_page() throws Throwable {
-    webDriver.get("http://localhost:8080/atsy/secure/candidate/1");
+    webDriver.get("http://localhost:8080/atsy/secure/candidate/details/1");
   }
 
   @When("^the user clicks on the Új jelentkezés hozzáadása button$")
@@ -140,7 +140,8 @@ public class NewApplicationStepDefs {
 
   @And("^the Application page is displayed$")
   public void the_application_page_is_displayed() throws Throwable {
-    assertThat(webDriver.getCurrentUrl(), equalTo("http://localhost:8080/atsy/secure/candidate/1"));
+    assertThat(webDriver.getCurrentUrl(),
+        equalTo("http://localhost:8080/atsy/secure/candidate/details/1"));
   }
 
   @And("^application is listed with all details$")

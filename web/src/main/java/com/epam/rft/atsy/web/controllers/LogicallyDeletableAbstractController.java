@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Collection;
 import java.util.Locale;
 import javax.validation.Valid;
 
@@ -33,15 +32,6 @@ public abstract class LogicallyDeletableAbstractController<T extends LogicallyDe
                                               MessageKeyResolver messageKeyResolver) {
     this.logicallyDeletableService = logicallyDeletableService;
     this.messageKeyResolver = messageKeyResolver;
-  }
-
-  /**
-   * Get all the available non-deleted dto.
-   * @return a collection of the available object wrapped
-   */
-  @RequestMapping(method = RequestMethod.GET)
-  public Collection<T> getAllNonDeletedDto() {
-    return this.logicallyDeletableService.getAllNonDeletedDto();
   }
 
   /**

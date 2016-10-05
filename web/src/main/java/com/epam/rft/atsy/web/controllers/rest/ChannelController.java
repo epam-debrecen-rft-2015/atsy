@@ -11,8 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
 import java.util.Locale;
 import javax.validation.Valid;
 
@@ -53,5 +55,10 @@ public class ChannelController extends LogicallyDeletableAbstractController<Chan
 
       return new ResponseEntity<>(restResponse, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  @RequestMapping(method = RequestMethod.GET)
+  public Collection<ChannelDTO> getChannels() {
+    return logicallyDeletableService.getAllNonDeletedDto();
   }
 }
