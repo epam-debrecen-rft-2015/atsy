@@ -90,8 +90,7 @@ public class ApplicationStateController {
             .convert(statesHistoryService.getStateHistoriesByApplicationId(applicationId),
                 StateHistoryViewRepresentation.class);
 
-    if (clickedState != null && !(stateHistoryViewRepresentations.get(0)
-        .getStateName().equals(clickedState))) {
+    if (clickedState != null && isRepresentationsListFirstStateEquals(stateHistoryViewRepresentations, clickedState)) {
       StateDTO clickedStateDTO = stateService.getStateDtoByName(clickedState);
 
       Assert.notNull(clickedStateDTO);
@@ -134,6 +133,12 @@ public class ApplicationStateController {
 
     modelAndView.addObject(STATES_OBJECT_KEY, stateHistoryViewRepresentations);
     return modelAndView;
-
   }
+
+  private boolean isRepresentationsListFirstStateEquals(
+      List<StateHistoryViewRepresentation> representaionList, String state) {
+    return representaionList.isEmpty() || !(representaionList.get(0)
+        .getStateName().equals(state));
+  }
+
 }
