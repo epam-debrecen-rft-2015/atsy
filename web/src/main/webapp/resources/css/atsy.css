@@ -237,3 +237,11 @@ form > .button-panel > .btn {
   padding-left: 5px;
   padding-right: 5px;
 }
+
+.form-group{
+  margin-bottom:0px;
+}
+
+/*.form-horizontal {
+
+}*/

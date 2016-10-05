@@ -73,7 +73,7 @@
                                        required maxlength="100"
                                        autofocus>
 
-                                <div id="name-errors" class="help-block with-errors"></div>
+                                <div id="name-errors" class="help-block with-errors hidden"></div>
                                 <p class="showValue form-control-static"><c:out value="${candidate.name}"/></p>
                             </div>
 
@@ -94,7 +94,7 @@
                             </div>
 
                         </div>
-                        <div class="error col-lg-12 col-md-12 col-sm-12">
+                        <div class="error col-lg-12 col-md-12 col-sm-12 hidden">
                         </div>
                         <div class="form-group"
                              id="emailDiv">
@@ -113,7 +113,7 @@
                                        data-pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
                                       data-pattern-error="${emailIncorrectValue}"
                                        required maxlength="255">
-                                <span id="email-errors" class="help-block with-errors"></span>
+                                <span id="email-errors" class="help-block with-errors hidden"></span>
 
                                 <p class="showValue form-control-static">
                                   <a href="mailto:${candidate.email}"><c:out value = "${candidate.email}"/></a>
@@ -159,7 +159,7 @@
                                        placeholder="${i18nphone}" data-error="${phoneIncorrectValue}"
                                        pattern="^\+?[0-9]+" maxlength="20">
 
-                                <div id="phone-errors" class="help-block with-errors"></div>
+                                <div id="phone-errors" class="help-block with-errors hidden"></div>
 
                                 <p class="showValue form-control-static"><c:out value ="${candidate.phone}"/></p>
                             </div>
