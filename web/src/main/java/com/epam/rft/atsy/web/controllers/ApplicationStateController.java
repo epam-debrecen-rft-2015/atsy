@@ -1,7 +1,5 @@
 package com.epam.rft.atsy.web.controllers;
 
-import static java.awt.SystemColor.window;
-
 import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.ChannelService;
@@ -92,7 +90,8 @@ public class ApplicationStateController {
             .convert(statesHistoryService.getStateHistoriesByApplicationId(applicationId),
                 StateHistoryViewRepresentation.class);
 
-    if (clickedState != null) {
+    if (clickedState != null && !(stateHistoryViewRepresentations.get(0)
+        .getStateName().equals(clickedState))) {
       StateDTO clickedStateDTO = stateService.getStateDtoByName(clickedState);
 
       Assert.notNull(clickedStateDTO);
@@ -128,13 +127,10 @@ public class ApplicationStateController {
 
       stateHistoryViewRepresentation.setStateFullName(stateType);
     }
-    System.out
-        .printf("+++++++++++++++++++++++++++" + stateHistoryViewRepresentations.get(0)
-            .getStateName() + "--------------" + clickedState + "\n");
-
-      modelAndView.addObject(STATE_FLOW_OBJECT_KEY, stateFlowService.getStateFlowDTOByFromStateDTO(
-          new StateDTO(stateHistoryViewRepresentations.get(0).getStateId(),
-              stateHistoryViewRepresentations.get(0).getStateName())));
+    
+    modelAndView.addObject(STATE_FLOW_OBJECT_KEY, stateFlowService.getStateFlowDTOByFromStateDTO(
+        new StateDTO(stateHistoryViewRepresentations.get(0).getStateId(),
+            stateHistoryViewRepresentations.get(0).getStateName())));
 
     modelAndView.addObject(STATES_OBJECT_KEY, stateHistoryViewRepresentations);
     return modelAndView;
