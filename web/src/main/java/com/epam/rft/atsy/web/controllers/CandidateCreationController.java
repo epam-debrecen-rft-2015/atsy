@@ -16,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
  * modify the data of a given candidate.
  */
 @Controller
-@RequestMapping(path = "/secure/candidate")
+@RequestMapping(path = "/secure/candidate/details")
 public class CandidateCreationController {
 
   private static final String CANDIDATE_OBJECT_KEY = "candidate";
