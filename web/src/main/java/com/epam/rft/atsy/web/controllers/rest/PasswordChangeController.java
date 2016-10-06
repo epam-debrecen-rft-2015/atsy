@@ -14,7 +14,6 @@ import com.epam.rft.atsy.web.mapper.RuleValidationExceptionMapper;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,19 +38,19 @@ public class PasswordChangeController {
       LoggerFactory.getLogger(PasswordChangeController.class);
 
   @Resource
-  MessageKeyResolver messageKeyResolver;
+  private MessageKeyResolver messageKeyResolver;
 
   @Resource
-  PasswordChangeService passwordChangeService;
+  private PasswordChangeService passwordChangeService;
 
   @Resource
-  UserService userService;
+  private UserService userService;
 
   @Resource
-  RuleValidationExceptionMapper ruleValidationExceptionMapper;
+  private RuleValidationExceptionMapper ruleValidationExceptionMapper;
 
-  @Autowired
-  PasswordValidator passwordValidator;
+  @Resource
+  private PasswordValidator passwordValidator;
 
   private static final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
