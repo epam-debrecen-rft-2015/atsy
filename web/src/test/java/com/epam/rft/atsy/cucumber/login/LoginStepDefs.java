@@ -24,7 +24,6 @@ public class LoginStepDefs {
     driverProvider.getDriver().get("http://localhost:8080/atsy/login?locale=hu");
   }
 
-
   @Given("the user enters username (.*)")
   public void userEntersUsernameUser(String userName) {
     driverProvider.getDriver().findElement(By.id("name")).sendKeys(userName);
@@ -42,7 +41,7 @@ public class LoginStepDefs {
 
   @Then("the Candidates page appears")
   public void candidatesPageAppears() {
-    //assertThat();
+    driverProvider.getDriver().findElement(By.id("logout_link")).click();
   }
 
   @Then("^(.*) message appears$")
