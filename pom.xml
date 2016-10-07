@@ -133,6 +133,7 @@
                     <systemProperties>
                         <spring.profiles.active>${environment}</spring.profiles.active>
                     </systemProperties>
+                    <uriEncoding>UTF-8</uriEncoding>
                 </configuration>
                 <executions>
                     <execution>

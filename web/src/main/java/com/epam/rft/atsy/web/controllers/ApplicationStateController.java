@@ -40,8 +40,7 @@ public class ApplicationStateController {
   private static final String STATES_OBJECT_KEY = "states";
   private static final String STATE_FLOW_OBJECT_KEY = "stateflows";
   private static final String NEW_STATE = "newstate";
-
-  private static final String DATE_FORMAT_CONSTANT = "yyyy-MM-dd HH:mm:ss";
+  private static final String CANDIDATE_OBJECT_KEY = "candidate";
 
   @Resource
   private StatesHistoryService statesHistoryService;
@@ -90,7 +89,7 @@ public class ApplicationStateController {
             .convert(statesHistoryService.getStateHistoriesByApplicationId(applicationId),
                 StateHistoryViewRepresentation.class);
 
-    if (clickedState != null) {
+    if (clickedState != null && isRepresentationsListFirstStateEquals(stateHistoryViewRepresentations, clickedState)) {
       StateDTO clickedStateDTO = stateService.getStateDtoByName(clickedState);
 
       Assert.notNull(clickedStateDTO);
@@ -126,11 +125,20 @@ public class ApplicationStateController {
 
       stateHistoryViewRepresentation.setStateFullName(stateType);
     }
-
+    
     modelAndView.addObject(STATE_FLOW_OBJECT_KEY, stateFlowService.getStateFlowDTOByFromStateDTO(
         new StateDTO(stateHistoryViewRepresentations.get(0).getStateId(),
             stateHistoryViewRepresentations.get(0).getStateName())));
+
     modelAndView.addObject(STATES_OBJECT_KEY, stateHistoryViewRepresentations);
+    modelAndView.addObject(CANDIDATE_OBJECT_KEY, candidateDTO);
     return modelAndView;
   }
+
+  private boolean isRepresentationsListFirstStateEquals(
+      List<StateHistoryViewRepresentation> representaionList, String state) {
+    return representaionList.isEmpty() || !(representaionList.get(0)
+        .getStateName().equals(state));
+  }
+
 }

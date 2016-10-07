@@ -23,6 +23,8 @@ function SettingsForm() {
             event.preventDefault();
             if ($this.find(".name").val() === "") {
                 showError($this, window.messages[validationMessageKey]);
+            } else if($this.find(".newPassword").val() === "" || $this.find(".newPasswordConfirm").val() === "" || $this.find(".oldPassword").val() === "") {
+                showError($this, window.messages[validationMessageKey]);
             } else {
                 data = {};
                 $this.serializeArray().map(function (x) {
@@ -63,6 +65,7 @@ function SettingsForm() {
 $(function () {
     new SettingsForm().init('#positions_section','settings.positions.error.empty');
     new SettingsForm().init('#channels_section','settings.channels.error.empty');
+    new SettingsForm().init('#password_section','settings.password.error.empty');
 });
 
 function actionFormatter(value, row, index) {
@@ -84,7 +87,7 @@ window.channelsEvents = {
     },
     'click .remove': function (e, value, row) {
          var container = $('#channels_section');
-         var options = getOptions('question.delete.channel.js', 'selected.channel.not.found.js', row, container);
+         var options = getOptions('question.delete.channel.js', 'selected.channel.not.found.js', row, container, 'channels');
          bootbox.dialog(options);
     }
 };
@@ -97,7 +100,7 @@ window.positionsEvents = {
 
     'click .remove': function (e, value, row) {
         var container = $('#positions_section');
-        var options = getOptions('question.delete.position.js', 'selected.position.not.found.js', row, container);
+        var options = getOptions('question.delete.position.js', 'selected.position.not.found.js', row, container, 'positions');
         bootbox.dialog(options);
     }
 };

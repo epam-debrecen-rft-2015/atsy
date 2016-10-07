@@ -23,7 +23,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "candidates", schema = "atsy")
-public class CandidateEntity extends SuperEntity implements Serializable {
+public class CandidateEntity extends LogicallyDeletableEntity implements Serializable {
 
 
   @Column(name = "name", length = 255)
@@ -50,9 +50,10 @@ public class CandidateEntity extends SuperEntity implements Serializable {
 
 
   @Builder
-  public CandidateEntity(Long id, String name, String email, String phone, String description,
+  public CandidateEntity(Long id, Boolean deleted, String name, String email, String phone,
+                         String description,
                          String referer, Short languageSkill, String cvFilename) {
-    super(id);
+    super(id, deleted);
     this.name = name;
     this.email = email;
     this.phone = phone;

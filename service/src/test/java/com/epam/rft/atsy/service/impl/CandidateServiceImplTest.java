@@ -2,17 +2,20 @@ package com.epam.rft.atsy.service.impl;
 
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
+import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.DuplicateCandidateException;
@@ -27,7 +30,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -74,7 +76,8 @@ public class CandidateServiceImplTest {
   @Mock
   private ApplicationsRepository applicationsRepository;
 
-  @InjectMocks
+  private ApplicationsService applicationsService;
+
   private CandidateServiceImpl candidateService;
 
   private CandidateEntity dummyCandidateEntity;
@@ -83,6 +86,10 @@ public class CandidateServiceImplTest {
 
   @Before
   public void setUp() {
+    this.candidateService =
+        new CandidateServiceImpl(candidateRepository, applicationsRepository, applicationsService,
+            converterService);
+
     dummyCandidateEntity = CandidateEntity.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
         .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).build();
 
@@ -90,8 +97,9 @@ public class CandidateServiceImplTest {
         ApplicationEntity.builder().id(APPLICATION_ID).candidateEntity(dummyCandidateEntity)
             .build();
 
-    dummyCandidateDto = CandidateDTO.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
-        .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).build();
+    dummyCandidateDto =
+        CandidateDTO.builder().id(ID).deleted(false).name(NAME).email(EMAIL).phone(PHONE)
+            .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).build();
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -350,5 +358,91 @@ public class CandidateServiceImplTest {
 
     // Then
     then(candidateRepository).should(times(1)).saveAndFlush(dummyCandidateEntity);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getCandidateDtoByEmailShouldThrowIllegalArgumentExceptionWhenParamEmailIsNull() {
+    // Given
+
+    // When
+    this.candidateService.getCandidateDtoByEmail(null);
+
+    // Then
+  }
+
+  @Test
+  public void getCandidateDtoByEmailShouldReturnNullWhenCandidateEntityNotExistsWithThisPhone() {
+    // Given
+    given(this.candidateRepository.findByEmail(EMAIL)).willReturn(null);
+
+    // When
+    CandidateDTO actualCandidateDto = this.candidateService.getCandidateDtoByEmail(EMAIL);
+
+    // Then
+    assertThat(actualCandidateDto, nullValue());
+
+    then(this.candidateRepository).should().findByEmail(EMAIL);
+    verifyZeroInteractions(this.converterService);
+  }
+
+  @Test
+  public void getCandidateDtoByEmailShouldReturnExistingCandidateDtoWhenCandidateEntityExistsWithThisPhone() {
+    // Given
+    given(this.candidateRepository.findByEmail(EMAIL)).willReturn(dummyCandidateEntity);
+    given(this.converterService.convert(dummyCandidateEntity, CandidateDTO.class))
+        .willReturn(dummyCandidateDto);
+
+    // When
+    CandidateDTO actualCandidateDto =  this.candidateService.getCandidateDtoByEmail(EMAIL);
+
+    // Then
+    assertThat(actualCandidateDto, notNullValue());
+    assertThat(actualCandidateDto, equalTo(dummyCandidateDto));
+
+    then(this.candidateRepository).should().findByEmail(EMAIL);
+    then(this.converterService).should().convert(dummyCandidateEntity, CandidateDTO.class);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void getCandidateDtoByPhoneShouldThrowIllegalArgumentExceptionWhenParamPhoneIsNull() {
+    // Given
+
+    // When
+    this.candidateService.getCandidateDtoByPhone(null);
+
+    // Then
+  }
+
+  @Test
+  public void getCandidateDtoByPhoneShouldReturnNullWhenCandidateEntityNotExistsWithThisPhone() {
+    // Given
+    given(this.candidateRepository.findByPhone(PHONE)).willReturn(null);
+
+    // When
+    CandidateDTO actualCandidateDto = this.candidateService.getCandidateDtoByPhone(PHONE);
+
+    // Then
+    assertThat(actualCandidateDto, nullValue());
+
+    then(this.candidateRepository).should().findByPhone(PHONE);
+    verifyZeroInteractions(this.converterService);
+  }
+
+  @Test
+  public void getCandidateDtoByPhoneShouldReturnExistingCandidateDtoWhenCandidateEntityExistsWithThisPhone() {
+    // Given
+    given(this.candidateRepository.findByPhone(PHONE)).willReturn(dummyCandidateEntity);
+    given(this.converterService.convert(dummyCandidateEntity, CandidateDTO.class))
+        .willReturn(dummyCandidateDto);
+
+    // When
+    CandidateDTO actualCandidateDto =  this.candidateService.getCandidateDtoByPhone(PHONE);
+
+    // Then
+    assertThat(actualCandidateDto, notNullValue());
+    assertThat(actualCandidateDto, equalTo(dummyCandidateDto));
+
+    then(this.candidateRepository).should().findByPhone(PHONE);
+    then(this.converterService).should().convert(dummyCandidateEntity, CandidateDTO.class);
   }
 }

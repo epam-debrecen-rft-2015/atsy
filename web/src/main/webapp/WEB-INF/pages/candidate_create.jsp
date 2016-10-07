@@ -10,9 +10,8 @@
 <spring:url value="/secure/positions" var="positions"/>
 <spring:url value="/secure/channels" var="channels"/>
 <spring:url value="/secure/welcome" var="welcome"/>
-<spring:url value="/secure/candidate" var="candidateURL"/>
+<spring:url value="/secure/candidate/details" var="candidateURL"/>
 <spring:url value="/secure/application" var="application"/>
-<spring:url value="/secure/candidate/fileUpload" var="fileUpload"/>
 
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
@@ -45,7 +44,7 @@
 
             <div id="candidate_data">
                 <div class="row">
-                    <form data-toggle="validator" class="form" role="form" method="POST" id="candidate-create-form" action="${candidateURL}" data-bind="css: { 'has-error': showError }">
+                    <form data-toggle="validator" class="form" role="form" method="POST" enctype="multipart/form-data" id="candidate-create-form" action="${candidateURL}" data-bind="css: { 'has-error': showError }">
                         <div class="panel panel-danger" role="alert"  data-bind="css: { hidden: !showError() }">
                             <div class="panel-heading" data-bind="text: errorMessage"></div>
                             <div class="panel-body">
@@ -55,6 +54,9 @@
                                     <!-- /ko -->
                                 </ul>
                             </div>
+                        </div>
+                        <div class="panel panel-danger hidden" role="alert"  data-bind="css: { hidden: !showFileError() }">
+                            <div class="panel-heading" data-bind="text: fileErrorMessage"></div>
                         </div>
                         <div class="form-group"
                              id="nameDiv">
@@ -142,6 +144,7 @@
                             </div>
                         </div>
 
+                        <div class="error col-lg-12 col-md-12 col-sm-12"></div>
 
                         <div class="error col-sm-12">
                         </div>
@@ -167,6 +170,8 @@
                         </div>
                         <div class="error col-sm-12">
                         </div>
+                        <div class="error col-lg-12 col-md-12 col-sm-12"></div>
+
                         <div class="form-group"
                              id="descriptionDiv">
                             <spring:message code="candidate.description.field" var="i18ndescription"/>
@@ -265,7 +270,7 @@
                             code="candidate.new.application.button"/></a>
                 </div>
                 <div id="application_table">
-                        <table class="table table-hover cursor-pointer" id="applications_table"  data-toggle="table" data-url="../applications/${candidate.id}" data-height="500"
+                        <table class="table table-hover cursor-pointer" id="applications_table"  data-toggle="table" data-url="../../applications/${candidate.id}" data-height="500"
                                data-sort-name="name" data-escape="true" data-pagination="true" data-side-pagination="server" data-query-params-type="">
                             <thead>
                             <tr>
