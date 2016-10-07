@@ -46,7 +46,7 @@
             <div id="candidate_data">
                 <div class="row">
                     <form data-toggle="validator" class="form" role="form" method="POST" id="candidate-create-form" action="${candidateURL}" data-bind="css: { 'has-error': showError }">
-                        <div class="panel panel-danger hidden" role="alert"  data-bind="css: { hidden: !showError() }">
+                        <div class="panel panel-danger" role="alert"  data-bind="css: { hidden: !showError() }">
                             <div class="panel-heading" data-bind="text: errorMessage"></div>
                             <div class="panel-body">
                                 <ul id="field-messages">
@@ -73,7 +73,7 @@
                                        required maxlength="100"
                                        autofocus>
 
-                                <div id="name-errors" class="help-block with-errors hidden"></div>
+                                <div id="name-errors" class="help-block with-errors"></div>
                                 <p class="showValue form-control-static"><c:out value="${candidate.name}"/></p>
                             </div>
 
@@ -94,7 +94,7 @@
                             </div>
 
                         </div>
-                        <div class="error col-lg-12 col-md-12 col-sm-12 hidden">
+                        <div class="error col-lg-12 col-md-12 col-sm-12">
                         </div>
                         <div class="form-group"
                              id="emailDiv">
@@ -113,7 +113,7 @@
                                        data-pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
                                       data-pattern-error="${emailIncorrectValue}"
                                        required maxlength="255">
-                                <span id="email-errors" class="help-block with-errors hidden"></span>
+                                <span id="email-errors" class="help-block with-errors"></span>
 
                                 <p class="showValue form-control-static">
                                   <a href="mailto:${candidate.email}"><c:out value = "${candidate.email}"/></a>
@@ -159,7 +159,7 @@
                                        placeholder="${i18nphone}" data-error="${phoneIncorrectValue}"
                                        pattern="^\+?[0-9]+" maxlength="20">
 
-                                <div id="phone-errors" class="help-block with-errors hidden"></div>
+                                <div id="phone-errors" class="help-block with-errors"></div>
 
                                 <p class="showValue form-control-static"><c:out value ="${candidate.phone}"/></p>
                             </div>
@@ -206,6 +206,7 @@
             </div>
         </div>
 
+       <div class="row">
         <c:if test="${not empty candidateId}">
             <form:form method="POST" action="${fileUpload}/${candidateId}" enctype="multipart/form-data">
                 <c:if test="${not empty validationSuccessKey}">
@@ -223,7 +224,7 @@
                 </c:if>
 
                 <c:if test="${not empty fileErrorMessage}">
-                    <div id="globalMessage" class="alert alert-danger" role="alert">
+                    <div id="globalMessage" class="alert alert-danger hidden" role="alert">
                         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
                         <spring:message code="${fileErrorMessage}"/>
                     </div>
@@ -234,7 +235,7 @@
                         <spring:message code="cv"/>
                     </label>
 
-                    <div class="form-group">
+                    <div class="form-group col-lg-2 col-md-2 col-sm-2">
                         <input type="file" name="file" />
                         <button type="submit" class="btn btn-link"><spring:message code="upload.button"/></button>
                     </div>
@@ -255,7 +256,7 @@
 
             </form:form>
         </c:if>
-
+      </div>
 
         <c:choose>
             <c:when test="${not empty candidate.id}">
