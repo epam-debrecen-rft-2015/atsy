@@ -61,11 +61,11 @@
                             <input type="hidden" name="candidateId" id="candidateId" data-bind="valueWithInit: 'id'" value="${candidate.id}" >
                             <input type="hidden" name="cvFilename" id="cvFilename" data-bind="valueWithInit: 'cvFilename'" value="${candidate.cvFilename}" >
                             <spring:message code="candidate.name.field" var="i18nname"/>
-                            <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
+                            <label class="control-label col-sm-2 text-right"
                                    for="name"><spring:message
                                     code="candidate.name.label"/></label>
 
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <div class="form-group col-sm-4">
                                <spring:message code="candidate.error.name.empty" var="nameEmptyValue"/> <input type="text" class="input form-control " name="name" id="name" data-bind="valueWithInit: 'name'"
                                       value="${fn:escapeXml(candidate.name)}"
                                        placeholder="${i18nname}"
@@ -81,11 +81,11 @@
                         <div class="form-group"
                              id="placeDiv">
                             <spring:message code="candidate.place.field" var="i18nplace"/>
-                            <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
+                            <label class="control-label col-sm-2 text-right"
                                    for="referer"><spring:message
                                     code="candidate.place.label"/></label>
 
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <div class="form-group col-sm-4">
                                 <input type="text" class="input form-control" name="referer" id="referer" data-bind="valueWithInit: 'referer'"
                                        value="${fn:escapeXml(candidate.referer)}"
                                        placeholder="${i18nplace}" maxlength="20">
@@ -94,16 +94,16 @@
                             </div>
 
                         </div>
-                        <div class="error col-lg-12 col-md-12 col-sm-12">
+                        <div class="error col-sm-12">
                         </div>
                         <div class="form-group"
                              id="emailDiv">
                             <spring:message code="candidate.email.field" var="i18nemail"/>
-                            <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
+                            <label class="control-label col-sm-2 text-right"
                                    for="email"><spring:message
                                     code="candidate.email.label"/></label>
 
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <div class="form-group col-sm-4">
                             <spring:message code="candidate.error.email.empty" var="emailEmptyValue"/>
                             <spring:message code="candidate.error.email.incorrect" var="emailIncorrectValue"/>
                                 <input type="text" class="input form-control" name="email" id="email" data-bind="valueWithInit: 'email'"
@@ -123,11 +123,11 @@
                         </div>
                         <div class="form-group"
                              id="englishDiv">
-                            <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
+                            <label class="control-label col-sm-2 text-right"
                                    for="drop"><spring:message
                                     code="candidate.english.label"/></label>
 
-                            <div class="selectContainer col-lg-4 col-md-4 col-sm-4">
+                            <div class="selectContainer col-sm-4">
                                 <select class="input form-control" name="languageSkill" id="languageSkill" data-bind="valueWithInit: 'languageSkill'">
                                     <option value=0 <c:if
                                             test="${0 eq candidate.languageSkill}"> selected="selected" </c:if>>
@@ -143,16 +143,16 @@
                         </div>
 
 
-                        <div class="error col-lg-12 col-md-12 col-sm-12">
+                        <div class="error col-sm-12">
                         </div>
                         <div class="form-group"
                              id="phoneDiv">
                             <spring:message code="candidate.phone.field" var="i18nphone"/>
-                            <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
+                            <label class="control-label col-sm-2 text-right"
                                    for="phone"><spring:message
                                     code="candidate.phone.label"/></label>
 
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <div class="form-group col-sm-4">
                             <spring:message code="candidate.error.phone.incorrect" var="phoneIncorrectValue"/>
                                 <input type="text" class="input form-control" name="phone" id="phone" data-bind="valueWithInit: 'phone'"
                                        value="${candidate.phone}"
@@ -165,16 +165,16 @@
                             </div>
 
                         </div>
-                        <div class="error col-lg-12 col-md-12 col-sm-12">
+                        <div class="error col-sm-12">
                         </div>
                         <div class="form-group"
                              id="descriptionDiv">
                             <spring:message code="candidate.description.field" var="i18ndescription"/>
-                            <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
+                            <label class="control-label col-sm-2 text-right"
                                    for="description"><spring:message
                                     code="candidate.description.label"/></label>
 
-                            <div class="col-lg-10 col-md-10 col-sm-10">
+                            <div class="col-sm-10">
                                 <textarea rows="4" cols="4" class="input form-control" id="description" data-bind="valueWithInit: 'description'"
                                           placeholder="${i18ndescription}"><c:out value = "${candidate.description}"/></textarea>
 
@@ -182,7 +182,7 @@
                             </div>
                         </div>
 
-                        <div class="text-right col-lg-12 col-md-12 col-sm-12">
+                        <div class="text-right col-sm-12">
                             <a class="btn btn-default showValue" href="${welcome}" id="cancelButton"><spring:message
                                     code="back.button"/></a>
                             <button class="btn btn-primary showValue" id="enableModify" data-bind="click: modify_display_false"><spring:message
@@ -231,18 +231,18 @@
                 </c:if>
 
                 <c:if test="${empty candidate.cvFilename}">
-                    <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="name">
+                    <label class="control-label col-sm-2 text-right" for="name">
                         <spring:message code="cv"/>
                     </label>
 
-                    <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                    <div class="form-group col-sm-2">
                         <input type="file" name="file" />
                         <button type="submit" class="btn btn-link"><spring:message code="upload.button"/></button>
                     </div>
                 </c:if>
 
                 <c:if test="${not empty candidate.cvFilename}">
-                    <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right" for="name">
+                    <label class="control-label col-sm-2 text-right" for="name">
                         <spring:message code="cv"/>
                     </label>
 
