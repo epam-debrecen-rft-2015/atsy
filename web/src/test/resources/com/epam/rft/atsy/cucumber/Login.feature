@@ -6,7 +6,7 @@ Feature: Login in
     And the user enters username test
     And the user enters password pass3
     When the user clicks on Bejelentkezés button
-    Then the Candidates page appears
+    Then the Candidates page appears and user logs out
 
   Scenario: user enters wrong password
 

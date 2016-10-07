@@ -21,6 +21,7 @@ public class LoginStepDefs {
 
   @Given("^the user is on the login page")
   public void onLoginPage() {
+    driverProvider.getDriver().get("http://localhost:8080/atsy/logout");
     driverProvider.getDriver().get("http://localhost:8080/atsy/login?locale=hu");
   }
 
@@ -39,7 +40,7 @@ public class LoginStepDefs {
     driverProvider.getDriver().findElement(By.id("loginButton")).click();
   }
 
-  @Then("the Candidates page appears")
+  @Then("the Candidates page appears and user logs out")
   public void candidatesPageAppears() {
     driverProvider.getDriver().findElement(By.id("logout_link")).click();
   }
