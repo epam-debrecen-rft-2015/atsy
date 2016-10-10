@@ -414,8 +414,6 @@ public class ApplicationsServiceImplTest {
 
     given(applicationsRepository.saveAndFlush(applicationEntity))
         .willReturn(this.applicationEntity);
-    given(converterService.convert(applicationEntity, ApplicationDTO.class))
-        .willReturn(applicationDTO);
 
     // When
     Long result = applicationsService.saveOrUpdate(applicationDTO);
@@ -570,6 +568,7 @@ public class ApplicationsServiceImplTest {
 
     then(applicationsRepository).should().findOne(APPLICATION_ID);
     then(applicationsRepository).should().saveAndFlush(applicationEntity);
+    assertThat(applicationEntity.isDeleted(), is(true));
   }
 }
 
