@@ -40,6 +40,7 @@ public class CandidateOneWayConverter
             .referer(source.getReferer())
             .languageSkill(source.getLanguageSkill())
             .description(source.getDescription())
+            .cvFilename(source.getCvFilename())
             .build();
 
     Set<String> positions = new HashSet<>();

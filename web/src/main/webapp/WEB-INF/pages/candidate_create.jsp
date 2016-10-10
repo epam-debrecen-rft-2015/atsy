@@ -265,7 +265,7 @@
                             code="candidate.new.application.button"/></a>
                 </div>
                 <div id="application_table">
-                        <table class="table table-hover cursor-pointer" id="applications_table"  data-toggle="table" data-url="../applications/${candidate.id}" data-height="500"
+                        <table class="table table-hover cursor-pointer" id="applications_table"  data-toggle="table" data-url="../../applications/${candidate.id}" data-height="500"
                                data-sort-name="name" data-escape="true" data-pagination="true" data-side-pagination="server" data-query-params-type="">
                             <thead>
                             <tr>
