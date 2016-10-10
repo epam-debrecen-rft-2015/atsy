@@ -27,7 +27,7 @@ public class CandidateCreationStepDefs {
 
   private static final String
       CANDIDATE_CREATION_URL =
-      "http://localhost:8080/atsy/secure/candidate";
+      "http://localhost:8080/atsy/secure/candidate/details";
 
   private static final String DESCRIPTION_ID = "description";
   private static final String NAME_ID = "name";
@@ -215,7 +215,9 @@ public class CandidateCreationStepDefs {
 
   @Then("the name field is in focus")
   public void usernameFieldNotInFocus() {
-    assertThat(getDriver().findElement(By.id("name")).equals(getDriver().switchTo().activeElement()), is(true));
+    assertThat(
+        getDriver().findElement(By.id("name")).equals(getDriver().switchTo().activeElement()),
+        is(true));
   }
 
 }

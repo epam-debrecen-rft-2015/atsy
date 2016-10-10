@@ -29,19 +29,26 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class CandidateServiceImpl implements CandidateService {
+public class CandidateServiceImpl
+    extends AbstractLogicallyDeletableService<CandidateDTO, CandidateEntity>
+    implements CandidateService {
 
   @Autowired
+  public CandidateServiceImpl(CandidateRepository candidateRepository,
+                              ApplicationsRepository applicationsRepository,
+                              ApplicationsService applicationsService,
+                              ConverterService converterService) {
+    super(CandidateDTO.class, candidateRepository, converterService);
+    this.candidateRepository = candidateRepository;
+    this.applicationsRepository = applicationsRepository;
+    this.applicationsService = applicationsService;
+  }
+
   private CandidateRepository candidateRepository;
 
-  @Autowired
   private ApplicationsService applicationsService;
 
-  @Autowired
   private ApplicationsRepository applicationsRepository;
-
-  @Autowired
-  private ConverterService converterService;
 
   @Transactional(readOnly = true)
   @Override
@@ -145,6 +152,28 @@ public class CandidateServiceImpl implements CandidateService {
 
       throw new DuplicateCandidateException(candidateName, ex);
     }
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public CandidateDTO getCandidateDtoByEmail(String email) {
+    Assert.notNull(email);
+    CandidateEntity candidateEntity = this.candidateRepository.findByEmail(email);
+    if (candidateEntity != null) {
+      return converterService.convert(candidateEntity, CandidateDTO.class);
+    }
+    return null;
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public CandidateDTO getCandidateDtoByPhone(String phone) {
+    Assert.notNull(phone);
+    CandidateEntity candidateEntity = this.candidateRepository.findByPhone(phone);
+    if (candidateEntity != null) {
+      return converterService.convert(candidateEntity, CandidateDTO.class);
+    }
+    return null;
   }
 
   private void validateCandidateFilterRequest(CandidateFilterRequest candidateFilterRequest) {
