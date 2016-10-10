@@ -24,19 +24,28 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ApplicationsServiceImpl implements ApplicationsService {
+public class ApplicationsServiceImpl extends AbstractLogicallyDeletableService<ApplicationDTO, ApplicationEntity> implements ApplicationsService {
 
-  @Autowired
   private StatesHistoryService statesHistoryService;
 
-  @Autowired
   private ApplicationsRepository applicationsRepository;
 
-  @Autowired
   private ConverterService converterService;
 
-  @Autowired
   private CandidateRepository candidateRepository;
+
+  @Autowired
+  public ApplicationsServiceImpl(
+      ApplicationsRepository applicationRepository,
+      StatesHistoryService statesHistoryService,
+      CandidateRepository candidateRepository,
+      ConverterService converterService) {
+    super(ApplicationDTO.class, applicationRepository, converterService);
+    this.applicationsRepository = applicationRepository;
+    this.statesHistoryService = statesHistoryService;
+    this.candidateRepository = candidateRepository;
+    this.converterService = converterService;
+  }
 
   @Transactional(readOnly = true)
   @Override
@@ -67,7 +76,7 @@ public class ApplicationsServiceImpl implements ApplicationsService {
 
     final Page<ApplicationEntity>
         pageResult =
-        applicationsRepository.findByCandidateEntity(candidateEntity, pageRequest);
+        applicationsRepository.findByCandidateEntityAndDeletedFalse(candidateEntity, pageRequest);
 
     List<CandidateApplicationDTO>
         candidateApplicationDTOs =
@@ -111,7 +120,7 @@ public class ApplicationsServiceImpl implements ApplicationsService {
 
   @Transactional
   @Override
-  public ApplicationDTO saveOrUpdate(ApplicationDTO applicationDTO) {
+  public Long saveOrUpdate(ApplicationDTO applicationDTO) {
     Assert.notNull(applicationDTO);
     Assert.notNull(applicationDTO.getCandidateId());
     Assert.notNull(applicationDTO.getPositionId());
@@ -119,11 +128,10 @@ public class ApplicationsServiceImpl implements ApplicationsService {
 
     ApplicationEntity applicationEntity =
         converterService.convert(applicationDTO, ApplicationEntity.class);
-    ApplicationEntity
-        savedOrUpdateApplicationEntity =
+    ApplicationEntity savedOrUpdateApplicationEntity =
         applicationsRepository.saveAndFlush(applicationEntity);
 
-    return converterService.convert(savedOrUpdateApplicationEntity, ApplicationDTO.class);
+    return savedOrUpdateApplicationEntity.getId();
   }
 
   @Transactional
@@ -131,7 +139,9 @@ public class ApplicationsServiceImpl implements ApplicationsService {
   public Long saveApplication(ApplicationDTO applicationDTO, StateHistoryDTO stateHistoryDTO) {
     Assert.notNull(stateHistoryDTO);
 
-    ApplicationDTO savedOrUpdatedApplicationDto = saveOrUpdate(applicationDTO);
+    Long applicationId = saveOrUpdate(applicationDTO);
+    ApplicationEntity applicationEntity = applicationsRepository.findOne(applicationId);
+    ApplicationDTO savedOrUpdatedApplicationDto = converterService.convert(applicationEntity, ApplicationDTO.class);
     stateHistoryDTO.setApplicationDTO(savedOrUpdatedApplicationDto);
     statesHistoryService.saveStateHistory(stateHistoryDTO);
     return savedOrUpdatedApplicationDto.getId();

@@ -5,6 +5,7 @@ import com.epam.rft.atsy.persistence.entities.StatesHistoryEntity;
 import com.epam.rft.atsy.persistence.repositories.StatesHistoryRepository;
 import com.epam.rft.atsy.service.converter.AbstractOneWayConverter;
 import com.epam.rft.atsy.service.domain.CandidateApplicationDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 public class CandidateApplicationOneWayConverter
@@ -28,8 +29,8 @@ public class CandidateApplicationOneWayConverter
 
     return CandidateApplicationDTO.builder()
         .lastStateId(statesHistoryEntity.getId())
-        .applicationId(source.getId())
-        .positionName(source.getPositionEntity().getName())
+        .id(source.getId())
+        .name(source.getPositionEntity().getName())
         .creationDate(source.getCreationDate())
         .modificationDate(statesHistoryEntity.getCreationDate())
         .stateType(statesHistoryEntity.getStatesEntity().getName())

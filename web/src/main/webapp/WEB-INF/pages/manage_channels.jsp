@@ -22,7 +22,7 @@
                         <tr>
                             <th data-field="name" data-align="left" data-sortable="true"><spring:message
                                     code="settings.channels.table.name.title"/></th>
-                            <th data-field="channelId" data-align="left"
+                            <th data-field="id" data-align="left"
                                 data-formatter="actionFormatter"
                                 data-events="channelsEvents"><spring:message
                                     code="settings.channels.table.action.title"/>
@@ -43,7 +43,7 @@
                             </div>
 
                             <div class="form-group">
-                                <input type="hidden" name="id" id="channelId">
+                                <input type="hidden" name="id" id="id">
                                 <label for="channel_name"><spring:message
                                         code="settings.channels.channel_name"/></label>
                                 <input type="text" class="name form-control" name="name" id="channel_name"/>

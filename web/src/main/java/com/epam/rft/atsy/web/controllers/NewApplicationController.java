@@ -52,6 +52,7 @@ public class NewApplicationController {
           .candidateId(stateHistoryDTO.getCandidateId())
           .positionId(stateHistoryDTO.getPosition().getId())
           .channelId(stateHistoryDTO.getChannel().getId())
+          .deleted(false)
           .build();
 
       applicationsService.saveApplication(applicationDTO, stateHistoryDTO);
