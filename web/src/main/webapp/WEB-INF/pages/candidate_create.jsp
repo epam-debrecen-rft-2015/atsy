@@ -17,11 +17,11 @@
     <jsp:attribute name="pageJs">
        <c:url value="/resources/thirdparty/bootstrap-validator/validator.js" var="urlValue" /> <script src="${urlValue}"
                 type="text/javascript"></script>
-       <c:url value="/resources/js/atsy-i18n-config.js" var="urlValue" /><script src="${urlValue}"></script>
-       <c:url value="/resources/js/atsy-candidate-create.js" var="urlValue" /><script src="${urlValue}"></script>
-       <c:url value="/resources/js/atsy-deletable-event-config.js" var="urlValue" /><script src="${urlValue}"></script>
-       <c:url value="/resources/thirdparty/bootbox/bootbox.js" var="urlValue"/><script src="${urlValue}"></script>
        <c:url value="/resources/thirdparty/jquery/jquery.i18n.properties.js" var="urlValue"/><script src="${urlValue}"></script>
+       <c:url value="/resources/thirdparty/bootbox/bootbox.js" var="urlValue"/><script src="${urlValue}"></script>
+       <c:url value="/resources/js/atsy-i18n-config.js" var="urlValue" /><script src="${urlValue}"></script>
+       <c:url value="/resources/js/atsy-deletable-event-config.js" var="urlValue" /><script src="${urlValue}"></script>
+       <c:url value="/resources/js/atsy-candidate-create.js" var="urlValue" /><script src="${urlValue}"></script>
     </jsp:attribute>
     <jsp:body>
 

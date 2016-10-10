@@ -10,12 +10,12 @@
          <script type="text/javascript">
              window.messages['settings.channels.error.empty'] = '<spring:message code="settings.channels.error.empty"/>';
          </script>
-         <c:url value="/resources/js/atsy-settings.js" var="urlValue"/><script src="${urlValue}"></script>
-         <c:url value="/resources/js/atsy-i18n-config.js" var="urlValue" /><script src="${urlValue}"></script>
-         <c:url value="/resources/js/atsy-deletable-event-config.js" var="urlValue" /><script src="${urlValue}"></script>
          <c:url value="/resources/thirdparty/bootstrap/js/bootstrap.min.js" var="urlValue"/><script src="${urlValue}"></script>
          <c:url value="/resources/thirdparty/bootbox/bootbox.js" var="urlValue"/><script src="${urlValue}"></script>
          <c:url value="/resources/thirdparty/jquery/jquery.i18n.properties.js" var="urlValue"/><script src="${urlValue}"></script>
+         <c:url value="/resources/js/atsy-i18n-config.js" var="urlValue" /><script src="${urlValue}"></script>
+         <c:url value="/resources/js/atsy-settings.js" var="urlValue"/><script src="${urlValue}"></script>
+         <c:url value="/resources/js/atsy-deletable-event-config.js" var="urlValue" /><script src="${urlValue}"></script>
     </jsp:attribute>
     <jsp:body>
         <div id="settings">
