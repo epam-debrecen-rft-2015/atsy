@@ -50,9 +50,6 @@ function cancelButtonOnClick() {
 
 $.getJSON('/atsy/secure/positions', { get_param: 'value' }, function(data) {
     $.each(data, function(index, element) {
-        console.log(element);
-        console.log(element.name);
-        console.log(element)
         $('#positionSelector').append($('<option value="'+escapeXml(element.name)+'"></option>').text(element.name));
     });
 });
