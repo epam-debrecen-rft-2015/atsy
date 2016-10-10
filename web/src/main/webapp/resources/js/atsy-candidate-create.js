@@ -257,7 +257,7 @@ function actionFormatter(value, row, index) {
 window.channelsEvents = {
     'click .remove': function (e, value, row) {
          var container = $('#applications_table').parent();
-         var options = getOptions('../applications', 'question.delete.application.js', 'selected.element.not.found', row, container);
+         var options = getOptions('question.delete.application.js', 'selected.element.not.found', row, container, '../../applications');
          e.stopImmediatePropagation();
          bootbox.dialog(options);
     }

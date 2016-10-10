@@ -15,6 +15,7 @@ import com.epam.rft.atsy.persistence.entities.ApplicationEntity;
 import com.epam.rft.atsy.persistence.entities.CandidateEntity;
 import com.epam.rft.atsy.persistence.repositories.ApplicationsRepository;
 import com.epam.rft.atsy.persistence.repositories.CandidateRepository;
+import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.exception.DuplicateCandidateException;
@@ -24,13 +25,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.hibernate.exception.ConstraintViolationException;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -77,7 +76,8 @@ public class CandidateServiceImplTest {
   @Mock
   private ApplicationsRepository applicationsRepository;
 
-  @InjectMocks
+  private ApplicationsService applicationsService;
+
   private CandidateServiceImpl candidateService;
 
   private CandidateEntity dummyCandidateEntity;
@@ -86,6 +86,10 @@ public class CandidateServiceImplTest {
 
   @Before
   public void setUp() {
+    this.candidateService =
+        new CandidateServiceImpl(candidateRepository, applicationsRepository, applicationsService,
+            converterService);
+
     dummyCandidateEntity = CandidateEntity.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
         .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).build();
 
@@ -93,8 +97,9 @@ public class CandidateServiceImplTest {
         ApplicationEntity.builder().id(APPLICATION_ID).candidateEntity(dummyCandidateEntity)
             .build();
 
-    dummyCandidateDto = CandidateDTO.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
-        .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).build();
+    dummyCandidateDto =
+        CandidateDTO.builder().id(ID).deleted(false).name(NAME).email(EMAIL).phone(PHONE)
+            .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).build();
   }
 
   @Test(expected = IllegalArgumentException.class)

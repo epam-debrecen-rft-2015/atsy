@@ -20,7 +20,7 @@ public interface LogicallyDeletableService<D extends LogicallyDeletableDTO> {
   /**
    * Saves a object to the database.
    * @param dto the dto
-   * @return the id of the saved entity
+   * @return id of the object
    */
   Long saveOrUpdate(D dto);
 

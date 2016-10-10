@@ -29,19 +29,26 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class CandidateServiceImpl implements CandidateService {
+public class CandidateServiceImpl
+    extends AbstractLogicallyDeletableService<CandidateDTO, CandidateEntity>
+    implements CandidateService {
 
   @Autowired
+  public CandidateServiceImpl(CandidateRepository candidateRepository,
+                              ApplicationsRepository applicationsRepository,
+                              ApplicationsService applicationsService,
+                              ConverterService converterService) {
+    super(CandidateDTO.class, candidateRepository, converterService);
+    this.candidateRepository = candidateRepository;
+    this.applicationsRepository = applicationsRepository;
+    this.applicationsService = applicationsService;
+  }
+
   private CandidateRepository candidateRepository;
 
-  @Autowired
   private ApplicationsService applicationsService;
 
-  @Autowired
   private ApplicationsRepository applicationsRepository;
-
-  @Autowired
-  private ConverterService converterService;
 
   @Transactional(readOnly = true)
   @Override

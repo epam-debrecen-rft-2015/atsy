@@ -57,6 +57,6 @@ public class NewApplicationController {
 
       applicationsService.saveApplication(applicationDTO, stateHistoryDTO);
     }
-    return "redirect:/secure/candidate/" + stateHistoryDTO.getCandidateId();
+    return "redirect:/secure/candidate/details/" + stateHistoryDTO.getCandidateId();
   }
 }
