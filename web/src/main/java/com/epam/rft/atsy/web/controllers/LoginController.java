@@ -23,13 +23,21 @@ public class LoginController {
    */
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView pageLoad() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    if (authentication != null && authentication.isAuthenticated()
-        && !(authentication instanceof AnonymousAuthenticationToken)) {
+    if (isTheCurrentUserSignedIn()) {
       return new ModelAndView("redirect:/" + VIEW_NAME_WELCOME);
     } else {
       return new ModelAndView(VIEW_NAME_LOGIN);
     }
+  }
+
+  /**
+   * Returns a boolean value indicating the authentication status of the current user.
+   * @return {@code true} if the current user already signed in {@code false} otherwise
+   */
+  private Boolean isTheCurrentUserSignedIn() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return authentication != null && authentication.isAuthenticated()
+        && !(authentication instanceof AnonymousAuthenticationToken);
   }
 }
