@@ -44,3 +44,12 @@ Feature: Login in
 
     Given the user is on the login page
     Then the username field is in focus
+
+  Scenario: user redirected to welcome page if already signed in
+    Given the user is on the login page
+    And the user enters username test
+    And the user enters password pass3
+    And the user tries to access the login page
+    And the user clicks on Bejelentkezés button
+    When the user tries to access the login page
+    Then the Candidates page appears and user logs out

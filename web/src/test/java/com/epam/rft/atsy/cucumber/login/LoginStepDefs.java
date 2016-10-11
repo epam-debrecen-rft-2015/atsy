@@ -78,4 +78,9 @@ public class LoginStepDefs {
         .equals(driverProvider.getDriver().switchTo().activeElement()), is(true));
   }
 
+  @When("the user tries to access the login page")
+  public void userRedirect() {
+    driverProvider.getDriver().get("http://localhost:8080/atsy/login?locale=hu");
+  }
+
 }
