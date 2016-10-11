@@ -10,18 +10,6 @@ function isNewState() {
   return queryStr.match(/state\=/);
 }
 
-function escapeXml(unsafe) {
-    return unsafe.replace(/[<>&'"]/g, function (c) {
-        switch (c) {
-            case '<': return '&lt;';
-            case '>': return '&gt;';
-            case '&': return '&amp;';
-            case '\'': return '&apos;';
-            case '"': return '&quot;';
-        }
-    });
-}
-
 function editLatestStateOnClick() {
 
     $('.stateInput').toggleClass("hidden");
@@ -50,7 +38,7 @@ function cancelButtonOnClick() {
 
 $.getJSON('/atsy/secure/positions', { get_param: 'value' }, function(data) {
     $.each(data, function(index, element) {
-        $('#positionSelector').append($('<option value="'+escapeXml(element.name)+'"></option>').text(element.name));
+        $('#positionSelector').append($('<option value="'+new Option(element.name).innerHTML.replace(/\"/g,'&quot;')+'"></option>').text(element.name));
     });
 });
 
