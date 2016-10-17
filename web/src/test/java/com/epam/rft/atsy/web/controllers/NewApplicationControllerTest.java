@@ -47,7 +47,7 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
   private static final String VIEW_NAME = "application";
   private static final String REQUEST_URL_GET = "/new_application";
   private static final String REQUEST_URL_POST = "/secure/new_application";
-  private static final String REDIRECT_URL_FOR_CANDIDATE_A = "/secure/candidate/1";
+  private static final String REDIRECT_URL_FOR_CANDIDATE_A = "/secure/candidate/details/1";
   private static final String REDIRECT_URL_FOR_NON_EXISTING_CANDIDATE = "/secure/application?candidateId=null";
   private static final String REDIRECT_URL_FOR_CANDIDATE_WITH_WRONG_ID = "/secure/application?candidateId=2";
   private static final String REDIRECT_URL_FIELD_ERROR = "/secure/application?candidateId=1";

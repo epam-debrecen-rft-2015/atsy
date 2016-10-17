@@ -64,7 +64,7 @@ public class NewApplicationController {
           .build();
 
       applicationsService.saveApplication(applicationDTO, stateHistoryDTO);
-      return "redirect:/secure/candidate/" + stateHistoryDTO.getCandidateId();
+      return "redirect:/secure/candidate/details/" + stateHistoryDTO.getCandidateId();
     }
 
     redirectAttributes.addFlashAttribute(COMMON_INVALID_INPUT_MESSAGE_NAME, this.messageKeyResolver.resolveMessageOrDefault(COMMON_INVALID_INPUT_MESSAGE_KEY));
