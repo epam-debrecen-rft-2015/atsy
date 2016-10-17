@@ -25,7 +25,7 @@ import cucumber.api.java.en.Then;
 public class CandidateApplicationStepDefs {
 
   private static WebDriver webDriver = DriverProvider.getDriver();
-  private static final String CANDIDATE_PAGE_URL = "http://localhost:8080/atsy/secure/candidate/3";
+  private static final String CANDIDATE_PAGE_URL = "http://localhost:8080/atsy/secure/candidate/details/3";
   private static final SimpleDateFormat
       SIMPLE_DATE_FORMAT =
       new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss");
@@ -86,7 +86,7 @@ public class CandidateApplicationStepDefs {
 
       CandidateApplicationDTO
           candidateApplicationDTO =
-          CandidateApplicationDTO.builder().positionName(positionName)
+          CandidateApplicationDTO.builder().name(positionName)
               .creationDate(creationDate).modificationDate(lastModifiedDate).stateType(stateName)
               .build();
 
@@ -122,17 +122,17 @@ public class CandidateApplicationStepDefs {
 
       CandidateApplicationDTO
           firstCandidateApplicationDTO =
-          CandidateApplicationDTO.builder().positionName(POSITION_NAME)
+          CandidateApplicationDTO.builder().name(POSITION_NAME)
               .creationDate(firstCreationDate).modificationDate(firstModificationDate)
               .stateType(STATE_TYPE).build();
       CandidateApplicationDTO
           secondCandidateApplicationDTO =
-          CandidateApplicationDTO.builder().positionName(POSITION_NAME)
+          CandidateApplicationDTO.builder().name(POSITION_NAME)
               .creationDate(secondCreationDate).modificationDate(secondModificationDate)
               .stateType(STATE_TYPE).build();
       CandidateApplicationDTO
           thirdCandidateApplicationDTO =
-          CandidateApplicationDTO.builder().positionName(POSITION_NAME)
+          CandidateApplicationDTO.builder().name(POSITION_NAME)
               .creationDate(thirdCreationDate).modificationDate(thirdModificationDate)
               .stateType(STATE_TYPE).build();
 

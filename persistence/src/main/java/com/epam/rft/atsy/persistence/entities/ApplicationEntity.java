@@ -24,8 +24,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "applications", schema = "atsy")
-public class ApplicationEntity extends SuperEntity {
-
+public class ApplicationEntity extends LogicallyDeletableEntity {
 
   @Column(name = "creation_date")
   private Date creationDate;
@@ -44,9 +43,9 @@ public class ApplicationEntity extends SuperEntity {
 
 
   @Builder
-  public ApplicationEntity(Long id, Date creationDate, CandidateEntity candidateEntity,
+  public ApplicationEntity(Long id, Boolean deleted, Date creationDate, CandidateEntity candidateEntity,
                            PositionEntity positionEntity, ChannelEntity channelEntity) {
-    super(id);
+    super(id, deleted);
     this.creationDate = creationDate;
     this.candidateEntity = candidateEntity;
     this.positionEntity = positionEntity;

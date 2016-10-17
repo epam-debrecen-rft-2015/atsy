@@ -1,5 +1,17 @@
 package com.epam.rft.atsy.web.controllers;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 import com.epam.rft.atsy.service.ApplicationsService;
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.ChannelService;
@@ -80,9 +92,13 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
   @InjectMocks
   private NewApplicationController newApplicationController;
 
-  private ChannelDTO channelDTO = ChannelDTO.builder().id(1L).name(CHANNEL_NAME_FACEBOOK).deleted(false).build();
+  private ChannelDTO
+      channelDTO =
+      ChannelDTO.builder().id(1L).name(CHANNEL_NAME_FACEBOOK).deleted(false).build();
 
-  private PositionDTO positionDTO = PositionDTO.builder().id(1L).name(POSITION_NAME_DEVELOPER).deleted(false).build();
+  private PositionDTO
+      positionDTO =
+      PositionDTO.builder().id(1L).name(POSITION_NAME_DEVELOPER).deleted(false).build();
   private StateDTO stateDTO = StateDTO.builder().id(1L).name(NEW_STATE).build();
 
   private StateHistoryDTO stateHistoryDTO =
@@ -214,7 +230,8 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
     then(this.channelService).should().getChannelDtoById(null);
   }
 
-  private void assertApplicationDtoWhenSaveOrUpdateIsSuccess(ArgumentCaptor<ApplicationDTO> applicationDTOCaptor) {
+  private void assertApplicationDtoWhenSaveOrUpdateIsSuccess(
+      ArgumentCaptor<ApplicationDTO> applicationDTOCaptor) {
     Date presentDate = currentDateMinus(5);
     assertThat(applicationDTOCaptor.getValue().getCandidateId(), equalTo(1L));
     assertThat(applicationDTOCaptor.getValue().getChannelId(), equalTo(1L));

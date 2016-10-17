@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Service that operates with applications in the database layer and in the view layer.
  */
-public interface ApplicationsService {
+public interface ApplicationsService extends LogicallyDeletableService<ApplicationDTO> {
 
   /**
    * Returns the application with the specified id.
@@ -40,13 +40,6 @@ public interface ApplicationsService {
                                                                        int size);
 
   void deleteApplicationsByCandidateDTO(CandidateDTO candidateDTO);
-
-  /**
-   * Saves an application to the database and returns it's id.
-   * @param applicationDTO the application
-   * @return the id of application
-   */
-  ApplicationDTO saveOrUpdate(ApplicationDTO applicationDTO);
 
   /**
    * Saves an application and a state to the database and returns the application's id.

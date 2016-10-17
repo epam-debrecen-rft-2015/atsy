@@ -52,7 +52,10 @@ public class StatesHistoryServiceImplTest {
   private static final String THIRD_STATE_TYPE_NAME = "Third state";
 
   private static final ApplicationEntity APPLICATION_ENTITY_WITHOUT_STATE_HISTORY =
-      ApplicationEntity.builder().id(FIRST_ID).build();
+      ApplicationEntity.builder().id(FIRST_ID).deleted(false).build();
+
+  private static final ApplicationEntity deletedApplicationEntity =
+      ApplicationEntity.builder().id(FIRST_ID).deleted(true).build();
 
   private static final List<StatesHistoryEntity>
       EMPTY_STATE_HISTORY_ENTITY_LIST =
@@ -97,15 +100,15 @@ public class StatesHistoryServiceImplTest {
 
   private final ApplicationEntity firstApplicationEntity =
       ApplicationEntity.builder().id(FIRST_ID).candidateEntity(firstCandidateEntity)
-          .positionEntity(firstPositionEntity).creationDate(futureDate).build();
+          .positionEntity(firstPositionEntity).creationDate(futureDate).deleted(false).build();
 
   private final ApplicationEntity secondApplicationEntity =
       ApplicationEntity.builder().id(SECOND_ID).candidateEntity(firstCandidateEntity)
-          .positionEntity(secondPositionEntity).creationDate(presentDate).build();
+          .positionEntity(secondPositionEntity).creationDate(presentDate).deleted(false).build();
 
   private final ApplicationEntity thirdApplicationEntity =
       ApplicationEntity.builder().id(THIRD_ID).candidateEntity(firstCandidateEntity)
-          .positionEntity(thirdPositionEntity).creationDate(pastDate).build();
+          .positionEntity(thirdPositionEntity).creationDate(pastDate).deleted(false).build();
 
   private final StatesEntity
       firstStateEntity =
@@ -225,6 +228,18 @@ public class StatesHistoryServiceImplTest {
         .findByApplicationEntityOrderByCreationDateDesc(APPLICATION_ENTITY_WITHOUT_STATE_HISTORY);
   }
 
+  @Test
+  public void getStatesByApplicationIdShouldReturnAnEmptyListForDeletedApplication() {
+    //Given
+    given(applicationsRepository.findOne(FIRST_ID)).willReturn(deletedApplicationEntity);
+
+    //When
+    List<StateHistoryDTO> stateHistory = statesHistoryService.getStateHistoriesByApplicationId(FIRST_ID);
+
+    //Then
+    assertThat(stateHistory, notNullValue());
+    assertThat(stateHistory.isEmpty(), is(true));
+  }
   @Test
   public void getStatesByApplicationIdShouldReturnAListWithSingleElement() {
     // Given

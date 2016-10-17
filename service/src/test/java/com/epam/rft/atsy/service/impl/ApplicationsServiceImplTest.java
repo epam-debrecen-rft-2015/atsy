@@ -28,9 +28,11 @@ import com.epam.rft.atsy.service.domain.ChannelDTO;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
+import com.epam.rft.atsy.service.exception.ObjectNotFoundException;
 import com.epam.rft.atsy.service.response.PagingResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -48,6 +50,7 @@ public class ApplicationsServiceImplTest {
 
   private static final Long APPLICATION_ID = 1L;
   private static final Date APPLICATION_CREATION_DATE = new Date();
+  private static final Long APPLICATION_ID_NON_EXISTENT = -1L;
 
   private static final Long CANDIDATE_ID = 1L;
   private static final Long NON_EXISTENT_CANDIDATE_ID = 1L;
@@ -77,7 +80,7 @@ public class ApplicationsServiceImplTest {
   private final ApplicationDTO applicationDTO =
       ApplicationDTO.builder().id(APPLICATION_ID).creationDate(APPLICATION_CREATION_DATE)
           .candidateId(CANDIDATE_ID)
-          .positionId(POSITION_ID).channelId(CHANNEL_ID).build();
+          .positionId(POSITION_ID).channelId(CHANNEL_ID).deleted(false).build();
 
   private final List<ApplicationDTO> applicationDTOs = Arrays.asList(applicationDTO);
 
@@ -183,7 +186,7 @@ public class ApplicationsServiceImplTest {
   public void getApplicationByCandidateIdShouldReturnEmptyListWhenCandidateIdIsNotFound() {
     // Given
     given(candidateRepository.findOne(NON_EXISTENT_CANDIDATE_ID)).willReturn(null);
-    given(applicationsRepository.findByCandidateEntity(null, DEFAULT_PAGE_REQUEST))
+    given(applicationsRepository.findByCandidateEntityAndDeletedFalse(null, DEFAULT_PAGE_REQUEST))
         .willReturn(new PageImpl<ApplicationEntity>(Collections.emptyList()));
 
     // When
@@ -229,7 +232,7 @@ public class ApplicationsServiceImplTest {
         Collections.singletonList(dummyCandidateApplicationDTO);
 
     given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
-    given(applicationsRepository.findByCandidateEntity(candidateEntity, DEFAULT_PAGE_REQUEST))
+    given(applicationsRepository.findByCandidateEntityAndDeletedFalse(candidateEntity, DEFAULT_PAGE_REQUEST))
         .willReturn(new PageImpl<ApplicationEntity>(applicationEntities));
     given(converterService.convert(applicationEntities, CandidateApplicationDTO.class))
         .willReturn(candidateApplicationDTOs);
@@ -281,7 +284,7 @@ public class ApplicationsServiceImplTest {
             dummyCandidateApplicationDTO);
 
     given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
-    given(applicationsRepository.findByCandidateEntity(candidateEntity, DEFAULT_PAGE_REQUEST))
+    given(applicationsRepository.findByCandidateEntityAndDeletedFalse(candidateEntity, DEFAULT_PAGE_REQUEST))
         .willReturn(new PageImpl<ApplicationEntity>(applicationEntities));
     given(converterService.convert(applicationEntities, CandidateApplicationDTO.class))
         .willReturn(candidateApplicationDTOs);
@@ -308,7 +311,7 @@ public class ApplicationsServiceImplTest {
         Arrays.asList(dummyCandidateApplicationDTO, dummyCandidateApplicationDTO);
 
     given(candidateRepository.findOne(CANDIDATE_ID)).willReturn(candidateEntity);
-    given(applicationsRepository.findByCandidateEntity(candidateEntity, ZERO_TWO_PAGE_REQUEST))
+    given(applicationsRepository.findByCandidateEntityAndDeletedFalse(candidateEntity, ZERO_TWO_PAGE_REQUEST))
         .willReturn(new PageImpl<ApplicationEntity>(applicationEntities));
     given(converterService.convert(applicationEntities, CandidateApplicationDTO.class))
         .willReturn(candidateApplicationDTOs);
@@ -411,20 +414,17 @@ public class ApplicationsServiceImplTest {
 
     given(applicationsRepository.saveAndFlush(applicationEntity))
         .willReturn(this.applicationEntity);
-    given(converterService.convert(applicationEntity, ApplicationDTO.class))
-        .willReturn(applicationDTO);
 
     // When
-    ApplicationDTO result = applicationsService.saveOrUpdate(applicationDTO);
+    Long result = applicationsService.saveOrUpdate(applicationDTO);
 
     // Then
     assertThat(result, notNullValue());
-    assertThat(result, equalTo(applicationDTO));
+    assertThat(result, equalTo(applicationDTO.getId()));
 
     then(converterService).should().convert(applicationDTO, ApplicationEntity.class);
 
     then(applicationsRepository).should().saveAndFlush(applicationEntity);
-    then(converterService).should().convert(applicationEntity, ApplicationDTO.class);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -490,6 +490,7 @@ public class ApplicationsServiceImplTest {
         .willReturn(this.applicationEntity);
     given(converterService.convert(applicationEntity, ApplicationDTO.class))
         .willReturn(applicationDTO);
+    given(applicationsRepository.findOne(APPLICATION_ID)).willReturn(this.applicationEntity);
 
     // When
     Long result = applicationsService.saveApplication(applicationDTO, stateHistoryDTO);
@@ -525,4 +526,49 @@ public class ApplicationsServiceImplTest {
 
     // Then
   }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void deleteDtoLogicallyByIdShouldThrowIllegalArgumentExceptionWhenApplicationIdIsNull()
+      throws
+      ObjectNotFoundException {
+    // Given
+
+    // When
+    this.applicationsService.deleteDtoLogicallyById(null);
+
+    // Then
+  }
+
+  @Test(expected = ObjectNotFoundException.class)
+  public void deleteDtoLogicallyByIddShouldThrowApplicationNotFoundExceptionWhenApplicationEntityNotExists()
+      throws ObjectNotFoundException {
+    // Given
+    given(this.applicationsRepository.findOne(APPLICATION_ID_NON_EXISTENT)).willReturn(null);
+
+    // When
+    this.applicationsService.deleteDtoLogicallyById(APPLICATION_ID_NON_EXISTENT);
+
+    // Then
+  }
+
+  @Test
+  public void deleteDtoLogicallyByIdShouldDeletedLogicallyWhenChannelEntityExists()
+      throws ObjectNotFoundException {
+    // Given
+    ArgumentCaptor<ApplicationEntity> applicationsEntityArgumentCaptor =
+        ArgumentCaptor.forClass(ApplicationEntity.class);
+    given(this.applicationsRepository.findOne(APPLICATION_ID)).willReturn(applicationEntity);
+
+    // When
+    this.applicationsService.deleteDtoLogicallyById(APPLICATION_ID);
+
+    // Then
+    verify(applicationsRepository).saveAndFlush(applicationsEntityArgumentCaptor.capture());
+    assertThat(applicationEntity, equalTo(applicationsEntityArgumentCaptor.getValue()));
+
+    then(applicationsRepository).should().findOne(APPLICATION_ID);
+    then(applicationsRepository).should().saveAndFlush(applicationEntity);
+    assertThat(applicationEntity.isDeleted(), is(true));
+  }
 }
+

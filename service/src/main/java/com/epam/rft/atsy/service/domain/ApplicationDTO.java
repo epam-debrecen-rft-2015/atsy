@@ -1,12 +1,13 @@
 package com.epam.rft.atsy.service.domain;
 
-
 import java.io.Serializable;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
 /**
@@ -14,16 +15,25 @@ import lombok.NoArgsConstructor;
  * web layers. See {@link com.epam.rft.atsy.persistence.entities.ApplicationEntity
  * ApplicationEntity}.
  */
-@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApplicationDTO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class ApplicationDTO extends LogicallyDeletableDTO {
 
-  private Long id;
   private Date creationDate;
   private Long candidateId;
   private Long positionId;
   private Long channelId;
 
+  @Builder
+  public ApplicationDTO(Long id, Boolean deleted, Date creationDate,
+                        Long candidateId, Long positionId, Long channelId) {
+    super(id, deleted);
+    this.creationDate = creationDate;
+    this.candidateId = candidateId;
+    this.positionId = positionId;
+    this.channelId = channelId;
+  }
 }

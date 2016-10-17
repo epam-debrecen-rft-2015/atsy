@@ -10,14 +10,18 @@
 <spring:url value="/secure/positions" var="positions"/>
 <spring:url value="/secure/channels" var="channels"/>
 <spring:url value="/secure/welcome" var="welcome"/>
-<spring:url value="/secure/candidate" var="candidateURL"/>
+<spring:url value="/secure/candidate/details" var="candidateURL"/>
 <spring:url value="/secure/application" var="application"/>
 
 <atsy:secure_page>
     <jsp:attribute name="pageJs">
        <c:url value="/resources/thirdparty/bootstrap-validator/validator.js" var="urlValue" /> <script src="${urlValue}"
                 type="text/javascript"></script>
-        <c:url value="/resources/js/atsy-candidate-create.js" var="urlValue" /><script src="${urlValue}"></script>
+       <c:url value="/resources/thirdparty/jquery/jquery.i18n.properties.js" var="urlValue"/><script src="${urlValue}"></script>
+       <c:url value="/resources/thirdparty/bootbox/bootbox.js" var="urlValue"/><script src="${urlValue}"></script>
+       <c:url value="/resources/js/atsy-i18n-config.js" var="urlValue" /><script src="${urlValue}"></script>
+       <c:url value="/resources/js/atsy-deletable-event-config.js" var="urlValue" /><script src="${urlValue}"></script>
+       <c:url value="/resources/js/atsy-candidate-create.js" var="urlValue" /><script src="${urlValue}"></script>
     </jsp:attribute>
     <jsp:body>
 
@@ -241,11 +245,11 @@
                             code="candidate.new.application.button"/></a>
                 </div>
                 <div id="application_table">
-                        <table class="table table-hover cursor-pointer" id="applications_table"  data-toggle="table" data-url="../applications/${candidate.id}" data-height="500"
+                        <table class="table table-hover cursor-pointer" id="applications_table"  data-toggle="table" data-url="../../applications/${candidate.id}" data-height="500"
                                data-sort-name="name" data-escape="true" data-pagination="true" data-side-pagination="server" data-query-params-type="">
                             <thead>
                             <tr>
-                                <th data-field="positionName" data-align="left"><spring:message
+                                <th data-field="name" data-align="left"><spring:message
                                         code="candidate.table.application.position"/></th>
                                 <th data-field="creationDate" data-align="left" data-formatter="creationDateFormatter">
                                     <spring:message code="candidate.table.application.added.date"/>
@@ -255,6 +259,10 @@
                                         code="candidate.table.application.modified.date"/></th>
                                 <th data-field="stateType" data-align="left"><spring:message
                                         code="candidate.table.application.state"/></th>
+                                <th data-field="id" data-align="left"
+                                    data-formatter="actionFormatter"
+                                    data-events="channelsEvents">
+                                    <spring:message code="candidate.table.application.action"/></th>
 
                             </tr>
 

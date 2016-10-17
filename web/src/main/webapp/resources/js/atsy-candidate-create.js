@@ -1,13 +1,14 @@
-$('.table').bootstrapTable({
-    onClickRow: function (row, $element) {
-      window.location.href = "../application_state?applicationId=" + row.applicationId;
-    }
+$('.table#applications_table').bootstrapTable({
+  onClickRow: function (row, $element) {
+    window.location.href = "../../application_state?applicationId=" + row.id;
+  }
 });
 
 $(document).ready(function() {
     $("#file").change(function() {
         $("#fileName").text(new Option($('input[type=file]')[0].files[0].name).innerHTML);
     });
+
 });
 
 function CandidateCreateModel(){
@@ -245,3 +246,20 @@ function dateTimeFormatter(dateTime) {
     var options = {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
     return dateTime.toLocaleDateString('hu-HU', options);
 }
+
+function actionFormatter(value, row, index) {
+    return [
+        '<a class="remove ml10 little-space" href="javascript:void(0)" title="', $.i18n.prop('common.remove.js'), '">',
+        '<i class="glyphicon glyphicon-remove"></i>',
+        '</a>',
+    ].join('');
+}
+
+window.channelsEvents = {
+    'click .remove': function (e, value, row) {
+         var container = $('#applications_table').parent();
+         var options = getOptions('question.delete.application.js', 'selected.element.not.found', row, container, '../../applications');
+         e.stopImmediatePropagation();
+         bootbox.dialog(options);
+    }
+};
