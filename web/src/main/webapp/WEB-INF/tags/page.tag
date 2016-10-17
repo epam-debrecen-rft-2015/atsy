@@ -6,7 +6,7 @@
 <html>
 <head>
    <c:url value="/resources/thirdparty/bootstrap/css/bootstrap.min.css" var="urlValue" /> <link rel="stylesheet" href="${urlValue}">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/bootstrap-table.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
     <c:url value="/resources/css/atsy.css" var="urValue" /><link rel="stylesheet" href="${urValue}">
     <title>Applicant Tracking System</title>
 </head>
@@ -27,8 +27,8 @@
 <c:url value="/resources/thirdparty/bootstrap/js/bootstrap.min.js" var="urlValue"/><script src="${urlValue}"></script>
 <c:url value="/resources/js/atsy.js" var="urlValue"/><script src="${urlValue}"></script>
 <!-- Latest compiled and minified JavaScript -->
-<c:url value="/resources/thirdparty/bootstrap-table/bootstrap-table.min.js" var="urlValue"/><script src="${urlValue}"></script>
-<c:url value="/resources/thirdparty/bootstrap-table/locale/bootstrap-table-${pageContext.response.locale}.min.js" var="urlValue"/><script src="${urlValue}"></script>
+<c:url value="/resources/thirdparty/bootstrap-table/bootstrap-table.js" var="urlValue"/><script src="${urlValue}"></script>
+<c:url value="/resources/thirdparty/bootstrap-table/locale/bootstrap-table-${pageContext.response.locale}.js" var="urlValue"/><script src="${urlValue}"></script>
 <c:url value="/resources/thirdparty/knockout-3.4.0/knockout-3.4.0.js" var="urlValue"/><script src="${urlValue}"></script>
 <!-- Latest compiled and minified Locales -->
 
