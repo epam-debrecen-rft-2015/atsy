@@ -1,0 +1,1 @@
+UPDATE states_history SET position_id = 1 WHERE state_id = 4;

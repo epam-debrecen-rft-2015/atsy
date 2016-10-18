@@ -25,7 +25,7 @@
     </jsp:attribute>
   <jsp:body>
       <div class="page-header">
-          <h1><spring:message code="application.state.title"/>
+          <h1><c:out value="${candidate.name}"/>
 
               <small id="positionName"><c:out value = "${states[0].positionName}"/></small>
           </h1>
