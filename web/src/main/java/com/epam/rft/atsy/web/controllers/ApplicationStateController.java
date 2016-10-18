@@ -89,7 +89,7 @@ public class ApplicationStateController {
             .convert(statesHistoryService.getStateHistoriesByApplicationId(applicationId),
                 StateHistoryViewRepresentation.class);
 
-    if (clickedState != null && isRepresentationsListFirstStateEquals(stateHistoryViewRepresentations, clickedState)) {
+    if (clickedState != null && !isRepresentationsListFirstStateEquals(stateHistoryViewRepresentations, clickedState)) {
       StateDTO clickedStateDTO = stateService.getStateDtoByName(clickedState);
 
       Assert.notNull(clickedStateDTO);
@@ -137,8 +137,13 @@ public class ApplicationStateController {
 
   private boolean isRepresentationsListFirstStateEquals(
       List<StateHistoryViewRepresentation> representaionList, String state) {
-    return representaionList.isEmpty() || !(representaionList.get(0)
-        .getStateName().equals(state));
+      boolean value= false;
+    for (StateHistoryViewRepresentation test : representaionList) {
+      if(representaionList.isEmpty() || test.getStateName().equals(state)){
+        value=true;
+      }
+    }
+    return value;
   }
 
 }
