@@ -14,6 +14,7 @@ public class ChannelValidator implements ConstraintValidator<ChannelExists, Chan
 
   @Override
   public void initialize(ChannelExists a) {
+    // We leave this empty because there's no need to initialize anything.
   }
 
   @Override

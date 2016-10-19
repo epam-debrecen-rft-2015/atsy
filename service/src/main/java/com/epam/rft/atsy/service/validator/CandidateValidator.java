@@ -13,6 +13,7 @@ public class CandidateValidator implements ConstraintValidator<CandidateExists, 
 
   @Override
   public void initialize(CandidateExists a) {
+    // We leave this empty because there's no need to initialize anything.
   }
 
   @Override

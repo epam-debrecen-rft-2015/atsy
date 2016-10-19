@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.Date;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.Errors;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -64,7 +65,8 @@ public class NewApplicationController {
           .build();
 
       applicationsService.saveApplication(applicationDTO, stateHistoryDTO);
-      return "redirect:/secure/candidate/details/" + stateHistoryDTO.getCandidateId();
+      redirectAttributes.addAttribute("candidateId", stateHistoryDTO.getCandidateId());
+      return "redirect:/secure/candidate/details/{candidateId}";
     }
 
     redirectAttributes.addFlashAttribute(COMMON_INVALID_INPUT_MESSAGE_NAME, this.messageKeyResolver.resolveMessageOrDefault(COMMON_INVALID_INPUT_MESSAGE_KEY));
@@ -72,6 +74,7 @@ public class NewApplicationController {
         redirectAttributes.addFlashAttribute(error.getField() + "ErrorMessage",
             messageKeyResolver.resolveMessageOrDefault(error.getDefaultMessage())));
 
-    return "redirect:/secure/application?candidateId=" + stateHistoryDTO.getCandidateId();
+    redirectAttributes.addAttribute("candidateId", stateHistoryDTO.getCandidateId());
+    return "redirect:/secure/application";
   }
 }

@@ -12,23 +12,22 @@
     <jsp:attribute name="pageJs">
        <c:url value="/resources/js/atsy-application.js" var="urlValue" /> <script src="${urlValue}"></script>
        <c:url value="/resources/js/atsy-new-application.js" var="urlValue" /> <script type="text/javascript" src="${urlValue}"></script>
+       <c:if test="${not empty positionErrorMessage}">
+           <script type="text/javascript">
+               $('#positionDiv').addClass('has-error');
+               $('#position_error').text("${positionErrorMessage}")
+           </script>
+       </c:if>
+       <c:if test="${not empty channelErrorMessage}">
+           <script type="text/javascript">
+               $('#sourceDiv').addClass('has-error');
+               $('#application_source_error').text("${channelErrorMessage}")
+           </script>
+       </c:if>
     </jsp:attribute>
     <jsp:body>
         <div id="application_page">
             <h1 class="page-header"><spring:message code="application.create.title"/></h1>
-
-            <c:if test="${not empty candidateIdErrorMessage or not empty positionErrorMessage or not empty channelErrorMessage}">
-              <div class="panel panel-danger" role="alert">
-                  <div class="panel-heading">${errorMessage}</div>
-                      <div class="panel-body">
-                          <ul>
-                              <c:if test="${not empty candidateIdErrorMessage}"><li>${candidateIdErrorMessage}</li></c:if>
-                              <c:if test="${not empty positionErrorMessage}"><li>${positionErrorMessage}</li></c:if>
-                              <c:if test="${not empty channelErrorMessage}"><li>${channelErrorMessage}</li></c:if>
-                          </ul>
-                      </div>
-              </div>
-            </c:if>
 
             <form class="form" role="form" method="POST" id="application-create-form" action="${new_application}">
                 <input type="hidden" name="candidateId" id="candidateId" value="${candidateId}">
@@ -43,7 +42,7 @@
                         <select class="input form-control" name="position.id" id="position">
                         <option value = "${i18n_position_drop_down_default_value}">${i18n_position_drop_down_default_value}</option>
                         </select>
-                        <span style="color: red" id="position_error"/>
+                        <span style="color: #a94442" id="position_error"/>
                     </div>
                 </div>
 
@@ -58,7 +57,7 @@
                         <select class="input form-control" name="channel.id" id="channel">
                             <option value = "${i18n_application_source_drop_down_default_value}">${i18n_application_source_drop_down_default_value}</option>
                         </select>
-                        <span style="color: red" id="application_source_error"/>
+                        <span style="color: #a94442" id="application_source_error"/>
                     </div>
                 </div>
 

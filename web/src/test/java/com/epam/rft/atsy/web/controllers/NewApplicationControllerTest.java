@@ -36,9 +36,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import org.springframework.web.util.NestedServletException;
 
 @RunWith(MockitoJUnitRunner.class)
 
@@ -48,7 +50,6 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
   private static final String REQUEST_URL_GET = "/new_application";
   private static final String REQUEST_URL_POST = "/secure/new_application";
   private static final String REDIRECT_URL_FOR_CANDIDATE_A = "/secure/candidate/details/1";
-  private static final String REDIRECT_URL_FOR_NON_EXISTING_CANDIDATE = "/secure/application?candidateId=null";
   private static final String REDIRECT_URL_FOR_CANDIDATE_WITH_WRONG_ID = "/secure/application?candidateId=2";
   private static final String REDIRECT_URL_FIELD_ERROR = "/secure/application?candidateId=1";
 
@@ -116,7 +117,7 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void saveOrUpdateShouldBeSuccessful() throws Exception {   
+  public void saveOrUpdateShouldBeSuccessful() throws Exception {
     given(this.candidateService.getCandidate(1L)).willReturn(new CandidateDTO());
     given(this.positionService.getPositionDtoById(1L)).willReturn(positionDTO);
     given(this.channelService.getChannelDtoById(1L)).willReturn(channelDTO);
@@ -143,8 +144,11 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
     assertApplicationDtoWhenSaveOrUpdateIsSuccess(applicationDTOCaptor);
   }
 
-  @Test
+  @Test(expected = NestedServletException.class)
   public void saveOrUpdateShouldBeUnsuccessfulWhenCandidateIdIsNotANumber() throws Exception {
+    given(this.candidateService.getCandidate(null)).willThrow(new AssertionError());
+    given(this.positionService.getPositionDtoById(1L)).willReturn(positionDTO);
+    given(this.channelService.getChannelDtoById(1L)).willReturn(channelDTO);
 
     this.mockMvc.perform(post(REQUEST_URL_POST)
         .param("candidateId", TEXT)
@@ -152,7 +156,7 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
         .param("channel.id", STRING_VALUE_ONE).param("channel.name", CHANNEL_NAME_FACEBOOK)
         .param("description", DESCRIPTION))
         .andExpect(status().is3xxRedirection())
-        .andExpect(redirectedUrl(REDIRECT_URL_FOR_NON_EXISTING_CANDIDATE));
+        .andExpect(model().attributeDoesNotExist("candidateId"));
 
     verifyZeroInteractions(applicationsService);
     then(this.candidateService).should().getCandidate(null);
@@ -162,6 +166,9 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
 
   @Test
   public void saveOrUpdateShouldBeUnsuccessfulWhenCandidateIdNotExists() throws Exception {
+    given(this.candidateService.getCandidate(2L)).willReturn(null);
+    given(this.positionService.getPositionDtoById(1L)).willReturn(positionDTO);
+    given(this.channelService.getChannelDtoById(1L)).willReturn(channelDTO);
     given(this.messageKeyResolver.resolveMessageOrDefault(COMMON_INVALID_INPUT_MESSAGE_KEY)).willReturn(COMMON_INVALID_INPUT_MESSAGE);
     given(this.messageKeyResolver.resolveMessageOrDefault(CANDIDATE_NOT_FOUND_ERROR_MESSAGE_KEY)).willReturn(CANDIDATE_NOT_FOUND_ERROR_MESSAGE);
 
@@ -180,8 +187,11 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
     then(this.channelService).should().getChannelDtoById(1L);
   }
 
-  @Test
+  @Test(expected = NestedServletException.class)
   public void saveOrUpdateShouldBeUnsuccessfulWhenPositionIdIsNotANumber() throws Exception {
+    given(this.candidateService.getCandidate(1L)).willReturn(new CandidateDTO());
+    given(this.positionService.getPositionDtoById(null)).willThrow(new AssertionError());
+    given(this.channelService.getChannelDtoById(1L)).willReturn(channelDTO);
     given(this.messageKeyResolver.resolveMessageOrDefault(COMMON_INVALID_INPUT_MESSAGE_KEY)).willReturn(COMMON_INVALID_INPUT_MESSAGE);
     given(this.messageKeyResolver.resolveMessageOrDefault(POSITION_NOT_FOUND_ERROR_MESSAGE_KEY)).willReturn(POSITION_NOT_FOUND_ERROR_MESSAGE);
 
@@ -200,8 +210,11 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
     then(this.channelService).should().getChannelDtoById(1L);
   }
 
-  @Test
+  @Test(expected = NestedServletException.class)
   public void saveOrUpdateShouldBeUnsuccessfulWhenChannelIdIsNotANumber() throws Exception {
+    given(this.candidateService.getCandidate(1L)).willReturn(new CandidateDTO());
+    given(this.positionService.getPositionDtoById(1L)).willReturn(positionDTO);
+    given(this.channelService.getChannelDtoById(null)).willThrow(new AssertionError());
     given(this.messageKeyResolver.resolveMessageOrDefault(COMMON_INVALID_INPUT_MESSAGE_KEY)).willReturn(COMMON_INVALID_INPUT_MESSAGE);
     given(this.messageKeyResolver.resolveMessageOrDefault(CHANNEL_NOT_FOUND_ERROR_MESSAGE_KEY)).willReturn(CHANNEL_NOT_FOUND_ERROR_MESSAGE);
 

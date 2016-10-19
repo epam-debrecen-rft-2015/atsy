@@ -14,6 +14,7 @@ public class PositionValidator implements ConstraintValidator<PositionExists, Po
 
   @Override
   public void initialize(PositionExists a) {
+    // We leave this empty because there's no need to initialize anything.
   }
 
   @Override
