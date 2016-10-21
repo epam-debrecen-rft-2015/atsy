@@ -42,7 +42,7 @@
                         <select class="input form-control" name="position.id" id="position">
                         <option value = "${i18n_position_drop_down_default_value}">${i18n_position_drop_down_default_value}</option>
                         </select>
-                        <span style="color: #a94442" id="position_error"/>
+                        <span class = "help-block with-errors" id="position_error"/>
                     </div>
                 </div>
 
@@ -57,7 +57,7 @@
                         <select class="input form-control" name="channel.id" id="channel">
                             <option value = "${i18n_application_source_drop_down_default_value}">${i18n_application_source_drop_down_default_value}</option>
                         </select>
-                        <span style="color: #a94442" id="application_source_error"/>
+                        <span class = "help-block with-errors" id="application_source_error"/>
                     </div>
                 </div>
 
