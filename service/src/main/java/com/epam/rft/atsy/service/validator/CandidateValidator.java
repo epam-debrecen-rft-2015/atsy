@@ -18,7 +18,11 @@ public class CandidateValidator implements ConstraintValidator<CandidateExists, 
 
   @Override
   public boolean isValid(Long candidateId, ConstraintValidatorContext context) {
-    return candidateService.getCandidate(candidateId) != null;
+    try {
+      return candidateService.getCandidate(candidateId) != null;
+    } catch (AssertionError e) {
+      return false;
+    }
   }
 
   @Override

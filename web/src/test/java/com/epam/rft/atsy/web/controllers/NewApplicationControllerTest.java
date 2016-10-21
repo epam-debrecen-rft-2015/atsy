@@ -20,6 +20,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpHeaders;
 
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -40,7 +41,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-import org.springframework.web.util.NestedServletException;
 
 @RunWith(MockitoJUnitRunner.class)
 
@@ -50,7 +50,6 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
   private static final String REQUEST_URL_GET = "/new_application";
   private static final String REQUEST_URL_POST = "/secure/new_application";
   private static final String REDIRECT_URL_FOR_CANDIDATE_A = "/secure/candidate/details/1";
-  private static final String REDIRECT_URL_FOR_CANDIDATE_WITH_WRONG_ID = "/secure/application?candidateId=2";
   private static final String REDIRECT_URL_FIELD_ERROR = "/secure/application?candidateId=1";
 
   private static final String CHANNEL_NAME_FACEBOOK = "facebook";
@@ -144,7 +143,7 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
     assertApplicationDtoWhenSaveOrUpdateIsSuccess(applicationDTOCaptor);
   }
 
-  @Test(expected = NestedServletException.class)
+  @Test
   public void saveOrUpdateShouldBeUnsuccessfulWhenCandidateIdIsNotANumber() throws Exception {
     given(this.candidateService.getCandidate(null)).willThrow(new AssertionError());
     given(this.positionService.getPositionDtoById(1L)).willReturn(positionDTO);
@@ -156,6 +155,7 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
         .param("channel.id", STRING_VALUE_ONE).param("channel.name", CHANNEL_NAME_FACEBOOK)
         .param("description", DESCRIPTION))
         .andExpect(status().is3xxRedirection())
+        .andExpect(flash().attributeCount(1))
         .andExpect(model().attributeDoesNotExist("candidateId"));
 
     verifyZeroInteractions(applicationsService);
@@ -173,13 +173,15 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
     given(this.messageKeyResolver.resolveMessageOrDefault(CANDIDATE_NOT_FOUND_ERROR_MESSAGE_KEY)).willReturn(CANDIDATE_NOT_FOUND_ERROR_MESSAGE);
 
     this.mockMvc.perform(post(REQUEST_URL_POST)
+        .header(HttpHeaders.REFERER, REDIRECT_URL_FIELD_ERROR)
         .param("candidateId", STRING_VALUE_TWO)
         .param("position.id", STRING_VALUE_ONE).param("position.name", POSITION_NAME_DEVELOPER)
         .param("channel.id", STRING_VALUE_ONE).param("channel.name", CHANNEL_NAME_FACEBOOK)
         .param("description", DESCRIPTION))
         .andExpect(status().is3xxRedirection())
-        .andExpect(flash().attribute("candidateIdErrorMessage", CANDIDATE_NOT_FOUND_ERROR_MESSAGE))
-        .andExpect(redirectedUrl(REDIRECT_URL_FOR_CANDIDATE_WITH_WRONG_ID));
+        .andExpect(redirectedUrl(REDIRECT_URL_FIELD_ERROR))
+        .andExpect(flash().attributeCount(1))
+        .andExpect(flash().attribute("candidateIdErrorMessage", CANDIDATE_NOT_FOUND_ERROR_MESSAGE));
 
     verifyZeroInteractions(applicationsService);
     then(this.candidateService).should().getCandidate(2L);
@@ -187,7 +189,7 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
     then(this.channelService).should().getChannelDtoById(1L);
   }
 
-  @Test(expected = NestedServletException.class)
+  @Test
   public void saveOrUpdateShouldBeUnsuccessfulWhenPositionIdIsNotANumber() throws Exception {
     given(this.candidateService.getCandidate(1L)).willReturn(new CandidateDTO());
     given(this.positionService.getPositionDtoById(null)).willThrow(new AssertionError());
@@ -196,12 +198,14 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
     given(this.messageKeyResolver.resolveMessageOrDefault(POSITION_NOT_FOUND_ERROR_MESSAGE_KEY)).willReturn(POSITION_NOT_FOUND_ERROR_MESSAGE);
 
     this.mockMvc.perform(post(REQUEST_URL_POST)
+        .header(HttpHeaders.REFERER, REDIRECT_URL_FIELD_ERROR)
         .param("candidateId", STRING_VALUE_ONE)
         .param("position.id", TEXT).param("position.name", POSITION_NAME_DEVELOPER)
         .param("channel.id", STRING_VALUE_ONE).param("channel.name", CHANNEL_NAME_FACEBOOK)
         .param("description", DESCRIPTION))
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl(REDIRECT_URL_FIELD_ERROR))
+        .andExpect(flash().attributeCount(2))
         .andExpect(flash().attribute("positionErrorMessage", POSITION_NOT_FOUND_ERROR_MESSAGE));
 
     verifyZeroInteractions(applicationsService);
@@ -210,7 +214,7 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
     then(this.channelService).should().getChannelDtoById(1L);
   }
 
-  @Test(expected = NestedServletException.class)
+  @Test
   public void saveOrUpdateShouldBeUnsuccessfulWhenChannelIdIsNotANumber() throws Exception {
     given(this.candidateService.getCandidate(1L)).willReturn(new CandidateDTO());
     given(this.positionService.getPositionDtoById(1L)).willReturn(positionDTO);
@@ -219,12 +223,14 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
     given(this.messageKeyResolver.resolveMessageOrDefault(CHANNEL_NOT_FOUND_ERROR_MESSAGE_KEY)).willReturn(CHANNEL_NOT_FOUND_ERROR_MESSAGE);
 
     this.mockMvc.perform(post(REQUEST_URL_POST)
+        .header(HttpHeaders.REFERER, REDIRECT_URL_FIELD_ERROR)
         .param("candidateId", STRING_VALUE_ONE)
         .param("position.id", STRING_VALUE_ONE).param("position.name", POSITION_NAME_DEVELOPER)
         .param("channel.id", TEXT).param("channel.name", CHANNEL_NAME_FACEBOOK)
         .param("description", DESCRIPTION))
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl(REDIRECT_URL_FIELD_ERROR))
+        .andExpect(flash().attributeCount(2))
         .andExpect(flash().attribute("channelErrorMessage", CHANNEL_NOT_FOUND_ERROR_MESSAGE));
 
     verifyZeroInteractions(applicationsService);

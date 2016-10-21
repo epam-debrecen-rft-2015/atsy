@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Date;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.Errors;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -25,8 +26,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class NewApplicationController {
   private static final String VIEW_NAME = "application";
-  private static final String COMMON_INVALID_INPUT_MESSAGE_KEY = "common.invalid.input";
-  private static final String COMMON_INVALID_INPUT_MESSAGE_NAME = "errorMessage";
 
   @Autowired
   private ApplicationsService applicationsService;
@@ -52,6 +51,7 @@ public class NewApplicationController {
   @RequestMapping(method = RequestMethod.POST, value = "/secure/new_application")
   public String saveOrUpdate(@Valid @ModelAttribute StateHistoryDTO stateHistoryDTO,
                              BindingResult result,
+                             HttpServletRequest request,
                              RedirectAttributes redirectAttributes) {
     if (!result.hasErrors()) {
       stateHistoryDTO.setStateDTO(new StateDTO(1L, "newstate"));
@@ -69,12 +69,10 @@ public class NewApplicationController {
       return "redirect:/secure/candidate/details/{candidateId}";
     }
 
-    redirectAttributes.addFlashAttribute(COMMON_INVALID_INPUT_MESSAGE_NAME, this.messageKeyResolver.resolveMessageOrDefault(COMMON_INVALID_INPUT_MESSAGE_KEY));
     result.getFieldErrors().forEach(error ->
         redirectAttributes.addFlashAttribute(error.getField() + "ErrorMessage",
             messageKeyResolver.resolveMessageOrDefault(error.getDefaultMessage())));
 
-    redirectAttributes.addAttribute("candidateId", stateHistoryDTO.getCandidateId());
-    return "redirect:/secure/application";
+    return "redirect:" + request.getHeader(HttpHeaders.REFERER);
   }
 }

@@ -19,7 +19,11 @@ public class ChannelValidator implements ConstraintValidator<ChannelExists, Chan
 
   @Override
   public boolean isValid(ChannelDTO channel, ConstraintValidatorContext context) {
-    return channelService.getChannelDtoById(channel.getId()) != null;
+    try {
+      return channelService.getChannelDtoById(channel.getId()) != null;
+    } catch (AssertionError e) {
+      return false;
+    }
   }
 
   @Override

@@ -19,7 +19,11 @@ public class PositionValidator implements ConstraintValidator<PositionExists, Po
 
   @Override
   public boolean isValid(PositionDTO position, ConstraintValidatorContext context) {
-    return positionService.getPositionDtoById(position.getId()) != null;
+    try {
+      return positionService.getPositionDtoById(position.getId()) != null;
+    } catch (AssertionError e) {
+      return false;
+    }
   }
 
   @Override
