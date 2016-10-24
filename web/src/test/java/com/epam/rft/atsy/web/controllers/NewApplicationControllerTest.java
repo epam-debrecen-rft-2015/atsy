@@ -50,6 +50,7 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
   private static final String REQUEST_URL_GET = "/new_application";
   private static final String REQUEST_URL_POST = "/secure/new_application";
   private static final String REDIRECT_URL_FOR_CANDIDATE_A = "/secure/candidate/details/1";
+  private static final String REDIRECT_URL_FOR_CANDIDATE_WITH_WRONG_ID = "/secure/application?candidateId=2";
   private static final String REDIRECT_URL_FIELD_ERROR = "/secure/application?candidateId=1";
 
   private static final String CHANNEL_NAME_FACEBOOK = "facebook";
@@ -173,13 +174,12 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
     given(this.messageKeyResolver.resolveMessageOrDefault(CANDIDATE_NOT_FOUND_ERROR_MESSAGE_KEY)).willReturn(CANDIDATE_NOT_FOUND_ERROR_MESSAGE);
 
     this.mockMvc.perform(post(REQUEST_URL_POST)
-        .header(HttpHeaders.REFERER, REDIRECT_URL_FIELD_ERROR)
         .param("candidateId", STRING_VALUE_TWO)
         .param("position.id", STRING_VALUE_ONE).param("position.name", POSITION_NAME_DEVELOPER)
         .param("channel.id", STRING_VALUE_ONE).param("channel.name", CHANNEL_NAME_FACEBOOK)
         .param("description", DESCRIPTION))
         .andExpect(status().is3xxRedirection())
-        .andExpect(redirectedUrl(REDIRECT_URL_FIELD_ERROR))
+        .andExpect(redirectedUrl(REDIRECT_URL_FOR_CANDIDATE_WITH_WRONG_ID))
         .andExpect(flash().attributeCount(1))
         .andExpect(flash().attribute("candidateIdErrorMessage", CANDIDATE_NOT_FOUND_ERROR_MESSAGE));
 
@@ -198,7 +198,6 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
     given(this.messageKeyResolver.resolveMessageOrDefault(POSITION_NOT_FOUND_ERROR_MESSAGE_KEY)).willReturn(POSITION_NOT_FOUND_ERROR_MESSAGE);
 
     this.mockMvc.perform(post(REQUEST_URL_POST)
-        .header(HttpHeaders.REFERER, REDIRECT_URL_FIELD_ERROR)
         .param("candidateId", STRING_VALUE_ONE)
         .param("position.id", TEXT).param("position.name", POSITION_NAME_DEVELOPER)
         .param("channel.id", STRING_VALUE_ONE).param("channel.name", CHANNEL_NAME_FACEBOOK)
@@ -223,7 +222,6 @@ public class NewApplicationControllerTest extends AbstractControllerTest {
     given(this.messageKeyResolver.resolveMessageOrDefault(CHANNEL_NOT_FOUND_ERROR_MESSAGE_KEY)).willReturn(CHANNEL_NOT_FOUND_ERROR_MESSAGE);
 
     this.mockMvc.perform(post(REQUEST_URL_POST)
-        .header(HttpHeaders.REFERER, REDIRECT_URL_FIELD_ERROR)
         .param("candidateId", STRING_VALUE_ONE)
         .param("position.id", STRING_VALUE_ONE).param("position.name", POSITION_NAME_DEVELOPER)
         .param("channel.id", TEXT).param("channel.name", CHANNEL_NAME_FACEBOOK)

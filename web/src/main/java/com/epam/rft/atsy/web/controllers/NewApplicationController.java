@@ -51,7 +51,6 @@ public class NewApplicationController {
   @RequestMapping(method = RequestMethod.POST, value = "/secure/new_application")
   public String saveOrUpdate(@Valid @ModelAttribute StateHistoryDTO stateHistoryDTO,
                              BindingResult result,
-                             HttpServletRequest request,
                              RedirectAttributes redirectAttributes) {
     if (!result.hasErrors()) {
       stateHistoryDTO.setStateDTO(new StateDTO(1L, "newstate"));
@@ -73,6 +72,7 @@ public class NewApplicationController {
         redirectAttributes.addFlashAttribute(error.getField() + "ErrorMessage",
             messageKeyResolver.resolveMessageOrDefault(error.getDefaultMessage())));
 
-    return "redirect:" + request.getHeader(HttpHeaders.REFERER);
+    redirectAttributes.addAttribute("candidateId", stateHistoryDTO.getCandidateId());
+    return "redirect:/secure/application";
   }
 }
