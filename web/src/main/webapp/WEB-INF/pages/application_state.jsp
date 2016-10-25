@@ -131,7 +131,7 @@
                             <div class="col-sm-8">
                                 <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value="${data.positionName}"/></p>
                                   <c:if test="${stat.first}">
-                                      <select required class="form-control stateInput hidden" id="positionSelector" data-bind="valueWithInit: 'positionName'">
+                                      <select required class="form-control stateInput hidden" id="positionSelector" data-bind="valueWithInit: 'positionId'">
                                           <option disabled="disabled" selected="selected">
                                                <c:out value="${data.positionName}"/>
                                            </option>

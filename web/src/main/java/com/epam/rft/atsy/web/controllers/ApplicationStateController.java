@@ -104,6 +104,8 @@ public class ApplicationStateController {
         ApplicationDTO applicationDTO = applicationsService.getApplicationDtoById(applicationId);
         representation.setChannelName(
             channelService.getChannelDtoById(applicationDTO.getChannelId()).getName());
+        representation.setPositionId(
+            applicationDTO.getPositionId());
         representation.setPositionName(
             positionService.getPositionDtoById(applicationDTO.getPositionId()).getName());
       }
