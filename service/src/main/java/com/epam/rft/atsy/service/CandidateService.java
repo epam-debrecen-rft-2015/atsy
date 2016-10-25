@@ -7,7 +7,7 @@ import com.epam.rft.atsy.service.response.PagingResponse;
 /**
  * Service that operates with candidates in the database layer and in the view layer.
  */
-public interface CandidateService {
+public interface CandidateService extends LogicallyDeletableService<CandidateDTO> {
 
   /**
    * Returns the candidate object with the given id.

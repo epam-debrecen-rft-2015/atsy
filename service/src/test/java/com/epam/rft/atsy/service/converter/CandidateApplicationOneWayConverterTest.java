@@ -73,6 +73,7 @@ public class CandidateApplicationOneWayConverterTest {
       .candidateEntity(candidateEntity)
       .positionEntity(positionEntity)
       .channelEntity(channelEntity)
+      .deleted(false)
       .build();
 
   private StatesEntity statesEntity = StatesEntity.builder()
@@ -90,8 +91,8 @@ public class CandidateApplicationOneWayConverterTest {
 
   private CandidateApplicationDTO candidateApplicationDTO = CandidateApplicationDTO.builder()
       .lastStateId(STATE_HISTORY_ID)
-      .applicationId(APPLICATION_ID)
-      .positionName(POSITION_NAME)
+      .id(APPLICATION_ID)
+      .name(POSITION_NAME)
       .creationDate(APPLICATION_CREATION_DATE)
       .modificationDate(APPLICATION_CREATION_DATE)
       .stateType(STATE_TYPE)

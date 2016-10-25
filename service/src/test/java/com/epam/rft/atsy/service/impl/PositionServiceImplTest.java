@@ -1,12 +1,23 @@
 package com.epam.rft.atsy.service.impl;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+
 import com.epam.rft.atsy.persistence.entities.PositionEntity;
 import com.epam.rft.atsy.persistence.repositories.PositionRepository;
 import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.domain.PositionDTO;
 import com.epam.rft.atsy.service.exception.DuplicatePositionException;
 import com.epam.rft.atsy.service.exception.ObjectNotFoundException;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,18 +31,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PositionServiceImplTest {
@@ -289,6 +288,7 @@ public class PositionServiceImplTest {
         ArgumentCaptor.forClass(PositionEntity.class);
     given(this.positionRepository.findByName(DEVELOPER_NAME))
         .willReturn(deletedDeveloperEntity);
+    given(this.positionRepository.saveAndFlush(deletedDeveloperEntity)).willReturn(deletedDeveloperEntity);
 
     // When
     this.positionService.saveOrUpdate(deletedDeveloperDto);
@@ -307,6 +307,7 @@ public class PositionServiceImplTest {
     // Given
     given(this.positionRepository.findByName(DEVELOPER_NAME)).willReturn(null);
     given(this.converterService.convert(developerDto, PositionEntity.class)).willReturn(developerEntity);
+    given(this.positionRepository.saveAndFlush(developerEntity)).willReturn(developerEntity);
 
     // When
     this.positionService.saveOrUpdate(developerDto);

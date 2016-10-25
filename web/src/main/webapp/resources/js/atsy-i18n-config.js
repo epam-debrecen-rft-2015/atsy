@@ -1,10 +1,8 @@
-$(document).ready(function() {
-    $.i18n.properties({
-        name: 'messages',
-        path: '/atsy/',
-        language: 'hu',
-        async: true,
-        mode:'both',
-        callback: function() {}
-    });
+$.i18n.properties({
+    name: 'messages',
+    path: '/atsy/',
+    language: $('html').attr('lang'),
+    async: true,
+    mode:'both',
+    callback: function() {}
 });

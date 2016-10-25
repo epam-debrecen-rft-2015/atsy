@@ -20,8 +20,8 @@ import lombok.NoArgsConstructor;
 public class CandidateApplicationDTO {
 
   private Long lastStateId;
-  private Long applicationId;
-  private String positionName;
+  private Long id;
+  private String name;
   private Date creationDate;
   private Date modificationDate;
   private String stateType;

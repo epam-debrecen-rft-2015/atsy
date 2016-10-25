@@ -1,47 +1,47 @@
 Feature: Login in
 
-  Scenario: user exists and can login
+  Background:
 
     Given the user is on the login page
+<<<<<<< HEAD
     And the user enters username test
     And the user enters password pass3
     When the user clicks on Bejelentkezés button
     Then the Candidates page appears and user logs out
+=======
+>>>>>>> master
 
-  Scenario: user enters wrong password
+  Scenario: 1 UI element check on the Login page
 
-    Given the user is on the login page
-    And the user enters username test
-    And the user enters password wrongPwd
-    When the user clicks on Bejelentkezés button
-    Then Felhasználónév vagy jelszó nem megfelelő! message appears
+    Then the user should get epam logo
+    And the user should get name field
+    And the user should get password field
+    And the user should get Bejelentkezés button
+    And the user should see placeholder Felhasználónév in the name field
+    And the user should see placeholder Jelszó in the password field
 
-  Scenario: user enters wrong username
+  Scenario: 2 Username inputfield is automatically in focus
 
-    Given the user is on the login page
-    And the user enters username wrongUname
-    And the user enters password pass3
-    When the user clicks on Bejelentkezés button
-    Then Felhasználónév vagy jelszó nem megfelelő! message appears
+    Then the username field should be in focus
 
-  Scenario: user missed to enter username and tries to login
+  Scenario: 3 Browser title is correct
 
-    Given the user is on the login page
-    And the username field is not filled in
-    And the user enters password pass3
-    When the user clicks on Bejelentkezés button
-    Then Add meg a felhasználó neved! message appears above the name field
+    Then the browser title should be Applicant Tracking System
 
-  Scenario: user missed to enter password and tries to login
+  Scenario Outline: 4 User exists and logs in
 
-    Given the user is on the login page
-    And the user enters username test
-    And the password field is not filled in
-    When the user clicks on Bejelentkezés button
-    Then Add meg a jelszavad! message appears above the password field
+    When the user enters username <username>
+    And the user enters password <password>
+    And the user clicks on Bejelentkezés button
+    Then the Candidates page should appear
+    Examples:
+      | username | password |
+      | test     | pass3    |
+      | TEST     | pass3    |
 
-  Scenario: username inputfield is automatically in focus
+  Scenario Outline: 5 User enters invalid username AND/OR password
 
+<<<<<<< HEAD
     Given the user is on the login page
     Then the username field is in focus
 
@@ -53,3 +53,29 @@ Feature: Login in
     And the user clicks on Bejelentkezés button
     When the user tries to access the login page
     Then the Candidates page appears and user logs out
+=======
+    And the user enters username <username>
+    And the user enters password <password>
+    When the user clicks on Bejelentkezés button
+    Then  <error message> message should appear
+    Examples:
+      | username    | password  | error message                             |
+      | test        | wrongPwd  | Felhasználónév vagy jelszó nem megfelelő! |
+      | wrongUname  | pass3     | Felhasználónév vagy jelszó nem megfelelő! |
+      | wrongUname  | wrongPwd  | Felhasználónév vagy jelszó nem megfelelő! |
+      | tes t       | pass3     | Felhasználónév vagy jelszó nem megfelelő! |
+      | test        | pass 3    | Felhasználónév vagy jelszó nem megfelelő! |
+
+  Scenario Outline: 6 User enters empty username AND/OR password
+
+    And the user enters username <username>
+    And the user enters password <password>
+    When the user clicks on Bejelentkezés button
+    Then  <error message> message should appear above the <field_name> field
+    Examples:
+      | username | password | error message                 | field_name |
+      |          | pass3    | Add meg a felhasználó neved!  | name       |
+      | test     |          | Add meg a jelszavad!          | password   |
+      |          |          | Add meg a felhasználó neved!  | name       |
+      |          |          | Add meg a jelszavad!          | password   |
+>>>>>>> master

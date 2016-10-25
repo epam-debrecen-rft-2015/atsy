@@ -82,16 +82,16 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
   public void setUpTestData() {
     developerApplicationDto =
         CandidateApplicationDTO.builder().lastStateId(LAST_STATE_ID)
-            .applicationId(APPLICATION_ID)
-            .positionName(DEVELOPER_POSITION).creationDate(CREATION_DATE)
+            .id(APPLICATION_ID)
+            .name(DEVELOPER_POSITION).creationDate(CREATION_DATE)
             .modificationDate(MODIFICATION_DATE)
             .stateType(RAW_STATE_TYPE)
             .build();
 
     sysadminApplicationDto =
         CandidateApplicationDTO.builder().lastStateId(LAST_STATE_ID)
-            .applicationId(APPLICATION_ID)
-            .positionName(SYSADMIN_POSITION).creationDate(CREATION_DATE)
+            .id(APPLICATION_ID)
+            .name(SYSADMIN_POSITION).creationDate(CREATION_DATE)
             .modificationDate(MODIFICATION_DATE)
             .stateType(RAW_STATE_TYPE)
             .build();
@@ -193,9 +193,9 @@ public class CandidateApplicationControllerTest extends AbstractControllerTest {
     resultActions
         .andExpect(jsonPath(basePath + "lastStateId",
             equalTo(applicationDto.getLastStateId().intValue())))
-        .andExpect(jsonPath(basePath + "applicationId",
-            equalTo(applicationDto.getApplicationId().intValue())))
-        .andExpect(jsonPath(basePath + "positionName", equalTo(applicationDto.getPositionName())))
+        .andExpect(jsonPath(basePath + "id",
+            equalTo(applicationDto.getId().intValue())))
+        .andExpect(jsonPath(basePath + "name", equalTo(applicationDto.getName())))
         .andExpect(jsonPath(basePath + "creationDate",
             equalTo(applicationDto.getCreationDate().getTime())))
         .andExpect(jsonPath(basePath + "modificationDate",
