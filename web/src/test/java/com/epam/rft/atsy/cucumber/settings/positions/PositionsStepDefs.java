@@ -26,19 +26,20 @@ public class PositionsStepDefs {
   private String positionsListContents;
   private String positionName;
 
-  @Given("^the list is saved$")
-  public void the_list_saved() throws Throwable {
+  public void rememberTheList() {
     positionsListContents =
             getDriver().findElement(By.cssSelector("table#positions tbody")).getText();
   }
 
   @When("^the user clicks on Mentés button$")
   public void the_mentes_button_clicked() throws Throwable {
+    rememberTheList();
     getDriver().findElement(By.cssSelector("#position-form .btn-success")).click();
   }
 
   @When("^the user clicks on Mégsem button$")
   public void the_megsem_button_clicked() throws Throwable {
+    rememberTheList();
     getDriver().findElement(By.cssSelector("#position-form .btn-danger")).click();
   }
 

@@ -85,7 +85,6 @@ Feature: As the user
       |            | Név megadása kötelező! |
 
   Scenario Outline: 14 User cancels new position creation
-    Given the list is saved
     When the user enters <title> into the title
     And the user clicks on Mégsem button
     Then the list of positions should left unchanged
@@ -136,7 +135,6 @@ Feature: As the user
       |           | Név megadása kötelező! |
 
   Scenario Outline: 18 User cancels modifying an existing position
-    Given the list is saved
     When the user clicks on Edit button on a position
     And the user enters <title> into the title
     And the user clicks on Mégsem button
@@ -148,7 +146,6 @@ Feature: As the user
 
   #TODO Scenario Outline: 18b User cancels modifying an existing position
     #TODO Given position with <old_title> title exists
-    #TODO And the list is saved
     #TODO When the user clicks on Edit button on the <old_title> position
     #TODO And the user enters <new_title> into the title
     #TODO And the user clicks on Mégsem button
@@ -170,7 +167,6 @@ Feature: As the user
 
   #TODO Scenario Outline: 20 User cancels deleting a position
     #TODO Given position with <title> title exists
-    #TODO And the list is saved
     #TODO When the user clicks on Delete button on a position
     #TODO Then <message> confirmation message should appear
     #TODO When the user clicks on No button
