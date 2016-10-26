@@ -7,6 +7,7 @@ import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StateFlowService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateFlowDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import org.springframework.util.Assert;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The StateFlowService that responsible for actions with StateFlows.
@@ -47,4 +49,16 @@ public class StateFlowServiceImpl implements StateFlowService {
 
     return converterService.convert(stateFlowEntities, StateFlowDTO.class);
   }
+  @Transactional(readOnly = true)
+  @Override
+  public boolean isAvailableFromLastState(List<StateHistoryDTO> representationList, String state) {
+    Collection<StateFlowDTO> available = getStateFlowDTOByFromStateDTO(representationList.get(0).getStateDTO());
+    List<StateFlowDTO> availableList= available.stream().filter(p->p.getToStateDTO().getName().equals(state)).collect(
+       Collectors.toList());
+    if(availableList.isEmpty()){
+      return false;
+    }
+    return true;
+  }
+
 }

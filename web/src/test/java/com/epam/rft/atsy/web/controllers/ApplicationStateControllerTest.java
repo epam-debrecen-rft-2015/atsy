@@ -279,12 +279,17 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
         .convert(emptyStateHistoryDTOList, StateHistoryViewRepresentation.class))
         .willReturn(emptyStateHistoryViewRepresentationList);
 
+    given(stateService.getStateDtoByName(CLICKED_STATE_NAME_NEW_STATE))
+        .willReturn(stateDTOWithStateNameNewState);
+
+    given(stateFlowService
+        .isAvailableFromLastState(emptyStateHistoryDTOList, CLICKED_STATE_NAME_NEW_STATE))
+        .willReturn(true);
+
     given(applicationsService.getApplicationDtoById(APPLICATION_ID)).willReturn(applicationDTO);
     given(channelService.getChannelDtoById(CHANNEL_ID)).willReturn(channelDTO);
     given(positionService.getPositionDtoById(POSITION_ID)).willReturn(positionDTO);
     given(candidateService.getCandidateByApplicationID(APPLICATION_ID)).willReturn(candidateDTO);
-    given(stateService.getStateDtoByName(CLICKED_STATE_NAME_NEW_STATE))
-        .willReturn(stateDTOWithStateNameNewState);
     given(messageKeyResolver
         .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_STATE,
             CLICKED_STATE_NAME_NEW_STATE)).willReturn(STATE_NAME_NEW_STATE);
@@ -317,6 +322,8 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     then(channelService).should().getChannelDtoById(CHANNEL_ID);
     then(positionService).should().getPositionDtoById(POSITION_ID);
     then(stateService).should().getStateDtoByName(CLICKED_STATE_NAME_NEW_STATE);
+    then(stateFlowService).should()
+        .isAvailableFromLastState(emptyStateHistoryDTOList, CLICKED_STATE_NAME_NEW_STATE);
     then(messageKeyResolver).should()
         .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_STATE,
             CLICKED_STATE_NAME_NEW_STATE);
@@ -334,6 +341,9 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
         .willReturn(actualStateHistoryViewRepresentationListWithTwoElements);
     given(stateService.getStateDtoByName(CLICKED_STATE_NAME_CODING))
         .willReturn(stateDTOWithStateNameCoding);
+    given(stateFlowService
+        .isAvailableFromLastState(stateHistoryDTOListWithTwoElements,CLICKED_STATE_NAME_CODING))
+        .willReturn(true);
     given(stateFlowService.getStateFlowDTOByFromStateDTO(stateDTOWithStateNameCoding))
         .willReturn(stateFlowDTOListWithSingleElement);
     given(candidateService.getCandidateByApplicationID(APPLICATION_ID)).willReturn(candidateDTO);
@@ -373,6 +383,8 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
         .convert(stateHistoryDTOListWithTwoElements, StateHistoryViewRepresentation.class);
     then(stateService).should().getStateDtoByName(CLICKED_STATE_NAME_CODING);
     then(stateFlowService).should().getStateFlowDTOByFromStateDTO(stateDTOWithStateNameCoding);
+    then(stateFlowService).should()
+        .isAvailableFromLastState(stateHistoryDTOListWithTwoElements, CLICKED_STATE_NAME_CODING);
 
     then(messageKeyResolver).should()
         .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_STATE,

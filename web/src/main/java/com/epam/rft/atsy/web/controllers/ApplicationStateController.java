@@ -11,6 +11,7 @@ import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.ApplicationDTO;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.web.StateHistoryViewRepresentation;
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,33 +84,35 @@ public class ApplicationStateController {
     ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
     modelAndView.addObject("applicationId", applicationId);
 
+    List<StateHistoryDTO> stateHistory=statesHistoryService.getStateHistoriesByApplicationId(applicationId);
+
     List<StateHistoryViewRepresentation>
         stateHistoryViewRepresentations =
-        converterService
-            .convert(statesHistoryService.getStateHistoriesByApplicationId(applicationId),
-                StateHistoryViewRepresentation.class);
+        converterService.convert(stateHistory,StateHistoryViewRepresentation.class);
 
-    if (clickedState != null && !isRepresentationsListFirstStateEquals(stateHistoryViewRepresentations, clickedState)) {
+    if (clickedState != null) {
       StateDTO clickedStateDTO = stateService.getStateDtoByName(clickedState);
 
       Assert.notNull(clickedStateDTO);
+      if (stateFlowService.isAvailableFromLastState(stateHistory, clickedState)) {
+        StateHistoryViewRepresentation representation = StateHistoryViewRepresentation.builder()
+            .creationDate(new Date())
+            .stateId(clickedStateDTO.getId())
+            .stateName(clickedStateDTO.getName())
+            .build();
 
-      StateHistoryViewRepresentation representation = StateHistoryViewRepresentation.builder()
-          .creationDate(new Date())
-          .stateId(clickedStateDTO.getId())
-          .stateName(clickedStateDTO.getName())
-          .build();
+        if (clickedState.equals(NEW_STATE)) {
+          ApplicationDTO applicationDTO = applicationsService.getApplicationDtoById(applicationId);
+          representation.setChannelName(
+              channelService.getChannelDtoById(applicationDTO.getChannelId()).getName());
+          representation.setPositionName(
+              positionService.getPositionDtoById(applicationDTO.getPositionId()).getName());
+        }
 
-      if (clickedState.equals(NEW_STATE)) {
-        ApplicationDTO applicationDTO = applicationsService.getApplicationDtoById(applicationId);
-        representation.setChannelName(
-            channelService.getChannelDtoById(applicationDTO.getChannelId()).getName());
-        representation.setPositionName(
-            positionService.getPositionDtoById(applicationDTO.getPositionId()).getName());
+        stateHistoryViewRepresentations.add(0, representation);
       }
-
-      stateHistoryViewRepresentations.add(0, representation);
     }
+
 
     CandidateDTO candidateDTO = candidateService.getCandidateByApplicationID(applicationId);
 
@@ -134,16 +137,4 @@ public class ApplicationStateController {
     modelAndView.addObject(CANDIDATE_OBJECT_KEY, candidateDTO);
     return modelAndView;
   }
-
-  private boolean isRepresentationsListFirstStateEquals(
-      List<StateHistoryViewRepresentation> representaionList, String state) {
-      boolean value= false;
-    for (StateHistoryViewRepresentation test : representaionList) {
-      if(representaionList.isEmpty() || test.getStateName().equals(state)){
-        value=true;
-      }
-    }
-    return value;
-  }
-
 }
