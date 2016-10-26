@@ -7,7 +7,7 @@ Feature: As the user
     And the user clicks on Beállítások-text in the header
     And the user clicks on Pozíciók tab link
 
-  Scenario Outline: 1 UI check
+  Scenario: 1 UI check
     Then the user should get epam logo in the header
     And the user should get Beállítások link in the header
     And the user should get Kilépés link in the header
@@ -17,14 +17,11 @@ Feature: As the user
     And the user should get Jelszó-változtatás tab link
     #TODO And the user should get Pozíciók table with the positions
     # Név, Műveletek, Edit icon and Delete icon test
-    And the user should get <title> subtitle
+    And the user should get Új pozíció felvétele subtitle
     And the user should get position label
     And the user should get position field
     And the user should get Mentés button
     And the user should get Mégsem button
-    Examples:
-    | title               |
-    | Új pozíció felvétele|
 
   Scenario: 2 User checks the epam logo in the header
     When the user clicks on epam-logo in the header
@@ -105,7 +102,6 @@ Feature: As the user
     And the user clicks on Mentés button
     Then the list of positions should be changed
 
-  # bizonyosat módosítson + azt is tesztelje le
   #TODO Scenario Outline: 15b User modifies an existing position
     #TODO Given position with <new_title> title does not exist
     #TODO And position with <old_title> title exists
@@ -150,7 +146,6 @@ Feature: As the user
       | Új pozíció |
       |            |
 
-  # bizonyosat módosítson
   #TODO Scenario Outline: 18b User cancels modifying an existing position
     #TODO Given position with <old_title> title exists
     #TODO And the list is saved

@@ -14,11 +14,7 @@ import cucumber.api.java.en.Given;
 import org.openqa.selenium.WebElement;
 
 public class CommonStepDefs {
-  private DriverProvider driverProvider;
 
-  public CommonStepDefs(DriverProvider driverProvider) {
-      this.driverProvider = driverProvider;
-  }
 
   @Given("The user signed in")
   public void loggedIn() {
@@ -32,19 +28,19 @@ public class CommonStepDefs {
   public void theUserClicksOnButtonInTheHeader(String button) throws Throwable {
       switch (button) {
           case "epam-logo":
-              driverProvider.getDriver().findElement(By.cssSelector("img.img-rounded")).click();
+              getDriver().findElement(By.cssSelector("img.img-rounded")).click();
               break;
           case "Beállítások-icon":
-              driverProvider.getDriver().findElement(By.id("settings_link")).click();
+              getDriver().findElement(By.id("settings_link")).click();
               break;
           case "Beállítások-text":
-              driverProvider.getDriver().findElement(By.linkText("Beállítások")).click();
+              getDriver().findElement(By.linkText("Beállítások")).click();
               break;
           case "Kilépés-icon":
-              driverProvider.getDriver().findElement(By.id("logout_link")).click();
+              getDriver().findElement(By.id("logout_link")).click();
               break;
           case "Kilépés-text":
-              driverProvider.getDriver().findElement(By.linkText("Kilépés")).click();
+              getDriver().findElement(By.linkText("Kilépés")).click();
               break;
       }
 
@@ -52,30 +48,30 @@ public class CommonStepDefs {
 
   @Then("^the user should get epam logo in the header$")
   public void theUserGetsEpamLogoInTheHeader() throws Throwable {
-      WebElement element = driverProvider.getDriver().findElement(By.cssSelector("img.img-rounded"));
+      WebElement element = getDriver().findElement(By.cssSelector("img.img-rounded"));
       assertThat(element.isDisplayed(), is(true));
   }
 
   @Then("^the user should get Beállítások link in the header$")
   public void theUserGetsSettingsLinkInTheHeader() throws Throwable {
-      WebElement text_element = driverProvider.getDriver().findElement(By.linkText("Beállítások"));
+      WebElement text_element = getDriver().findElement(By.linkText("Beállítások"));
       assertThat(text_element.getText(), is("Beállítások"));
       assertThat(text_element.isDisplayed(), is(true));
-      WebElement icon_element = driverProvider.getDriver().findElement(By.id("settings_link"));
+      WebElement icon_element = getDriver().findElement(By.id("settings_link"));
       assertThat(icon_element.isDisplayed(), is(true));
   }
 
   @Then("^the user should get Kilépés link in the header$")
   public void theUserGetsLogoutLinkInTheHeader() throws Throwable {
-     WebElement text_element = driverProvider.getDriver().findElement(By.linkText("Kilépés"));
+     WebElement text_element = getDriver().findElement(By.linkText("Kilépés"));
      assertThat(text_element.getText(), is("Kilépés"));
      assertThat(text_element.isDisplayed(), is(true));
-     WebElement icon_element = driverProvider.getDriver().findElement(By.id("logout_link"));
+     WebElement icon_element = getDriver().findElement(By.id("logout_link"));
      assertThat(icon_element.isDisplayed(), is(true));
   }
 
   @Then("^(.*) url should open$")
-  public void UrlOpens(String page) throws Throwable {
+  public void urlOpens(String page) throws Throwable {
     // TODO
     switch (page) {
       case "welcome":
@@ -90,7 +86,8 @@ public class CommonStepDefs {
       case "logout":
             assertThat(getDriver().getCurrentUrl(), is("http://localhost:8080/atsy/login?logout"));
             break;
-            // a többi oldalt is hozzá kell majd adni, vannak olyan oldalak amelyeknek megegyezik az url-je
+       //the other pages should be put here too
+       //warning: some pages have the same URL
     }
   }
 

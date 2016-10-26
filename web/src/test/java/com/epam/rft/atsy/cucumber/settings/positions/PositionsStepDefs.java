@@ -1,6 +1,5 @@
 package com.epam.rft.atsy.cucumber.settings.positions;
 
-import com.epam.rft.atsy.cucumber.util.DriverProvider;
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForAjax;
 import static org.hamcrest.CoreMatchers.is;
@@ -24,50 +23,8 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 public class PositionsStepDefs {
-  private DriverProvider driverProvider;
   private String positionsListContents;
   private String positionName;
-
-  public PositionsStepDefs(DriverProvider driverProvider) {
-        this.driverProvider = driverProvider;
-  }
-
-  // Anita: ez nem szerepelt a feature fájlban úh innen is kivettem
-  /*
-  @Given("^the user is on an Atsy page$")
-  public void the_user_is_on_an_Atsy_page() throws Throwable {
-    assertThat(getDriver().getCurrentUrl(), containsString("secure"));
-  }
-  */
-
-  // Anita: ez innen ki lett törölve a feature fájlból mert felesleges
-  /*
-  @Given("^the options screen appears$")
-  public void the_options_screen_appears() throws Throwable {
-    WebDriverWait wait = new WebDriverWait(getDriver(), 5);
-    wait.until(presenceOfElementLocated(By.id("positions_link")));
-    assertThat(getDriver().findElement(By.id("settings")).isDisplayed(), is(true));
-  }
-  */
-
-  // Anita: ez innen ki lett törölve a feature fájlból mert felesleges
-  /*
-  @Given("^the positions screen appears$")
-  public void the_positions_screen_appears() throws Throwable {
-    WebDriverWait wait = new WebDriverWait(getDriver(), 5);
-    wait.until(presenceOfElementLocated(By.id("positions")));
-    assertThat(getDriver().findElement(By.id("settings")).isDisplayed(), is(true));
-    assertThat(getDriver().findElement(By.id("positions")).getTagName(), is("table"));
-  }
-  */
-
-  // Anita: ez innen ki lett törölve a feature fájlból mert felesleges
-  /*
-  @Given("^the user in on the \"([^\"]*)\" page$")
-  public void the_user_in_on_the_page(String arg1) throws Throwable {
-    the_options_screen_appears();
-  }
-  */
 
   @Given("^the list is saved$")
   public void the_list_saved() throws Throwable {
@@ -103,13 +60,13 @@ public class PositionsStepDefs {
   public void theUserClicksOnTabLink(String tab) throws Throwable {
       switch (tab) {
           case "Pozíciók":
-              driverProvider.getDriver().findElement(By.id("positions_link")).click();
+              getDriver().findElement(By.id("positions_link")).click();
               break;
           case "Csatornák":
-              driverProvider.getDriver().findElement(By.id("channels_link")).click();
+              getDriver().findElement(By.id("channels_link")).click();
               break;
           case "Jelszó-változtatás":
-              driverProvider.getDriver().findElement(By.id("password_link")).click();
+              getDriver().findElement(By.id("password_link")).click();
               break;
         }
     }
@@ -162,7 +119,7 @@ public class PositionsStepDefs {
 
   @Then("^the user should get (.*) title$")
   public void theUserGetsPageTitle(String title) throws Throwable {
-    WebElement element = driverProvider.getDriver().findElement(By.cssSelector("h1"));
+    WebElement element = getDriver().findElement(By.cssSelector("h1"));
     assertThat(element.getText(), is(title));
     assertThat(element.isDisplayed(), is(true));
   }
@@ -172,17 +129,17 @@ public class PositionsStepDefs {
      WebElement element;
      switch (tab) {
          case "Pozíciók":
-             element = driverProvider.getDriver().findElement(By.id("positions_link"));
+             element = getDriver().findElement(By.id("positions_link"));
              assertThat(element.getText(), is("Pozíciók"));
              assertThat(element.isDisplayed(), is(true));
              break;
          case "Csatornák":
-             element = driverProvider.getDriver().findElement(By.id("channels_link"));
+             element = getDriver().findElement(By.id("channels_link"));
              assertThat(element.getText(), is("Csatornák"));
              assertThat(element.isDisplayed(), is(true));
              break;
          case "Jelszó-változtatás":
-             element = driverProvider.getDriver().findElement(By.id("password_link"));
+             element = getDriver().findElement(By.id("password_link"));
              assertThat(element.getText(), is("Jelszó változtatás"));
              assertThat(element.isDisplayed(), is(true));
              break;
@@ -194,11 +151,11 @@ public class PositionsStepDefs {
       WebElement element;
       switch (tab) {
           case "Pozíciók":
-              element = driverProvider.getDriver().findElement(By.id("positions"));
+              element = getDriver().findElement(By.id("positions"));
               assertThat(element.isDisplayed(), is(true));
               break;
           case "Csatornák":
-              element = driverProvider.getDriver().findElement(By.id("channels"));
+              element = getDriver().findElement(By.id("channels"));
               assertThat(element.isDisplayed(), is(true));
               break;
       }
@@ -206,27 +163,27 @@ public class PositionsStepDefs {
 
   @Then("^the user should get password change form$")
   public void passwordChangeFormIsShown() throws Throwable {
-      WebElement element= driverProvider.getDriver().findElement(By.id("pw-form"));
+      WebElement element= getDriver().findElement(By.id("pw-form"));
       assertThat(element.isDisplayed(), is(true));
   }
 
   @Then("^the user should get (.*) subtitle$")
   public void theUserShouldGetTitleOnThePositionsPage(String title) throws Throwable {
-      WebElement element= driverProvider.getDriver().findElement(By.cssSelector("legend"));
+      WebElement element= getDriver().findElement(By.cssSelector("legend"));
       assertThat(element.getText(), is(title));
       assertThat(element.isDisplayed(), is(true));
   }
 
   @Then("^the user should get position label$")
   public void theUserGetsPositionLabel() throws Throwable {
-      WebElement element= driverProvider.getDriver().findElement(By.cssSelector("label"));
+      WebElement element= getDriver().findElement(By.cssSelector("label"));
       assertThat(element.getText(), is("Pozíció neve:"));
       assertThat(element.isDisplayed(), is(true));
   }
 
   @Then("^the user should get position field$")
   public void theUserGetsPositionField() throws Throwable {
-      WebElement element= driverProvider.getDriver().findElement(By.id("position_name"));
+      WebElement element= getDriver().findElement(By.id("position_name"));
       assertThat(element.isDisplayed(), is(true));
     }
 
@@ -235,12 +192,12 @@ public class PositionsStepDefs {
       WebElement element;
       switch (button) {
           case "Mentés":
-              element = driverProvider.getDriver().findElement(By.cssSelector("button.btn.btn-success"));
+              element = getDriver().findElement(By.cssSelector("button.btn.btn-success"));
               assertThat(element.isDisplayed(), is(true));
               assertThat(element.getText(), is(button));
               break;
           case "Mégsem":
-              element = driverProvider.getDriver().findElement(By.cssSelector("button.btn.btn-danger"));
+              element = getDriver().findElement(By.cssSelector("button.btn.btn-danger"));
               assertThat(element.isDisplayed(), is(true));
               assertThat(element.getText(), is(button));
               break;
