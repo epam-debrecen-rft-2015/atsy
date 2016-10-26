@@ -24,7 +24,7 @@ public class LoginStepDefs {
     this.driverProvider = driverProvider;
   }
 
-  @Given("^the user is on the login page$")
+  @Given("^the user opens the login page$")
   public void onLoginPage() {
     driverProvider.getDriver().get("http://localhost:8080/atsy/login?locale=hu");
   }
