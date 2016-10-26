@@ -3,13 +3,6 @@ Feature: Login in
   Background:
 
     Given the user is on the login page
-<<<<<<< HEAD
-    And the user enters username test
-    And the user enters password pass3
-    When the user clicks on Bejelentkezés button
-    Then the Candidates page appears and user logs out
-=======
->>>>>>> master
 
   Scenario: 1 UI element check on the Login page
 
@@ -41,19 +34,6 @@ Feature: Login in
 
   Scenario Outline: 5 User enters invalid username AND/OR password
 
-<<<<<<< HEAD
-    Given the user is on the login page
-    Then the username field is in focus
-
-  Scenario: user redirected to welcome page if already signed in
-    Given the user is on the login page
-    And the user enters username test
-    And the user enters password pass3
-    And the user tries to access the login page
-    And the user clicks on Bejelentkezés button
-    When the user tries to access the login page
-    Then the Candidates page appears and user logs out
-=======
     And the user enters username <username>
     And the user enters password <password>
     When the user clicks on Bejelentkezés button
@@ -78,4 +58,3 @@ Feature: Login in
       | test     |          | Add meg a jelszavad!          | password   |
       |          |          | Add meg a felhasználó neved!  | name       |
       |          |          | Add meg a jelszavad!          | password   |
->>>>>>> master

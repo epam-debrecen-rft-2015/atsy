@@ -30,7 +30,7 @@ public class LoginStepDefs {
     driverProvider.getDriver().get("http://localhost:8080/atsy/login?locale=hu");
   }
 
-  @Given("the user enters username (.*)")
+  @When("^the user enters username (.*)$")
   public void userEntersUsernameUser(String userName) {
     driverProvider.getDriver().findElement(By.id("name")).sendKeys(userName);
   }
@@ -45,9 +45,10 @@ public class LoginStepDefs {
     driverProvider.getDriver().findElement(By.id("loginButton")).click();
   }
 
-  @Then("the Candidates page appears and user logs out")
+  @Then("^the Candidates page should appear$")
   public void candidatesPageAppears() {
-    driverProvider.getDriver().findElement(By.id("logout_link")).click();
+    WebDriverWait wait = new WebDriverWait(getDriver(), 5);
+    wait.until(presenceOfElementLocated(By.id("candidates_table")));
   }
 
   @Then("^(.*) message should appear$")
@@ -103,11 +104,6 @@ public class LoginStepDefs {
     WebElement messageElement = driverProvider.getDriver().findElement(By.id("loginButton"));
     assertThat(messageElement.isDisplayed(), is(true));
     assertThat(messageElement.getText(), is(buttonLabel));
-  }
-
-  @When("the user tries to access the login page")
-  public void userRedirect() {
-    driverProvider.getDriver().get("http://localhost:8080/atsy/login?locale=hu");
   }
 
 }
