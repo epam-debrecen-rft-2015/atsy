@@ -1,8 +1,10 @@
 package com.epam.rft.atsy.web.controllers;
 
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.epam.rft.atsy.service.AuthenticationService;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,9 +15,12 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller
 @RequestMapping("/login")
-public class LoginController {
+public class LoginController implements ApplicationContextAware {
   private static final String VIEW_NAME_LOGIN = "login";
   private static final String VIEW_NAME_WELCOME = "secure/welcome";
+
+  @Autowired
+  AuthenticationService authenticationService;
 
   /**
    * Loads the page.
@@ -24,20 +29,15 @@ public class LoginController {
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView pageLoad() {
 
-    if (isTheCurrentUserSignedIn()) {
+    if (this.authenticationService.isCurrentUserAuthenticated()) {
       return new ModelAndView("redirect:/" + VIEW_NAME_WELCOME);
     } else {
       return new ModelAndView(VIEW_NAME_LOGIN);
     }
   }
 
-  /**
-   * Returns a boolean value indicating the authentication status of the current user.
-   * @return {@code true} if the current user already signed in {@code false} otherwise
-   */
-  private Boolean isTheCurrentUserSignedIn() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    return authentication != null && authentication.isAuthenticated()
-        && !(authentication instanceof AnonymousAuthenticationToken);
+  @Override
+  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    this.authenticationService = applicationContext.getBean(AuthenticationService.class);
   }
 }
