@@ -56,7 +56,7 @@ public class CandidateServiceImpl
     Assert.notNull(id);
 
     CandidateEntity candidateEntity = candidateRepository.findOne(id);
-    if (candidateEntity != null) {
+    if (candidateEntity != null && !candidateEntity.isDeleted()) {
       return converterService.convert(candidateEntity, CandidateDTO.class);
     }
     return null;

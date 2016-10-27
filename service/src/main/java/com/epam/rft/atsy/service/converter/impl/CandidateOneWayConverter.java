@@ -41,6 +41,7 @@ public class CandidateOneWayConverter
             .languageSkill(source.getLanguageSkill())
             .description(source.getDescription())
             .cvFilename(source.getCvFilename())
+            .deleted(source.isDeleted())
             .build();
 
     Set<String> positions = new HashSet<>();

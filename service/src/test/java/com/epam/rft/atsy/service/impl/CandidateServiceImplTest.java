@@ -91,7 +91,7 @@ public class CandidateServiceImplTest {
             converterService);
 
     dummyCandidateEntity = CandidateEntity.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
-        .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).build();
+        .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).deleted(false).build();
 
     dummyApplicationEntity =
         ApplicationEntity.builder().id(APPLICATION_ID).candidateEntity(dummyCandidateEntity)
@@ -99,7 +99,7 @@ public class CandidateServiceImplTest {
 
     dummyCandidateDto =
         CandidateDTO.builder().id(ID).deleted(false).name(NAME).email(EMAIL).phone(PHONE)
-            .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).build();
+            .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).deleted(false).build();
   }
 
   @Test(expected = IllegalArgumentException.class)

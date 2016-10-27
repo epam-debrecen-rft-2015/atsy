@@ -56,7 +56,7 @@ public class CandidateCreationControllerTest extends AbstractControllerTest {
   public void setUpTestDate() {
     emptyCandidateDto = CandidateDTO.builder().deleted(false).build();
 
-    persistedCandidateDto = CandidateDTO.builder().id(CANDIDATE_ID).build();
+    persistedCandidateDto = CandidateDTO.builder().id(CANDIDATE_ID).deleted(false).build();
   }
 
   @Test
