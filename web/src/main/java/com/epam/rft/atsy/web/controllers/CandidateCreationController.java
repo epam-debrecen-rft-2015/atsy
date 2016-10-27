@@ -38,7 +38,7 @@ public class CandidateCreationController {
     ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
     CandidateDTO candidate = candidateService.getCandidate(candidateId);
     if (candidate == null)
-      throw new CandidateNotFoundException();
+      throw new CandidateNotFoundException(candidateId);
 
     modelAndView.addObject(CANDIDATE_OBJECT_KEY, candidate);
     return modelAndView;

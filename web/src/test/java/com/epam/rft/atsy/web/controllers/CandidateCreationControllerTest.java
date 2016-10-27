@@ -27,13 +27,18 @@ public class CandidateCreationControllerTest extends AbstractControllerTest {
 
   private static final Long CANDIDATE_ID = 1L;
 
-  private static final Long NON_EXISTENT_CANDIDATE_ID = -1L;
+  private static final Long NON_EXISTENT_CANDIDATE_ID = 13L;
+
+  private static final Long ILLEGAL_CANDIDATE_ID = -1L;
 
   private static final String EXISTING_CANDIDATE_REQUEST_URL =
       "/secure/candidate/details/" + CANDIDATE_ID.toString();
 
   private static final String NON_EXISTENT_CANDIDATE_REQUEST_URL =
       "/secure/candidate/details/" + NON_EXISTENT_CANDIDATE_ID.toString();
+
+  private static final String ILLEGAL_CANDIDATE_REQUEST_URL =
+      "/secure/candidate/details/" + ILLEGAL_CANDIDATE_ID.toString();
 
   private static final String CANDIDATE_OBJECT_KEY = "candidate";
 
@@ -88,14 +93,14 @@ public class CandidateCreationControllerTest extends AbstractControllerTest {
   @Test
   public void loadCandidateShouldRenderErrorViewWhenThereIsNoCandidateWithIdInPathParam()
       throws Exception {
-    given(candidateService.getCandidate(NON_EXISTENT_CANDIDATE_ID))
+    given(candidateService.getCandidate(ILLEGAL_CANDIDATE_ID))
         .willThrow(IllegalArgumentException.class);
 
-    mockMvc.perform(get(NON_EXISTENT_CANDIDATE_REQUEST_URL))
+    mockMvc.perform(get(ILLEGAL_CANDIDATE_REQUEST_URL))
         .andExpect(status().isInternalServerError())
         .andExpect(view().name(ERROR_VIEW_NAME))
         .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
 
-    then(candidateService).should().getCandidate(NON_EXISTENT_CANDIDATE_ID);
+    then(candidateService).should().getCandidate(ILLEGAL_CANDIDATE_ID);
   }
 }
