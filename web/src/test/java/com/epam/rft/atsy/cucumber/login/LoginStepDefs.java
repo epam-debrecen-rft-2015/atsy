@@ -6,8 +6,6 @@ import static org.hamcrest.core.Is.is;
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 
 import com.epam.rft.atsy.cucumber.util.DriverProvider;
-import cucumber.api.PendingException;
-import cucumber.api.java.en.And;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -24,8 +22,14 @@ public class LoginStepDefs {
     this.driverProvider = driverProvider;
   }
 
-  @Given("^the user opens the login page$")
+  @Given("^the user is on the login page$")
   public void onLoginPage() {
+    driverProvider.getDriver().get("http://localhost:8080/atsy/logout");
+    driverProvider.getDriver().get("http://localhost:8080/atsy/login?locale=hu");
+  }
+
+  @Given("^the user opens the login page$")
+  public void openLoginPage() {
     driverProvider.getDriver().get("http://localhost:8080/atsy/login?locale=hu");
   }
 

@@ -2,7 +2,7 @@ Feature: Login in
 
   Background:
 
-    Given the user opens the login page
+    Given the user is on the login page
 
   Scenario: 1 UI element check on the Login page
 
@@ -61,7 +61,7 @@ Feature: Login in
 
     Scenario: 7 logged in user is redirected to the Welcome page in case the login page is opened
 
-      When the user enters username test3
+      When the user enters username test
       And the user enters password pass3
       And the user clicks on Bejelentkezés button
       And the user opens the login page
