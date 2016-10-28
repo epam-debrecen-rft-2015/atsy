@@ -5,12 +5,10 @@ import static com.epam.rft.atsy.cucumber.util.DriverProvider.waitForPageLoadAfte
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import cucumber.api.java.en.And;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
-import org.openqa.selenium.By;
-
 import cucumber.api.java.en.Given;
+import cucumber.api.java.en.When;
+import cucumber.api.java.en.Then;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 public class CommonStepDefs {
@@ -18,7 +16,9 @@ public class CommonStepDefs {
 
   @Given("The user signed in")
   public void loggedIn() {
+    getDriver().get("http://localhost:8080/atsy/logout");
     getDriver().get("http://localhost:8080/atsy/login?locale=hu");
+
     getDriver().findElement(By.id("name")).sendKeys("test");
     getDriver().findElement(By.id("password")).sendKeys("pass3");
     waitForPageLoadAfter(event -> getDriver().findElement(By.id("loginButton")).click());
@@ -90,7 +90,4 @@ public class CommonStepDefs {
        //warning: some pages have the same URL
     }
   }
-
-
-
 }
