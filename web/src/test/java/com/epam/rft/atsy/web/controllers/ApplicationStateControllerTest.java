@@ -117,7 +117,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
 
   private StateHistoryViewRepresentation expectedFirstStateHistoryViewRepresentation =
       StateHistoryViewRepresentation.builder().stateId(1L).stateName(CLICKED_STATE_NAME_NEW_STATE)
-          .stateFullName(STATE_NAME_NEW_STATE).channelName(CHANNEL_NAME).positionName(POSITION_NAME)
+          .stateFullName(STATE_NAME_NEW_STATE).channelName(CHANNEL_NAME).positionId(POSITION_ID).positionName(POSITION_NAME)
           .build();
   private StateHistoryViewRepresentation expectedSecondStateHistoryViewRepresentation =
       StateHistoryViewRepresentation.builder().stateId(2L).stateName(CLICKED_STATE_NAME_CV)
