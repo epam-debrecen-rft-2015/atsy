@@ -31,14 +31,15 @@ public class CandidateCreationController {
    * @param candidateId the identifier of the candidate whose data should be given back
    * @return a ModelAndView object which contains the all candidate information and the name of the
    * page that handles the candidate data
-   * @throws com.epam.rft.atsy.web.exceptionhandling.CandidateNotFoundException
+   * @throws CandidateNotFoundException if there is no candidate with the given ID
    */
   @RequestMapping(method = RequestMethod.GET, path = "/{candidateId}")
   public ModelAndView loadCandidate(@PathVariable(value = "candidateId") Long candidateId) throws CandidateNotFoundException {
     ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
     CandidateDTO candidate = candidateService.getCandidate(candidateId);
-    if (candidate == null)
+    if (candidate == null) {
       throw new CandidateNotFoundException(candidateId);
+    }
 
     modelAndView.addObject(CANDIDATE_OBJECT_KEY, candidate);
     return modelAndView;
