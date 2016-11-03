@@ -147,6 +147,9 @@ public class CandidateCreationStepDefs {
       case "name":
         element = getDriver().findElement(By.id(NAME_ID));
         break;
+      case "phone":
+        element = getDriver().findElement(By.id(PHONE_ID));
+        break;
     }
     element.clear();
     assertTrue(element.getText().isEmpty());
