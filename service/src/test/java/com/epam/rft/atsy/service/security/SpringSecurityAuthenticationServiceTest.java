@@ -11,7 +11,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -106,4 +108,17 @@ public class SpringSecurityAuthenticationServiceTest {
     assertFalse(result);
   }
 
+  @Test
+  public void isCurrentUserAuthenticatedShouldNotBeAuthenticatedWhenUserIsAuthenticatedByAnonymousAuthentication() {
+    //Given
+    SecurityContextHolder.getContext()
+        .setAuthentication(new AnonymousAuthenticationToken(USER_NAME, USER_NAME,
+                AuthorityUtils.createAuthorityList(USER_NAME)));
+
+    //When
+    boolean result = springSecurityAuthenticationService.isCurrentUserAuthenticated();
+
+    //Then
+    assertFalse(result);
+  }
 }

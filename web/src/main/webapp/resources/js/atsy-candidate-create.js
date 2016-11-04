@@ -44,7 +44,7 @@ function CandidateCreateModel(){
                    dataType: "json",
                    data: JSON.stringify({
                        id: self.id(),
-                       name: self.name(),
+                       name: self.name().trim(),
                        referer: self.referer(),
                        email: self.email(),
                        languageSkill: self.languageSkill(),

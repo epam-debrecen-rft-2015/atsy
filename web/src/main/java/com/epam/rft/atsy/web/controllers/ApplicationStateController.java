@@ -104,13 +104,15 @@ public class ApplicationStateController {
             .stateName(clickedStateDTO.getName())
             .build();
 
-        if (clickedState.equals(NEW_STATE)) {
-          ApplicationDTO applicationDTO = applicationsService.getApplicationDtoById(applicationId);
-          representation.setChannelName(
-              channelService.getChannelDtoById(applicationDTO.getChannelId()).getName());
-          representation.setPositionName(
-              positionService.getPositionDtoById(applicationDTO.getPositionId()).getName());
-        }
+      if (clickedState.equals(NEW_STATE)) {
+        ApplicationDTO applicationDTO = applicationsService.getApplicationDtoById(applicationId);
+        representation.setChannelName(
+            channelService.getChannelDtoById(applicationDTO.getChannelId()).getName());
+        representation.setPositionId(
+            applicationDTO.getPositionId());
+        representation.setPositionName(
+            positionService.getPositionDtoById(applicationDTO.getPositionId()).getName());
+      }
 
         stateHistoryViewRepresentations.add(0, representation);
       } else {

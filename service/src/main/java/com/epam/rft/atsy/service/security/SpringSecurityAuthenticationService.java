@@ -2,6 +2,7 @@ package com.epam.rft.atsy.service.security;
 
 import com.epam.rft.atsy.service.AuthenticationService;
 import com.epam.rft.atsy.service.exception.UserNotLoggedInException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,8 @@ public class SpringSecurityAuthenticationService implements AuthenticationServic
   @Override
   public boolean isCurrentUserAuthenticated() {
     return SecurityContextHolder.getContext().getAuthentication() != null &&
-        SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
+        SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
+        !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken);
   }
 
 }

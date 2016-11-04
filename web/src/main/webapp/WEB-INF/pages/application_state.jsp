@@ -25,7 +25,7 @@
     </jsp:attribute>
   <jsp:body>
       <div class="page-header">
-          <h1><spring:message code="application.state.title"/>
+          <h1><c:out value="${candidate.name}"/>
 
               <small id="positionName"><c:out value = "${states[0].positionName}"/></small>
           </h1>
@@ -131,8 +131,8 @@
                             <div class="col-sm-8">
                                 <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value="${data.positionName}"/></p>
                                   <c:if test="${stat.first}">
-                                      <select required class="form-control stateInput hidden" id="positionSelector" data-bind="valueWithInit: 'positionName'">
-                                          <option disabled="disabled" selected="selected">
+                                      <select required class="form-control stateInput hidden" id="positionSelector" data-bind="valueWithInit: 'positionId'">
+                                          <option disabled="disabled" selected="selected" value="${data.positionId}">
                                                <c:out value="${data.positionName}"/>
                                            </option>
                                       </select>

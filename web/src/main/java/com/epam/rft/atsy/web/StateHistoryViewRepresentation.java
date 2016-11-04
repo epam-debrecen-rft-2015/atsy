@@ -23,6 +23,8 @@ public class StateHistoryViewRepresentation {
 
   private Long candidateId;
 
+  private Long positionId;
+
   private String positionName;
 
   private String channelName;

@@ -1,0 +1,6 @@
+ALTER TABLE candidates
+CHANGE name name VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_bin',
+CHANGE email email VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_bin';
+
+ALTER TABLE positions
+CHANGE name name VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_bin';

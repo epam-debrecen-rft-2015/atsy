@@ -158,11 +158,15 @@
                                     code="candidate.phone.label"/></label>
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <spring:message code="candidate.error.phone.empty" var="phoneEmptyValue"/>
                             <spring:message code="candidate.error.phone.incorrect" var="phoneIncorrectValue"/>
                                 <input type="text" class="input form-control" name="phone" id="phone" data-bind="valueWithInit: 'phone'"
                                        value="${candidate.phone}"
-                                       placeholder="${i18nphone}" data-error="${phoneIncorrectValue}"
-                                       pattern="^\+?[0-9]+" maxlength="20">
+                                       placeholder="${i18nphone}"
+                                       data-error="${phoneEmptyValue}"
+                                       data-pattern="^\+?[0-9]+$"
+                                       data-pattern-error="${phoneIncorrectValue}"
+                                       required maxlength="20">
 
                                 <div id="phone-errors" class="help-block with-errors"></div>
 
@@ -246,7 +250,7 @@
                 </div>
                 <div id="application_table">
                         <table class="table table-hover cursor-pointer" id="applications_table"  data-toggle="table" data-url="../../applications/${candidate.id}" data-height="500"
-                               data-sort-name="name" data-escape="true" data-pagination="true" data-side-pagination="server" data-query-params-type="">
+                               data-sort-name="name" data-escape="true" data-pagination="true" data-pagination-loop="false" data-side-pagination="server" data-query-params-type="">
                             <thead>
                             <tr>
                                 <th data-field="name" data-align="left"><spring:message
