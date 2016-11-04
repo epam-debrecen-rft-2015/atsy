@@ -23,7 +23,6 @@
         <script src="${moment_js}" type="text/javascript"></script>
         <script src="${bootstrap_datetimepicker_js}" type="text/javascript"></script>
 
-        <fmt:setTimeZone value="Europe/Budapest" scope="session"/>
     </jsp:attribute>
   <jsp:body>
       <div class="page-header">
