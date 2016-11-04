@@ -135,8 +135,9 @@ public class ChannelsStepDefs {
 
   @Then("^the list of channels changed$")
   public void the_list_of_channels_changed() throws Throwable {
+    waitChannelTableUntilPresentChannelName(channelName);
     assertThat(getDriver().findElement(By.cssSelector("table#channels tbody")).getText(),
-        is(not(containsString(channelName))));
+        is(containsString(channelName)));
   }
 
   private void waitChannelTableUntilPresentChannelName(String channelName) {

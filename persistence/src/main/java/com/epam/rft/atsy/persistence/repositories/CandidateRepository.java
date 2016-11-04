@@ -23,10 +23,10 @@ public interface CandidateRepository extends LogicallyDeletableRepository<Candid
       + "RIGHT OUTER JOIN application.candidateEntity candidate "
       + "LEFT OUTER JOIN application.positionEntity position "
       + "WHERE candidate.deleted = false AND "
-      + "candidate.name LIKE CONCAT('%',:name,'%') AND "
-      + "candidate.email LIKE CONCAT('%',:email,'%') AND "
+      + "LOWER(candidate.name) LIKE CONCAT('%',LOWER(:name),'%') AND "
+      + "LOWER(candidate.email) LIKE CONCAT('%',LOWER(:email),'%') AND "
       + "candidate.phone LIKE CONCAT('%',:phone,'%') AND "
-      + "(position.name LIKE CONCAT('%',:position,'%') OR LENGTH(TRIM(:position)) < 1) ")
+      + "(LOWER(position.name) LIKE CONCAT('%',LOWER(:position),'%') OR LENGTH(TRIM(:position)) < 1) ")
   Page<CandidateEntity> findByCandidateFilterRequest(@Param("name") String candidateName,
                                                      @Param("email") String candidateEmail,
                                                      @Param("phone") String candidatePhone,

@@ -31,7 +31,7 @@ public class StateHistoryController {
 
   private static final String POSITION_NOT_FOUND_MESSAGE_KEY = "position.not.found.error.message";
   private static final String CHANNEL_NOT_FOUND_MESSAGE_KEY = "channel.not.found.error.message";
-  private static final String FIELD_POSITION_NAME = "positionName";
+  private static final String FIELD_POSITION_ID = "positionId";
   private static final String FIELD_CHANNEL_NAME = "channelName";
   private static final String NEW_STATE = "newstate";
 
@@ -99,7 +99,7 @@ public class StateHistoryController {
             channelService.getChannelDtoByName(stateHistoryViewRepresentation.getChannelName());
         PositionDTO
             positionDTO =
-            positionService.getPositionDtoByName(stateHistoryViewRepresentation.getPositionName());
+            positionService.getPositionDtoById(stateHistoryViewRepresentation.getPositionId());
 
         stateHistoryDTO.getApplicationDTO().setChannelId(channelDTO.getId());
         stateHistoryDTO.getApplicationDTO().setPositionId(positionDTO.getId());
@@ -138,9 +138,9 @@ public class StateHistoryController {
 
   protected void validateNewState(StateHistoryViewRepresentation stateHistoryViewRepresentation,
                                   BindingResult bindingResult) {
-    if (positionService.getPositionDtoByName(stateHistoryViewRepresentation.getPositionName())
+    if (positionService.getPositionDtoById(stateHistoryViewRepresentation.getPositionId())
         == null) {
-      bindingResult.rejectValue(FIELD_POSITION_NAME, null, POSITION_NOT_FOUND_MESSAGE_KEY);
+      bindingResult.rejectValue(FIELD_POSITION_ID, null, POSITION_NOT_FOUND_MESSAGE_KEY);
     }
     if (channelService.getChannelDtoByName(stateHistoryViewRepresentation.getChannelName())
         == null) {

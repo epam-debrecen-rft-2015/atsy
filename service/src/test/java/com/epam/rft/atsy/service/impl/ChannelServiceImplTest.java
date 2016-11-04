@@ -275,6 +275,7 @@ public class ChannelServiceImplTest {
         ArgumentCaptor.forClass(ChannelEntity.class);
     given(this.channelRepository.findByName(CHANNEL_NAME_FACEBOOK))
         .willReturn(deletedFacebookEntity);
+    given(this.channelRepository.saveAndFlush(deletedFacebookEntity)).willReturn(deletedFacebookEntity);
 
     // When
     this.channelService.saveOrUpdate(deletedFacebookDto);
@@ -294,6 +295,7 @@ public class ChannelServiceImplTest {
     given(this.channelRepository.findByName(CHANNEL_NAME_FACEBOOK)).willReturn(null);
     given(this.converterService.convert(facebookDto, ChannelEntity.class))
         .willReturn(facebookEntity);
+    given(this.channelRepository.saveAndFlush(facebookEntity)).willReturn(facebookEntity);
 
     // When
     this.channelService.saveOrUpdate(facebookDto);

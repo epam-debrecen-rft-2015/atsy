@@ -5,15 +5,23 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.epam.rft.atsy.web.MediaTypes;
 import com.epam.rft.atsy.web.exceptionhandling.GlobalControllerExceptionHandler;
 import com.epam.rft.atsy.web.exceptionhandling.UncheckedExceptionResolver;
+import com.epam.rft.atsy.web.validator.LazySpringConstraintValidatorFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.LinkedList;
+import java.util.List;
 import org.junit.Before;
 import org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
+import org.springframework.test.web.servlet.setup.ConfigurableMockMvcBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcConfigurer;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.validation.beanvalidation.SpringConstraintValidatorFactory;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ViewResolver;
@@ -29,6 +37,8 @@ public abstract class AbstractControllerTest {
 
   protected ObjectMapper objectMapper;
 
+  protected LazySpringConstraintValidatorFactory lazySpringConstraintValidatorFactory = new LazySpringConstraintValidatorFactory();
+
   @Before
   public void setUp() {
     objectMapper = new ObjectMapper();
@@ -36,10 +46,11 @@ public abstract class AbstractControllerTest {
     mockMvc =
         MockMvcBuilders.standaloneSetup(controllersUnderTest())
             .setViewResolvers(viewResolver())
-            .setControllerAdvice(controllerAdvice())
+            .setControllerAdvice(controllerAdvice().toArray())
             .setHandlerExceptionResolvers(exceptionResolvers())
             .setValidator(localValidatorFactoryBean())
             .setCustomArgumentResolvers(customArgumentResolvers())
+            .apply(new LazySpringContstraintValidatorFactoryMockMvcConfigurer())
             .build();
   }
 
@@ -69,11 +80,19 @@ public abstract class AbstractControllerTest {
   }
 
   protected LocalValidatorFactoryBean localValidatorFactoryBean() {
-    return new LocalValidatorFactoryBean();
+    LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+    validator.setConstraintValidatorFactory(this.lazySpringConstraintValidatorFactory);
+    return validator;
   }
 
-  protected Object[] controllerAdvice() {
-    return new Object[]{new GlobalControllerExceptionHandler()};
+  protected List<Object> controllerAdvice() {
+    List<Object> advices = new LinkedList<>();
+    advices.add(new GlobalControllerExceptionHandler());
+    addBeans(advices);
+    return advices;
+  }
+
+  protected void addBeans(List<Object> beans) {
   }
 
   protected HandlerMethodArgumentResolver[] customArgumentResolvers() {
@@ -98,4 +117,19 @@ public abstract class AbstractControllerTest {
   }
 
   protected abstract Object[] controllersUnderTest();
+
+  private class LazySpringContstraintValidatorFactoryMockMvcConfigurer implements MockMvcConfigurer {
+
+    @Override
+    public void afterConfigurerAdded(ConfigurableMockMvcBuilder<?> builder) {
+    }
+
+    @Override
+    public RequestPostProcessor beforeMockMvcCreated(ConfigurableMockMvcBuilder<?> builder, WebApplicationContext context) {
+      AbstractControllerTest.this.lazySpringConstraintValidatorFactory.setDelegate(new SpringConstraintValidatorFactory(context.getAutowireCapableBeanFactory()));
+      AbstractControllerTest.this.lazySpringConstraintValidatorFactory.setBeanFactory(context.getAutowireCapableBeanFactory());
+      return null;
+    }
+
+  }
 }

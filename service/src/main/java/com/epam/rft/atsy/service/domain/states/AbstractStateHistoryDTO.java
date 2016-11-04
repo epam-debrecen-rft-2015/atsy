@@ -6,6 +6,9 @@ import com.epam.rft.atsy.service.domain.PositionDTO;
 
 import java.io.Serializable;
 import java.util.Date;
+import com.epam.rft.atsy.service.validator.CandidateExists;
+import com.epam.rft.atsy.service.validator.PositionExists;
+import com.epam.rft.atsy.service.validator.ChannelExists;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,8 +25,11 @@ import lombok.NoArgsConstructor;
 public abstract class AbstractStateHistoryDTO implements Serializable {
 
   private Long id;
+  @CandidateExists(message = "candidate.not.found.error.message")
   private Long candidateId;
+  @PositionExists(message = "position.not.found.error.message")
   private PositionDTO position;
+  @ChannelExists(message = "channel.not.found.error.message")
   private ChannelDTO channel;
   private ApplicationDTO applicationDTO;
   private String description;

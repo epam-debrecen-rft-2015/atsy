@@ -17,9 +17,13 @@
         <div id="application_page">
             <h1 class="page-header"><spring:message code="application.create.title"/></h1>
 
+            <div class="alert alert-danger ${empty candidateIdErrorMessage ? 'hidden' : ''}" id="candidate_error">
+                ${candidateIdErrorMessage}
+            </div>
+
             <form class="form" role="form" method="POST" id="application-create-form" action="${new_application}">
                 <input type="hidden" name="candidateId" id="candidateId" value="${candidateId}">
-                <div class="form-group row" id="positionDiv">
+                <div class="form-group row ${not empty positionErrorMessage ? 'has-error' : ''}" id="positionDiv">
                     <spring:message code="application.popup.position.drop.down.default.value" var="i18n_position_drop_down_default_value"/>
 
                     <label id="positionLabel" class="control-label text-left" for="drop">
@@ -30,11 +34,13 @@
                         <select class="input form-control" name="position.id" id="position">
                         <option value = "${i18n_position_drop_down_default_value}">${i18n_position_drop_down_default_value}</option>
                         </select>
-                        <span style="color: red" id="position_error"/>
+                        <span class = "help-block with-errors" id="position_error">
+                            ${positionErrorMessage}
+                        </span>
                     </div>
                 </div>
 
-                <div class="form-group row" id="sourceDiv">
+                <div class="form-group row ${not empty channelErrorMessage ? 'has-error' : ''}" id="sourceDiv">
                     <spring:message code="application.popup.application.source.drop.down.default.value" var="i18n_application_source_drop_down_default_value"/>
 
                     <label id="sourceLabel" class="control-label text-left" for="source">
@@ -45,7 +51,9 @@
                         <select class="input form-control" name="channel.id" id="channel">
                             <option value = "${i18n_application_source_drop_down_default_value}">${i18n_application_source_drop_down_default_value}</option>
                         </select>
-                        <span style="color: red" id="application_source_error"/>
+                        <span class = "help-block with-errors" id="application_source_error">
+                            ${channelErrorMessage}
+                        </span>
                     </div>
                 </div>
 

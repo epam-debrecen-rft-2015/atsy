@@ -90,7 +90,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
   private static final String JSON_PATH_FIELD_OFFERED_MONEY = "$.fields.offeredMoney";
 
-  private static final String JSON_PATH_FIELD_POSITION_NAME = "$.fields.positionName";
+  private static final String JSON_PATH_FIELD_POSITION_ID = "$.fields.positionId";
 
   private static final String JSON_PATH_FIELD_CHANNEL_NAME = "$.fields.channelName";
 
@@ -114,7 +114,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
   private static final String FIELD_NAME_CHANNEL = "channelName";
 
-  private static final String FIELD_NAME_POSITION = "positionName";
+  private static final String FIELD_NAME_POSITION = "positionId";
 
   private static final String FIELD_DESCRIPTION = "description";
 
@@ -189,7 +189,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
 
   private static final Long CANDIDATE_ID = 1L;
 
-  private static final String POSITION_NAME_NON_EXISTENT = "Football instructor";
+  private static final Long POSITION_ID_NON_EXISTENT = 13L;
 
   private static final String CHANNEL_NAME_NON_EXISTENT = "Digisport channel";
 
@@ -260,6 +260,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
     dummyStateHistoryWithNewState = StateHistoryViewRepresentation.builder()
         .id(ID)
         .candidateId(CANDIDATE_ID)
+        .positionId(ID)
         .positionName(POSITION_NAME)
         .channelName(CHANNEL_NAME)
         .creationDate(CREATION_DATE)
@@ -380,9 +381,9 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
     StateHistoryViewRepresentation stateHistoryViewRepresentation =
         StateHistoryViewRepresentation.builder().stateId(STATE_ID_FOR_NEW_STATE)
             .stateName(STATE_NAME_NEW_STATE)
-            .positionName(POSITION_NAME_NON_EXISTENT).build();
+            .positionId(POSITION_ID_NON_EXISTENT).build();
 
-    given(positionService.getPositionDtoByName(POSITION_NAME_NON_EXISTENT)).willReturn(null);
+    given(positionService.getPositionDtoById(POSITION_ID_NON_EXISTENT)).willReturn(null);
     given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
         .willReturn(composeResponseFromField(FIELD_NAME_POSITION, POSITION_NOT_FOUND_MESSAGE_KEY));
 
@@ -390,9 +391,9 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
-        .andExpect(jsonPath(JSON_PATH_FIELD_POSITION_NAME).value(POSITION_NOT_FOUND_MESSAGE_KEY));
+        .andExpect(jsonPath(JSON_PATH_FIELD_POSITION_ID).value(POSITION_NOT_FOUND_MESSAGE_KEY));
 
-    then(positionService).should().getPositionDtoByName(POSITION_NAME_NON_EXISTENT);
+    then(positionService).should().getPositionDtoById(POSITION_ID_NON_EXISTENT);
     then(channelService).should().getChannelDtoByName(any(String.class));
     then(fieldErrorResponseComposer).should().composeResponse(any(BindingResult.class));
     verifyZeroInteractions(applicationsService, statesHistoryService);
@@ -416,7 +417,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
         .andExpect(jsonPath(JSON_PATH_FIELD_CHANNEL_NAME).value(CHANNEL_NOT_FOUND_MESSAGE_KEY));
 
-    then(positionService).should().getPositionDtoByName(any(String.class));
+    then(positionService).should().getPositionDtoById(any(Long.class));
     then(channelService).should().getChannelDtoByName(CHANNEL_NAME_NON_EXISTENT);
     then(fieldErrorResponseComposer).should().composeResponse(any(BindingResult.class));
     verifyZeroInteractions(applicationsService, statesHistoryService);
@@ -429,10 +430,10 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
     StateHistoryViewRepresentation stateHistoryViewRepresentation =
         StateHistoryViewRepresentation.builder().stateId(STATE_ID_FOR_NEW_STATE)
             .stateName(STATE_NAME_NEW_STATE)
-            .positionName(POSITION_NAME_NON_EXISTENT).channelName(CHANNEL_NAME_NON_EXISTENT)
+            .positionId(POSITION_ID_NON_EXISTENT).channelName(CHANNEL_NAME_NON_EXISTENT)
             .build();
 
-    given(positionService.getPositionDtoByName(POSITION_NAME_NON_EXISTENT)).willReturn(null);
+    given(positionService.getPositionDtoById(POSITION_ID_NON_EXISTENT)).willReturn(null);
     given(channelService.getChannelDtoByName(CHANNEL_NAME_NON_EXISTENT)).willReturn(null);
     given(fieldErrorResponseComposer.composeResponse(any(BindingResult.class)))
         .willReturn(composeResponseFromField(FIELD_NAME_POSITION, POSITION_NOT_FOUND_MESSAGE_KEY,
@@ -442,10 +443,10 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
         buildJsonPostRequest(REQUEST_URL_TO_SAVE_OR_UPDATE, stateHistoryViewRepresentation))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(COMMON_INVALID_INPUT_MESSAGE_KEY))
-        .andExpect(jsonPath(JSON_PATH_FIELD_POSITION_NAME).value(POSITION_NOT_FOUND_MESSAGE_KEY))
+        .andExpect(jsonPath(JSON_PATH_FIELD_POSITION_ID).value(POSITION_NOT_FOUND_MESSAGE_KEY))
         .andExpect(jsonPath(JSON_PATH_FIELD_CHANNEL_NAME).value(CHANNEL_NOT_FOUND_MESSAGE_KEY));
 
-    then(positionService).should().getPositionDtoByName(POSITION_NAME_NON_EXISTENT);
+    then(positionService).should().getPositionDtoById(POSITION_ID_NON_EXISTENT);
     then(channelService).should().getChannelDtoByName(CHANNEL_NAME_NON_EXISTENT);
     then(fieldErrorResponseComposer).should().composeResponse(any(BindingResult.class));
     verifyZeroInteractions(applicationsService, statesHistoryService);
@@ -455,7 +456,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
   @Test
   public void saveOrUpdateShouldRespondWithApplicationIdWhenPositionAndChannelExist()
       throws Exception {
-    given(positionService.getPositionDtoByName(POSITION_NAME)).willReturn(positionDTO);
+    given(positionService.getPositionDtoById(ID)).willReturn(positionDTO);
     given(channelService.getChannelDtoByName(CHANNEL_NAME)).willReturn(channelDTO);
     given(applicationsService.getApplicationDtoById(APPLICATION_ID))
         .willReturn(dummyApplicationDto);
@@ -470,7 +471,7 @@ public class StateHistoryControllerTest extends AbstractControllerTest {
     assertThat(historyCaptor.getValue(), equalTo(dummyStateHistoryDtoWithNewState));
 
     then(applicationsService).should().getApplicationDtoById(APPLICATION_ID);
-    then(positionService).should(times(2)).getPositionDtoByName(POSITION_NAME);
+    then(positionService).should(times(2)).getPositionDtoById(ID);
     then(channelService).should(times(2)).getChannelDtoByName(CHANNEL_NAME);
     then(statesHistoryService).should().saveStateHistory(any(StateHistoryDTO.class));
     verifyZeroInteractions(fieldErrorResponseComposer);
