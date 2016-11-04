@@ -283,7 +283,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
         .willReturn(stateDTOWithStateNameNewState);
 
     given(stateFlowService
-        .isAvailableFromLastState(emptyStateHistoryDTOList, CLICKED_STATE_NAME_NEW_STATE))
+        .isAvailableFromLastState(new StateDTO(), CLICKED_STATE_NAME_NEW_STATE))
         .willReturn(true);
 
     given(applicationsService.getApplicationDtoById(APPLICATION_ID)).willReturn(applicationDTO);
@@ -323,7 +323,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     then(positionService).should().getPositionDtoById(POSITION_ID);
     then(stateService).should().getStateDtoByName(CLICKED_STATE_NAME_NEW_STATE);
     then(stateFlowService).should()
-        .isAvailableFromLastState(emptyStateHistoryDTOList, CLICKED_STATE_NAME_NEW_STATE);
+        .isAvailableFromLastState(new StateDTO(), CLICKED_STATE_NAME_NEW_STATE);
     then(messageKeyResolver).should()
         .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_STATE,
             CLICKED_STATE_NAME_NEW_STATE);
@@ -342,7 +342,8 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     given(stateService.getStateDtoByName(CLICKED_STATE_NAME_CODING))
         .willReturn(stateDTOWithStateNameCoding);
     given(stateFlowService
-        .isAvailableFromLastState(stateHistoryDTOListWithTwoElements,CLICKED_STATE_NAME_CODING))
+        .isAvailableFromLastState(stateHistoryDTOListWithTwoElements.get(1).getStateDTO(),
+            CLICKED_STATE_NAME_CODING))
         .willReturn(true);
     given(stateFlowService.getStateFlowDTOByFromStateDTO(stateDTOWithStateNameCoding))
         .willReturn(stateFlowDTOListWithSingleElement);
@@ -384,7 +385,8 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
     then(stateService).should().getStateDtoByName(CLICKED_STATE_NAME_CODING);
     then(stateFlowService).should().getStateFlowDTOByFromStateDTO(stateDTOWithStateNameCoding);
     then(stateFlowService).should()
-        .isAvailableFromLastState(stateHistoryDTOListWithTwoElements, CLICKED_STATE_NAME_CODING);
+        .isAvailableFromLastState(stateHistoryDTOListWithTwoElements.get(1).getStateDTO(),
+            CLICKED_STATE_NAME_CODING);
 
     then(messageKeyResolver).should()
         .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_STATE,

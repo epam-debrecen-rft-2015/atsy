@@ -84,17 +84,20 @@ public class ApplicationStateController {
     ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
     modelAndView.addObject("applicationId", applicationId);
 
-    List<StateHistoryDTO> stateHistory=statesHistoryService.getStateHistoriesByApplicationId(applicationId);
+    List<StateHistoryDTO>
+        stateHistory =
+        statesHistoryService.getStateHistoriesByApplicationId(applicationId);
 
     List<StateHistoryViewRepresentation>
         stateHistoryViewRepresentations =
-        converterService.convert(stateHistory,StateHistoryViewRepresentation.class);
+        converterService.convert(stateHistory, StateHistoryViewRepresentation.class);
 
     if (clickedState != null) {
       StateDTO clickedStateDTO = stateService.getStateDtoByName(clickedState);
 
       Assert.notNull(clickedStateDTO);
-      if (stateFlowService.isAvailableFromLastState(stateHistory, clickedState)) {
+      if (stateFlowService
+          .isAvailableFromLastState(stateHistory.get(0).getStateDTO(), clickedState)) {
         StateHistoryViewRepresentation representation = StateHistoryViewRepresentation.builder()
             .creationDate(new Date())
             .stateId(clickedStateDTO.getId())
@@ -110,9 +113,12 @@ public class ApplicationStateController {
         }
 
         stateHistoryViewRepresentations.add(0, representation);
+      } else {
+
+        return new ModelAndView(
+            "redirect:/secure/application_state?applicationId=" + applicationId);
       }
     }
-
 
     CandidateDTO candidateDTO = candidateService.getCandidateByApplicationID(applicationId);
 
@@ -128,7 +134,7 @@ public class ApplicationStateController {
 
       stateHistoryViewRepresentation.setStateFullName(stateType);
     }
-    
+
     modelAndView.addObject(STATE_FLOW_OBJECT_KEY, stateFlowService.getStateFlowDTOByFromStateDTO(
         new StateDTO(stateHistoryViewRepresentations.get(0).getStateId(),
             stateHistoryViewRepresentations.get(0).getStateName())));

@@ -7,7 +7,6 @@ import com.epam.rft.atsy.service.ConverterService;
 import com.epam.rft.atsy.service.StateFlowService;
 import com.epam.rft.atsy.service.domain.states.StateDTO;
 import com.epam.rft.atsy.service.domain.states.StateFlowDTO;
-import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,14 +50,19 @@ public class StateFlowServiceImpl implements StateFlowService {
   }
   @Transactional(readOnly = true)
   @Override
-  public boolean isAvailableFromLastState(List<StateHistoryDTO> representationList, String state) {
-    Collection<StateFlowDTO> available = getStateFlowDTOByFromStateDTO(representationList.get(0).getStateDTO());
-    List<StateFlowDTO> availableList= available.stream().filter(p->p.getToStateDTO().getName().equals(state)).collect(
-       Collectors.toList());
-    if(availableList.isEmpty()){
-      return false;
+  public boolean isAvailableFromLastState(StateDTO representation, String newState) {
+    if (representation.equals(null) && newState.equals("newstate")) {
+      return true;
     }
-    return true;
-  }
+      Collection<StateFlowDTO> available = getStateFlowDTOByFromStateDTO(representation);
+      List<StateFlowDTO>
+          availableList =
+          available.stream().filter(p -> p.getToStateDTO().getName().equals(newState)).collect(
+              Collectors.toList());
+      if (availableList.isEmpty()) {
+        return false;
+      }
+      return true;
 
+  }
 }
