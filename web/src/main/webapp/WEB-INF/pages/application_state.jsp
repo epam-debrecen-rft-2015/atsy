@@ -22,6 +22,7 @@
         <link href="${bootstrap_datepicker_css}" rel="stylesheet" type="text/css">
         <script src="${moment_js}" type="text/javascript"></script>
         <script src="${bootstrap_datetimepicker_js}" type="text/javascript"></script>
+
     </jsp:attribute>
   <jsp:body>
       <div class="page-header">
