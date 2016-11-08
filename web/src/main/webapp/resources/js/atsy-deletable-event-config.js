@@ -29,10 +29,7 @@ function getOptions(dialogMessageKey, errorMessageKey, row, container, optionalP
                         table.bootstrapTable('refresh');
                         hideError(container);
                     }).error(function (xhr) {
-                        // If the response type is not JSON, redirection happened -> perform a manual page reload
-                        if ( xhr.status === 405 && xhr.getResponseHeader("Content-Type").indexOf("json") === -1 ) {
-                            window.location.reload();
-                        } else {
+                        if (typeof xhr.responseJSON !== "undefined") {
                             var response = xhr.responseJSON;
                             showError(container, response.errorMessage + " (" + row.name + ")");
                         }

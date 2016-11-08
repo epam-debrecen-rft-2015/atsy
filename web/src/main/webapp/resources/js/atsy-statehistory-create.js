@@ -199,28 +199,25 @@ function StateHistoryModel() {
         }
     // If stateHistoryViewRepresentation is not valid, then show error msg
     }).error(function (xhr) {
-        // If the response type is not JSON, redirection happened -> perform a manual page reload
-        if ( xhr.status === 200 && xhr.getResponseHeader("Content-Type").indexOf("json") === -1 ) {
-            window.location.reload();
-        } else {
+        if (typeof xhr.responseJSON !== "undefined") {
             self.errorResponse(xhr.responseJSON);
             self.showError(true);
-            // If the file exists
-            if (($('input[type=file]')[0] != undefined) && ($('input[type=file]').val() != '')) {
-                // Send file to save
-                sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
-                    // If there is no error with file, then hide the error msg
-                    self.showFileError(false);
-                    $('#fileUploadLabel').show();
-                    localStorage['isShowFileUploadIcon'] = 'true';
-                // If file is not valid, then show the error msg
-                }).error(function (xhr) {
-                    self.fileErrorResponse(xhr.responseJSON);
-                    self.showFileError(true);
-                    $('#fileUploadLabel').show();
-                    localStorage['isShowFileUploadIcon'] = 'true';
-                });
-            }
+        }
+        // If the file exists
+        if (($('input[type=file]')[0] != undefined) && ($('input[type=file]').val() != '')) {
+            // Send file to save
+            sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
+                // If there is no error with file, then hide the error msg
+                self.showFileError(false);
+                $('#fileUploadLabel').show();
+                localStorage['isShowFileUploadIcon'] = 'true';
+            // If file is not valid, then show the error msg
+            }).error(function (xhr) {
+                self.fileErrorResponse(xhr.responseJSON);
+                self.showFileError(true);
+                $('#fileUploadLabel').show();
+                localStorage['isShowFileUploadIcon'] = 'true';
+            });
         }
     });
   }

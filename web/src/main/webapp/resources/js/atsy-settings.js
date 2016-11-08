@@ -43,10 +43,7 @@ function SettingsForm() {
                     }
                     $this.find('input').val('');
                 }).error(function (xhr) {
-                    // If the response type is not JSON, redirection happened -> perform a manual page reload
-                    if ( xhr.status === 200 && xhr.getResponseHeader("Content-Type").indexOf("json") === -1 ) {
-                        window.location.reload();
-                    } else {
+                    if (typeof xhr.responseJSON !== "undefined") {
                         var response = xhr.responseJSON;
                         showError($this, response.errorMessage);
                     }
