@@ -38,21 +38,21 @@ function CandidateCreateModel(){
 
     function sendCandidateWithAjax(url, method) {
         return $.ajax({
-                   url: url,
-                   method: method,
-                   contentType: 'application/json',
-                   dataType: "json",
-                   data: JSON.stringify({
-                       id: self.id(),
-                       name: self.name(),
-                       referer: self.referer(),
-                       email: self.email(),
-                       languageSkill: self.languageSkill(),
-                       phone: self.phone(),
-                       description: self.description(),
-                       cvFilename: self.cvFilename()
-                   })
-               });
+            url: url,
+            method: method,
+            contentType: 'application/json',
+            dataType: "json",
+            data: JSON.stringify({
+                id: self.id(),
+                name: self.name(),
+                referer: self.referer(),
+                email: self.email(),
+                languageSkill: self.languageSkill(),
+                phone: self.phone(),
+                description: self.description(),
+                cvFilename: self.cvFilename()
+            })
+        });
     }
 
     function sendFileWithAjax(url, formData) {
@@ -127,19 +127,24 @@ function CandidateCreateModel(){
             }
         // If candidate is not valid, then show error msg
         }).error(function (xhr) {
-            self.candidateErrorResponse(xhr.responseJSON);
-            self.showError(true);
-            // If the file exists
-            if (($('input[type=file]')[0] != undefined) && ($('input[type=file]').val() != '')) {
-                // Send file to save
-                sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
-                    // If there is no error with file, then hide the error msg
-                    self.showFileError(false);
-                // If file is not valid, then show the error msg
-                }).error(function (xhr) {
-                    self.fileErrorResponse(xhr.responseJSON);
-                    self.showFileError(true);
-                });
+            // If the response type is not JSON, redirection happened -> perform a manual page reload
+            if ( xhr.status === 200 && xhr.getResponseHeader("Content-Type").indexOf("json") === -1 ) {
+                window.location.reload();
+            } else {
+                self.candidateErrorResponse(xhr.responseJSON);
+                self.showError(true);
+                // If the file exists
+                if (($('input[type=file]')[0] != undefined) && ($('input[type=file]').val() != '')) {
+                    // Send file to save
+                    sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
+                        // If there is no error with file, then hide the error msg
+                        self.showFileError(false);
+                    // If file is not valid, then show the error msg
+                    }).error(function (xhr) {
+                        self.fileErrorResponse(xhr.responseJSON);
+                        self.showFileError(true);
+                    });
+                }
             }
         });
     }

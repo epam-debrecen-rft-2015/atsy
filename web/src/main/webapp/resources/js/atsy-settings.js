@@ -43,8 +43,13 @@ function SettingsForm() {
                     }
                     $this.find('input').val('');
                 }).error(function (xhr) {
-                    var response = xhr.responseJSON;
-                    showError($this, response.errorMessage);
+                    // If the response type is not JSON, redirection happened -> perform a manual page reload
+                    if ( xhr.status === 200 && xhr.getResponseHeader("Content-Type").indexOf("json") === -1 ) {
+                        window.location.reload();
+                    } else {
+                        var response = xhr.responseJSON;
+                        showError($this, response.errorMessage);
+                    }
                 });
             }
         });

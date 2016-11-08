@@ -29,8 +29,13 @@ function getOptions(dialogMessageKey, errorMessageKey, row, container, optionalP
                         table.bootstrapTable('refresh');
                         hideError(container);
                     }).error(function (xhr) {
-                        var response = xhr.responseJSON;
-                        showError(container, response.errorMessage + " (" + row.name + ")");
+                        // If the response type is not JSON, redirection happened -> perform a manual page reload
+                        if ( xhr.status === 405 && xhr.getResponseHeader("Content-Type").indexOf("json") === -1 ) {
+                            window.location.reload();
+                        } else {
+                            var response = xhr.responseJSON;
+                            showError(container, response.errorMessage + " (" + row.name + ")");
+                        }
                     });
                 }
              },
