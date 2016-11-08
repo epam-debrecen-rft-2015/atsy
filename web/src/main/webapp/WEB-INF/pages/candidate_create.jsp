@@ -49,7 +49,7 @@
             <div id="candidate_data">
                 <div class="row">
                     <form data-toggle="validator" class="form" role="form" method="POST" enctype="multipart/form-data" id="candidate-create-form" action="${candidateURL}" data-bind="css: { 'has-error': showError }">
-                        <div class="panel panel-danger hidden" role="alert"  data-bind="css: { hidden: !showError() }">
+                        <div class="panel panel-danger" role="alert"  data-bind="css: { hidden: !showError() }">
                             <div class="panel-heading" data-bind="text: errorMessage"></div>
                             <div class="panel-body">
                                 <ul id="field-messages">
@@ -241,6 +241,58 @@
                 </div>
             </div>
         </div>
+
+       <div class="row">
+        <c:if test="${not empty candidateId}">
+            <form:form method="POST" action="${fileUpload}/${candidateId}" enctype="multipart/form-data">
+                <c:if test="${not empty validationSuccessKey}">
+                    <div id="globalMessage" class="alert alert-success" role="alert">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="false"></span>
+                        <spring:message code="${validationSuccessKey}"/>
+                    </div>
+                </c:if>
+
+                <c:if test="${not empty validationErrorKey}">
+                    <div id="globalMessage" class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
+                        <spring:message code="${validationErrorKey}"/>
+                    </div>
+                </c:if>
+
+                <c:if test="${not empty fileErrorMessage}">
+                    <div id="globalMessage" class="alert alert-danger hidden" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span>
+                        <spring:message code="${fileErrorMessage}"/>
+                    </div>
+                </c:if>
+
+                <c:if test="${empty candidate.cvFilename}">
+                    <label class="control-label col-sm-2 text-right" for="name">
+                        <spring:message code="cv"/>
+                    </label>
+
+                    <div class="form-group col-sm-2">
+                        <input type="file" name="file" />
+                        <button type="submit" class="btn btn-link"><spring:message code="upload.button"/></button>
+                    </div>
+                </c:if>
+
+                <c:if test="${not empty candidate.cvFilename}">
+                    <label class="control-label col-sm-2 text-right" for="name">
+                        <spring:message code="cv"/>
+                    </label>
+
+                    <label class="control-label col-lg-2 col-md-4 col-sm-4 text-left" for="name">
+                       <c:url value='/secure/candidate/fileDownload/${candidateId}' var="urlValue" /> <a href="${urlValue}">
+                            <c:out value="${candidate.cvFilename}"/>
+                        </a>
+                    </label>
+                </c:if>
+
+
+            </form:form>
+        </c:if>
+      </div>
 
         <c:choose>
             <c:when test="${not empty candidate.id}">

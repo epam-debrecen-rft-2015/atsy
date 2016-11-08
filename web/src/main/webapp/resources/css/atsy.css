@@ -115,7 +115,7 @@ body {
 }
 
 .form-group > label {
-    padding-top: 5px;
+    padding-top: 7px;
 }
 
 #name {
@@ -236,4 +236,18 @@ form > .button-panel > .btn {
 .little-space {
   padding-left: 5px;
   padding-right: 5px;
+}
+
+.form-group{
+  margin-bottom:0px;
+}
+
+.help-block {
+  color: #737373;
+  margin-bottom: 0px;
+  margin-top: 0px;
+}
+
+.btn-link {
+  padding: 6px 0px;
 }
