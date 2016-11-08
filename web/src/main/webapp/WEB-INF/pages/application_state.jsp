@@ -22,6 +22,7 @@
         <link href="${bootstrap_datepicker_css}" rel="stylesheet" type="text/css">
         <script src="${moment_js}" type="text/javascript"></script>
         <script src="${bootstrap_datetimepicker_js}" type="text/javascript"></script>
+
     </jsp:attribute>
   <jsp:body>
       <div class="page-header">
@@ -132,7 +133,7 @@
                                 <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value="${data.positionName}"/></p>
                                   <c:if test="${stat.first}">
                                       <select required class="form-control stateInput hidden" id="positionSelector" data-bind="valueWithInit: 'positionId'">
-                                          <option disabled="disabled" selected="selected">
+                                          <option disabled="disabled" selected="selected" value="${data.positionId}">
                                                <c:out value="${data.positionName}"/>
                                            </option>
                                       </select>

@@ -38,21 +38,21 @@ function CandidateCreateModel(){
 
     function sendCandidateWithAjax(url, method) {
         return $.ajax({
-            url: url,
-            method: method,
-            contentType: 'application/json',
-            dataType: "json",
-            data: JSON.stringify({
-                id: self.id(),
-                name: self.name(),
-                referer: self.referer(),
-                email: self.email(),
-                languageSkill: self.languageSkill(),
-                phone: self.phone(),
-                description: self.description(),
-                cvFilename: self.cvFilename()
-            })
-        });
+                   url: url,
+                   method: method,
+                   contentType: 'application/json',
+                   dataType: "json",
+                   data: JSON.stringify({
+                       id: self.id(),
+                       name: self.name().trim(),
+                       referer: self.referer(),
+                       email: self.email(),
+                       languageSkill: self.languageSkill(),
+                       phone: self.phone(),
+                       description: self.description(),
+                       cvFilename: self.cvFilename()
+                   })
+               });
     }
 
     function sendFileWithAjax(url, formData) {

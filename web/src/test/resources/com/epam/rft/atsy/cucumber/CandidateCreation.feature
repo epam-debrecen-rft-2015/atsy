@@ -17,9 +17,10 @@ Feature: candidate creation test
     Then a "<message>" message is shown under the "<field>" field
 
     Examples:
-      | field | message                                    |
-      | name  | A jelentkező nevét kötelező megadni!       |
-      | email | A jelentkező email címét kötelező megadni! |
+      | field | message                                      |
+      | name  | A jelentkező nevét kötelező megadni!         |
+      | email | A jelentkező email címét kötelező megadni!   |
+      | phone | A jelentkező telefonszámát kötelező megadni! |
 
   Scenario Outline: user can't create new candidate because of duplication based on same email address or phone number
 
