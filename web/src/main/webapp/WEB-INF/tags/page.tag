@@ -1,10 +1,8 @@
 <%@tag description="Overall Page template" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@attribute name="header" fragment="true" %>
 <%@attribute name="footer" fragment="true" %>
 <%@attribute name="refs" fragment="true" %>
-<fmt:setTimeZone value="Europe/Budapest"/>
 <html lang="${pageContext.response.locale}">
 <head>
     <c:url value="/resources/thirdparty/bootstrap/css/bootstrap.min.css" var="urlValue" /> <link rel="stylesheet" href="${urlValue}">
