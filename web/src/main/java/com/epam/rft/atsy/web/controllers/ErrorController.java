@@ -34,8 +34,10 @@ public class ErrorController {
           .build();
 
   /**
-   * Loads the custom error page.
-   * @return the ModelAndView object which describes the page
+   * Loads the custom error page for a given HTTP status code.
+   * @param httpStatusCode the HTTP status code of the error
+   * @return the ModelAndView object which contains the HTTP status code and a
+   * short explanation of the error that occurred
    */
   @RequestMapping(method = RequestMethod.GET, path = "/{httpStatusCode}")
   public ModelAndView pageLoad(@PathVariable(value = "httpStatusCode") int httpStatusCode) {
