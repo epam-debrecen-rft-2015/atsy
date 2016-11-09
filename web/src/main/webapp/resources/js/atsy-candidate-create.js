@@ -178,10 +178,10 @@ function CandidateCreateModel(){
     self.modify = ko.observable(false);
 
     self.modify_display_true = function() {
+        $("#candidate-create-form").validator('destroy');
         self.modify(true);
         self.showError(false);
         self.showFileError(false);
-        $("#candidate-create-form").validator('destroy');
         candidateModel.id(savedModel.id);
         candidateModel.name(savedModel.name);
         candidateModel.referer(savedModel.referer);
@@ -192,6 +192,7 @@ function CandidateCreateModel(){
     };
 
     self.modify_display_false = function() {
+        $("#candidate-create-form").validator('validate');
         self.modify(false);
         savedModel = ko.toJS(candidateModel);
     };
