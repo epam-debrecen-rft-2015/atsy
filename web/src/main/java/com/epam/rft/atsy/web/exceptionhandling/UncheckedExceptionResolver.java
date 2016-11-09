@@ -32,11 +32,6 @@ public class UncheckedExceptionResolver implements HandlerExceptionResolver {
 
   private MessageKeyResolver messageKeyResolver;
 
-  private final Map<Class<? extends Exception>, String>
-      errorMessageKeyMap =
-      ImmutableMap.<Class<? extends Exception>, String>builder()
-          .build();
-
   public UncheckedExceptionResolver(MappingJackson2JsonView jsonView, MessageKeyResolver messageKeyResolver) {
     this.jsonView = jsonView;
     this.messageKeyResolver = messageKeyResolver;
@@ -51,22 +46,17 @@ public class UncheckedExceptionResolver implements HandlerExceptionResolver {
       return PASS_TO_NEXT_RESOLVER;
     }
 
-    int httpStatusCode =
-        AnnotationUtils.isAnnotationDeclaredLocally(ResponseStatus.class, e.getClass())
-            ? AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class).value().value()
-            : HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-
-    String
-        errorMessageKey =
-        errorMessageKeyMap.getOrDefault(e.getClass(), TECHNICAL_ERROR_MESSAGE_KEY);
-    String errorMessage = messageKeyResolver.resolveMessageOrDefault(errorMessageKey);
-
+    int httpStatusCode = getHttpStatusCodeForException(e.getClass());
     httpServletResponse.setStatus(httpStatusCode);
-    httpServletRequest.setAttribute(WebUtils.ERROR_STATUS_CODE_ATTRIBUTE, httpStatusCode);
-    httpServletRequest.setAttribute(WebUtils.ERROR_MESSAGE_ATTRIBUTE, errorMessage);
 
     if (!RequestInspector.isAjaxRequest(httpServletRequest)) {
-      return new ModelAndView(ERROR_VIEW_NAME);
+      ModelAndView modelAndView = new ModelAndView(ERROR_VIEW_NAME);
+
+      String errorMessage = messageKeyResolver.resolveMessageOrDefault(TECHNICAL_ERROR_MESSAGE_KEY);
+
+      modelAndView.addObject(WebUtils.ERROR_STATUS_CODE_ATTRIBUTE, httpStatusCode);
+      modelAndView.addObject(WebUtils.ERROR_MESSAGE_ATTRIBUTE, errorMessage);
+      return modelAndView;
     } else {
       RestResponse restResponse = new RestResponse(e.getMessage());
 
@@ -77,5 +67,11 @@ public class UncheckedExceptionResolver implements HandlerExceptionResolver {
 
       return modelAndView;
     }
+  }
+
+  private int getHttpStatusCodeForException(Class<? extends Exception> e) {
+    return AnnotationUtils.isAnnotationDeclaredLocally(ResponseStatus.class, e.getClass())
+             ? AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class).code().value()
+             : HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
   }
 }
