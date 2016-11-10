@@ -8,9 +8,15 @@ function SettingsForm() {
             }
         }
 
-        var form = container.find('form'),
+        var tabs = $('[role="tab"]'),
+            form = container.find('form'),
             table = container.find('table'),
             addAction = container.find('.add');
+
+        tabs.on('shown.bs.tab', function (e) {
+          var tabContentName = e.target.toString().split("#")[1];
+          $('#' + tabContentName + " input[class='name form-control']").focus();
+        });
 
         form.find('button[type="reset"]').add(addAction).on('click', function (event) {
             event.preventDefault();
