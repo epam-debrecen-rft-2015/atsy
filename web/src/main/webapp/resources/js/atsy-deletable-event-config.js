@@ -29,8 +29,10 @@ function getOptions(dialogMessageKey, errorMessageKey, row, container, optionalP
                         table.bootstrapTable('refresh');
                         hideError(container);
                     }).error(function (xhr) {
-                        var response = xhr.responseJSON;
-                        showError(container, response.errorMessage + " (" + row.name + ")");
+                        if (typeof xhr.responseJSON !== "undefined") {
+                            var response = xhr.responseJSON;
+                            showError(container, response.errorMessage + " (" + row.name + ")");
+                        }
                     });
                 }
              },

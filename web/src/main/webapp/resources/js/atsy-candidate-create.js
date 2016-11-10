@@ -127,19 +127,21 @@ function CandidateCreateModel(){
             }
         // If candidate is not valid, then show error msg
         }).error(function (xhr) {
-            self.candidateErrorResponse(xhr.responseJSON);
-            self.showError(true);
-            // If the file exists
-            if (($('input[type=file]')[0] != undefined) && ($('input[type=file]').val() != '')) {
-                // Send file to save
-                sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
-                    // If there is no error with file, then hide the error msg
-                    self.showFileError(false);
-                // If file is not valid, then show the error msg
-                }).error(function (xhr) {
-                    self.fileErrorResponse(xhr.responseJSON);
-                    self.showFileError(true);
-                });
+            if (typeof xhr.responseJSON !== "undefined") {
+                self.candidateErrorResponse(xhr.responseJSON);
+                self.showError(true);
+                // If the file exists
+                if (($('input[type=file]')[0] != undefined) && ($('input[type=file]').val() != '')) {
+                    // Send file to save
+                    sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
+                        // If there is no error with file, then hide the error msg
+                        self.showFileError(false);
+                    // If file is not valid, then show the error msg
+                    }).error(function (xhr) {
+                        self.fileErrorResponse(xhr.responseJSON);
+                        self.showFileError(true);
+                    });
+                }
             }
         });
     }
@@ -182,6 +184,7 @@ function CandidateCreateModel(){
         self.modify(true);
         self.showError(false);
         self.showFileError(false);
+
         candidateModel.id(savedModel.id);
         candidateModel.name(savedModel.name);
         candidateModel.referer(savedModel.referer);

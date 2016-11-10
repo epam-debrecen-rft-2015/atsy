@@ -43,8 +43,10 @@ function SettingsForm() {
                     }
                     $this.find('input').val('');
                 }).error(function (xhr) {
-                    var response = xhr.responseJSON;
-                    showError($this, response.errorMessage);
+                    if (typeof xhr.responseJSON !== "undefined") {
+                        var response = xhr.responseJSON;
+                        showError($this, response.errorMessage);
+                    }
                 });
             }
         });
