@@ -43,6 +43,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import org.junit.Ignore;
+import org.springframework.web.util.WebUtils;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationStateControllerTest extends AbstractControllerTest {
@@ -53,6 +55,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   private static final String CANDIDATE_OBJECT_KEY = "candidate";
   private static final String APPLICATION_STATE = "candidate.table.state.";
   private static final String ERROR_VIEW_NAME = "error";
+  private static final String COMMON_INVALID_INPUT_MESSAGE = "One or more fields contain incorrect input!";
 
   private static final String PARAM_APPLICATION_ID = "applicationId";
   private static final String PARAM_CLICKED_STATE = "state";

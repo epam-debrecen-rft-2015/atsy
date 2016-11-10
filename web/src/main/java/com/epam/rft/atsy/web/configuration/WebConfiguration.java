@@ -120,7 +120,7 @@ public class WebConfiguration extends DelegatingWebMvcConfiguration {
     addDefaultHandlerExceptionResolvers(exceptionResolvers);
 
     // The index is 1, in order to add it after the ExceptionHandlerExceptionResolver
-    exceptionResolvers.add(1, new UncheckedExceptionResolver(mappingJackson2JsonView()));
+    exceptionResolvers.add(1, new UncheckedExceptionResolver(mappingJackson2JsonView(), messageSource()));
   }
 
   @Bean
