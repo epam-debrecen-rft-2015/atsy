@@ -14,8 +14,7 @@ function SettingsForm() {
             addAction = container.find('.add');
 
         tabs.on('shown.bs.tab', function (e) {
-          var tabContentName = e.target.toString().split("#")[1];
-          $('#' + tabContentName + " input[class='name form-control']").focus();
+          $(e.target.hash + " input[class='name form-control']").focus();
         });
 
         form.find('button[type="reset"]').add(addAction).on('click', function (event) {
