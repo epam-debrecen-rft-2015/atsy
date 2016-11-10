@@ -51,7 +51,7 @@
                 </div>
 
                 <div>
-                    <table class="table table-striped table-hover cursor-pointer" data-toggle="table" id="candidates"
+                    <table class="table table-striped table-hover cursor-pointer" id="candidates"
                     data-url="${candidate}" data-height="500" data-sort-name="name" data-escape="true"
                     data-pagination="true" data-pagination-loop="false" data-side-pagination="server" data-query-params-type="" >
                         <thead>

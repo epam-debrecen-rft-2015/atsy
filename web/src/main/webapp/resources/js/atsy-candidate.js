@@ -17,11 +17,10 @@ $(document).ready(function () {
 
         event.preventDefault();
         return false;
-    })
+    });
 
-    function locationHashChanged() {
+    function fillInFormFromLocationHash() {
         var nth = 0;
-        result = {};
         form[0].reset();
         var data = location.hash.replace(/["/"]/g, function (match) {
             nth++;
@@ -29,69 +28,77 @@ $(document).ready(function () {
         }).replace("#", "").split("/").map(function (x) {
             x = x.split(";");
             form.find('#filter_' + x[0]).val(x[1]);
-            result[x[0]] = x[1];
-        });
-        table.bootstrapTable('refresh', {
-            url: form.attr('action') + "?filter=" + encodeURIComponent(JSON.stringify(result))
         });
     }
 
-    var additionalOptions = {
-      customSort: function(sortName, sortOrder) {
-        var defaultComparator;
+    function locationHashChanged() {
+        fillInFormFromLocationHash();
+        table.bootstrapTable('refresh');
+    }
 
-        if (sortOrder === "asc") {
-         defaultComparator = function(a, b, field) { return a[field] > b[field]; };
-        } else {
-         defaultComparator = function(a, b, field) { return a[field] < b[field]; };
-        }
-
-        this.data.sort(function(a, b) {
-            return defaultComparator(a, b, a[sortName] !== b[sortName] ? sortName : "name");
-        });
-      }
+    var fieldToSortAttributeMap = {
+      "email": "candidate.email",
+      "phone": "candidate.phone",
+      "positions": "position.name",
+      "name": "candidate.name"
     };
 
-    table.bootstrapTable('refreshOptions', additionalOptions);
-
-    locationHashChanged();
-});
-
-$('.table').bootstrapTable({
-    queryParams: function (p) {
-        var sortName = p.sortName;
-
-        if (sortName == "email") {
-          sortName = "candidate.email";
-        } else if (sortName == "phone") {
-          sortName = "candidate.phone";
-        } else if (sortName == "positions") {
-          sortName = "position.name";
-        } else {
-          sortName = "candidate.name";
-        }
-        p.sortName = sortName
-        return  p
-      },
-
-      onClickRow: function (row, $element) {
-        window.location.href = "candidate/details/" + row.id;
-      }
-});
-
-function actionsFormatter(value, row, index) {
-    return [
-             '<a class="remove ml10 little-space" href="javascript:void(0)" title="Remove">',
-                '<i class="glyphicon glyphicon-remove"></i>',
-             '</a>',
-            ].join('');
-};
-
-window.candidatesEvents = {
-    'click .remove': function (e, value, row) {
-         var container = $('#candidates_table');
-         var options = getOptions('question.delete.candidate.js', 'selected.candidate.not.found.js', row, container, "candidate");
-         e.stopImmediatePropagation();
-         bootbox.dialog(options);
+    function translateSortName(fieldName) {
+        var sortName = fieldToSortAttributeMap[fieldName];
+        return sortName ? sortName : params.sortName;
     }
-};
+
+    function extractFilterFromForm() {
+        var filterFields = {};
+        form.find("input").each(function(index, element){
+          var $this = $(this);
+          if($this.val()) {
+            filterFields[$this.attr("name")] = $this.val();
+          }
+        });
+        return JSON.stringify(filterFields);
+    }
+
+    fillInFormFromLocationHash();
+    $('.table').bootstrapTable({
+        queryParams: function (params) {
+          params.sortName = translateSortName(params.sortName);
+          params.filter = extractFilterFromForm();
+
+          return params;
+        },
+        customSort: function(sortName, sortOrder) {
+          var defaultComparator;
+
+          if (sortOrder === "asc") {
+           defaultComparator = function(a, b, field) { return a[field] > b[field]; };
+          } else {
+           defaultComparator = function(a, b, field) { return a[field] < b[field]; };
+          }
+
+          this.data.sort(function(a, b) {
+              return defaultComparator(a, b, a[sortName] !== b[sortName] ? sortName : "name");
+          });
+        },
+        onClickRow: function (row, $element) {
+          window.location.href = "candidate/details/" + row.id;
+        }
+    });
+
+    window.actionsFormatter = function(value, row, index) {
+        return [
+                 '<a class="remove ml10 little-space" href="javascript:void(0)" title="Remove">',
+                    '<i class="glyphicon glyphicon-remove"></i>',
+                 '</a>',
+                ].join('');
+    };
+
+    window.candidatesEvents = {
+        'click .remove': function (e, value, row) {
+             var container = $('#candidates_table');
+             var options = getOptions('question.delete.candidate.js', 'selected.candidate.not.found.js', row, container, "candidate");
+             e.stopImmediatePropagation();
+             bootbox.dialog(options);
+        }
+    };
+});
