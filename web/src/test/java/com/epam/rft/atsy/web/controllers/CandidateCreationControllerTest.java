@@ -90,7 +90,6 @@ public class CandidateCreationControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  @Ignore
   public void loadCandidateShouldRenderErrorViewWhenThereIsNoCandidateWithIdInPathParam()
       throws Exception {
     given(candidateService.getCandidate(NON_EXISTENT_CANDIDATE_ID))
@@ -99,7 +98,6 @@ public class CandidateCreationControllerTest extends AbstractControllerTest {
     mockMvc.perform(get(NON_EXISTENT_CANDIDATE_REQUEST_URL))
         .andExpect(status().isInternalServerError())
         .andExpect(view().name(ERROR_VIEW_NAME))
-        .andExpect(model().attribute(WebUtils.ERROR_MESSAGE_ATTRIBUTE, COMMON_INVALID_INPUT_MESSAGE))
         .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
 
     then(candidateService).should().getCandidate(NON_EXISTENT_CANDIDATE_ID);

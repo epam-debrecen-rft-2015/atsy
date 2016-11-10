@@ -44,13 +44,11 @@ public class ApplicationControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  @Ignore
   public void loadPageShouldRenderErrorViewWhenCandidateIdParamIsMalformed() throws Exception {
     mockMvc.perform(
         get(REQUEST_URL).param(CANDIDATE_ID_PARAM_NAME, MALFORMED_CANDIDATE_ID_PARAM_VALUE))
         .andExpect(status().isInternalServerError())
         .andExpect(view().name(ERROR_VIEW_NAME))
-        .andExpect(model().attribute(WebUtils.ERROR_MESSAGE_ATTRIBUTE, COMMON_INVALID_INPUT_MESSAGE))
         .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
   }
 }
