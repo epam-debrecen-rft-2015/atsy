@@ -61,7 +61,7 @@ Feature: candidate modification test
     And the user is on the Candidate profile page of the candidate "Candidate A"
     And the user enters a phone number which doesn't match "\\+?[\d]+" pattern
     When the user clicks on the "Mentés" button
-    Then a "A jelentkező telefonszáma egy plusz jellel kezdődhet és utána számjegyekből állhat!" message appears under the "phone" field
+    Then a "A jelentkező telefonszáma számjeggyel vagy egy plusz jellel kezdődhet és utána számjegyekből állhat!" message appears under the "phone" field
 
   Scenario: user can't modify the existing candidate because of email address is not a valid email address
 

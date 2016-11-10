@@ -79,9 +79,9 @@ Feature: candidate creation test
     Then a "<message>" message is shown under the "<field>" field
 
     Examples:
-      | field | email          | phone         | message                                                                                    |
-      | email | email/atsy.com | +36301234567  | A jelentkező email címének megfelelő formában kell lennie, például kovacs.jozsef@email.hu! |
-      | phone | email@atsy.com | +36a301234567 | A jelentkező telefonszáma egy plusz jellel kezdődhet és utána számjegyekből állhat!       |
+      | field | email          | phone         | message                                                                                              |
+      | email | email/atsy.com | +36301234567  | A jelentkező email címének megfelelő formában kell lennie, például kovacs.jozsef@email.hu!           |
+      | phone | email@atsy.com | +36a301234567 | A jelentkező telefonszáma számjeggyel vagy egy plusz jellel kezdődhet és utána számjegyekből állhat! |
 
   Scenario: the "Név" field is focused on Candidate creation page
     Given the user is on the Candidate creation page
