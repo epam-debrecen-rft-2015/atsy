@@ -7,6 +7,7 @@ import com.epam.rft.atsy.service.exception.file.FileIsEmptyValidationException;
 import com.epam.rft.atsy.service.exception.file.FileIsInWrongExtensionValidationException;
 import com.epam.rft.atsy.service.exception.file.FileIsMissingValidationException;
 import com.epam.rft.atsy.service.exception.file.FileIsTooLargeValidationException;
+import com.epam.rft.atsy.service.exception.file.FileUploadNotAllowedException;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordAllFieldFilledValidationException;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordContainsValidationException;
 import com.epam.rft.atsy.service.exception.passwordchange.PasswordLengthValidationException;
@@ -77,6 +78,9 @@ public class ExceptionMapperConfiguration {
     exceptionMessagePairValidationExceptionSet
         .add(new ExceptionMessagePair("candidate.already.has.cv.file",
             CandidateAlreadyHasCVFileException.class));
+    exceptionMessagePairValidationExceptionSet
+        .add(new ExceptionMessagePair("file.upload.not.allowed",
+            FileUploadNotAllowedException.class));
 
     return Collections.unmodifiableSet(exceptionMessagePairValidationExceptionSet);
   }

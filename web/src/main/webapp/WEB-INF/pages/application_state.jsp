@@ -185,7 +185,7 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.cv"/></label>
 
-                          <c:if test="${empty candidate.cvFilename}">
+                          <c:if test="${empty candidate.cvFilename && states[0].stateName == 'cv'}">
 
                               <div class="form-group col-lg-4 col-md-4 col-sm-4">
                                   <label class="btn btn-primary" for="file" id="fileUploadLabel">
