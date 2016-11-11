@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @AllArgsConstructor
 @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "candidate.not.found.error.message")
-public class CandidateNotFoundException extends Exception {
+public class CandidateNotFoundException extends RuntimeException {
   @Getter
   private final Long id;
 }

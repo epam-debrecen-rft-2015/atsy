@@ -34,7 +34,7 @@ public class CandidateCreationController {
    * @throws CandidateNotFoundException if there is no candidate with the given ID
    */
   @RequestMapping(method = RequestMethod.GET, path = "/{candidateId}")
-  public ModelAndView loadCandidate(@PathVariable(value = "candidateId") Long candidateId) throws CandidateNotFoundException {
+  public ModelAndView loadCandidate(@PathVariable(value = "candidateId") Long candidateId) {
     ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
     CandidateDTO candidate = candidateService.getCandidate(candidateId);
     if (candidate == null) {
