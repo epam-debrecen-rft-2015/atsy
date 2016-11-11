@@ -11,17 +11,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.web.util.WebUtils;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CandidateCreationControllerTest extends AbstractControllerTest {
   private static final String VIEW_NAME = "candidate_create";
 
   private static final String ERROR_VIEW_NAME = "error";
+
+  private static final String COMMON_INVALID_INPUT_MESSAGE = "One or more fields contain incorrect input!";
 
   private static final String CANDIDATE_CREATION_REQUEST_URL = "/secure/candidate/details";
 

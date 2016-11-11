@@ -1,8 +1,11 @@
 package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.service.CandidateService;
+import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.service.exception.file.CandidateAlreadyHasCVFileException;
+import com.epam.rft.atsy.service.exception.file.FileUploadNotAllowedException;
 import com.epam.rft.atsy.service.exception.file.FileValidationException;
 import com.epam.rft.atsy.web.exceptionhandling.RestResponse;
 import com.epam.rft.atsy.web.handler.FileHandler;
@@ -27,6 +30,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +43,8 @@ import lombok.extern.slf4j.Slf4j;
 public class FileUploadController {
 
   private static final String FILE_PARAMETER_NAME = "file";
+
+  private static final String STATE_NAME_CV = "cv";
 
   @Value("${upload_location_cv}")
   private String uploadLocation;
@@ -59,6 +65,9 @@ public class FileUploadController {
   private CandidateService candidateService;
 
   @Autowired
+  private StatesHistoryService statesHistoryService;
+
+  @Autowired
   private MessageKeyResolver messageKeyResolver;
 
   @RequestMapping(path = "/candidate/{candidateId}", method = RequestMethod.POST)
@@ -73,8 +82,21 @@ public class FileUploadController {
   public ResponseEntity uploadFileForState(@PathVariable("applicationId") Long applicationId,
                                            HttpServletRequest httpServletRequest) throws IOException, ServletException {
 
-    Long candidateId = this.candidateService.getCandidateByApplicationID(applicationId).getId();
-    return uploadFile(candidateId, applicationId, httpServletRequest);
+    try {
+      List<StateHistoryDTO> stateHistoryViewRepresentations =
+              this.statesHistoryService.getStateHistoriesByApplicationId(applicationId);
+      String currentStateName = stateHistoryViewRepresentations.get(0).getStateDTO().getName();
+      if (!currentStateName.equals(STATE_NAME_CV)) {
+        throw new FileUploadNotAllowedException();
+      }
+
+      Long candidateId = this.candidateService.getCandidateByApplicationID(applicationId).getId();
+      return uploadFile(candidateId, applicationId, httpServletRequest);
+
+    } catch (FileValidationException e) {
+      log.error(FileUploadController.class.getName(), e);
+      return getResponseEntityWithFileErrorMessageByException(e);
+    }
   }
 
   @RequestMapping(path = "/validate", method = RequestMethod.POST)

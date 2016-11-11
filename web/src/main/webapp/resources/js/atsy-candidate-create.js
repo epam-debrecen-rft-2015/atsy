@@ -44,7 +44,7 @@ function CandidateCreateModel(){
                    dataType: "json",
                    data: JSON.stringify({
                        id: self.id(),
-                       name: self.name(),
+                       name: self.name().trim(),
                        referer: self.referer(),
                        email: self.email(),
                        languageSkill: self.languageSkill(),
@@ -127,19 +127,21 @@ function CandidateCreateModel(){
             }
         // If candidate is not valid, then show error msg
         }).error(function (xhr) {
-            self.candidateErrorResponse(xhr.responseJSON);
-            self.showError(true);
-            // If the file exists
-            if (($('input[type=file]')[0] != undefined) && ($('input[type=file]').val() != '')) {
-                // Send file to save
-                sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
-                    // If there is no error with file, then hide the error msg
-                    self.showFileError(false);
-                // If file is not valid, then show the error msg
-                }).error(function (xhr) {
-                    self.fileErrorResponse(xhr.responseJSON);
-                    self.showFileError(true);
-                });
+            if (typeof xhr.responseJSON !== "undefined") {
+                self.candidateErrorResponse(xhr.responseJSON);
+                self.showError(true);
+                // If the file exists
+                if (($('input[type=file]')[0] != undefined) && ($('input[type=file]').val() != '')) {
+                    // Send file to save
+                    sendFileWithAjax(fileValidationUrl, formData).done(function (xhr) {
+                        // If there is no error with file, then hide the error msg
+                        self.showFileError(false);
+                    // If file is not valid, then show the error msg
+                    }).error(function (xhr) {
+                        self.fileErrorResponse(xhr.responseJSON);
+                        self.showFileError(true);
+                    });
+                }
             }
         });
     }
@@ -178,10 +180,11 @@ function CandidateCreateModel(){
     self.modify = ko.observable(false);
 
     self.modify_display_true = function() {
+        $("#candidate-create-form").validator('destroy');
         self.modify(true);
         self.showError(false);
         self.showFileError(false);
-        $("#candidate-create-form").validator('destroy');
+
         candidateModel.id(savedModel.id);
         candidateModel.name(savedModel.name);
         candidateModel.referer(savedModel.referer);
@@ -192,6 +195,7 @@ function CandidateCreateModel(){
     };
 
     self.modify_display_false = function() {
+        $("#candidate-create-form").validator('validate');
         self.modify(false);
         savedModel = ko.toJS(candidateModel);
     };

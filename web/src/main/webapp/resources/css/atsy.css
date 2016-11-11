@@ -237,3 +237,13 @@ form > .button-panel > .btn {
   padding-left: 5px;
   padding-right: 5px;
 }
+
+#error .jumbotron {
+	max-width: 600px;
+	margin: 100px auto 0 auto;
+}
+
+#error .description {
+	margin-top: 60px;
+	margin-bottom: 30px;
+}

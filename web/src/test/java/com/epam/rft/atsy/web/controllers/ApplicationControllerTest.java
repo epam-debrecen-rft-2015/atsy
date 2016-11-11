@@ -1,5 +1,6 @@
 package com.epam.rft.atsy.web.controllers;
 
+import org.junit.Ignore;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -7,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import org.junit.Test;
+import org.springframework.web.util.WebUtils;
 
 public class ApplicationControllerTest extends AbstractControllerTest {
   private static final String VIEW_NAME = "application";
@@ -20,6 +22,8 @@ public class ApplicationControllerTest extends AbstractControllerTest {
   private static final String CORRECT_CANDIDATE_ID_PARAM_VALUE = "1";
 
   private static final String MALFORMED_CANDIDATE_ID_PARAM_VALUE = "asd";
+
+  private static final String COMMON_INVALID_INPUT_MESSAGE = "One or more fields contain incorrect input!";
 
   @Override
   protected Object[] controllersUnderTest() {

@@ -2,9 +2,13 @@ package com.epam.rft.atsy.web.controllers.rest;
 
 import com.epam.rft.atsy.helper.MultipartFileCreatorTestHelper;
 import com.epam.rft.atsy.service.CandidateService;
+import com.epam.rft.atsy.service.StatesHistoryService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
+import com.epam.rft.atsy.service.domain.states.StateDTO;
+import com.epam.rft.atsy.service.domain.states.StateHistoryDTO;
 import com.epam.rft.atsy.service.exception.file.CandidateAlreadyHasCVFileException;
 import com.epam.rft.atsy.service.exception.file.FileIsInWrongExtensionValidationException;
+import com.epam.rft.atsy.service.exception.file.FileUploadNotAllowedException;
 import com.epam.rft.atsy.service.exception.file.FileValidationException;
 import com.epam.rft.atsy.web.controllers.AbstractControllerTest;
 import com.epam.rft.atsy.web.handler.FileHandler;
@@ -30,6 +34,8 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -52,8 +58,10 @@ public class FileUploadControllerTest extends AbstractControllerTest {
   private static final String REQUEST_URL_TO_UPLOAD_TO_STATE_HISTORY = "/secure/fileUpload/stateHistory/1";
   private static final String FILE_IS_IN_WRONG_EXTENSION_MESSAGE_KEY = "file.is.in.wrong.extension";
   private static final String CANDIDATE_ALREADY_HAS_CV_FILE_MESSAGE_KEY = "candidate.already.has.cv.file";
+  private static final String FILE_UPLOAD_NOT_ALLOWED_MESSAGE_KEY = "file.upload.not.allowed";
   private static final String FILE_IS_IN_WRONG_EXTENSION_MESSAGE = "The file is in wrong extension";
   private static final String CANDIDATE_ALREADY_HAS_CV_FILE_MESSAGE = "The candidate already has a CV file";
+  private static final String FILE_UPLOAD_NOT_ALLOWED_MESSAGE = "File upload is not allowed";
   private static final String JSON_PATH_ERROR_MESSAGE = "$.errorMessage";
 
   private static final String UPLOAD_LOCATION_VARIABLE_NAME = "uploadLocation";
@@ -87,6 +95,12 @@ public class FileUploadControllerTest extends AbstractControllerTest {
   private CandidateDTO
       candidateDTOWithValidCVFilename =
       CandidateDTO.builder().id(CANDIDATE_ID).name(CANDIDATE_NAME).cvFilename(ORIGINAL_FILENAME_VALID).build();
+  private StateHistoryDTO
+      stateHistoryDTOWithCVState =
+      StateHistoryDTO.builder().stateDTO(new StateDTO(1L, "cv")).build();
+  private StateHistoryDTO
+      stateHistoryDTOWithHRState =
+      StateHistoryDTO.builder().stateDTO(new StateDTO(2L, "hr")).build();
 
   @Mock
   private FileValidator fileValidator;
@@ -102,6 +116,9 @@ public class FileUploadControllerTest extends AbstractControllerTest {
 
   @Mock
   private CandidateService candidateService;
+
+  @Mock
+  private StatesHistoryService statesHistoryService;
 
   @Mock
   private MessageKeyResolver messageKeyResolver;
@@ -228,6 +245,34 @@ public class FileUploadControllerTest extends AbstractControllerTest {
   }
 
   @Test
+  public void uploadFileForCandidateShouldThrowFileUploadNotAllowedExceptionWhenApplicationStateNotEqualsCV()
+      throws Exception {
+    MockMultipartFile
+        multipartFile =
+        MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_VALID, FILE_SIZE_HUNDRED_BYTE);
+
+    List<StateHistoryDTO>
+        stateHistoryDTOs =
+        Arrays.asList(stateHistoryDTOWithHRState);
+
+    given(this.statesHistoryService.getStateHistoriesByApplicationId(APPLICATION_ID)).willReturn(stateHistoryDTOs);
+    given(this.ruleValidationExceptionMapper.getMessageKeyByException(any(FileUploadNotAllowedException.class)))
+        .willReturn(FILE_UPLOAD_NOT_ALLOWED_MESSAGE_KEY);
+    given(this.messageKeyResolver.resolveMessageOrDefault(FILE_UPLOAD_NOT_ALLOWED_MESSAGE_KEY))
+        .willReturn(FILE_UPLOAD_NOT_ALLOWED_MESSAGE);
+
+    this.mockMvc.perform(buildFileUploadRequestForFileUploadOnStateHistoryView(multipartFile))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).exists())
+        .andExpect(jsonPath(JSON_PATH_ERROR_MESSAGE).value(FILE_UPLOAD_NOT_ALLOWED_MESSAGE));
+
+    then(this.ruleValidationExceptionMapper).should()
+        .getMessageKeyByException(any(FileUploadNotAllowedException.class));
+    then(this.messageKeyResolver).should().resolveMessageOrDefault(FILE_UPLOAD_NOT_ALLOWED_MESSAGE_KEY);
+    verifyZeroInteractions(this.fileValidator, this.folderHandler, this.fileHandler);
+  }
+
+  @Test
   public void uploadFileForCandidateShouldSaveFileWhenEverythingIsOk() throws Exception {
     MockMultipartFile
         multipartFile =
@@ -259,6 +304,11 @@ public class FileUploadControllerTest extends AbstractControllerTest {
         multipartFile =
         MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_INVALID, FILE_SIZE_HUNDRED_BYTE);
 
+    List<StateHistoryDTO>
+        stateHistoryDTOs =
+        Arrays.asList(stateHistoryDTOWithCVState);
+
+    given(this.statesHistoryService.getStateHistoriesByApplicationId(APPLICATION_ID)).willReturn(stateHistoryDTOs);
     given(this.candidateService.getCandidateByApplicationID(APPLICATION_ID)).willReturn(null);
 
     this.mockMvc.perform(buildFileUploadRequestForFileUploadOnStateHistoryView(multipartFile))
@@ -279,6 +329,11 @@ public class FileUploadControllerTest extends AbstractControllerTest {
         multipartFile =
         MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_INVALID, FILE_SIZE_HUNDRED_BYTE);
 
+    List<StateHistoryDTO>
+        stateHistoryDTOs =
+        Arrays.asList(stateHistoryDTOWithCVState);
+
+    given(this.statesHistoryService.getStateHistoriesByApplicationId(APPLICATION_ID)).willReturn(stateHistoryDTOs);
     given(this.candidateService.getCandidateByApplicationID(APPLICATION_ID)).willReturn(candidateDTOWithNullCVFilename);
     given(this.candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithNullCVFilename);
     given(this.ruleValidationExceptionMapper.getMessageKeyByException(fileValidationException))
@@ -309,6 +364,11 @@ public class FileUploadControllerTest extends AbstractControllerTest {
         multipartFile =
         MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_INVALID, FILE_SIZE_HUNDRED_BYTE);
 
+    List<StateHistoryDTO>
+        stateHistoryDTOs =
+        Arrays.asList(stateHistoryDTOWithCVState);
+
+    given(this.statesHistoryService.getStateHistoriesByApplicationId(APPLICATION_ID)).willReturn(stateHistoryDTOs);
     given(this.candidateService.getCandidateByApplicationID(APPLICATION_ID)).willReturn(candidateDTOWithNullCVFilename);
     given(candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithEmptyCVFilename);
     given(ruleValidationExceptionMapper.getMessageKeyByException(fileValidationException))
@@ -338,6 +398,11 @@ public class FileUploadControllerTest extends AbstractControllerTest {
         multipartFile =
         MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_VALID, FILE_SIZE_HUNDRED_BYTE);
 
+    List<StateHistoryDTO>
+        stateHistoryDTOs =
+        Arrays.asList(stateHistoryDTOWithCVState);
+
+    given(this.statesHistoryService.getStateHistoriesByApplicationId(APPLICATION_ID)).willReturn(stateHistoryDTOs);
     given(this.candidateService.getCandidateByApplicationID(APPLICATION_ID)).willReturn(candidateDTOWithNullCVFilename);
     given(this.candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithValidCVFilename);
     given(this.ruleValidationExceptionMapper.getMessageKeyByException(any(CandidateAlreadyHasCVFileException.class)))
@@ -365,6 +430,11 @@ public class FileUploadControllerTest extends AbstractControllerTest {
         multipartFile =
         MultipartFileCreatorTestHelper.createMultipartFile(ORIGINAL_FILENAME_VALID, FILE_SIZE_HUNDRED_BYTE);
 
+    List<StateHistoryDTO>
+        stateHistoryDTOs =
+        Arrays.asList(stateHistoryDTOWithCVState);
+
+    given(this.statesHistoryService.getStateHistoriesByApplicationId(APPLICATION_ID)).willReturn(stateHistoryDTOs);
     given(this.candidateService.getCandidateByApplicationID(APPLICATION_ID)).willReturn(candidateDTOWithNullCVFilename);
     given(this.candidateService.getCandidate(CANDIDATE_ID)).willReturn(candidateDTOWithNullCVFilename);
     given(this.fileHandler.getFileByParentDirectoryPathAndFolderNameAndFilename(CV_TEST_FOLDER_NAME,

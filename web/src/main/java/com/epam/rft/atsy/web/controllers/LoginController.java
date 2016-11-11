@@ -1,5 +1,7 @@
 package com.epam.rft.atsy.web.controllers;
 
+import com.epam.rft.atsy.service.AuthenticationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,7 +13,11 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/login")
 public class LoginController {
-  private static final String VIEW_NAME = "login";
+  private static final String VIEW_NAME_LOGIN = "login";
+  private static final String VIEW_NAME_WELCOME = "secure/welcome";
+
+  @Autowired
+  private AuthenticationService authenticationService;
 
   /**
    * Loads the page.
@@ -19,7 +25,11 @@ public class LoginController {
    */
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView pageLoad() {
-    return new ModelAndView(VIEW_NAME);
-  }
 
+    if (this.authenticationService.isCurrentUserAuthenticated()) {
+      return new ModelAndView("redirect:/" + VIEW_NAME_WELCOME);
+    } else {
+      return new ModelAndView(VIEW_NAME_LOGIN);
+    }
+  }
 }

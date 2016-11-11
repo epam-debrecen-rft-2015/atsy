@@ -22,6 +22,7 @@
         <link href="${bootstrap_datepicker_css}" rel="stylesheet" type="text/css">
         <script src="${moment_js}" type="text/javascript"></script>
         <script src="${bootstrap_datetimepicker_js}" type="text/javascript"></script>
+
     </jsp:attribute>
   <jsp:body>
       <div class="page-header">
@@ -132,7 +133,7 @@
                                 <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value="${data.positionName}"/></p>
                                   <c:if test="${stat.first}">
                                       <select required class="form-control stateInput hidden" id="positionSelector" data-bind="valueWithInit: 'positionId'">
-                                          <option disabled="disabled" selected="selected">
+                                          <option disabled="disabled" selected="selected" value="${data.positionId}">
                                                <c:out value="${data.positionName}"/>
                                            </option>
                                       </select>
@@ -184,7 +185,7 @@
                       <div class="form-group">
                           <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.cv"/></label>
 
-                          <c:if test="${empty candidate.cvFilename}">
+                          <c:if test="${empty candidate.cvFilename && states[0].stateName == 'cv'}">
 
                               <div class="form-group col-lg-4 col-md-4 col-sm-4">
                                   <label class="btn btn-primary" for="file" id="fileUploadLabel">
