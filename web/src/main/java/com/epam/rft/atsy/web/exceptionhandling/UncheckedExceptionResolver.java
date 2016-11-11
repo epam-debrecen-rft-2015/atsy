@@ -1,11 +1,17 @@
 package com.epam.rft.atsy.web.exceptionhandling;
 
+import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
+import com.google.common.collect.ImmutableMap;
+import java.util.Map;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.util.WebUtils;
 
 /**
  * This class handles the unchecked exceptions thrown by the controllers. Registered with the
@@ -20,10 +26,15 @@ public class UncheckedExceptionResolver implements HandlerExceptionResolver {
 
   private static final String ERROR_VIEW_NAME = "error";
 
+  private static final String TECHNICAL_ERROR_MESSAGE_KEY = "technical.error.message";
+
   private MappingJackson2JsonView jsonView;
 
-  public UncheckedExceptionResolver(MappingJackson2JsonView jsonView) {
+  private MessageKeyResolver messageKeyResolver;
+
+  public UncheckedExceptionResolver(MappingJackson2JsonView jsonView, MessageKeyResolver messageKeyResolver) {
     this.jsonView = jsonView;
+    this.messageKeyResolver = messageKeyResolver;
   }
 
   @Override
@@ -35,10 +46,17 @@ public class UncheckedExceptionResolver implements HandlerExceptionResolver {
       return PASS_TO_NEXT_RESOLVER;
     }
 
-    httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    int httpStatusCode = getHttpStatusCodeForException(e.getClass());
+    httpServletResponse.setStatus(httpStatusCode);
 
     if (!RequestInspector.isAjaxRequest(httpServletRequest)) {
-      return new ModelAndView(ERROR_VIEW_NAME);
+      ModelAndView modelAndView = new ModelAndView(ERROR_VIEW_NAME);
+
+      String errorMessage = messageKeyResolver.resolveMessageOrDefault(TECHNICAL_ERROR_MESSAGE_KEY);
+
+      modelAndView.addObject(WebUtils.ERROR_STATUS_CODE_ATTRIBUTE, httpStatusCode);
+      modelAndView.addObject(WebUtils.ERROR_MESSAGE_ATTRIBUTE, errorMessage);
+      return modelAndView;
     } else {
       RestResponse restResponse = new RestResponse(e.getMessage());
 
@@ -49,5 +67,11 @@ public class UncheckedExceptionResolver implements HandlerExceptionResolver {
 
       return modelAndView;
     }
+  }
+
+  private int getHttpStatusCodeForException(Class<? extends Exception> e) {
+    return AnnotationUtils.isAnnotationDeclaredLocally(ResponseStatus.class, e.getClass())
+             ? AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class).code().value()
+             : HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
   }
 }

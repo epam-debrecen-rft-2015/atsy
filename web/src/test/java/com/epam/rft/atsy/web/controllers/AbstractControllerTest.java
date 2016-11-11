@@ -1,15 +1,17 @@
 package com.epam.rft.atsy.web.controllers;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
 import com.epam.rft.atsy.web.MediaTypes;
 import com.epam.rft.atsy.web.exceptionhandling.GlobalControllerExceptionHandler;
 import com.epam.rft.atsy.web.exceptionhandling.UncheckedExceptionResolver;
+import com.epam.rft.atsy.web.messageresolution.AtsyReloadableResourceBundleMessageSource;
+import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
+import com.epam.rft.atsy.web.messageresolution.MessageKeyResolverImpl;
 import com.epam.rft.atsy.web.validator.LazySpringConstraintValidatorFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.LinkedList;
 import java.util.List;
+import org.apache.commons.lang3.CharEncoding;
 import org.junit.Before;
 import org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,6 +30,7 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 public abstract class AbstractControllerTest {
   protected static final String VIEW_PREFIX = "/WEB-INF/pages/";
@@ -37,11 +40,19 @@ public abstract class AbstractControllerTest {
 
   protected ObjectMapper objectMapper;
 
+  protected AtsyReloadableResourceBundleMessageSource atsyInternalMessageSource;
+
   protected LazySpringConstraintValidatorFactory lazySpringConstraintValidatorFactory = new LazySpringConstraintValidatorFactory();
 
   @Before
   public void setUp() {
     objectMapper = new ObjectMapper();
+
+    atsyInternalMessageSource =
+        new AtsyReloadableResourceBundleMessageSource();
+    atsyInternalMessageSource.setBasename("classpath:i18n/messages");
+    atsyInternalMessageSource.setDefaultEncoding(CharEncoding.UTF_8);
+    atsyInternalMessageSource.setFallbackToSystemLocale(false);
 
     mockMvc =
         MockMvcBuilders.standaloneSetup(controllersUnderTest())
@@ -73,10 +84,11 @@ public abstract class AbstractControllerTest {
 
   protected UncheckedExceptionResolver uncheckedExceptionResolver() {
     MappingJackson2JsonView jsonView = new MappingJackson2JsonView(objectMapper);
-
     jsonView.setContentType(MediaTypes.APPLICATION_JSON_UTF8.toString());
 
-    return new UncheckedExceptionResolver(jsonView);
+    MessageKeyResolver messageKeyResolver = new MessageKeyResolverImpl(atsyInternalMessageSource);
+
+    return new UncheckedExceptionResolver(jsonView, messageKeyResolver);
   }
 
   protected LocalValidatorFactoryBean localValidatorFactoryBean() {
