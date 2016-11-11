@@ -11,13 +11,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.web.util.WebUtils;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CandidateCreationControllerTest extends AbstractControllerTest {
@@ -25,19 +23,17 @@ public class CandidateCreationControllerTest extends AbstractControllerTest {
 
   private static final String ERROR_VIEW_NAME = "error";
 
-  private static final String COMMON_INVALID_INPUT_MESSAGE = "One or more fields contain incorrect input!";
-
   private static final String CANDIDATE_CREATION_REQUEST_URL = "/secure/candidate/details";
 
   private static final Long CANDIDATE_ID = 1L;
 
-  private static final Long NON_EXISTENT_CANDIDATE_ID = -1L;
+  private static final Long ILLEGAL_CANDIDATE_ID = -1L;
 
   private static final String EXISTING_CANDIDATE_REQUEST_URL =
       "/secure/candidate/details/" + CANDIDATE_ID.toString();
 
-  private static final String NON_EXISTENT_CANDIDATE_REQUEST_URL =
-      "/secure/candidate/details/" + NON_EXISTENT_CANDIDATE_ID.toString();
+  private static final String ILLEGAL_CANDIDATE_REQUEST_URL =
+      "/secure/candidate/details/" + ILLEGAL_CANDIDATE_ID.toString();
 
   private static final String CANDIDATE_OBJECT_KEY = "candidate";
 
@@ -60,7 +56,7 @@ public class CandidateCreationControllerTest extends AbstractControllerTest {
   public void setUpTestDate() {
     emptyCandidateDto = CandidateDTO.builder().deleted(false).build();
 
-    persistedCandidateDto = CandidateDTO.builder().id(CANDIDATE_ID).build();
+    persistedCandidateDto = CandidateDTO.builder().id(CANDIDATE_ID).deleted(false).build();
   }
 
   @Test
@@ -92,14 +88,13 @@ public class CandidateCreationControllerTest extends AbstractControllerTest {
   @Test
   public void loadCandidateShouldRenderErrorViewWhenThereIsNoCandidateWithIdInPathParam()
       throws Exception {
-    given(candidateService.getCandidate(NON_EXISTENT_CANDIDATE_ID))
-        .willThrow(IllegalArgumentException.class);
+    given(candidateService.getCandidate(ILLEGAL_CANDIDATE_ID)).willReturn(null);
 
-    mockMvc.perform(get(NON_EXISTENT_CANDIDATE_REQUEST_URL))
-        .andExpect(status().isInternalServerError())
+    mockMvc.perform(get(ILLEGAL_CANDIDATE_REQUEST_URL))
+        .andExpect(status().isNotFound())
         .andExpect(view().name(ERROR_VIEW_NAME))
         .andExpect(forwardedUrl(VIEW_PREFIX + ERROR_VIEW_NAME + VIEW_SUFFIX));
 
-    then(candidateService).should().getCandidate(NON_EXISTENT_CANDIDATE_ID);
+    then(candidateService).should().getCandidate(ILLEGAL_CANDIDATE_ID);
   }
 }

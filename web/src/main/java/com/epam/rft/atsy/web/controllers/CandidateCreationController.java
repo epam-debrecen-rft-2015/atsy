@@ -2,6 +2,7 @@ package com.epam.rft.atsy.web.controllers;
 
 import com.epam.rft.atsy.service.CandidateService;
 import com.epam.rft.atsy.service.domain.CandidateDTO;
+import com.epam.rft.atsy.web.exceptionhandling.CandidateNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,11 +31,17 @@ public class CandidateCreationController {
    * @param candidateId the identifier of the candidate whose data should be given back
    * @return a ModelAndView object which contains the all candidate information and the name of the
    * page that handles the candidate data
+   * @throws CandidateNotFoundException if there is no candidate with the given ID
    */
   @RequestMapping(method = RequestMethod.GET, path = "/{candidateId}")
   public ModelAndView loadCandidate(@PathVariable(value = "candidateId") Long candidateId) {
     ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
-    modelAndView.addObject(CANDIDATE_OBJECT_KEY, candidateService.getCandidate(candidateId));
+    CandidateDTO candidate = candidateService.getCandidate(candidateId);
+    if (candidate == null) {
+      throw new CandidateNotFoundException(candidateId);
+    }
+
+    modelAndView.addObject(CANDIDATE_OBJECT_KEY, candidate);
     return modelAndView;
   }
 

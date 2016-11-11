@@ -1,8 +1,6 @@
 package com.epam.rft.atsy.web.exceptionhandling;
 
 import com.epam.rft.atsy.web.messageresolution.MessageKeyResolver;
-import com.google.common.collect.ImmutableMap;
-import java.util.Map;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
@@ -52,7 +50,7 @@ public class UncheckedExceptionResolver implements HandlerExceptionResolver {
     if (!RequestInspector.isAjaxRequest(httpServletRequest)) {
       ModelAndView modelAndView = new ModelAndView(ERROR_VIEW_NAME);
 
-      String errorMessage = messageKeyResolver.resolveMessageOrDefault(TECHNICAL_ERROR_MESSAGE_KEY);
+      String errorMessage = getErrorMessageForException(e.getClass());
 
       modelAndView.addObject(WebUtils.ERROR_STATUS_CODE_ATTRIBUTE, httpStatusCode);
       modelAndView.addObject(WebUtils.ERROR_MESSAGE_ATTRIBUTE, errorMessage);
@@ -70,8 +68,17 @@ public class UncheckedExceptionResolver implements HandlerExceptionResolver {
   }
 
   private int getHttpStatusCodeForException(Class<? extends Exception> e) {
-    return AnnotationUtils.isAnnotationDeclaredLocally(ResponseStatus.class, e.getClass())
-             ? AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class).code().value()
+    return AnnotationUtils.isAnnotationDeclaredLocally(ResponseStatus.class, e)
+             ? AnnotationUtils.findAnnotation(e, ResponseStatus.class).code().value()
              : HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+  }
+
+  private String getErrorMessageForException(Class<? extends Exception> e) {
+    String errorMessageKey =
+             AnnotationUtils.isAnnotationDeclaredLocally(ResponseStatus.class, e)
+               ? AnnotationUtils.findAnnotation(e, ResponseStatus.class).reason()
+               : TECHNICAL_ERROR_MESSAGE_KEY;
+
+    return messageKeyResolver.resolveMessageOrDefault(errorMessageKey);
   }
 }

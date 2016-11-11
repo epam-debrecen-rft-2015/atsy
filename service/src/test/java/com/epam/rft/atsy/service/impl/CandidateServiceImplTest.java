@@ -53,7 +53,6 @@ public class CandidateServiceImplTest {
   private static final Short LANGUAGE_SKILL = 5;
   private static final String DESCRIPTION = "Simply John Doe.";
   private static final CandidateEntity NOT_FOUND_CANDIDATE_ENTITY = null;
-  private static final CandidateDTO NOT_FOUND_CANDIDATE_DTO = null;
 
   private static final String SORT_NAME_NAME = "name";
   private static final String SORT_ORDER_ASC = "asc";
@@ -81,6 +80,7 @@ public class CandidateServiceImplTest {
   private CandidateServiceImpl candidateService;
 
   private CandidateEntity dummyCandidateEntity;
+  private CandidateEntity deletedDummyCandidateEntity;
   private CandidateDTO dummyCandidateDto;
   private ApplicationEntity dummyApplicationEntity;
 
@@ -91,7 +91,10 @@ public class CandidateServiceImplTest {
             converterService);
 
     dummyCandidateEntity = CandidateEntity.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
-        .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).build();
+        .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).deleted(false).build();
+
+    deletedDummyCandidateEntity = CandidateEntity.builder().id(ID).name(NAME).email(EMAIL).phone(PHONE)
+        .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).deleted(true).build();
 
     dummyApplicationEntity =
         ApplicationEntity.builder().id(APPLICATION_ID).candidateEntity(dummyCandidateEntity)
@@ -99,7 +102,7 @@ public class CandidateServiceImplTest {
 
     dummyCandidateDto =
         CandidateDTO.builder().id(ID).deleted(false).name(NAME).email(EMAIL).phone(PHONE)
-            .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).build();
+            .referer(REFERER).languageSkill(LANGUAGE_SKILL).description(DESCRIPTION).deleted(false).build();
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -112,8 +115,18 @@ public class CandidateServiceImplTest {
   public void getCandidateShouldReturnNullWhenIdNotFound() {
     // Given
     given(candidateRepository.findOne(ID)).willReturn(NOT_FOUND_CANDIDATE_ENTITY);
-    given(converterService.convert(NOT_FOUND_CANDIDATE_ENTITY, CandidateDTO.class))
-        .willReturn(NOT_FOUND_CANDIDATE_DTO);
+
+    // When
+    CandidateDTO candidate = candidateService.getCandidate(ID);
+
+    // Then
+    assertThat(candidate, nullValue());
+  }
+
+  @Test
+  public void getCandidateShouldReturnNullWhenCandidateIsLogicallyDeleted() {
+    // Given
+    given(candidateRepository.findOne(ID)).willReturn(deletedDummyCandidateEntity);
 
     // When
     CandidateDTO candidate = candidateService.getCandidate(ID);
