@@ -5,7 +5,8 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="atsy" tagdir="/WEB-INF/tags" %>
 <%@page contentType="text/html;charset=UTF-8" %>
-<fmt:setTimeZone value="Europe/Budapest" scope="session"/>
+<spring:eval var="timeZone" expression="@environment.getProperty('time_zone')"/>
+<fmt:setTimeZone value="${timeZone}" scope="session"/>
 
 <atsy:page>
 
