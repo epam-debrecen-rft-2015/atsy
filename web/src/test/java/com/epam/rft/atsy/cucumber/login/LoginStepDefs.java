@@ -1,112 +1,97 @@
 package com.epam.rft.atsy.cucumber.login;
 
 import static com.epam.rft.atsy.cucumber.util.DriverProvider.getDriver;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 
-import com.epam.rft.atsy.cucumber.util.DriverProvider;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+import com.epam.rft.atsy.cucumber.util.Navigation;
+import com.epam.rft.atsy.cucumber.welcome.CandidatesPage;
 
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class LoginStepDefs {
 
-  private DriverProvider driverProvider;
+  private Navigation navigation;
+  private LoginPage loginPage;
+  private CandidatesPage candidatesPage;
 
-  public LoginStepDefs(DriverProvider driverProvider) {
-    this.driverProvider = driverProvider;
+  @Before
+  public void initialize() {
+    this.navigation = new Navigation(getDriver());
+    this.loginPage = new LoginPage(getDriver());
+    this.candidatesPage = new CandidatesPage(getDriver());
   }
 
   @Given("^the user is on the login page$")
   public void onLoginPage() {
-    driverProvider.getDriver().get("http://localhost:8080/atsy/logout");
-    driverProvider.getDriver().get("http://localhost:8080/atsy/login?locale=hu");
+    this.navigation.logout();
+    this.navigation.goToLoginPage();
   }
 
   @Given("^the user opens the login page$")
   public void openLoginPage() {
-    driverProvider.getDriver().get("http://localhost:8080/atsy/login?locale=hu");
+    this.navigation.goToLoginPage();
   }
 
   @When("^the user enters username (.*)$")
   public void userEntersUsernameUser(String userName) {
-    driverProvider.getDriver().findElement(By.id("name")).sendKeys(userName);
+    this.loginPage.enterName(userName);
   }
 
   @When("^the user enters password (.*)$")
   public void userEntersPasswordPassword(String password) {
-    driverProvider.getDriver().findElement(By.id("password")).sendKeys(password);
+    this.loginPage.enterPassword(password);
   }
 
   @When("^the user clicks on Bejelentkezés button$")
   public void bejelentkezesButtonClicked() {
-    driverProvider.getDriver().findElement(By.id("loginButton")).click();
+    this.loginPage.clickOnLoginButton();
   }
 
   @Then("^the Candidates page should appear$")
   public void candidatesPageAppears() {
-    WebDriverWait wait = new WebDriverWait(getDriver(), 5);
-    wait.until(presenceOfElementLocated(By.id("candidates_table")));
+    this.candidatesPage.validateCandidatesTableAppearance();
   }
 
   @Then("^(.*) message should appear$")
   public void messageAppearance(String message) {
-    WebElement messageElement = driverProvider.getDriver().findElement(By.id("globalMessage"));
-    assertThat(messageElement.isDisplayed(), is(true));
-    assertThat(messageElement.getText(), is(message));
+    this.loginPage.validateGlobalMessage(message);
   }
 
   @Then("^(.*) message should appear above the (.*) field$")
   public void fieldMessageAppearance(String message, String fieldName) {
-    WebElement messageElement = driverProvider.getDriver()
-        .findElement(By.id(fieldName))
-        .findElement(By.xpath("..")) //parent
-        .findElement(By.tagName("span"));
-    assertThat(messageElement.isDisplayed(), is(true));
-    assertThat(messageElement.getText(), is(message));
+    this.loginPage.validateFieldErrorMessage(fieldName, message);
   }
 
   @Then("^the username field should be in focus$")
-  public void usernameFieldNotInFocus() {
-    assertThat(driverProvider.getDriver().findElement(By.id("name"))
-        .equals(driverProvider.getDriver().switchTo().activeElement()), is(true));
+  public void usernameFieldIsInFocus() {
+    this.loginPage.valdiateUsernameFieldHasFocus();
   }
 
   @Then("^the browser title should be (.*)$")
   public void browserTitle(String title) {
-    String browserTitle = driverProvider.getDriver().getTitle();
-    //assertThat(driverProvider.getDriver().getTitle().equals(title), is(true));
-    assertThat(browserTitle, is(title));
+    this.loginPage.validateBrowserTitle(title);
   }
 
   @Then("^the user should get epam logo$")
   public void theUserGetsEpamLogo() throws Throwable {
-    WebElement messageElement = driverProvider.getDriver().findElement(By.cssSelector("img.img-rounded"));
-    assertThat(messageElement.isDisplayed(), is(true));
+    this.loginPage.validateLogoAppearance();
   }
 
   @Then("^the user should get (.*) field$")
   public void theUserGetsUsernameField(String fieldId) throws Throwable {
-    WebElement messageElement = driverProvider.getDriver().findElement(By.id(fieldId));
-    assertThat(messageElement.isDisplayed(), is(true));
+    this.loginPage.validateFieldExistence(fieldId);
   }
 
   @Then("^the user should see placeholder (.*) in the (.*) field$")
   public void theUserGetFelhasználónévPlaceholderInTheUsernameField(String placeholderText, String fieldId) throws Throwable {
-    String fieldPlaceholderText = driverProvider.getDriver().findElement(By.id(fieldId)).getAttribute("placeholder");
-    assertThat(fieldPlaceholderText, is(placeholderText));
+    this.loginPage.validateFieldPlaceHolder(fieldId, placeholderText);
   }
 
   @Then("^the user should get (.*) button$")
   public void theUserGetsBejelentkezésButton(String buttonLabel) throws Throwable {
-    WebElement messageElement = driverProvider.getDriver().findElement(By.id("loginButton"));
-    assertThat(messageElement.isDisplayed(), is(true));
-    assertThat(messageElement.getText(), is(buttonLabel));
+    this.loginPage.validateLoginButtonAppearance(buttonLabel);
   }
 
 }
