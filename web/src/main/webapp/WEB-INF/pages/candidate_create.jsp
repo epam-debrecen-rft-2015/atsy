@@ -69,7 +69,9 @@
                             <spring:message code="candidate.name.field" var="i18nname"/>
                             <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
                                    for="name"><spring:message
-                                    code="candidate.name.label"/></label>
+                                   code="candidate.name.label"/>
+                                <span class="input">*</span>
+                            </label>
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
                                <spring:message code="candidate.error.name.empty" var="nameEmptyValue"/> <input type="text" class="input form-control " name="name" id="name" data-bind="valueWithInit: 'name'"
@@ -107,7 +109,9 @@
                             <spring:message code="candidate.email.field" var="i18nemail"/>
                             <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
                                    for="email"><spring:message
-                                    code="candidate.email.label"/></label>
+                                   code="candidate.email.label"/>
+                                <span class="input">*</span>
+                            </label>
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
                             <spring:message code="candidate.error.email.empty" var="emailEmptyValue"/>
@@ -155,7 +159,9 @@
                             <spring:message code="candidate.phone.field" var="i18nphone"/>
                             <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
                                    for="phone"><spring:message
-                                    code="candidate.phone.label"/></label>
+                                   code="candidate.phone.label"/>
+                                <span class="input">*</span>
+                            </label>
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
                             <spring:message code="candidate.error.phone.empty" var="phoneEmptyValue"/>

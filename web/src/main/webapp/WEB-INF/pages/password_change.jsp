@@ -13,15 +13,21 @@
                 <span class="error-message"></span>
             </div>
             <div class="form-group">
-                <label for="new-pw"><spring:message code="settings.password.new"/></label>
+                <label for="new-pw"><spring:message code="settings.password.new"/>
+                    <span class="input">*</span>
+                </label>
                 <input type="password" class="newPassword form-control" name="newPassword" id="new-pw">
             </div>
             <div class="form-group">
-                <label for="new-pw-two"><spring:message code="settings.password.new.two"/></label>
+                <label for="new-pw-two"><spring:message code="settings.password.new.two"/>
+                    <span class="input">*</span>
+                </label>
                 <input type="password" class="newPasswordConfirm form-control" name="newPasswordConfirm" id="new-pw-two">
             </div>
             <div class="form-group">
-                <label for="old-pw"><spring:message code="settings.password.old"/></label>
+                <label for="old-pw"><spring:message code="settings.password.old"/>
+                    <span class="input">*</span>
+                </label>
                 <input type="password" class="oldPassword form-control" name="oldPassword" id="old-pw">
             </div>
             <button type="submit" class="btn btn-success">

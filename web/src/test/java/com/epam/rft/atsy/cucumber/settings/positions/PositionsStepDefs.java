@@ -178,7 +178,7 @@ public class PositionsStepDefs {
   @Then("^the user should get position label$")
   public void theUserGetsPositionLabel() throws Throwable {
       WebElement element= getDriver().findElement(By.cssSelector("label"));
-      assertThat(element.getText(), is("Pozíció neve:"));
+      assertThat(element.getText(), is("Pozíció neve: *"));
       assertThat(element.isDisplayed(), is(true));
   }
 
