@@ -37,13 +37,19 @@ function cancelButtonOnClick() {
 }
 
 $.getJSON('/atsy/secure/positions', { get_param: 'value' }, function(data) {
+    var currentPositionId = parseInt($('#positionSelector').attr("data-currentPositionId"));
     $.each(data, function(index, element) {
-        $('#positionSelector').append($('<option value="'+element.id+'"></option>').text(element.name));
+        if (element.id !== currentPositionId) {
+            $('#positionSelector').append($('<option value="'+element.id+'"></option>').text(element.name));
+        }
     });
 });
 
 $.getJSON('/atsy/secure/channels', { get_param: 'value' }, function(data) {
+    var currentChannelName = $('#channelSelector').attr("data-currentChannelName");
     $.each(data, function(index, element) {
-        $('#channelSelector').append($('<option value="'+element.name+'"></option>').text(element.name));
+        if (element.name !== currentChannelName) {
+            $('#channelSelector').append($('<option value="'+element.name+'"></option>').text(element.name));
+        }
     });
 });

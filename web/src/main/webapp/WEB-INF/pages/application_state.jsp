@@ -132,8 +132,9 @@
                             <div class="col-sm-8">
                                 <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value="${data.positionName}"/></p>
                                   <c:if test="${stat.first}">
-                                      <select required class="form-control stateInput hidden" id="positionSelector" data-bind="valueWithInit: 'positionId'">
-                                          <option disabled="disabled" selected="selected" value="${data.positionId}">
+                                      <select required class="form-control stateInput hidden" id="positionSelector" data-bind="valueWithInit: 'positionId'"
+                                         data-currentPositionId="${data.positionId}">
+                                          <option selected="selected" value="${data.positionId}">
                                                <c:out value="${data.positionName}"/>
                                            </option>
                                       </select>
@@ -145,8 +146,9 @@
                             <div class="col-sm-8">
                                  <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.channelName}</p>
                                  <c:if test="${stat.first}">
-                                     <select required class="form-control stateInput hidden" id="channelSelector" data-bind="valueWithInit: 'channelName'">
-                                         <option disabled="disabled" selected="selected">
+                                     <select required class="form-control stateInput hidden" id="channelSelector" data-bind="valueWithInit: 'channelName'"
+                                       data-currentChannelName="${data.channelName}">
+                                         <option selected="selected">
                                              <c:out value="${data.channelName}"/>
                                          </option>
                                      </select>
