@@ -157,7 +157,9 @@
                   </c:when>
                     <c:when test ="${data.stateName == 'coding'}">
                        <div class="form-group">
-                          <label for="recommendedPositionLevelInput"  class="control-label col-sm-4"><spring:message code="statehistory.field.recommendedPositionLevel"/></label>
+                          <label for="recommendedPositionLevelInput"  class="control-label col-sm-4"><spring:message code="statehistory.field.recommendedPositionLevel"/>
+                              <span id="requiredMark" class="stateInput hidden">*</span>
+                          </label>
                           <div class="col-sm-8">
                             <p class="form-control-static ${stat.first ? 'stateData' : ''}"> <c:out value = "L${data.recommendedPositionLevel}"/></p>
                             <c:if test="${stat.first}">
@@ -210,7 +212,9 @@
 
                 <c:when test ="${data.stateName == 'tech'}">
                    <div class="form-group">
-                      <label for="recommendedPositionLevelInput"  class="control-label col-sm-4"><spring:message code="statehistory.field.recommendedPositionLevel"/></label>
+                      <label for="recommendedPositionLevelInput"  class="control-label col-sm-4"><spring:message code="statehistory.field.recommendedPositionLevel"/>
+                          <span id="requiredMark" class="stateInput hidden">*</span>
+                      </label>
                       <div class="col-sm-8">
                         <p class="form-control-static ${stat.first ? 'stateData' : ''}"> <c:out value="L${data.recommendedPositionLevel}"/></p>
                         <c:if test="${stat.first}">
@@ -245,7 +249,9 @@
                   </c:when>
                   <c:when test="${data.stateName == 'firstTest'}">
                       <div class="form-group">
-                          <label for="resultInput" class="control-label col-sm-4"><spring:message code="statehistory.field.result"/></label>
+                          <label for="resultInput" class="control-label col-sm-4"><spring:message code="statehistory.field.result"/>
+                              <span id="requiredMark" class="stateInput hidden">*</span>
+                          </label>
                           <div class="col-sm-8">
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.result}%</p>
                               <c:if test="${stat.first}">
@@ -259,7 +265,9 @@
                           <div class="help-block with-errors"></div>
                       </div>
                       <div class="form-group">
-                        <label for="recommendationInput" class="control-label col-sm-4"><spring:message code="statehistory.field.recommendation"/></label>
+                        <label for="recommendationInput" class="control-label col-sm-4"><spring:message code="statehistory.field.recommendation"/>
+                            <span id="requiredMark" class="stateInput hidden">*</span>
+                        </label>
                         <div class="col-sm-8">
                           <p class="form-control-static ${stat.first ? 'stateData' : ''}">
                             <spring:message code="common.yes" var="yesMessage" />
@@ -279,7 +287,9 @@
                         <div class="help-block with-errors"></div>
                       </div>
                       <div class="form-group">
-                        <label for="reviewerNameInput"  class="control-label col-sm-4"><spring:message code="statehistory.field.reviewerName"/></label>
+                        <label for="reviewerNameInput"  class="control-label col-sm-4"><spring:message code="statehistory.field.reviewerName"/>
+                            <span id="requiredMark" class="stateInput hidden">*</span>
+                        </label>
                         <div class="col-sm-8">
                           <p class="form-control-static ${stat.first ? 'stateData' : ''}">${data.reviewerName}</p>
                           <c:if test="${stat.first}">
@@ -295,7 +305,9 @@
                         <div class="help-block with-errors"></div>
                       </div>
                       <div class="form-group">
-                        <label for="recommendedPositionLevelInput"  class="control-label col-sm-4"><spring:message code="statehistory.field.recommendedPositionLevel"/></label>
+                        <label for="recommendedPositionLevelInput"  class="control-label col-sm-4"><spring:message code="statehistory.field.recommendedPositionLevel"/>
+                            <span id="requiredMark" class="stateInput hidden">*</span>
+                        </label>
                         <div class="col-sm-8">
                           <p class="form-control-static ${stat.first ? 'stateData' : ''}">L${data.recommendedPositionLevel}</p>
                           <c:if test="${stat.first}">
@@ -319,7 +331,9 @@
                   </c:when>
                   <c:when test="${data.stateName == 'clientInterview'}">
                     <div class="form-group">
-                      <label for="recommendedPositionLevelInput"  class="control-label col-sm-4"><spring:message code="statehistory.field.recommendedPositionLevel"/></label>
+                      <label for="recommendedPositionLevelInput"  class="control-label col-sm-4"><spring:message code="statehistory.field.recommendedPositionLevel"/>
+                          <span id="requiredMark" class="stateInput hidden">*</span>
+                      </label>
                       <div class="col-sm-8">
                         <p class="form-control-static ${stat.first ? 'stateData' : ''}">L${data.recommendedPositionLevel}</p>
                         <c:if test="${stat.first}">
@@ -342,7 +356,9 @@
                   </c:when>
                     <c:when test ="${data.stateName == 'profInterview'}">
                        <div class="form-group">
-                          <label for="recommendedPositionLevelInput"  class="control-label col-sm-4"><spring:message code="statehistory.field.recommendedPositionLevel"/></label>
+                          <label for="recommendedPositionLevelInput"  class="control-label col-sm-4"><spring:message code="statehistory.field.recommendedPositionLevel"/>
+                              <span id="requiredMark" class="stateInput hidden">*</span>
+                          </label>
                           <div class="col-sm-8">
                             <p class="form-control-static ${stat.first ? 'stateData' : ''}"> <c:out value = "L${data.recommendedPositionLevel}"/></p>
                             <c:if test="${stat.first}">
@@ -369,7 +385,9 @@
                   <c:when test="${data.stateName == 'wageOffer'}">
                       <spring:message code="common.thousand.huf" var="thousandHUF"/>
                       <div class="form-group">
-                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.offeredMoney"/></label>
+                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.offeredMoney"/>
+                              <span id="requiredMark" class="stateInput hidden">*</span>
+                          </label>
                           <div class="col-sm-8">
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value="${data.offeredMoney} ${thousandHUF}"/></p>
                               <c:if test="${stat.first}">
@@ -385,7 +403,9 @@
                           <div class="help-block with-errors"></div>
                       </div>
                       <div class="form-group">
-                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.claim"/></label>
+                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.claim"/>
+                              <span id="requiredMark" class="stateInput hidden">*</span>
+                          </label>
                           <div class="col-sm-8">
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}"><c:out value="${data.claim} ${thousandHUF}"/></p>
                               <c:if test="${stat.first}">
@@ -401,7 +421,9 @@
                       </div>
 
                       <div class="form-group">
-                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.feedbackDate"/></label>
+                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.feedbackDate"/>
+                              <span id="requiredMark" class="stateInput hidden">*</span>
+                          </label>
                           <div class="col-sm-8">
                               <fmt:formatDate value="${data.feedbackDate}" type="date" pattern="yyyy-MM-dd HH:mm" var="formattedFeedbackDate"/>
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedFeedbackDate}</p>
@@ -419,7 +441,9 @@
                   </c:when>
                   <c:when test="${data.stateName == 'agree'}">
                       <div class="form-group">
-                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.dayOfStart"/></label>
+                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.dayOfStart"/>
+                              <span id="requiredMark" class="stateInput hidden">*</span>
+                          </label>
                           <div class="col-sm-8">
                               <fmt:formatDate value="${data.dayOfStart}" type="date" pattern="yyyy-MM-dd" var="formattedDayOfStart"/>
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedDayOfStart}</p>
@@ -436,7 +460,9 @@
                   </c:when>
                   <c:when test="${data.stateName == 'accept'}">
                       <div class="form-group">
-                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.dateOfEnter"/></label>
+                          <label for="name" class="control-label col-sm-4"><spring:message code="statehistory.field.dateOfEnter"/>
+                              <span id="requiredMark" class="stateInput hidden">*</span>
+                          </label>
                           <div class="col-sm-8">
                               <fmt:formatDate value="${data.dateOfEnter}" type="date" pattern="yyyy-MM-dd" var="formattedDateOfEnter"/>
                               <p class="form-control-static ${stat.first ? 'stateData' : ''}">${formattedDateOfEnter}</p>

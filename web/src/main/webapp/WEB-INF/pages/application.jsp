@@ -28,6 +28,7 @@
 
                     <label id="positionLabel" class="control-label text-left" for="drop">
                         <spring:message code="application.create.position.label"/>
+                        <span id="requiredMark">*</span>
                     </label>
 
                     <div class="selectContainer" id="drop">
@@ -45,6 +46,7 @@
 
                     <label id="sourceLabel" class="control-label text-left" for="source">
                       <spring:message code="application.create.source.label"/>
+                      <span id="requiredMark">*</span>
                     </label>
 
                     <div class="selectContainer" id="dropSource">
