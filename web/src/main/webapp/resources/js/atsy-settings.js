@@ -77,13 +77,13 @@ $(function () {
 
 function actionFormatter(value, row, index) {
     return [
-        '<a class="edit ml10 little-space" href="javascript:void(0)" title="Edit">',
+        '<a class="edit ml10 little-space" href="javascript:void(0)" title="', $.i18n.prop('common.edit.js'), '">',
         '<i class="glyphicon glyphicon-edit"></i>',
         '</a>',
 
-        '<a class="remove ml10 little-space" href="javascript:void(0)" title="Remove">',
+        '<a class="remove ml10 little-space" href="javascript:void(0)" title="', $.i18n.prop('common.remove.js'), '">',
         '<i class="glyphicon glyphicon-remove"></i>',
-         '</a>',
+        '</a>',
     ].join('');
 }
 
