@@ -87,10 +87,10 @@ $(document).ready(function () {
 
     window.actionsFormatter = function(value, row, index) {
         return [
-                 '<a class="remove ml10 little-space" href="javascript:void(0)" title="Remove">',
-                    '<i class="glyphicon glyphicon-remove"></i>',
-                 '</a>',
-                ].join('');
+            '<a class="remove ml10 little-space" href="javascript:void(0)" title="', $.i18n.prop('common.remove.js'), '">',
+            '<i class="glyphicon glyphicon-remove"></i>',
+            '</a>',
+        ].join('');
     };
 
     window.candidatesEvents = {
