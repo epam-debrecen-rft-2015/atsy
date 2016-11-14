@@ -35,7 +35,7 @@ import javax.annotation.PostConstruct;
 
 @Configuration
 @ComponentScan("com.epam.rft.atsy.web")
-@PropertySource("classpath:file_storage.properties")
+@PropertySource("classpath:environment.properties")
 @Import({ServiceConfiguration.class})
 public class WebConfiguration extends DelegatingWebMvcConfiguration {
 
