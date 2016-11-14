@@ -70,7 +70,7 @@
                             <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
                                    for="name"><spring:message
                                    code="candidate.name.label"/>
-                                <span id="requiredMark" class="input">*</span>
+                                <span class="input">*</span>
                             </label>
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
@@ -110,7 +110,7 @@
                             <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
                                    for="email"><spring:message
                                    code="candidate.email.label"/>
-                                <span id="requiredMark" class="input">*</span>
+                                <span class="input">*</span>
                             </label>
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">
@@ -160,7 +160,7 @@
                             <label class="control-label col-lg-2 col-md-2 col-sm-2 text-right"
                                    for="phone"><spring:message
                                    code="candidate.phone.label"/>
-                                <span id="requiredMark" class="input">*</span>
+                                <span class="input">*</span>
                             </label>
 
                             <div class="form-group col-lg-4 col-md-4 col-sm-4">

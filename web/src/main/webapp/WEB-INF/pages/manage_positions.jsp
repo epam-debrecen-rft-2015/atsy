@@ -47,7 +47,7 @@
                             <div class="form-group">
                                 <input type="hidden" name="id" id="id">
                                 <label for="position_name"><spring:message code="settings.positions.position_name"/>
-                                    <span id="requiredMark">*</span>
+                                    <span class="input">*</span>
                                 </label>
                                 <input type="text" class="name form-control" name="name" id="position_name">
                             </div>
