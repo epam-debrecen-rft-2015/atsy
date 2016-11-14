@@ -26,7 +26,9 @@
     </jsp:attribute>
   <jsp:body>
       <div class="page-header">
-          <h1><c:out value="${candidate.name}"/>
+          <h1>
+              <a href="/atsy/secure/candidate/details/${candidate.id}"><span class="glyphicon glyphicon-chevron-left"></span></a>
+              <c:out value="${candidate.name}"/>
 
               <small id="positionName"><c:out value = "${states[0].positionName}"/></small>
           </h1>
