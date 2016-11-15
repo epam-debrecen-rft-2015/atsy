@@ -66,7 +66,7 @@ public class LoginStepDefs {
 
   @Then("^the username field should be in focus$")
   public void usernameFieldIsInFocus() {
-    this.loginPage.valdiateUsernameFieldHasFocus();
+    this.loginPage.validateUsernameFieldHasFocus();
   }
 
   @Then("^the browser title should be (.*)$")

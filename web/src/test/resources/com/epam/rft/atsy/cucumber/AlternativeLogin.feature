@@ -3,7 +3,7 @@ Feature: Alternate Login
   Background:
 
     Given the user is not authenticated
-    And the user is on the login page
+    And the user opens the login page
 
   Scenario: 1 UI element check on the Login page
 
@@ -18,43 +18,60 @@ Feature: Alternate Login
     When the user logs in with valid login details
     Then the user should be logged in
 
-  Scenario: 3 User enters username in different case
+  Scenario Outline: 3 User enters username in different case
 
-    When the user logs in with valid all uppercase username
+    When the user logs in with valid <case> username
     Then the user should be logged in
+    Examples:
+    | case |
+    | uppercase |
+    | lowercase |
+    | camelcase |
 
-  Scenario: 4 User enters invalid credentials
-    When the user tries to log in with incorrect password
+  Scenario Outline: 4 User enters invalid credentials
+    When the user tries to log in with <username> name and <password> password
     Then  incorrect username or password message should appear
+    Examples:
+    | username | password |
+    | valid    | invalid  |
+    | invalid  | valid    |
+    | invalid  | invalid  |
+    | hasSpace | valid    |
+    | valid    | hasSpace |
+    | hasSpace | hasSpace |
 
-  Scenario: 6 User enters empty username
+  Scenario Outline: 6 User enters empty username
 
-    When the user tries to log in with empty username
+    When the user tries to log in with <username> name
     Then  empty username error message appears above username field
+    Examples:
+    | username |
+    | empty    |
+    | blank    |
 
-  Scenario: 7 User enters blank username
+  Scenario Outline: 7 User enters empty password
 
-    When the user tries to log in with blank username
-    Then  empty username error message appears above username field
-
-  Scenario: 8 User enters empty password
-
-    When the user tries to log in with empty password
+    When the user tries to log in with <password> password
     Then  empty password error message appears above password field
+    Examples:
+    | password |
+    | empty    |
+    | blank    |
 
-  Scenario: 9 User enters blank password
+  Scenario Outline: 8 User enters nothing
 
-    When the user tries to log in with blank password
-    Then  empty password error message appears above password field
-
-  Scenario: 9 User enters nothing
-
-    When the user tries to log in without filling in the login form
+    When the user tries to log in with <username> name and <password> password
     Then empty username error message appears above username field
     And  empty password error message appears above password field
+    Examples:
+    | username | password |
+    | empty    | empty    |
+#    | blank    | empty    |
+    | empty    | blank    |
+#    | blank    | blank    |
 
-  Scenario: 10 logged in user is redirected to the Welcome page in case the login page is opened
+  Scenario: 9 logged in user is redirected to the Welcome page in case the login page is opened
 
     When the user logs in with valid login details
     And the user opens the login page
-    Then the Candidates page should appear
+    Then the user should be logged in

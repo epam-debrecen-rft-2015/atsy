@@ -15,8 +15,14 @@ public class LoginPage extends GenericPage {
   @FindBy(id = "name")
   private WebElement name;
 
+  @FindBy(xpath = "//input[@id=\"name\"]/../span")
+  private WebElement nameErrorMessage;
+
   @FindBy(id = "password")
   private WebElement password;
+
+  @FindBy(xpath = "//input[@id=\"name\"]/../span")
+  private WebElement passwordErrorMessage;
 
   @FindBy(id = "loginButton")
   private WebElement loginButton;
@@ -48,7 +54,7 @@ public class LoginPage extends GenericPage {
     assertThat(this.globalMessage.getText(), equalTo(message));
   }
 
-  public void valdiateUsernameFieldHasFocus() {
+  public void validateUsernameFieldHasFocus() {
     assertThat(this.name, equalTo(driver.switchTo().activeElement()));
   }
 
@@ -56,6 +62,16 @@ public class LoginPage extends GenericPage {
     WebElement errorMessageElement = driver.findElement(By.id(fieldId)).findElement(By.xpath("../span"));
     assertThat(errorMessageElement.isDisplayed(), is(true));
     assertThat(errorMessageElement.getText(), equalTo(expectedMessage));
+  }
+
+  public void validateUsernameFieldErrorMessage(String expectedMessage) {
+    assertThat(this.nameErrorMessage.isDisplayed(), is(true));
+    assertThat(this.nameErrorMessage.getText(), equalTo(expectedMessage));
+  }
+
+  public void validatePasswordFieldErrorMessage(String expectedMessage) {
+    assertThat(this.passwordErrorMessage.isDisplayed(), is(true));
+    assertThat(this.passwordErrorMessage.getText(), equalTo(expectedMessage));
   }
 
   public void validateLogoAppearance() {
@@ -67,13 +83,35 @@ public class LoginPage extends GenericPage {
     assertThat(messageElement.isDisplayed(), is(true));
   }
 
+  public void validateUsernameFieldExistence() {
+    assertThat(this.name.isDisplayed(), is(true));
+  }
+
+  public void validatePasswordFieldExistence() {
+    assertThat(this.password.isDisplayed(), is(true));
+  }
+
   public void validateFieldPlaceHolder(String fieldId, String expectedPlaceholder) {
     String fieldPlaceholderText = driver.findElement(By.id(fieldId)).getAttribute("placeholder");
     assertThat(fieldPlaceholderText, equalTo(expectedPlaceholder));
   }
 
+  public void validateUsernameFieldPlaceHolder(String expectedPlaceholder) {
+    assertThat(this.name.getAttribute("placeholder"), equalTo(expectedPlaceholder));
+  }
+
+  public void validatePasswordFieldPlaceHolder(String expectedPlaceholder) {
+    assertThat(this.password.getAttribute("placeholder"), equalTo(expectedPlaceholder));
+  }
+
   public void validateLoginButtonAppearance(String expectedLabel) {
     assertThat(this.loginButton.isDisplayed(), is(true));
     assertThat(this.loginButton.getText(), equalTo(expectedLabel));
+  }
+
+  public void login(String username, String password) {
+    this.enterName(username);
+    this.enterPassword(password);
+    this.clickOnLoginButton();
   }
 }
