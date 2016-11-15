@@ -26,9 +26,10 @@
     </jsp:attribute>
   <jsp:body>
       <div class="page-header">
-          <h1><c:out value="${candidate.name}"/>
-
+          <h1>
+              <c:out value="${candidate.name}"/>
               <small id="positionName"><c:out value = "${states[0].positionName}"/></small>
+              <a class="btn btn-default pull-right" href="/atsy/secure/candidate/details/${candidate.id}"><spring:message code="back.button"/></a>
           </h1>
       </div>
 
