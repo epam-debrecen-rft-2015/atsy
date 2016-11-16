@@ -1,5 +1,5 @@
+@alternative
 Feature: Alternate Login
-
   Background:
 
     Given the user is not authenticated

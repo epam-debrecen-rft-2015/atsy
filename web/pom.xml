@@ -12,6 +12,12 @@
     <artifactId>web</artifactId>
     <packaging>war</packaging>
 
+    <properties>
+        <test.language>hu</test.language>
+        <test.environment>${environment}</test.environment>
+        <test.tags>~@alternative</test.tags>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.epam.rft</groupId>
@@ -99,6 +105,20 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+     <build>
+         <plugins>
+             <plugin>
+                 <artifactId>maven-failsafe-plugin</artifactId>
+                 <configuration>
+                     <systemProperties>
+                         <spring.profiles.active>lang-${test.language},env-${test.environment}</spring.profiles.active>
+                         <cucumber.options>-t ${test.tags}</cucumber.options>
+                     </systemProperties>
+                 </configuration>
+             </plugin>
+         </plugins>
+     </build>
 
     <profiles>
         <profile>
