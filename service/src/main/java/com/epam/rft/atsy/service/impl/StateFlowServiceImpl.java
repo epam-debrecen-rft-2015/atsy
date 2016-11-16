@@ -51,10 +51,7 @@ public class StateFlowServiceImpl implements StateFlowService {
   @Transactional(readOnly = true)
   @Override
   public boolean isAvailableFromLastState(StateDTO representation, String newState) {
-    if (representation.equals(null) && newState.equals("newstate")) {
-      return true;
-    }
-      Collection<StateFlowDTO> available = getStateFlowDTOByFromStateDTO(representation);
+    Collection<StateFlowDTO> available = getStateFlowDTOByFromStateDTO(representation);
       List<StateFlowDTO>
           availableList =
           available.stream().filter(p -> p.getToStateDTO().getName().equals(newState)).collect(
