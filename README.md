@@ -20,6 +20,32 @@ Running integration tests as part of the build:
 
     mvn clean install -Pintegration
 
+Alternative configurations for running BDD cucumber tests:
+
+* Run only features, scenarios with `@tag1` or `tag2`
+ 
+      mvn clean install -Pintegration -Dtest.tags="@tag1,@tag2"
+    
+* Run only features, scenarios which has no `@tag`
+
+      mvn clean install -Pintegration -Dtest.tags="~@tag"
+
+* Run features, scenarions which has tags `@tag1` and `@tag2`
+
+      mvn clean install -Pintegration -Dcucumber.options="-t @tag1 -t @tag2"
+
+* Select test language (currently `hu` and `en` supported)
+
+      mvn clean install -Pintegration -Dtest.language=hu
+
+* Select environment dependent test data (currently only `integration` is supported)
+
+      mvn clean install -Pintegration -Dtest.environment=integration
+      
+* You can combine the above commands, like
+
+      mvn clean install -Pintegration -Dtest.tags="@alternative" -Dtest.language=en -Dtest.environment=integration
+
 Running Atsy in docker:
 =======================
 
