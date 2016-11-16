@@ -14,6 +14,7 @@ import org.springframework.util.Assert;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The StateFlowService that responsible for actions with StateFlows.
@@ -46,5 +47,19 @@ public class StateFlowServiceImpl implements StateFlowService {
             StatesEntity.class));
 
     return converterService.convert(stateFlowEntities, StateFlowDTO.class);
+  }
+  @Transactional(readOnly = true)
+  @Override
+  public boolean isAvailableFromLastState(StateDTO representation, String newState) {
+    Collection<StateFlowDTO> available = getStateFlowDTOByFromStateDTO(representation);
+      List<StateFlowDTO>
+          availableList =
+          available.stream().filter(p -> p.getToStateDTO().getName().equals(newState)).collect(
+              Collectors.toList());
+      if (availableList.isEmpty()) {
+        return false;
+      }
+      return true;
+
   }
 }

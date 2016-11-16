@@ -17,4 +17,5 @@ public interface StateFlowService {
    * @return the collection of available states.
    */
   Collection<StateFlowDTO> getStateFlowDTOByFromStateDTO(StateDTO statesDTO);
+  boolean isAvailableFromLastState(StateDTO representation, String newState);
 }

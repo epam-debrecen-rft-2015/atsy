@@ -120,7 +120,8 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
 
   private StateHistoryViewRepresentation expectedFirstStateHistoryViewRepresentation =
       StateHistoryViewRepresentation.builder().stateId(1L).stateName(CLICKED_STATE_NAME_NEW_STATE)
-          .stateFullName(STATE_NAME_NEW_STATE).channelName(CHANNEL_NAME).positionId(POSITION_ID).positionName(POSITION_NAME)
+          .stateFullName(STATE_NAME_NEW_STATE).channelName(CHANNEL_NAME).positionId(POSITION_ID)
+          .positionName(POSITION_NAME)
           .build();
   private StateHistoryViewRepresentation expectedSecondStateHistoryViewRepresentation =
       StateHistoryViewRepresentation.builder().stateId(2L).stateName(CLICKED_STATE_NAME_CV)
@@ -135,11 +136,7 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
       new ArrayList<>(Arrays
           .asList(actualSecondStateHistoryViewRepresentation,
               actualFirstStateHistoryViewRepresentation));
-
-  private List<StateHistoryViewRepresentation>
-      expectedStateHistoryViewRepresentationListWithSingleElement =
-      new LinkedList<>(Arrays.asList(expectedFirstStateHistoryViewRepresentation));
-
+  
   private List<StateHistoryViewRepresentation>
       expectedStateHistoryViewRepresentationListWithThreeElements =
       new LinkedList<>(Arrays.asList(expectedThirdStateHistoryViewRepresentation,
@@ -275,19 +272,53 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
   @SuppressWarnings("unchecked")
   public void pageLoadShouldRespondModelAndViewWhenParamApplicationIdAndSParamClickedStateAreCorrectAndStateHistoryViewRepresentationListContainsSingleElement()
       throws Exception {
-    given(statesHistoryService.getStateHistoriesByApplicationId(1L))
-        .willReturn(emptyStateHistoryDTOList);
+
+    final StateDTO stateDTO = new StateDTO();
+    final StateHistoryDTO stateHistoryDTO = StateHistoryDTO.builder().stateDTO(stateDTO).build();
+    final List<StateHistoryDTO> singleElementHistoryDTO = Arrays.asList(stateHistoryDTO);
+    final StateHistoryViewRepresentation
+        stateHistoryViewRepresentation =
+        new StateHistoryViewRepresentation();
+    final List<StateHistoryViewRepresentation>
+        singleElementStateHistoryViewRepresentationList = new LinkedList<>();
+    singleElementStateHistoryViewRepresentationList.add(stateHistoryViewRepresentation);
+    final StateDTO clickedStateDTO = StateDTO.builder()
+        .id(1L)
+        .name(CLICKED_STATE_NAME_NEW_STATE)
+        .build();
+    final List<StateHistoryViewRepresentation>
+        expectedStateHistoryViewRepresentations =
+        new LinkedList<>();
+    expectedStateHistoryViewRepresentations.add(StateHistoryViewRepresentation.builder()
+        .creationDate(new Date())
+        .stateId(1L)
+        .stateName(CLICKED_STATE_NAME_NEW_STATE)
+        .stateFullName(STATE_NAME_NEW_STATE)
+        .channelName(CHANNEL_NAME)
+        .positionId(POSITION_ID)
+        .positionName(POSITION_NAME)
+        .build()
+    );
+    expectedStateHistoryViewRepresentations.add(stateHistoryViewRepresentation);
+
+    given(statesHistoryService.getStateHistoriesByApplicationId(APPLICATION_ID))
+        .willReturn(singleElementHistoryDTO);
 
     given(converterService
-        .convert(emptyStateHistoryDTOList, StateHistoryViewRepresentation.class))
-        .willReturn(emptyStateHistoryViewRepresentationList);
+        .convert(singleElementHistoryDTO, StateHistoryViewRepresentation.class))
+        .willReturn(singleElementStateHistoryViewRepresentationList);
+
+    given(stateService.getStateDtoByName(CLICKED_STATE_NAME_NEW_STATE))
+        .willReturn(clickedStateDTO);
+
+    given(stateFlowService
+        .isAvailableFromLastState(stateDTO, CLICKED_STATE_NAME_NEW_STATE))
+        .willReturn(true);
 
     given(applicationsService.getApplicationDtoById(APPLICATION_ID)).willReturn(applicationDTO);
     given(channelService.getChannelDtoById(CHANNEL_ID)).willReturn(channelDTO);
     given(positionService.getPositionDtoById(POSITION_ID)).willReturn(positionDTO);
     given(candidateService.getCandidateByApplicationID(APPLICATION_ID)).willReturn(candidateDTO);
-    given(stateService.getStateDtoByName(CLICKED_STATE_NAME_NEW_STATE))
-        .willReturn(stateDTOWithStateNameNewState);
     given(messageKeyResolver
         .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_STATE,
             CLICKED_STATE_NAME_NEW_STATE)).willReturn(STATE_NAME_NEW_STATE);
@@ -313,13 +344,15 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
             .get(STATES_OBJECT_KEY);
 
     assertStateHistoryViewRepresentationList(representationList,
-        expectedStateHistoryViewRepresentationListWithSingleElement);
+        expectedStateHistoryViewRepresentations);
 
     then(statesHistoryService).should().getStateHistoriesByApplicationId(1L);
     then(applicationsService).should().getApplicationDtoById(APPLICATION_ID);
     then(channelService).should().getChannelDtoById(CHANNEL_ID);
     then(positionService).should().getPositionDtoById(POSITION_ID);
     then(stateService).should().getStateDtoByName(CLICKED_STATE_NAME_NEW_STATE);
+    then(stateFlowService).should()
+        .isAvailableFromLastState(stateDTO, CLICKED_STATE_NAME_NEW_STATE);
     then(messageKeyResolver).should()
         .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_STATE,
             CLICKED_STATE_NAME_NEW_STATE);
@@ -337,6 +370,10 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
         .willReturn(actualStateHistoryViewRepresentationListWithTwoElements);
     given(stateService.getStateDtoByName(CLICKED_STATE_NAME_CODING))
         .willReturn(stateDTOWithStateNameCoding);
+    given(stateFlowService
+        .isAvailableFromLastState(stateHistoryDTOListWithTwoElements.get(1).getStateDTO(),
+            CLICKED_STATE_NAME_CODING))
+        .willReturn(true);
     given(stateFlowService.getStateFlowDTOByFromStateDTO(stateDTOWithStateNameCoding))
         .willReturn(stateFlowDTOListWithSingleElement);
     given(candidateService.getCandidateByApplicationID(APPLICATION_ID)).willReturn(candidateDTO);
@@ -376,6 +413,9 @@ public class ApplicationStateControllerTest extends AbstractControllerTest {
         .convert(stateHistoryDTOListWithTwoElements, StateHistoryViewRepresentation.class);
     then(stateService).should().getStateDtoByName(CLICKED_STATE_NAME_CODING);
     then(stateFlowService).should().getStateFlowDTOByFromStateDTO(stateDTOWithStateNameCoding);
+    then(stateFlowService).should()
+        .isAvailableFromLastState(stateHistoryDTOListWithTwoElements.get(1).getStateDTO(),
+            CLICKED_STATE_NAME_CODING);
 
     then(messageKeyResolver).should()
         .resolveMessageOrDefault(APPLICATION_STATE + CLICKED_STATE_NAME_NEW_STATE,
